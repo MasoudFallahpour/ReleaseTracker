@@ -9,5 +9,18 @@
         android:id="@+id/librariesFragment"
         android:name="ir.fallahpoor.releasetracker.libraries.view.LibrariesFragment"
         android:label="@string/libraries"
-        tools:layout="@layout/fragment_libraries" />
+        tools:layout="@layout/fragment_libraries">
+        <action
+            android:id="@+id/action_librariesFragment_to_addLibraryFragment"
+            app:destination="@id/addLibraryFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/addLibraryFragment"
+        android:name="ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryFragment"
+        android:label="@string/add_library"
+        tools:layout="@layout/fragment_add_library" />
 </navigation>
