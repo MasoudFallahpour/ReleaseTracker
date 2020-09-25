@@ -44,4 +44,5 @@ dependencies {
     implementation(Dependencies.App.coordinatorLayout)
     implementation(Dependencies.App.navigationFragment)
     implementation(Dependencies.App.navigationUi)
+    implementation(Dependencies.App.material)
 }
