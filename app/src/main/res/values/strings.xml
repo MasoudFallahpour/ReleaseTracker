@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Release Tracker</string>
+    <string name="libraries">Libraries</string>
+    <string name="add_library">Add library</string>
 </resources>
