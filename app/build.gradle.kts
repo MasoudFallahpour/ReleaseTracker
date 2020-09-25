@@ -38,7 +38,10 @@ android {
 
 dependencies {
     implementation(Dependencies.App.kotlinStdLib)
-    implementation(Dependencies.App.coreKtx)
+    implementation(Dependencies.App.core)
     implementation(Dependencies.App.appCompat)
     implementation(Dependencies.App.constraintLayout)
+    implementation(Dependencies.App.coordinatorLayout)
+    implementation(Dependencies.App.navigationFragment)
+    implementation(Dependencies.App.navigationUi)
 }
