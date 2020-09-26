@@ -2,9 +2,17 @@ object Dependencies {
 
     private const val kotlinVersion = "1.4.10"
     private const val navigationVersion = "2.3.0"
+    private const val hiltVersion = "2.28-alpha"
+    private const val hiltJetpackVersion = "1.0.0-alpha01"
+    private const val roomVersion = "2.2.5"
+
+    private object Common {
+        const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        const val room = "androidx.room:room-runtime:$roomVersion"
+    }
 
     object App {
-        const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        const val kotlinStdLib = Common.kotlinStdLib
         const val core = "androidx.core:core-ktx:1.3.1"
         const val appCompat = "androidx.appcompat:appcompat:1.2.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.1"
@@ -13,6 +21,21 @@ object Dependencies {
             "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
         const val navigationUi = "androidx.navigation:navigation-ui-ktx:$navigationVersion"
         const val material = "com.google.android.material:material:1.3.0-alpha01"
+        const val hilt = "com.google.dagger:hilt-android:$hiltVersion"
+        const val hiltCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
+        const val hiltJetpack = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion"
+        const val hiltJetpackCompiler = "androidx.hilt:hilt-compiler:$hiltJetpackVersion"
+        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+        const val room = Common.room
+        const val materialProgressBar = "me.zhanghai.android.materialprogressbar:library:1.6.1"
+    }
+
+    object Data {
+        const val kotlinStdLib = Common.kotlinStdLib
+        const val room = Common.room
+        const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
+        const val roomKtx = "androidx.room:room-ktx:$roomVersion"
+        const val inject = "javax.inject:javax.inject:1"
     }
 
 }

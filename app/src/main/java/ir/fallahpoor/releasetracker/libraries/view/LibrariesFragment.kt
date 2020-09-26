@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import kotlinx.android.synthetic.main.fragment_libraries.*
 
+@AndroidEntryPoint
 class LibrariesFragment : Fragment() {
 
     override fun onCreateView(

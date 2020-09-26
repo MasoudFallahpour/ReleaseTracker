@@ -2,4 +2,21 @@
     <string name="app_name">Release Tracker</string>
     <string name="libraries">Libraries</string>
     <string name="add_library">Add library</string>
+    <string name="library_name">Library name</string>
+    <string name="library_url">Library URL</string>
+    <string name="library_added">Library added successfully</string>
+    <string name="library_host">Library host</string>
+    <string name="library_name_empty">Library name cannot be empty</string>
+    <string name="library_url_empty">Library URL cannot be empty</string>
+    <string name="library_url_invalid">Library URL is invalid</string>
+    <string name="library_host_empty">Library host cannot be empty</string>
+    <string name="library_name_already_exists">Library name already exists</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="github">https://github.com/</string>
+    <string name="github_base_url">https://github.com/</string>
+    <string name="jcenter_base_url">https://bintray.com/bintray/jcenter/</string>
+    <string-array name="hosts">
+        <item>Github</item>
+        <item>JCenter</item>
+    </string-array>
 </resources>

@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("dagger.hilt.android.plugin")
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
@@ -36,6 +37,11 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+
+}
+
 dependencies {
     implementation(Dependencies.App.kotlinStdLib)
     implementation(Dependencies.App.core)
@@ -45,4 +51,12 @@ dependencies {
     implementation(Dependencies.App.navigationFragment)
     implementation(Dependencies.App.navigationUi)
     implementation(Dependencies.App.material)
+    implementation(Dependencies.App.viewModel)
+    implementation(Dependencies.App.hilt)
+    kapt(Dependencies.App.hiltCompiler)
+    implementation(Dependencies.App.hiltJetpack)
+    kapt(Dependencies.App.hiltJetpackCompiler)
+    implementation(Dependencies.App.room)
+    implementation(Dependencies.App.materialProgressBar)
+    implementation(project(":data"))
 }

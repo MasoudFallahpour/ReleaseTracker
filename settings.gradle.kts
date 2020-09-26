@@ -1,2 +1,2 @@
 rootProject.name = "Release Tracker"
-include(":app")
+include(":app", ":data")

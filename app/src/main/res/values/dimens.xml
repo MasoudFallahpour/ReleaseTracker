@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="space_normal">16dp</dimen>
+    <dimen name="text_size_normal">16sp</dimen>
+    <dimen name="height_progress_bar">3dp</dimen>
 </resources>
