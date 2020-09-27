@@ -8,5 +8,7 @@ data class Library(
     @ColumnInfo(name = "name")
     val libraryName: String,
     @ColumnInfo(name = "url")
-    val libraryUrl: String
+    val libraryUrl: String,
+    @ColumnInfo(name = "version")
+    val version: String = ""
 )

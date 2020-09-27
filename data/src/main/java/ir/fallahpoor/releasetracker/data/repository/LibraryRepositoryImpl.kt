@@ -13,4 +13,8 @@ class LibraryRepositoryImpl
         libraryDao.insert(Library(libraryName, libraryUrl))
     }
 
+    override suspend fun getLibraries(): List<Library> {
+        return libraryDao.getAll()
+    }
+
 }

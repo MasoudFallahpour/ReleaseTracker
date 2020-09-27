@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/librariesRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/librariesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addLibraryButton"
@@ -11,5 +17,13 @@
         android:layout_margin="@dimen/space_normal"
         android:contentDescription="@string/add_library"
         android:src="@drawable/ic_add" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/librariesProgressBar"
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
