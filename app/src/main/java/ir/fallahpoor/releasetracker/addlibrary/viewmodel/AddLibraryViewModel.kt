@@ -6,11 +6,13 @@ import ir.fallahpoor.releasetracker.common.BaseViewModel
 import ir.fallahpoor.releasetracker.common.ExceptionParser
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
+import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
 import kotlinx.coroutines.launch
 
 class AddLibraryViewModel
 @ViewModelInject constructor(
     private val libraryRepository: LibraryRepository,
+    private val networkUtils: NetworkUtils,
     private val exceptionParser: ExceptionParser
 ) : BaseViewModel<Unit>() {
 
@@ -21,8 +23,12 @@ class AddLibraryViewModel
             setViewState(ViewState.loading())
 
             try {
-                libraryRepository.addLibrary(libraryName, libraryUrl)
-                setViewState(ViewState.success(Unit))
+                if (networkUtils.urlExists(libraryUrl)) {
+                    libraryRepository.addLibrary(libraryName, libraryUrl)
+                    setViewState(ViewState.success(Unit))
+                } else {
+                    setViewState(ViewState.error("Library URL does not exist"))
+                }
             } catch (t: Throwable) {
                 val message = exceptionParser.getMessage(t)
                 setViewState(ViewState.error(message))

@@ -69,7 +69,7 @@ class AddLibraryFragment : Fragment() {
             if (inputsAreValid()) {
                 val libraryName = libraryNameEditText.text.toString()
                 val libraryUrl = libraryUrlEditText.text.toString()
-                addLibraryViewModel.addLibrary(libraryName, libraryUrl)
+                addLibraryViewModel.addLibrary(libraryName, "https://github.com/$libraryUrl")
             }
         }
     }

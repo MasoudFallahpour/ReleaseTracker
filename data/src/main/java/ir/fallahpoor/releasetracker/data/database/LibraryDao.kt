@@ -6,7 +6,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 @Dao
 interface LibraryDao {
 
-    @Query("SELECT * FROM library")
+    @Query("SELECT * FROM library ORDER BY name")
     suspend fun getAll(): List<Library>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
