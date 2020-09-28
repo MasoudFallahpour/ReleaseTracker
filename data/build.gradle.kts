@@ -12,6 +12,11 @@ android {
         targetSdkVersion(Versions.targetSdkVersion)
         versionCode = Versions.versionCode
         versionName = Versions.versionName
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
     buildTypes {
         getByName("release") {
