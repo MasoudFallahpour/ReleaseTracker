@@ -2,5 +2,6 @@
 <resources>
     <dimen name="space_normal">16dp</dimen>
     <dimen name="text_size_normal">16sp</dimen>
-    <dimen name="height_progress_bar">3dp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="height_progress_bar">4dp</dimen>
 </resources>

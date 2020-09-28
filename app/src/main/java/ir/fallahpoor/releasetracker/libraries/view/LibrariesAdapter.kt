@@ -21,6 +21,7 @@ class LibrariesAdapter(
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         val library: Library = libraries[position]
         holder.libraryNameTextView.text = library.libraryName
+        holder.libraryUrlTextView.text = library.libraryUrl
         holder.libraryVersionTextView.text = library.version
     }
 
@@ -29,6 +30,7 @@ class LibrariesAdapter(
     class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val libraryNameTextView: TextView = itemView.findViewById(R.id.libraryNameTextView)
+        val libraryUrlTextView: TextView = itemView.findViewById(R.id.libraryUrlTextView)
         val libraryVersionTextView: TextView = itemView.findViewById(R.id.libraryVersionTextView)
 
     }
