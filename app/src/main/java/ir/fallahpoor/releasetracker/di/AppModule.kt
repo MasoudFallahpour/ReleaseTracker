@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.addlibrary.di
+package ir.fallahpoor.releasetracker.di
 
 import android.content.Context
 import androidx.room.Room
@@ -16,10 +16,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLibraryDatabase(@ApplicationContext context: Context): LibraryDatabase =
-        Room.databaseBuilder(
-            context,
-            LibraryDatabase::class.java, "ReleaseTracker.db"
-        ).build()
+        Room.databaseBuilder(context, LibraryDatabase::class.java, "ReleaseTracker.db")
+            .createFromAsset("database/libraries.db")
+            .build()
 
     @Provides
     fun provideContext(@ApplicationContext context: Context): Context {

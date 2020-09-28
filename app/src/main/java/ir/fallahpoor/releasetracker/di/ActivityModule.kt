@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.addlibrary.di
+package ir.fallahpoor.releasetracker.di
 
 import dagger.Module
 import dagger.Provides
