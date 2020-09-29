@@ -5,6 +5,7 @@ object Dependencies {
     private const val hiltVersion = "2.28-alpha"
     private const val hiltJetpackVersion = "1.0.0-alpha01"
     private const val roomVersion = "2.2.5"
+    private const val retrofitVersion = "2.9.0"
 
     private object Common {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -36,6 +37,9 @@ object Dependencies {
         const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
         const val roomKtx = "androidx.room:room-ktx:$roomVersion"
         const val inject = "javax.inject:javax.inject:1"
+        const val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
+        const val retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+        const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
     }
 
 }

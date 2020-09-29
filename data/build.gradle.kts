@@ -45,4 +45,7 @@ dependencies {
     kapt(Dependencies.Data.roomCompiler)
     implementation(Dependencies.Data.roomKtx)
     implementation(Dependencies.Data.inject)
+    implementation(Dependencies.Data.retrofit)
+    implementation(Dependencies.Data.retrofitConverterGson)
+    implementation(Dependencies.Data.okhttpLoggingInterceptor)
 }
