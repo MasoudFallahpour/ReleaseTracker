@@ -9,6 +9,10 @@ import javax.inject.Inject
 class NetworkUtils
 @Inject constructor() {
 
+    suspend fun networkReachable(): Boolean {
+        return urlExists("https://www.google.com")
+    }
+
     suspend fun urlExists(url: String): Boolean = withContext(Dispatchers.IO) {
 
         val url = URL(url)

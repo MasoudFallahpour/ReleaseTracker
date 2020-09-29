@@ -24,11 +24,13 @@ object Dependencies {
         const val material = "com.google.android.material:material:1.3.0-alpha01"
         const val hilt = "com.google.dagger:hilt-android:$hiltVersion"
         const val hiltCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
-        const val hiltJetpack = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion"
+        const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion"
         const val hiltJetpackCompiler = "androidx.hilt:hilt-compiler:$hiltJetpackVersion"
+        const val hiltWorkManager = "androidx.hilt:hilt-work:$hiltJetpackVersion"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
         const val room = Common.room
         const val materialProgressBar = "me.zhanghai.android.materialprogressbar:library:1.6.1"
+        const val workManager = "androidx.work:work-runtime-ktx:2.4.0"
     }
 
     object Data {

@@ -7,7 +7,7 @@ import retrofit2.http.Path
 interface GithubWebservice {
 
     @GET("repos/{owner}/{repo}/releases/latest")
-    suspend fun getLatestRelease(
+    suspend fun getLatestVersion(
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): GithubResponse

@@ -54,9 +54,11 @@ dependencies {
     implementation(Dependencies.App.viewModel)
     implementation(Dependencies.App.hilt)
     kapt(Dependencies.App.hiltCompiler)
-    implementation(Dependencies.App.hiltJetpack)
+    implementation(Dependencies.App.hiltViewModel)
+    implementation(Dependencies.App.hiltWorkManager)
     kapt(Dependencies.App.hiltJetpackCompiler)
     implementation(Dependencies.App.room)
     implementation(Dependencies.App.materialProgressBar)
+    implementation(Dependencies.App.workManager)
     implementation(project(":data"))
 }

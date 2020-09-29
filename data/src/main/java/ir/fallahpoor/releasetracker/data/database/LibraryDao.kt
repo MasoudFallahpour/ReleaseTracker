@@ -12,6 +12,9 @@ interface LibraryDao {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(library: Library)
 
+    @Update
+    suspend fun update(library: Library)
+
     @Delete
     suspend fun delete(library: Library)
 
