@@ -30,21 +30,18 @@ class UpdateVersionsWorker
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
-        var result: Result = Result.success()
-
-        launch {
-
-            result = if (!networkUtils.networkReachable()) {
+        val result: Result =
+            if (!networkUtils.networkReachable()) {
                 Result.retry()
             } else {
                 val libraries: List<Library> = librariesDao.getAll()
-                libraries.forEach {
-                    getLatestVersion(it)
+                libraries.map {
+                    launch {
+                        getLatestVersion(it)
+                    }
                 }
                 Result.success()
             }
-
-        }
 
         result
 
@@ -61,10 +58,11 @@ class UpdateVersionsWorker
                 libraryOwner,
                 libraryRepo
             )
-            val library = Library(library.libraryName, library.libraryName, githubResponse.name)
-            librariesDao.update(library)
+            librariesDao.update(
+                Library(library.libraryName, library.libraryUrl, githubResponse.name)
+            )
         } catch (t: Throwable) {
-            Log.d("@@@@@@", "Webservice error:" + t.message)
+            Log.d("@@@@@@", "Update failed: " + t.message)
         }
 
     }
