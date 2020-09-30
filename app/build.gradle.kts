@@ -60,5 +60,6 @@ dependencies {
     implementation(Dependencies.App.room)
     implementation(Dependencies.App.materialProgressBar)
     implementation(Dependencies.App.workManager)
+    implementation(Dependencies.App.timber)
     implementation(project(":data"))
 }

@@ -1,7 +1,6 @@
 package ir.fallahpoor.releasetracker
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.hilt.work.WorkerInject
 import androidx.work.CoroutineWorker
@@ -14,6 +13,7 @@ import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class UpdateVersionsWorker
 @WorkerInject constructor(
@@ -61,8 +61,9 @@ class UpdateVersionsWorker
             librariesDao.update(
                 Library(library.libraryName, library.libraryUrl, githubResponse.name)
             )
+            Timber.d("Update SUCCESS (%s): %s", library.libraryName, githubResponse.name)
         } catch (t: Throwable) {
-            Log.d("@@@@@@", "Update failed: " + t.message)
+            Timber.d("Update fFAILURE (%s): %s", library.libraryName, t.message)
         }
 
     }

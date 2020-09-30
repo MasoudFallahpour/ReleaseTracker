@@ -31,6 +31,7 @@ object Dependencies {
         const val room = Common.room
         const val materialProgressBar = "me.zhanghai.android.materialprogressbar:library:1.6.1"
         const val workManager = "androidx.work:work-runtime-ktx:2.4.0"
+        const val timber = "com.jakewharton.timber:timber:4.7.1"
     }
 
     object Data {
