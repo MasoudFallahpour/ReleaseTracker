@@ -33,8 +33,15 @@ class WebserviceFactory @Inject constructor() {
             .build()
     }
 
-    private fun getLoggingInterceptor() =
-        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    private fun getLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            if (BuildConfig.DEBUG) {
+                setLevel(HttpLoggingInterceptor.Level.BODY)
+            } else {
+                setLevel(HttpLoggingInterceptor.Level.NONE)
+            }
+        }
+    }
 
     fun <S> createGithubService(serviceClass: Class<S>): S {
         return retrofit.create(serviceClass)
