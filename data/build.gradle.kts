@@ -1,8 +1,12 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
 }
+
+val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToken")
 
 android {
     compileSdkVersion(Versions.compileSdkVersion)
@@ -20,6 +24,7 @@ android {
     }
     buildTypes {
         getByName("release") {
+            buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile(
@@ -27,7 +32,10 @@ android {
                 ),
                 "proguard-rules.pro"
             )
-
+        }
+        getByName("debug") {
+            buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
+            isMinifyEnabled = false
         }
     }
     compileOptions {

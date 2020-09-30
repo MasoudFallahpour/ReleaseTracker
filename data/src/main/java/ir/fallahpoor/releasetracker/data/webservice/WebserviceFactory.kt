@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.data.webservice
 
+import ir.fallahpoor.releasetracker.data.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -14,7 +15,7 @@ class WebserviceFactory @Inject constructor() {
 
     companion object {
         private const val GITHUB_BASE_URL = "https://api.github.com/"
-        private const val ACCESS_TOKEN = "fe0127806085f63a9f6119102fbe43d8c4382b8d"
+        private const val ACCESS_TOKEN = BuildConfig.ACCESS_TOKEN
         private const val HEADER_NAME_AUTHORIZATION = "Authorization"
         private const val HEADER_VALUE_AUTHORIZATION = "token $ACCESS_TOKEN"
     }
