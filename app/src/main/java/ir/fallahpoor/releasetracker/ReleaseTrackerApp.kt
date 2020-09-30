@@ -25,14 +25,14 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
             .setRequiresBatteryNotLow(true)
             .build()
 
-        val workRequest = PeriodicWorkRequestBuilder<UpdateVersionsWorker>(30, TimeUnit.SECONDS)
+        val workRequest = PeriodicWorkRequestBuilder<UpdateVersionsWorker>(8, TimeUnit.HOURS)
             .setConstraints(constraints)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR,
                 1,
                 TimeUnit.HOURS
             )
-            .setInitialDelay(30, TimeUnit.SECONDS)
+            .setInitialDelay(2, TimeUnit.MINUTES)
             .addTag(getString(R.string.worker_tag))
             .build()
 
