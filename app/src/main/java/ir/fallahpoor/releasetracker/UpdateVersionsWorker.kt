@@ -60,11 +60,7 @@ class UpdateVersionsWorker
                 libraryRepo
             )
 
-            val libraryVersion = if (githubResponse.name.isNotBlank()) {
-                githubResponse.name
-            } else {
-                githubResponse.tagName
-            }
+            val libraryVersion = getLibraryVersion(library, githubResponse)
 
             val library = Library(library.libraryName, library.libraryUrl, libraryVersion)
             librariesDao.update(library)
@@ -72,9 +68,30 @@ class UpdateVersionsWorker
             Timber.d("Update SUCCESS (%s): %s", library.libraryName, githubResponse.name)
 
         } catch (t: Throwable) {
-            Timber.d("Update fFAILURE (%s): %s", library.libraryName, t.message)
+            Timber.d("Update FAILURE (%s): %s", library.libraryName, t.message)
         }
 
     }
+
+    private fun getLibraryVersion(library: Library, githubResponse: GithubResponse): String {
+        return if (githubResponse.name.isNotBlank()) {
+            getRefinedLibraryVersion(library, githubResponse.name)
+        } else {
+            getRefinedLibraryVersion(library, githubResponse.tagName)
+        }
+    }
+
+    /**
+     * Sometimes the given version may contain irrelevant words/letters. Some examples are
+     * 'Dagger 2.9.0' or 'v2.1.0'. This method removes such words/letters from the given
+     * version.
+     */
+    private fun getRefinedLibraryVersion(library: Library, version: String): String =
+        version
+            // Remove the library name
+            .replace(library.libraryName, "", ignoreCase = true)
+            // Remove the letter 'v'
+            .replace("v", "", ignoreCase = true)
+            .trim()
 
 }
