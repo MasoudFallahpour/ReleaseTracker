@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -64,7 +63,6 @@ class AddLibraryFragment : Fragment() {
     }
 
     private fun setupViews() {
-        setupLibraryHostTextView()
         addLibraryButton.setOnClickListener {
             if (inputsAreValid()) {
                 val libraryName = libraryNameEditText.text.toString()
@@ -76,22 +74,8 @@ class AddLibraryFragment : Fragment() {
 
     private fun inputsAreValid(): Boolean {
         val libraryNameIsValid = libraryNameIsValid()
-        val libraryHostIsValid = libraryHostIsValid()
         val libraryUrlIsValid = libraryUrlIsValid()
-        return libraryNameIsValid && libraryHostIsValid && libraryUrlIsValid
-    }
-
-    private fun setupLibraryHostTextView() {
-        val hosts = resources.getStringArray(R.array.hosts)
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_item_library_host, hosts)
-        libraryHostTextView.setAdapter(adapter)
-        libraryHostTextView.setOnItemClickListener { _, _, position, _ ->
-            if (position == 0) {
-                libraryUrlTextInputLayout.prefixText = getString(R.string.github_base_url)
-            } else {
-                libraryUrlTextInputLayout.prefixText = getString(R.string.jcenter_base_url)
-            }
-        }
+        return libraryNameIsValid && libraryUrlIsValid
     }
 
     private fun libraryNameIsValid(): Boolean {
@@ -100,18 +84,6 @@ class AddLibraryFragment : Fragment() {
         libraryNameTextInputLayout.error =
             if (!isValid) {
                 getString(R.string.library_name_empty)
-            } else {
-                ""
-            }
-        return isValid
-    }
-
-    private fun libraryHostIsValid(): Boolean {
-        val libraryHost = libraryHostTextView.text
-        val isValid = libraryHost.isNotBlank()
-        libraryHostTextInputLayout.error =
-            if (!isValid) {
-                getString(R.string.library_host_empty)
             } else {
                 ""
             }
