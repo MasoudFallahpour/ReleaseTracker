@@ -17,7 +17,7 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         setupTimber()
-        startWorkManager()
+        startUpdateWorker()
     }
 
     private fun setupTimber() {
@@ -26,7 +26,7 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
         }
     }
 
-    private fun startWorkManager() {
+    private fun startUpdateWorker() {
 
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)

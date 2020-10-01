@@ -54,14 +54,23 @@ class UpdateVersionsWorker
         val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
 
         try {
+
             val githubResponse: GithubResponse = githubWebservice.getLatestVersion(
                 libraryOwner,
                 libraryRepo
             )
-            librariesDao.update(
-                Library(library.libraryName, library.libraryUrl, githubResponse.name)
-            )
+
+            val libraryVersion = if (githubResponse.name.isNotBlank()) {
+                githubResponse.name
+            } else {
+                githubResponse.tagName
+            }
+
+            val library = Library(library.libraryName, library.libraryUrl, libraryVersion)
+            librariesDao.update(library)
+
             Timber.d("Update SUCCESS (%s): %s", library.libraryName, githubResponse.name)
+
         } catch (t: Throwable) {
             Timber.d("Update fFAILURE (%s): %s", library.libraryName, t.message)
         }
