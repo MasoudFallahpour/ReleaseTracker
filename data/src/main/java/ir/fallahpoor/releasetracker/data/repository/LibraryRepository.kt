@@ -14,4 +14,6 @@ interface LibraryRepository {
 
     suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String
 
+    suspend fun setFavourite(library: Library, isFavourite: Boolean)
+
 }

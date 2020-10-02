@@ -2,20 +2,20 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "70bcbfa94a8d5f3b86621bd2ff848e1f",
+    "identityHash": "d1cc34b5d7b002489c0b568e0bb9860e",
     "entities": [
       {
         "tableName": "Library",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL COLLATE NOCASE, `url` TEXT NOT NULL, `version` TEXT NOT NULL, PRIMARY KEY(`name`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL COLLATE NOCASE, `url` TEXT NOT NULL, `version` TEXT NOT NULL, `isFavourite` INTEGER NOT NULL, PRIMARY KEY(`name`))",
         "fields": [
           {
-            "fieldPath": "libraryName",
+            "fieldPath": "name",
             "columnName": "name",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "libraryUrl",
+            "fieldPath": "url",
             "columnName": "url",
             "affinity": "TEXT",
             "notNull": true
@@ -24,6 +24,12 @@
             "fieldPath": "version",
             "columnName": "version",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFavourite",
+            "columnName": "isFavourite",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -40,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '70bcbfa94a8d5f3b86621bd2ff848e1f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd1cc34b5d7b002489c0b568e0bb9860e')"
     ]
   }
 }

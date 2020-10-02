@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.data.repository
 
+import android.util.Log
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
@@ -73,6 +74,12 @@ class LibraryRepositoryImpl
 
         return getLibraryVersion(libraryName, libraryVersion)
 
+    }
+
+    override suspend fun setFavourite(library: Library, isFavourite: Boolean) {
+        Log.d("@@@@@@", "setFavourite: $isFavourite")
+        val newLibrary = library.copy(isFavourite = if (isFavourite) 1 else 0)
+        libraryDao.update(newLibrary)
     }
 
 }

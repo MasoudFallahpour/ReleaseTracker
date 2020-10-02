@@ -7,10 +7,9 @@ import androidx.room.PrimaryKey
 @Entity
 data class Library(
     @PrimaryKey
-    @ColumnInfo(name = "name", collate = ColumnInfo.NOCASE)
-    val libraryName: String,
-    @ColumnInfo(name = "url")
-    val libraryUrl: String,
-    @ColumnInfo(name = "version")
-    val version: String
+    @ColumnInfo(collate = ColumnInfo.NOCASE)
+    val name: String,
+    val url: String,
+    val version: String,
+    val isFavourite: Int = 0
 )

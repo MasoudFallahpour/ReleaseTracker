@@ -45,15 +45,15 @@ class UpdateVersionsWorker
         try {
 
             val libraryVersion: String =
-                libraryRepository.getLibraryVersion(library.libraryName, library.libraryUrl)
+                libraryRepository.getLibraryVersion(library.name, library.url)
 
-            val library = Library(library.libraryName, library.libraryUrl, libraryVersion)
+            val library = Library(library.name, library.url, libraryVersion)
             libraryRepository.updateLibrary(library)
 
-            Timber.d("Update SUCCESS (%s): %s", library.libraryName, libraryVersion)
+            Timber.d("Update SUCCESS (%s): %s", library.name, libraryVersion)
 
         } catch (t: Throwable) {
-            Timber.d("Update FAILURE (%s): %s", library.libraryName, t.message)
+            Timber.d("Update FAILURE (%s): %s", library.name, t.message)
         }
 
     }

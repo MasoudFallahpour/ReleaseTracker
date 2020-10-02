@@ -36,33 +36,51 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        librariesViewModel.getViewState()
+        librariesViewModel.librariesViewState
             .observe(viewLifecycleOwner) { viewState: ViewState<List<Library>> ->
                 when (viewState) {
-                    is ViewState.LoadingState -> handleLoadingState()
-                    is ViewState.DataLoadedState -> handleDataLoadedState(viewState)
+                    is ViewState.LoadingState -> showPrimaryLoading()
+                    is ViewState.DataLoadedState -> handleLibrariesLoadedState(viewState)
+                    is ViewState.ErrorState -> handleErrorState(viewState)
+                }
+            }
+        librariesViewModel.favouriteViewState
+            .observe(viewLifecycleOwner) { viewState: ViewState<Unit> ->
+                when (viewState) {
+                    is ViewState.LoadingState -> showSecondaryLoading()
+                    is ViewState.DataLoadedState -> hideSecondaryLoading()
                     is ViewState.ErrorState -> handleErrorState(viewState)
                 }
             }
     }
 
-    private fun handleLoadingState() {
-        showLoading()
+    private fun showPrimaryLoading() {
+        librariesPrimaryProgressBar.isVisible = true
     }
 
-    private fun handleDataLoadedState(viewState: ViewState.DataLoadedState<List<Library>>) {
-        hideLoading()
+    private fun hideSecondaryLoading() {
+        librariesSecondaryProgressBar.isVisible = false
+    }
+
+    private fun handleLibrariesLoadedState(viewState: ViewState.DataLoadedState<List<Library>>) {
+        hidePrimaryLoading()
         with(librariesRecyclerView) {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            adapter = LibrariesAdapter(viewState.data)
+            adapter = LibrariesAdapter(viewState.data) { library: Library, isFavourite: Boolean ->
+                librariesViewModel.setFavourite(library, isFavourite)
+            }
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
     }
 
-    private fun handleErrorState(viewState: ViewState.ErrorState<List<Library>>) {
-        hideLoading()
+    private fun <T> handleErrorState(viewState: ViewState.ErrorState<T>) {
+        hidePrimaryLoading()
         showSnackbar(viewState.errorMessage)
+    }
+
+    private fun showSecondaryLoading() {
+        librariesSecondaryProgressBar.isVisible = true
     }
 
     private fun setupViews() {
@@ -71,12 +89,8 @@ class LibrariesFragment : Fragment() {
         }
     }
 
-    private fun showLoading() {
-        librariesProgressBar.isVisible = true
-    }
-
-    private fun hideLoading() {
-        librariesProgressBar.isVisible = false
+    private fun hidePrimaryLoading() {
+        librariesPrimaryProgressBar.isVisible = false
     }
 
     private fun showSnackbar(message: String) {
