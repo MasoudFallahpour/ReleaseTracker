@@ -3,10 +3,10 @@ package ir.fallahpoor.releasetracker.libraries.viewmodel
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
 import ir.fallahpoor.releasetracker.common.BaseViewModel
-import ir.fallahpoor.releasetracker.common.ExceptionParser
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
+import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.launch
 
 class LibrariesViewModel

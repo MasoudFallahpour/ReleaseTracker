@@ -2,13 +2,15 @@ package ir.fallahpoor.releasetracker.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Entity(primaryKeys = ["name"])
+@Entity
 data class Library(
-    @ColumnInfo(name = "name")
+    @PrimaryKey
+    @ColumnInfo(name = "name", collate = ColumnInfo.NOCASE)
     val libraryName: String,
     @ColumnInfo(name = "url")
     val libraryUrl: String,
     @ColumnInfo(name = "version")
-    val version: String = ""
+    val version: String
 )

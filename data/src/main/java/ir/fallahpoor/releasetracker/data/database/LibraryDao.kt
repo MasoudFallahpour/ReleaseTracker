@@ -18,4 +18,7 @@ interface LibraryDao {
     @Delete
     suspend fun delete(library: Library)
 
+    @Query("SELECT * FROM library WHERE name = :libraryName COLLATE NOCASE")
+    suspend fun get(libraryName: String): Library?
+
 }

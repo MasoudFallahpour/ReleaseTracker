@@ -3,16 +3,15 @@ package ir.fallahpoor.releasetracker.addlibrary.viewmodel
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
 import ir.fallahpoor.releasetracker.common.BaseViewModel
-import ir.fallahpoor.releasetracker.common.ExceptionParser
 import ir.fallahpoor.releasetracker.common.ViewState
+import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
-import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
+import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.launch
 
 class AddLibraryViewModel
 @ViewModelInject constructor(
     private val libraryRepository: LibraryRepository,
-    private val networkUtils: NetworkUtils,
     private val exceptionParser: ExceptionParser
 ) : BaseViewModel<Unit>() {
 
@@ -23,11 +22,15 @@ class AddLibraryViewModel
             setViewState(ViewState.loading())
 
             try {
-                if (networkUtils.urlExists(libraryUrl)) {
-                    libraryRepository.addLibrary(libraryName, libraryUrl)
-                    setViewState(ViewState.success(Unit))
+                val library: Library? = libraryRepository.getLibrary(libraryName)
+                val libraryAlreadyExists = library != null
+                if (libraryAlreadyExists) {
+                    setViewState(ViewState.error("Library already exists"))
                 } else {
-                    setViewState(ViewState.error("Library URL does not exist"))
+                    val libraryVersion: String =
+                        libraryRepository.getLibraryVersion(libraryName, libraryUrl)
+                    libraryRepository.addLibrary(libraryName, libraryUrl, libraryVersion)
+                    setViewState(ViewState.success(Unit))
                 }
             } catch (t: Throwable) {
                 val message = exceptionParser.getMessage(t)

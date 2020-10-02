@@ -2,19 +2,72 @@ package ir.fallahpoor.releasetracker.data.repository
 
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
+import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
 @Inject constructor(
-    private val libraryDao: LibraryDao
+    private val libraryDao: LibraryDao,
+    private val githubWebservice: GithubWebservice
 ) : LibraryRepository {
 
-    override suspend fun addLibrary(libraryName: String, libraryUrl: String) {
-        libraryDao.insert(Library(libraryName, libraryUrl))
+    companion object {
+        private const val GITHUB_BASE_URL = "https://github.com/"
     }
+
+    override suspend fun addLibrary(
+        libraryName: String,
+        libraryUrl: String,
+        libraryVersion: String
+    ) {
+        libraryDao.insert(Library(libraryName, libraryUrl, libraryVersion))
+    }
+
+    override suspend fun updateLibrary(library: Library) {
+        libraryDao.update(library)
+    }
+
+    private fun getLibraryVersion(libraryName: String, libraryVersion: LibraryVersion): String {
+        return if (libraryVersion.name.isNotBlank()) {
+            getRefinedLibraryVersion(libraryName, libraryVersion.name)
+        } else {
+            getRefinedLibraryVersion(libraryName, libraryVersion.tagName)
+        }
+    }
+
+    /**
+     * Sometimes the given version may contain irrelevant words/letters. Some examples are
+     * 'Dagger 2.9.0' or 'v2.1.0'. This method removes such words/letters from the given
+     * version.
+     */
+    private fun getRefinedLibraryVersion(libraryName: String, version: String): String =
+        version
+            // Remove the library name
+            .replace(libraryName, "", ignoreCase = true)
+            // Remove the letter 'v'
+            .replace("v", "", ignoreCase = true)
+            .trim()
 
     override suspend fun getLibraries(): List<Library> {
         return libraryDao.getAll()
+    }
+
+    override suspend fun getLibrary(libraryName: String): Library? {
+        return libraryDao.get(libraryName)
+    }
+
+    override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
+
+        val libraryPath = libraryUrl.removePrefix(GITHUB_BASE_URL)
+        val libraryOwner = libraryPath.substring(0 until libraryPath.indexOf("/"))
+        val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
+
+        val libraryVersion: LibraryVersion =
+            githubWebservice.getLatestVersion(libraryOwner, libraryRepo)
+
+        return getLibraryVersion(libraryName, libraryVersion)
+
     }
 
 }
