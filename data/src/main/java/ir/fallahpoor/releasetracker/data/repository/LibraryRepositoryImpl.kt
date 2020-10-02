@@ -4,6 +4,7 @@ import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
+import java.util.*
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
@@ -42,9 +43,13 @@ class LibraryRepositoryImpl
      * version.
      */
     private fun getRefinedLibraryVersion(libraryName: String, version: String): String =
-        version
+        version.toLowerCase(Locale.US)
             // Remove the library name
             .replace(libraryName, "", ignoreCase = true)
+            // Remove the word "version"
+            .replace("version", "", ignoreCase = true)
+            // Remove the word "release"
+            .replace("release", "", ignoreCase = true)
             // Remove the letter 'v'
             .replace("v", "", ignoreCase = true)
             .trim()
