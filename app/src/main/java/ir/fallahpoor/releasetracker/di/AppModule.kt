@@ -1,6 +1,9 @@
 package ir.fallahpoor.releasetracker.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
+
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -18,6 +21,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
+
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
 
     @Provides
     @Singleton

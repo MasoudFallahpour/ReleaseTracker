@@ -39,15 +39,15 @@ class LibrariesAdapter(
         private val nameTextView: TextView = itemView.findViewById(R.id.libraryNameTextView)
         private val urlTextView: TextView = itemView.findViewById(R.id.libraryUrlTextView)
         private val versionTextView: TextView = itemView.findViewById(R.id.libraryVersionTextView)
-        private val favouriteCheckBox: CheckBox = itemView.findViewById(R.id.favouriteCheckBox)
+        private val pinCheckBox: CheckBox = itemView.findViewById(R.id.pinCheckBox)
 
         fun bindData(library: Library) {
             nameTextView.text = library.name
             urlTextView.text = library.url
             versionTextView.text = library.version
-            favouriteCheckBox.isChecked = library.isFavourite == 1
-            favouriteCheckBox.setOnClickListener {
-                val isChecked = library.isFavourite == 0
+            pinCheckBox.isChecked = library.pinned == 1
+            pinCheckBox.setOnClickListener {
+                val isChecked = library.pinned == 0
                 favoriteClickListener.invoke(library, isChecked)
             }
         }

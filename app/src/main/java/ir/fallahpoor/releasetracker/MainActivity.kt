@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
+        setSupportActionBar(toolbar)
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         NavigationUI.setupWithNavController(toolbar, navHostFragment.navController)

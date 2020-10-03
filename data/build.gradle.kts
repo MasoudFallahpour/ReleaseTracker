@@ -49,6 +49,7 @@ android {
 
 dependencies {
     implementation(Dependencies.Data.kotlinStdLib)
+    implementation(Dependencies.Data.core)
     implementation(Dependencies.Data.room)
     kapt(Dependencies.Data.roomCompiler)
     implementation(Dependencies.Data.roomKtx)

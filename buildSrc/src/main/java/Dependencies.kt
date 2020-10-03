@@ -11,11 +11,13 @@ object Dependencies {
     private object Common {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         const val room = "androidx.room:room-runtime:$roomVersion"
+        const val core = "androidx.core:core-ktx:1.3.1"
     }
 
     object App {
         const val kotlinStdLib = Common.kotlinStdLib
-        const val core = "androidx.core:core-ktx:1.3.1"
+        const val core = Common.core
+        const val preference = "androidx.preference:preference:1.1.1"
         const val appCompat = "androidx.appcompat:appcompat:1.2.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.1"
         const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
@@ -37,6 +39,7 @@ object Dependencies {
 
     object Data {
         const val kotlinStdLib = Common.kotlinStdLib
+        const val core = Common.core
         const val room = Common.room
         const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
         const val roomKtx = "androidx.room:room-ktx:$roomVersion"

@@ -1,11 +1,11 @@
 package ir.fallahpoor.releasetracker.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.sqlite.db.SimpleSQLiteQuery
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
-import java.util.*
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
@@ -34,8 +34,18 @@ class LibraryRepositoryImpl
         return libraryDao.get(libraryName)
     }
 
-    override fun getLibrariesByLiveData(): LiveData<List<Library>> {
-        return libraryDao.getAllLiveData()
+    override fun getLibrariesByLiveData(
+        sortingOrder: LibraryRepository.SortingOrder
+    ): LiveData<List<Library>> {
+
+        val query = when (sortingOrder) {
+            LibraryRepository.SortingOrder.A_TO_Z -> "SELECT * FROM library ORDER BY name ASC"
+            LibraryRepository.SortingOrder.Z_TO_A -> "SELECT * FROM library ORDER BY name DESC"
+            LibraryRepository.SortingOrder.PINNED_FIRST -> "SELECT * FROM library ORDER BY pinned DESC, name ASC"
+        }
+
+        return libraryDao.getAllLiveData(SimpleSQLiteQuery(query))
+
     }
 
     private fun getLibraryVersion(libraryName: String, libraryVersion: LibraryVersion): String {
@@ -52,15 +62,11 @@ class LibraryRepositoryImpl
      * version.
      */
     private fun getRefinedLibraryVersion(libraryName: String, version: String): String =
-        version.toLowerCase(Locale.US)
-            // Remove the library name
-            .replace(libraryName, "", ignoreCase = true)
-            // Remove the word "version"
-            .replace("version", "", ignoreCase = true)
-            // Remove the word "release"
-            .replace("release", "", ignoreCase = true)
-            // Remove the letter 'v'
-            .replace("v", "", ignoreCase = true)
+        version
+            .replace(libraryName, "", ignoreCase = true) // Remove the library name
+            .replace("version", "", ignoreCase = true) // Remove the word "version"
+            .replace("release", "", ignoreCase = true) // Remove the word "release"
+            .replace("v", "", ignoreCase = true) // Remove the letter 'v'
             .trim()
 
     override suspend fun getLibraries(): List<Library> {
@@ -80,8 +86,8 @@ class LibraryRepositoryImpl
 
     }
 
-    override suspend fun setFavourite(library: Library, isFavourite: Boolean) {
-        val newLibrary = library.copy(isFavourite = if (isFavourite) 1 else 0)
+    override suspend fun setPinned(library: Library, pinned: Boolean) {
+        val newLibrary = library.copy(pinned = if (pinned) 1 else 0)
         libraryDao.update(newLibrary)
     }
 

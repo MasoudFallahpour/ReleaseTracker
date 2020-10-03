@@ -11,5 +11,5 @@ data class Library(
     val name: String,
     val url: String,
     val version: String,
-    val isFavourite: Int = 0
+    val pinned: Int = 0
 )

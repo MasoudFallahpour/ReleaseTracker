@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d1cc34b5d7b002489c0b568e0bb9860e",
+    "identityHash": "56d8a3011fd10d548f10043d9120f20c",
     "entities": [
       {
         "tableName": "Library",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL COLLATE NOCASE, `url` TEXT NOT NULL, `version` TEXT NOT NULL, `isFavourite` INTEGER NOT NULL, PRIMARY KEY(`name`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL COLLATE NOCASE, `url` TEXT NOT NULL, `version` TEXT NOT NULL, `pinned` INTEGER NOT NULL, PRIMARY KEY(`name`))",
         "fields": [
           {
             "fieldPath": "name",
@@ -27,8 +27,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "isFavourite",
-            "columnName": "isFavourite",
+            "fieldPath": "pinned",
+            "columnName": "pinned",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -46,7 +46,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd1cc34b5d7b002489c0b568e0bb9860e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '56d8a3011fd10d548f10043d9120f20c')"
     ]
   }
 }

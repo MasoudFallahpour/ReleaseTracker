@@ -2,13 +2,14 @@ package ir.fallahpoor.releasetracker.data.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import ir.fallahpoor.releasetracker.data.entity.Library
 
 @Dao
 interface LibraryDao {
 
-    @Query("SELECT * FROM library ORDER BY name")
-    fun getAllLiveData(): LiveData<List<Library>>
+    @RawQuery(observedEntities = [Library::class])
+    fun getAllLiveData(query: SupportSQLiteQuery): LiveData<List<Library>>
 
     @Query("SELECT * FROM library ORDER BY name")
     suspend fun getAll(): List<Library>

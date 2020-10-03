@@ -47,7 +47,7 @@ class UpdateVersionsWorker
             val libraryVersion: String =
                 libraryRepository.getLibraryVersion(library.name, library.url)
 
-            val library = Library(library.name, library.url, libraryVersion)
+            val library = library.copy(version = libraryVersion)
             libraryRepository.updateLibrary(library)
 
             Timber.d("Update SUCCESS (%s): %s", library.name, libraryVersion)

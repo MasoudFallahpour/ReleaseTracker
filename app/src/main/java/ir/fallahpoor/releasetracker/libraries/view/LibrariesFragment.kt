@@ -1,9 +1,7 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -23,7 +21,13 @@ class LibrariesFragment : Fragment() {
 
     private val librariesViewModel: LibrariesViewModel by viewModels()
     private val librariesAdapter = LibrariesAdapter { library: Library, isFavourite: Boolean ->
-        librariesViewModel.setFavourite(library, isFavourite)
+        librariesViewModel.setPinned(library, isFavourite)
+    }
+    private var currentSortingOrder: SortingOrderDialogFragment.SortingOrder? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -36,6 +40,18 @@ class LibrariesFragment : Fragment() {
         setupViews()
         observeViewModel()
         librariesViewModel.getLibraries()
+    }
+
+    private fun setupViews() {
+        addLibraryButton.setOnClickListener {
+            findNavController().navigate(R.id.action_librariesFragment_to_addLibraryFragment)
+        }
+        with(librariesRecyclerView) {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = librariesAdapter
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        }
     }
 
     private fun observeViewModel() {
@@ -56,6 +72,7 @@ class LibrariesFragment : Fragment() {
                 }
             }
     }
+
 
     private fun showPrimaryLoading() {
         librariesPrimaryProgressBar.isVisible = true
@@ -79,18 +96,6 @@ class LibrariesFragment : Fragment() {
         librariesSecondaryProgressBar.isVisible = true
     }
 
-    private fun setupViews() {
-        addLibraryButton.setOnClickListener {
-            findNavController().navigate(R.id.action_librariesFragment_to_addLibraryFragment)
-        }
-        with(librariesRecyclerView) {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = librariesAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        }
-    }
-
     private fun hidePrimaryLoading() {
         librariesPrimaryProgressBar.isVisible = false
     }
@@ -102,6 +107,40 @@ class LibrariesFragment : Fragment() {
             Snackbar.LENGTH_LONG
         ).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
             .show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_libraries, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.action_sort) {
+            showSortingOrderSelectionDialog()
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun showSortingOrderSelectionDialog() {
+        val sortingOrderDialog = SortingOrderDialogFragment()
+        sortingOrderDialog.setListener { sortingOrder: SortingOrderDialogFragment.SortingOrder ->
+            if (sortingOrder != currentSortingOrder) {
+                currentSortingOrder = sortingOrder
+                librariesViewModel.getLibraries(getSortingOrder(sortingOrder))
+            }
+        }
+        sortingOrderDialog.show(requireActivity().supportFragmentManager, null)
+    }
+
+    private fun getSortingOrder(
+        sortingOrder: SortingOrderDialogFragment.SortingOrder
+    ): LibrariesViewModel.SortingOrder {
+        return when (sortingOrder) {
+            SortingOrderDialogFragment.SortingOrder.A_TO_Z -> LibrariesViewModel.SortingOrder.A_TO_Z
+            SortingOrderDialogFragment.SortingOrder.Z_TO_A -> LibrariesViewModel.SortingOrder.Z_TO_A
+            SortingOrderDialogFragment.SortingOrder.PINNED_FIRST -> LibrariesViewModel.SortingOrder.PINNED_FIRST
+        }
     }
 
 }
