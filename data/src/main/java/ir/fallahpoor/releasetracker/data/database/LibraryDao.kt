@@ -22,7 +22,7 @@ interface LibraryDao {
     @Delete
     suspend fun delete(library: Library)
 
-    @Query("SELECT * FROM library WHERE name = :libraryName COLLATE NOCASE")
+    @Query("SELECT * FROM library WHERE name = :libraryName COLLATE NOCASE LIMIT 1")
     suspend fun get(libraryName: String): Library?
 
 }
