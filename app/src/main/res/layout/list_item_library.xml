@@ -64,7 +64,6 @@
         android:textSize="@dimen/text_size_normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/libraryNameTextView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Library version" />
 
