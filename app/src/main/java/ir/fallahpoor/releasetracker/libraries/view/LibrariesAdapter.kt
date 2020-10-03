@@ -10,9 +10,10 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
 
 class LibrariesAdapter(
-    private val libraries: List<Library>,
     private val favoriteClickListener: (Library, Boolean) -> Unit
 ) : RecyclerView.Adapter<LibrariesAdapter.LibraryViewHolder>() {
+
+    private val libraries = mutableListOf<Library>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -26,6 +27,12 @@ class LibrariesAdapter(
     }
 
     override fun getItemCount() = libraries.size
+
+    fun setLibraries(libraries: List<Library>) {
+        this.libraries.clear()
+        this.libraries.addAll(libraries)
+        notifyDataSetChanged()
+    }
 
     inner class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

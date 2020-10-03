@@ -1,10 +1,14 @@
 package ir.fallahpoor.releasetracker.data.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import ir.fallahpoor.releasetracker.data.entity.Library
 
 @Dao
 interface LibraryDao {
+
+    @Query("SELECT * FROM library ORDER BY name")
+    fun getAllLiveData(): LiveData<List<Library>>
 
     @Query("SELECT * FROM library ORDER BY name")
     suspend fun getAll(): List<Library>

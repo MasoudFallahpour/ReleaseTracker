@@ -1,6 +1,6 @@
 package ir.fallahpoor.releasetracker.data.repository
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
@@ -28,6 +28,14 @@ class LibraryRepositoryImpl
 
     override suspend fun updateLibrary(library: Library) {
         libraryDao.update(library)
+    }
+
+    override suspend fun getLibrary(libraryName: String): Library? {
+        return libraryDao.get(libraryName)
+    }
+
+    override fun getLibrariesByLiveData(): LiveData<List<Library>> {
+        return libraryDao.getAllLiveData()
     }
 
     private fun getLibraryVersion(libraryName: String, libraryVersion: LibraryVersion): String {
@@ -59,10 +67,6 @@ class LibraryRepositoryImpl
         return libraryDao.getAll()
     }
 
-    override suspend fun getLibrary(libraryName: String): Library? {
-        return libraryDao.get(libraryName)
-    }
-
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
 
         val libraryPath = libraryUrl.removePrefix(GITHUB_BASE_URL)
@@ -77,7 +81,6 @@ class LibraryRepositoryImpl
     }
 
     override suspend fun setFavourite(library: Library, isFavourite: Boolean) {
-        Log.d("@@@@@@", "setFavourite: $isFavourite")
         val newLibrary = library.copy(isFavourite = if (isFavourite) 1 else 0)
         libraryDao.update(newLibrary)
     }

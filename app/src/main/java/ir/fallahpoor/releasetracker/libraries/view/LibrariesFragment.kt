@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.fragment_libraries.*
 class LibrariesFragment : Fragment() {
 
     private val librariesViewModel: LibrariesViewModel by viewModels()
+    private val librariesAdapter = LibrariesAdapter { library: Library, isFavourite: Boolean ->
+        librariesViewModel.setFavourite(library, isFavourite)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,14 +67,7 @@ class LibrariesFragment : Fragment() {
 
     private fun handleLibrariesLoadedState(viewState: ViewState.DataLoadedState<List<Library>>) {
         hidePrimaryLoading()
-        with(librariesRecyclerView) {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = LibrariesAdapter(viewState.data) { library: Library, isFavourite: Boolean ->
-                librariesViewModel.setFavourite(library, isFavourite)
-            }
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        }
+        librariesAdapter.setLibraries(viewState.data)
     }
 
     private fun <T> handleErrorState(viewState: ViewState.ErrorState<T>) {
@@ -86,6 +82,12 @@ class LibrariesFragment : Fragment() {
     private fun setupViews() {
         addLibraryButton.setOnClickListener {
             findNavController().navigate(R.id.action_librariesFragment_to_addLibraryFragment)
+        }
+        with(librariesRecyclerView) {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = librariesAdapter
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
     }
 

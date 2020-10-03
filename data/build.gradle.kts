@@ -56,4 +56,5 @@ dependencies {
     implementation(Dependencies.Data.retrofit)
     implementation(Dependencies.Data.retrofitConverterGson)
     implementation(Dependencies.Data.okhttpLoggingInterceptor)
+    implementation(Dependencies.Data.liveData)
 }

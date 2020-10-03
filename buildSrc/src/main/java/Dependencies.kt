@@ -6,6 +6,7 @@ object Dependencies {
     private const val hiltJetpackVersion = "1.0.0-alpha01"
     private const val roomVersion = "2.2.5"
     private const val retrofitVersion = "2.9.0"
+    private const val lifeCycleVersion = "2.2.0"
 
     private object Common {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -27,7 +28,7 @@ object Dependencies {
         const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion"
         const val hiltJetpackCompiler = "androidx.hilt:hilt-compiler:$hiltJetpackVersion"
         const val hiltWorkManager = "androidx.hilt:hilt-work:$hiltJetpackVersion"
-        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:$lifeCycleVersion"
         const val room = Common.room
         const val materialProgressBar = "me.zhanghai.android.materialprogressbar:library:1.6.1"
         const val workManager = "androidx.work:work-runtime-ktx:2.4.0"
@@ -43,6 +44,7 @@ object Dependencies {
         const val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
         const val retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
         const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
+        const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycleVersion"
     }
 
 }

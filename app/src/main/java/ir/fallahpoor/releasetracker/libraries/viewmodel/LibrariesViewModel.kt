@@ -1,10 +1,7 @@
 package ir.fallahpoor.releasetracker.libraries.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
@@ -17,27 +14,19 @@ class LibrariesViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    private val _librariesViewState = MutableLiveData<ViewState<List<Library>>>()
     private val _favouriteViewState = MutableLiveData<ViewState<Unit>>()
-    val librariesViewState: LiveData<ViewState<List<Library>>> = _librariesViewState
+    private val triggerLiveData = MutableLiveData<Unit>()
+
     val favouriteViewState: LiveData<ViewState<Unit>> = _favouriteViewState
-
-    fun getLibraries() {
-
-        viewModelScope.launch {
-
-            _librariesViewState.value = ViewState.loading()
-
-            try {
-                val libraries: List<Library> = libraryRepository.getLibraries()
-                _librariesViewState.value = ViewState.success(libraries)
-            } catch (t: Throwable) {
-                val message = exceptionParser.getMessage(t)
-                _librariesViewState.value = ViewState.error(message)
+    val librariesViewState: LiveData<ViewState<List<Library>>> =
+        Transformations.switchMap(triggerLiveData) {
+            Transformations.map(libraryRepository.getLibrariesByLiveData()) { libraries: List<Library> ->
+                ViewState.success(libraries)
             }
-
         }
 
+    fun getLibraries() {
+        triggerLiveData.value = Unit
     }
 
     fun setFavourite(library: Library, isFavourite: Boolean) {

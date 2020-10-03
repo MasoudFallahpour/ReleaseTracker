@@ -28,7 +28,7 @@ class UpdateVersionsWorker
                 Result.retry()
             } else {
                 libraryRepository.getLibraries()
-                    .map { library: Library ->
+                    .forEach { library: Library ->
                         launch {
                             getLatestVersion(library)
                         }
