@@ -73,7 +73,6 @@ class LibrariesFragment : Fragment() {
             }
     }
 
-
     private fun showPrimaryLoading() {
         librariesPrimaryProgressBar.isVisible = true
     }
