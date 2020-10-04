@@ -5,15 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
 
 class LibrariesAdapter(
-    private val favoriteClickListener: (Library, Boolean) -> Unit
-) : RecyclerView.Adapter<LibrariesAdapter.LibraryViewHolder>() {
-
-    private val libraries = mutableListOf<Library>()
+    private val pinClickListener: (Library, Boolean) -> Unit
+) : ListAdapter<Library, LibrariesAdapter.LibraryViewHolder>(LibraryDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -22,16 +22,8 @@ class LibrariesAdapter(
     }
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
-        val library: Library = libraries[position]
+        val library: Library = getItem(position)
         holder.bindData(library)
-    }
-
-    override fun getItemCount() = libraries.size
-
-    fun setLibraries(libraries: List<Library>) {
-        this.libraries.clear()
-        this.libraries.addAll(libraries)
-        notifyDataSetChanged()
     }
 
     inner class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,10 +40,22 @@ class LibrariesAdapter(
             pinCheckBox.isChecked = library.pinned == 1
             pinCheckBox.setOnClickListener {
                 val isChecked = library.pinned == 0
-                favoriteClickListener.invoke(library, isChecked)
+                pinClickListener.invoke(library, isChecked)
             }
         }
 
+    }
+
+}
+
+class LibraryDiffCallback : DiffUtil.ItemCallback<Library>() {
+
+    override fun areItemsTheSame(oldItem: Library, newItem: Library): Boolean {
+        return oldItem.name == newItem.name
+    }
+
+    override fun areContentsTheSame(oldItem: Library, newItem: Library): Boolean {
+        return oldItem == newItem
     }
 
 }

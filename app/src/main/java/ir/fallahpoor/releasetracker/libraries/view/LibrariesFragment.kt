@@ -84,7 +84,7 @@ class LibrariesFragment : Fragment() {
 
     private fun handleLibrariesLoadedState(viewState: ViewState.DataLoadedState<List<Library>>) {
         hidePrimaryLoading()
-        librariesAdapter.setLibraries(viewState.data)
+        librariesAdapter.submitList(viewState.data)
     }
 
     private fun <T> handleErrorState(viewState: ViewState.ErrorState<T>) {
