@@ -17,7 +17,7 @@ object Dependencies {
     object App {
         const val kotlinStdLib = Common.kotlinStdLib
         const val core = Common.core
-        const val preference = "androidx.preference:preference:1.1.1"
+        const val preference = "androidx.preference:preference-ktx:1.1.1"
         const val appCompat = "androidx.appcompat:appcompat:1.2.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.1"
         const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
