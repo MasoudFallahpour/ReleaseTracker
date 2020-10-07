@@ -1,6 +1,9 @@
-# \[ 🚧 Work in progress 🚧 \]
-Release Tracker is an Android app that shows the latest version of some popular Android libraries.
+# Release Tracker \[ 🚧 Work in progress 🚧 \]
+Release Tracker is an Android app that shows the latest version of Github-hosted libraries, tools, frameworks, or whatever!
 
+By default it's pre-populated with a list of some popular Android libraries, and you can add your own libraries too.
+
+# Screenshots
 ![Screenshots](/screenshots/screenshots_1.png?raw=true "Screenshots")
 
 # How it works
