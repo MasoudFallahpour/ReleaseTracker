@@ -1,6 +1,8 @@
 # \[ 🚧 Work in progress 🚧 \]
 Release Tracker is an Android app that shows the latest version of some popular Android libraries.
 
+![Screenshots](/screenshots/screenshots_1.png?raw=true "Screenshots")
+
 # How it works
 There is a [worker](https://developer.android.com/topic/libraries/architecture/workmanager) that runs 3 times a day. In each run, for each library, it connects to the [Github REST API](https://docs.github.com/en/free-pro-team@latest/rest) and fetches the latest version of the library.
 
