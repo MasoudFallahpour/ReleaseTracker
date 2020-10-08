@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "34086092595",
+    "firebase_url": "https://release-tracker-3b360.firebaseio.com",
+    "project_id": "release-tracker-3b360",
+    "storage_bucket": "release-tracker-3b360.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34086092595:android:99582a45f4df5b0a0f0846",
+        "android_client_info": {
+          "package_name": "ir.fallahpoor.releasetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34086092595-34toonmjbdqlbgi6g57dr412c6gg17dn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8P5GWMwuHajpONqILBDIfnNuxr9_X35Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34086092595-34toonmjbdqlbgi6g57dr412c6gg17dn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

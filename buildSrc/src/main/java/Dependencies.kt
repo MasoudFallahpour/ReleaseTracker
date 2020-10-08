@@ -35,6 +35,8 @@ object Dependencies {
         const val materialProgressBar = "me.zhanghai.android.materialprogressbar:library:1.6.1"
         const val workManager = "androidx.work:work-runtime-ktx:2.4.0"
         const val timber = "com.jakewharton.timber:timber:4.7.1"
+        const val firebase = "com.google.firebase:firebase-bom:25.12.0"
+        const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     }
 
     object Data {

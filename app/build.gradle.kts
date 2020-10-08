@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     kotlin("android")
     kotlin("android.extensions")
     kotlin("kapt")
@@ -62,5 +64,7 @@ dependencies {
     implementation(Dependencies.App.materialProgressBar)
     implementation(Dependencies.App.workManager)
     implementation(Dependencies.App.timber)
+    implementation(platform(Dependencies.App.firebase))
+    implementation(Dependencies.App.crashlytics)
     implementation(project(":data"))
 }
