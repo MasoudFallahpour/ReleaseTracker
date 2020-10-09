@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ir.fallahpoor.releasetracker.R
 import kotlinx.android.synthetic.main.fragment_delete_confirmation.*
 
-class DeleteConfirmationDialog : BottomSheetDialogFragment() {
+class DeleteConfirmationDialog : BaseBottomSheetDialogFragment() {
 
     interface Listener {
 

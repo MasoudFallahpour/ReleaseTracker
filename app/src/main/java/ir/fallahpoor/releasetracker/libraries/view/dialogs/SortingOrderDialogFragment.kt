@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Nullable
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
@@ -13,7 +12,7 @@ import kotlinx.android.synthetic.main.sorting_order_dialog.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SortingOrderDialogFragment : BottomSheetDialogFragment() {
+class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
 
     enum class SortingOrder {
         A_TO_Z,
