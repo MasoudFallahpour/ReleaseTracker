@@ -8,21 +8,21 @@ import androidx.annotation.Nullable
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
-import kotlinx.android.synthetic.main.sorting_order_dialog.*
+import kotlinx.android.synthetic.main.dialog_sort.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
+class SortDialog : BaseBottomSheetDialogFragment() {
 
     companion object {
-        const val TAG = "SortingOrderDialogFragment"
+        const val TAG = "SortDialog"
     }
 
     interface SortListener {
-        fun orderSelected(sortingOrder: SortingOrder)
+        fun orderSelected(order: Order)
     }
 
-    enum class SortingOrder {
+    enum class Order {
         A_TO_Z,
         Z_TO_A,
         PINNED_FIRST
@@ -31,15 +31,15 @@ class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
     @Inject
     lateinit var localStorage: LocalStorage
     private var listener: SortListener? = null
-    private var defaultSortingOrder: SortingOrder = SortingOrder.A_TO_Z
+    private var defaultOrder: Order = Order.A_TO_Z
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val sortingOrder = localStorage.getSortingOrder()
-        defaultSortingOrder = if (sortingOrder != null) {
-            SortingOrder.valueOf(sortingOrder)
+        defaultOrder = if (sortingOrder != null) {
+            Order.valueOf(sortingOrder)
         } else {
-            SortingOrder.A_TO_Z
+            Order.A_TO_Z
         }
     }
 
@@ -48,7 +48,7 @@ class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
         inflater: LayoutInflater,
         @Nullable container: ViewGroup?,
         @Nullable savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.sorting_order_dialog, container, false)
+    ): View? = inflater.inflate(R.layout.dialog_sort, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()
@@ -57,20 +57,20 @@ class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
     private fun setupViews() {
 
         val onClickListener = View.OnClickListener { view: View ->
-            val sortingOrder = when (view.id) {
-                R.id.sortingOrderAtoZTextView -> SortingOrder.A_TO_Z
-                R.id.sortingOrderZtoATextView -> SortingOrder.Z_TO_A
-                R.id.sortingOrderPinnedFirstTextView -> SortingOrder.PINNED_FIRST
-                else -> SortingOrder.A_TO_Z
+            val order = when (view.id) {
+                R.id.sortingOrderAtoZTextView -> Order.A_TO_Z
+                R.id.sortingOrderZtoATextView -> Order.Z_TO_A
+                R.id.sortingOrderPinnedFirstTextView -> Order.PINNED_FIRST
+                else -> Order.A_TO_Z
             }
-            listener?.orderSelected(sortingOrder)
+            listener?.orderSelected(order)
             dismiss()
         }
 
-        when (defaultSortingOrder) {
-            SortingOrder.A_TO_Z -> sortingOrderAtoZTextView.isSelected = true
-            SortingOrder.Z_TO_A -> sortingOrderZtoATextView.isSelected = true
-            SortingOrder.PINNED_FIRST -> sortingOrderPinnedFirstTextView.isSelected = true
+        when (defaultOrder) {
+            Order.A_TO_Z -> sortingOrderAtoZTextView.isSelected = true
+            Order.Z_TO_A -> sortingOrderZtoATextView.isSelected = true
+            Order.PINNED_FIRST -> sortingOrderPinnedFirstTextView.isSelected = true
         }
 
         sortingOrderAtoZTextView.setOnClickListener(onClickListener)

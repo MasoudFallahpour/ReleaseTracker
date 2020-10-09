@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import ir.fallahpoor.releasetracker.R
-import kotlinx.android.synthetic.main.fragment_delete_confirmation.*
+import kotlinx.android.synthetic.main.dialog_delete.*
 
-class DeleteConfirmationDialog : BaseBottomSheetDialogFragment() {
+class DeleteDialog : BaseBottomSheetDialogFragment() {
 
     companion object {
-        const val TAG = "DeleteConfirmationDialog"
+        const val TAG = "DeleteDialog"
     }
 
     interface DeleteListener {
@@ -28,7 +28,7 @@ class DeleteConfirmationDialog : BaseBottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_delete_confirmation, container, false)
+    ): View? = inflater.inflate(R.layout.dialog_delete, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()

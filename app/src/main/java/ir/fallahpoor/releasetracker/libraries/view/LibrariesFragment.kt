@@ -19,8 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteConfirmationDialog
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortingOrderDialogFragment
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteDialog
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortDialog
 import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemDetailsLookup
 import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemKeyProvider
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
@@ -36,7 +36,7 @@ class LibrariesFragment : Fragment() {
     private val librariesViewModel: LibrariesViewModel by viewModels()
     private lateinit var selectionTracker: SelectionTracker<String>
     private lateinit var librariesAdapter: LibrariesAdapter
-    private var currentSortingOrder: SortingOrderDialogFragment.SortingOrder? = null
+    private var currentOrder: SortDialog.Order? = null
     private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -210,18 +210,20 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun restoreDeleteDialogIfPresent() {
-        val deleteDialog =
-            requireActivity().supportFragmentManager.findFragmentByTag(DeleteConfirmationDialog.TAG)
+        val deleteDialog = requireActivity()
+            .supportFragmentManager
+            .findFragmentByTag(DeleteDialog.TAG)
         deleteDialog?.let {
-            (it as DeleteConfirmationDialog).setListener(DeleteListener())
+            (it as DeleteDialog).setListener(DeleteListener())
         }
     }
 
     private fun restoreSortDialogIfPresent() {
-        val sortDialog =
-            requireActivity().supportFragmentManager.findFragmentByTag(SortingOrderDialogFragment.TAG)
+        val sortDialog = requireActivity()
+            .supportFragmentManager
+            .findFragmentByTag(SortDialog.TAG)
         sortDialog?.let {
-            (it as SortingOrderDialogFragment).setListener(SortListener())
+            (it as SortDialog).setListener(SortListener())
         }
     }
 
@@ -239,9 +241,9 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun showSortingOrderSelectionDialog() {
-        val dialogFragment = SortingOrderDialogFragment()
+        val dialogFragment = SortDialog()
         dialogFragment.setListener(SortListener())
-        showDialogFragment(dialogFragment, SortingOrderDialogFragment.TAG)
+        showDialogFragment(dialogFragment, SortDialog.TAG)
     }
 
     inner class ActionModeCallback : ActionMode.Callback {
@@ -271,16 +273,16 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun showDeleteConfirmationDialog() {
-        val dialogFragment = DeleteConfirmationDialog()
+        val dialogFragment = DeleteDialog()
         dialogFragment.setListener(DeleteListener())
-        showDialogFragment(dialogFragment, DeleteConfirmationDialog.TAG)
+        showDialogFragment(dialogFragment, DeleteDialog.TAG)
     }
 
     private fun showDialogFragment(dialogFragment: DialogFragment?, tag: String) {
         dialogFragment?.show(requireActivity().supportFragmentManager, tag)
     }
 
-    private inner class DeleteListener : DeleteConfirmationDialog.DeleteListener {
+    private inner class DeleteListener : DeleteDialog.DeleteListener {
 
         override fun cancelClicked(dialogFragment: DialogFragment) {
             dialogFragment.dismiss()
@@ -298,24 +300,22 @@ class LibrariesFragment : Fragment() {
 
     }
 
-    private inner class SortListener : SortingOrderDialogFragment.SortListener {
+    private inner class SortListener : SortDialog.SortListener {
 
-        override fun orderSelected(sortingOrder: SortingOrderDialogFragment.SortingOrder) {
-            if (sortingOrder != currentSortingOrder) {
-                currentSortingOrder = sortingOrder
-                librariesViewModel.getLibraries(getSortingOrder(sortingOrder))
+        override fun orderSelected(order: SortDialog.Order) {
+            if (order != currentOrder) {
+                currentOrder = order
+                librariesViewModel.getLibraries(getSortingOrder(order))
             }
         }
 
     }
 
-    private fun getSortingOrder(
-        sortingOrder: SortingOrderDialogFragment.SortingOrder
-    ): LibrariesViewModel.SortingOrder {
-        return when (sortingOrder) {
-            SortingOrderDialogFragment.SortingOrder.A_TO_Z -> LibrariesViewModel.SortingOrder.A_TO_Z
-            SortingOrderDialogFragment.SortingOrder.Z_TO_A -> LibrariesViewModel.SortingOrder.Z_TO_A
-            SortingOrderDialogFragment.SortingOrder.PINNED_FIRST -> LibrariesViewModel.SortingOrder.PINNED_FIRST
+    private fun getSortingOrder(order: SortDialog.Order): LibrariesViewModel.SortingOrder {
+        return when (order) {
+            SortDialog.Order.A_TO_Z -> LibrariesViewModel.SortingOrder.A_TO_Z
+            SortDialog.Order.Z_TO_A -> LibrariesViewModel.SortingOrder.Z_TO_A
+            SortDialog.Order.PINNED_FIRST -> LibrariesViewModel.SortingOrder.PINNED_FIRST
         }
     }
 
