@@ -37,6 +37,7 @@ object Dependencies {
         const val timber = "com.jakewharton.timber:timber:4.7.1"
         const val firebase = "com.google.firebase:firebase-bom:25.12.0"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
+        const val recyclerViewSelection = "androidx.recyclerview:recyclerview-selection:1.0.0"
     }
 
     object Data {

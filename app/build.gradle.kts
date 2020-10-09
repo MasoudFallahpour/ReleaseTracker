@@ -66,5 +66,6 @@ dependencies {
     implementation(Dependencies.App.timber)
     implementation(platform(Dependencies.App.firebase))
     implementation(Dependencies.App.crashlytics)
+    implementation(Dependencies.App.recyclerViewSelection)
     implementation(project(":data"))
 }

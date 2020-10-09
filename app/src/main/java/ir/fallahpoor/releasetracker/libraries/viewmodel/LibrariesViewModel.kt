@@ -23,10 +23,11 @@ class LibrariesViewModel
     }
 
     private var sortingOrder = getDefaultSortingOrder()
-    private val _favouriteViewState = MutableLiveData<ViewState<Unit>>()
+    private val _pinViewState = MutableLiveData<ViewState<Unit>>()
+    private val _deleteLiveData = MutableLiveData<ViewState<Unit>>()
     private val triggerLiveData = MutableLiveData<Unit>()
 
-    val favouriteViewState: LiveData<ViewState<Unit>> = _favouriteViewState
+    val pinViewState: LiveData<ViewState<Unit>> = _pinViewState
     val librariesViewState: LiveData<ViewState<List<Library>>> =
         Transformations.switchMap(triggerLiveData) {
             val sortingOrder = getSortingOrder()
@@ -35,6 +36,7 @@ class LibrariesViewModel
                 ViewState.success(libraries)
             }
         }
+    val deleteViewState: LiveData<ViewState<Unit>> = _deleteLiveData
 
     private fun getSortingOrder(): LibraryRepository.SortingOrder =
         when (sortingOrder) {
@@ -48,25 +50,41 @@ class LibrariesViewModel
         triggerLiveData.value = Unit
     }
 
+    private fun getDefaultSortingOrder(): SortingOrder =
+        SortingOrder.valueOf(localStorage.getSortingOrder() ?: SortingOrder.A_TO_Z.name)
+
     fun setPinned(library: Library, isPinned: Boolean) {
+
+        _pinViewState.value = ViewState.loading()
 
         viewModelScope.launch {
 
-            _favouriteViewState.value = ViewState.loading()
-
             try {
                 libraryRepository.setPinned(library, isPinned)
-                _favouriteViewState.value = ViewState.success(Unit)
+                _pinViewState.value = ViewState.success(Unit)
             } catch (t: Throwable) {
                 val message = exceptionParser.getMessage(t)
-                _favouriteViewState.value = ViewState.error(message)
+                _pinViewState.value = ViewState.error(message)
             }
 
         }
 
     }
 
-    private fun getDefaultSortingOrder(): SortingOrder =
-        SortingOrder.valueOf(localStorage.getSortingOrder() ?: SortingOrder.A_TO_Z.name)
+    fun deleteLibraries(libraryNames: List<String>) {
+
+        _deleteLiveData.value = ViewState.loading()
+
+        try {
+            viewModelScope.launch {
+                libraryRepository.deleteLibraries(libraryNames)
+                _deleteLiveData.value = ViewState.success(Unit)
+            }
+        } catch (t: Throwable) {
+            val message = exceptionParser.getMessage(t)
+            _deleteLiveData.value = ViewState.error(message)
+        }
+
+    }
 
 }

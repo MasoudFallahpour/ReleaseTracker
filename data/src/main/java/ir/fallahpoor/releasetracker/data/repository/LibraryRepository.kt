@@ -21,6 +21,8 @@ interface LibraryRepository {
 
     suspend fun getLibraries(): List<Library>
 
+    suspend fun deleteLibraries(libraryNames: List<String>)
+
     suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String
 
     suspend fun setPinned(library: Library, pinned: Boolean)

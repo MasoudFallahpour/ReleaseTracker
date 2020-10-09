@@ -1,9 +1,19 @@
 <resources>
 
-<style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-    <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorAccent</item>
-</style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/Widget.App.ActionMode</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
+    </style>
+
+    <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">
+        <item name="titleTextStyle">?attr/textAppearanceHeadline6</item>
+        <item name="subtitleTextStyle">?attr/textAppearanceSubtitle1</item>
+        <item name="background">@color/colorPrimaryDark</item>
+    </style>
 
 </resources>

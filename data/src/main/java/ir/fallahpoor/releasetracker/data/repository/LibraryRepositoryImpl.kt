@@ -73,6 +73,10 @@ class LibraryRepositoryImpl
         return libraryDao.getAll()
     }
 
+    override suspend fun deleteLibraries(libraryNames: List<String>) {
+        libraryDao.delete(libraryNames)
+    }
+
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
 
         val libraryPath = libraryUrl.removePrefix(GITHUB_BASE_URL)
