@@ -56,37 +56,6 @@ class LibrariesFragment : Fragment() {
         librariesViewModel.getLibraries()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        saveState(outState)
-    }
-
-    private fun saveState(outState: Bundle) {
-        selectionTracker.onSaveInstanceState(outState)
-        outState.putBoolean(KEY_ACTION_MODE_ENABLED, actionMode != null)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        restoreState(savedInstanceState)
-    }
-
-    private fun restoreState(savedInstanceState: Bundle?) {
-        selectionTracker.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState?.let {
-            val actionModeEnabled = it.getBoolean(KEY_ACTION_MODE_ENABLED)
-            if (actionModeEnabled) {
-                startActionMode()
-            }
-        }
-    }
-
-    private fun startActionMode() {
-        if (actionMode == null) {
-            (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
-        }
-    }
-
     private fun setupViews() {
         addLibraryButton.setOnClickListener {
             findNavController().navigate(R.id.action_librariesFragment_to_addLibraryFragment)
@@ -203,6 +172,59 @@ class LibrariesFragment : Fragment() {
             .show()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        saveState(outState)
+    }
+
+    private fun saveState(outState: Bundle) {
+        selectionTracker.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_ACTION_MODE_ENABLED, actionMode != null)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        restoreState(savedInstanceState)
+    }
+
+    private fun restoreState(savedInstanceState: Bundle?) {
+        selectionTracker.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState?.let {
+            val actionModeEnabled = it.getBoolean(KEY_ACTION_MODE_ENABLED)
+            if (actionModeEnabled) {
+                startActionMode()
+            }
+        }
+    }
+
+    private fun startActionMode() {
+        if (actionMode == null) {
+            (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        restoreDeleteDialogIfPresent()
+        restoreSortDialogIfPresent()
+    }
+
+    private fun restoreDeleteDialogIfPresent() {
+        val deleteDialog =
+            requireActivity().supportFragmentManager.findFragmentByTag(DeleteConfirmationDialog.TAG)
+        deleteDialog?.let {
+            (it as DeleteConfirmationDialog).setListener(DeleteListener())
+        }
+    }
+
+    private fun restoreSortDialogIfPresent() {
+        val sortDialog =
+            requireActivity().supportFragmentManager.findFragmentByTag(SortingOrderDialogFragment.TAG)
+        sortDialog?.let {
+            (it as SortingOrderDialogFragment).setListener(SortListener())
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_libraries, menu)
     }
@@ -217,24 +239,9 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun showSortingOrderSelectionDialog() {
-        val sortingOrderDialog = SortingOrderDialogFragment()
-        sortingOrderDialog.setListener { sortingOrder: SortingOrderDialogFragment.SortingOrder ->
-            if (sortingOrder != currentSortingOrder) {
-                currentSortingOrder = sortingOrder
-                librariesViewModel.getLibraries(getSortingOrder(sortingOrder))
-            }
-        }
-        showDialogFragment(sortingOrderDialog)
-    }
-
-    private fun getSortingOrder(
-        sortingOrder: SortingOrderDialogFragment.SortingOrder
-    ): LibrariesViewModel.SortingOrder {
-        return when (sortingOrder) {
-            SortingOrderDialogFragment.SortingOrder.A_TO_Z -> LibrariesViewModel.SortingOrder.A_TO_Z
-            SortingOrderDialogFragment.SortingOrder.Z_TO_A -> LibrariesViewModel.SortingOrder.Z_TO_A
-            SortingOrderDialogFragment.SortingOrder.PINNED_FIRST -> LibrariesViewModel.SortingOrder.PINNED_FIRST
-        }
+        val dialogFragment = SortingOrderDialogFragment()
+        dialogFragment.setListener(SortListener())
+        showDialogFragment(dialogFragment, SortingOrderDialogFragment.TAG)
     }
 
     inner class ActionModeCallback : ActionMode.Callback {
@@ -264,27 +271,52 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun showDeleteConfirmationDialog() {
-        val deleteConfirmationDialog = DeleteConfirmationDialog()
-        deleteConfirmationDialog.setListener(object : DeleteConfirmationDialog.Listener {
-            override fun cancelClicked() {
-                deleteConfirmationDialog.dismiss()
-            }
-
-            override fun deleteClicked() {
-                val libraryNames = selectionTracker.selection.map {
-                    it
-                }
-                librariesViewModel.deleteLibraries(libraryNames)
-                actionMode?.finish()
-                actionMode = null
-                deleteConfirmationDialog.dismiss()
-            }
-        })
-        showDialogFragment(deleteConfirmationDialog)
+        val dialogFragment = DeleteConfirmationDialog()
+        dialogFragment.setListener(DeleteListener())
+        showDialogFragment(dialogFragment, DeleteConfirmationDialog.TAG)
     }
 
-    private fun showDialogFragment(dialogFragment: DialogFragment) {
-        dialogFragment.show(requireActivity().supportFragmentManager, null)
+    private fun showDialogFragment(dialogFragment: DialogFragment?, tag: String) {
+        dialogFragment?.show(requireActivity().supportFragmentManager, tag)
+    }
+
+    private inner class DeleteListener : DeleteConfirmationDialog.DeleteListener {
+
+        override fun cancelClicked(dialogFragment: DialogFragment) {
+            dialogFragment.dismiss()
+        }
+
+        override fun deleteClicked(dialogFragment: DialogFragment) {
+            val libraryNames = selectionTracker.selection.map {
+                it
+            }
+            librariesViewModel.deleteLibraries(libraryNames)
+            actionMode?.finish()
+            actionMode = null
+            dialogFragment.dismiss()
+        }
+
+    }
+
+    private inner class SortListener : SortingOrderDialogFragment.SortListener {
+
+        override fun orderSelected(sortingOrder: SortingOrderDialogFragment.SortingOrder) {
+            if (sortingOrder != currentSortingOrder) {
+                currentSortingOrder = sortingOrder
+                librariesViewModel.getLibraries(getSortingOrder(sortingOrder))
+            }
+        }
+
+    }
+
+    private fun getSortingOrder(
+        sortingOrder: SortingOrderDialogFragment.SortingOrder
+    ): LibrariesViewModel.SortingOrder {
+        return when (sortingOrder) {
+            SortingOrderDialogFragment.SortingOrder.A_TO_Z -> LibrariesViewModel.SortingOrder.A_TO_Z
+            SortingOrderDialogFragment.SortingOrder.Z_TO_A -> LibrariesViewModel.SortingOrder.Z_TO_A
+            SortingOrderDialogFragment.SortingOrder.PINNED_FIRST -> LibrariesViewModel.SortingOrder.PINNED_FIRST
+        }
     }
 
 }

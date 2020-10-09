@@ -14,6 +14,14 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
 
+    companion object {
+        const val TAG = "SortingOrderDialogFragment"
+    }
+
+    interface SortListener {
+        fun orderSelected(sortingOrder: SortingOrder)
+    }
+
     enum class SortingOrder {
         A_TO_Z,
         Z_TO_A,
@@ -22,7 +30,7 @@ class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
 
     @Inject
     lateinit var localStorage: LocalStorage
-    private var listener: ((SortingOrder) -> Unit)? = null
+    private var listener: SortListener? = null
     private var defaultSortingOrder: SortingOrder = SortingOrder.A_TO_Z
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +63,7 @@ class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
                 R.id.sortingOrderPinnedFirstTextView -> SortingOrder.PINNED_FIRST
                 else -> SortingOrder.A_TO_Z
             }
-            listener?.invoke(sortingOrder)
+            listener?.orderSelected(sortingOrder)
             dismiss()
         }
 
@@ -71,7 +79,7 @@ class SortingOrderDialogFragment : BaseBottomSheetDialogFragment() {
 
     }
 
-    internal fun setListener(listener: ((SortingOrder) -> Unit)) {
+    fun setListener(listener: SortListener) {
         this.listener = listener
     }
 
