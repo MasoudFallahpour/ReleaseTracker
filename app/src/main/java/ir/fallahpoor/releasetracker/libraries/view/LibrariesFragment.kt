@@ -25,6 +25,10 @@ import kotlinx.android.synthetic.main.fragment_libraries.*
 @AndroidEntryPoint
 class LibrariesFragment : Fragment() {
 
+    companion object {
+        const val KEY_ACTION_MODE_ENABLED = "action_mode_enabled"
+    }
+
     private val librariesViewModel: LibrariesViewModel by viewModels()
     private lateinit var selectionTracker: SelectionTracker<String>
     private lateinit var librariesAdapter: LibrariesAdapter
@@ -51,11 +55,24 @@ class LibrariesFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         selectionTracker.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_ACTION_MODE_ENABLED, actionMode != null)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         selectionTracker.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState?.let {
+            val actionModeEnabled = it.getBoolean(KEY_ACTION_MODE_ENABLED)
+            if (actionModeEnabled) {
+                startActionMode()
+            }
+        }
+    }
+
+    private fun startActionMode() {
+        if (actionMode == null) {
+            (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
+        }
     }
 
     private fun setupViews() {
@@ -102,8 +119,8 @@ class LibrariesFragment : Fragment() {
                 val items = selectionTracker.selection
                 if (items.isEmpty) {
                     actionMode?.finish()
-                } else if (items.size() == 1 && actionMode == null) {
-                    (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
+                } else if (items.size() == 1) {
+                    startActionMode()
                 }
             }
         })
