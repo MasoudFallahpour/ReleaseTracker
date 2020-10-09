@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.fragment_libraries.*
 class LibrariesFragment : Fragment() {
 
     companion object {
-        const val KEY_ACTION_MODE_ENABLED = "action_mode_enabled"
+        private const val KEY_ACTION_MODE_ENABLED = "action_mode_enabled"
     }
 
     private val librariesViewModel: LibrariesViewModel by viewModels()
@@ -58,12 +58,20 @@ class LibrariesFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        saveState(outState)
+    }
+
+    private fun saveState(outState: Bundle) {
         selectionTracker.onSaveInstanceState(outState)
         outState.putBoolean(KEY_ACTION_MODE_ENABLED, actionMode != null)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
+        restoreState(savedInstanceState)
+    }
+
+    private fun restoreState(savedInstanceState: Bundle?) {
         selectionTracker.onRestoreInstanceState(savedInstanceState)
         savedInstanceState?.let {
             val actionModeEnabled = it.getBoolean(KEY_ACTION_MODE_ENABLED)
