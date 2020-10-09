@@ -1,6 +1,7 @@
-package ir.fallahpoor.releasetracker.libraries.view
+package ir.fallahpoor.releasetracker.libraries.view.selection
 
 import androidx.recyclerview.selection.ItemKeyProvider
+import ir.fallahpoor.releasetracker.libraries.view.LibrariesAdapter
 
 class LibrariesItemKeyProvider(
     private val librariesAdapter: LibrariesAdapter

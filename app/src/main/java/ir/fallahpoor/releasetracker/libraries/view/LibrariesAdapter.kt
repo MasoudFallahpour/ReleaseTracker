@@ -70,16 +70,16 @@ class LibrariesAdapter(
 
     }
 
-}
+    private class LibraryDiffCallback : DiffUtil.ItemCallback<Library>() {
 
-class LibraryDiffCallback : DiffUtil.ItemCallback<Library>() {
+        override fun areItemsTheSame(oldItem: Library, newItem: Library): Boolean {
+            return oldItem.name == newItem.name
+        }
 
-    override fun areItemsTheSame(oldItem: Library, newItem: Library): Boolean {
-        return oldItem.name == newItem.name
-    }
+        override fun areContentsTheSame(oldItem: Library, newItem: Library): Boolean {
+            return oldItem == newItem
+        }
 
-    override fun areContentsTheSame(oldItem: Library, newItem: Library): Boolean {
-        return oldItem == newItem
     }
 
 }

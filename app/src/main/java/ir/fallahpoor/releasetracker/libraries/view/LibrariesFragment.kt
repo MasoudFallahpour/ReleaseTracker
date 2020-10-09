@@ -19,6 +19,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteConfirmationDialog
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortingOrderDialogFragment
+import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemDetailsLookup
+import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemKeyProvider
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import kotlinx.android.synthetic.main.fragment_libraries.*
 

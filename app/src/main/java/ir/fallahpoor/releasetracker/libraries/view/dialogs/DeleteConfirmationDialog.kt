@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.view
+package ir.fallahpoor.releasetracker.libraries.view.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater

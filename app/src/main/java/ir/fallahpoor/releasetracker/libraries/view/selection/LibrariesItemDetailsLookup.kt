@@ -1,8 +1,9 @@
-package ir.fallahpoor.releasetracker.libraries.view
+package ir.fallahpoor.releasetracker.libraries.view.selection
 
 import android.view.MotionEvent
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
+import ir.fallahpoor.releasetracker.libraries.view.LibrariesAdapter
 
 class LibrariesItemDetailsLookup(
     private val recyclerView: RecyclerView
