@@ -16,8 +16,7 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
 
 class LibrariesAdapter(
-    private val pinClickListener: (Library, Boolean) -> Unit,
-    private val longClickListener: () -> Unit
+    private val pinClickListener: (Library, Boolean) -> Unit
 ) : ListAdapter<Library, LibrariesAdapter.LibraryViewHolder>(LibraryDiffCallback()) {
 
     var selectionTracker: SelectionTracker<String>? = null
@@ -58,10 +57,6 @@ class LibrariesAdapter(
                 pinClickListener.invoke(library, isChecked)
             }
             checkImageView.isGone = !isSelected
-            itemView.setOnLongClickListener {
-                longClickListener.invoke()
-                true
-            }
         }
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<String> =

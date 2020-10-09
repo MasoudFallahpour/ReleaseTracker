@@ -48,6 +48,16 @@ class LibrariesFragment : Fragment() {
         librariesViewModel.getLibraries()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        selectionTracker.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        selectionTracker.onRestoreInstanceState(savedInstanceState)
+    }
+
     private fun setupViews() {
         addLibraryButton.setOnClickListener {
             findNavController().navigate(R.id.action_librariesFragment_to_addLibraryFragment)
@@ -71,9 +81,6 @@ class LibrariesFragment : Fragment() {
         librariesAdapter = LibrariesAdapter(
             pinClickListener = { library: Library, pinned: Boolean ->
                 librariesViewModel.setPinned(library, pinned)
-            },
-            longClickListener = {
-                (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
             }
         )
     }
@@ -95,6 +102,8 @@ class LibrariesFragment : Fragment() {
                 val items = selectionTracker.selection
                 if (items.isEmpty) {
                     actionMode?.finish()
+                } else if (items.size() == 1 && actionMode == null) {
+                    (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
                 }
             }
         })
