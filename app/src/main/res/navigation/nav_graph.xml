@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/librariesFragment"
         android:name="ir.fallahpoor.releasetracker.libraries.view.LibrariesFragment"
-        android:label="@string/libraries"
         tools:layout="@layout/fragment_libraries">
         <action
             android:id="@+id/action_librariesFragment_to_addLibraryFragment"
