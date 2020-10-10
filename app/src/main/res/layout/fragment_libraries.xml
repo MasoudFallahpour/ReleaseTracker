@@ -25,11 +25,10 @@
         android:id="@+id/addLibraryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/space_normal"
         android:contentDescription="@string/add_library"
         android:src="@drawable/ic_add"
-        app:layout_anchor="@id/librariesRecyclerView"
-        app:layout_anchorGravity="bottom|start"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
