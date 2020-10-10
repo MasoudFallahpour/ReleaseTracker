@@ -177,7 +177,8 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun handleUpdateDateLoadedState(viewState: ViewState.DataLoadedState<String>) {
-        lastCheckTextView.text = viewState.data
+        val lastCheckDate = viewState.data
+        lastCheckTextView.text = getString(R.string.last_check_for_updates, lastCheckDate)
     }
 
     private fun showSnackbar(message: String) {
