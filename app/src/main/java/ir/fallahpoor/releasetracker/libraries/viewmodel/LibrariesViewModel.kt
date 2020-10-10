@@ -2,6 +2,7 @@ package ir.fallahpoor.releasetracker.libraries.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import ir.fallahpoor.releasetracker.common.SingleLiveData
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
@@ -25,7 +26,7 @@ class LibrariesViewModel
 
     private var order = getDefaultOrder()
     private val _pinViewState = MutableLiveData<ViewState<Unit>>()
-    private val _deleteLiveData = MutableLiveData<ViewState<Unit>>()
+    private val _deleteLiveData = SingleLiveData<ViewState<Unit>>()
     private val triggerLiveData = MutableLiveData<Unit>()
     private val _lastUpdateCheckLiveData = MutableLiveData<ViewState<String>>()
 

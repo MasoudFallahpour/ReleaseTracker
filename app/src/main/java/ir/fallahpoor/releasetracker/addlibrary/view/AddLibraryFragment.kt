@@ -32,7 +32,7 @@ class AddLibraryFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        addLibraryViewModel.getViewState()
+        addLibraryViewModel.viewState
             .observe(viewLifecycleOwner) { viewState: ViewState<Unit> ->
                 when (viewState) {
                     is ViewState.LoadingState -> handleLoadingState()
