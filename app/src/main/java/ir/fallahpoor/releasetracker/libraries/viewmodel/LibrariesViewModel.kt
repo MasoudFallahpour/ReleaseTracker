@@ -7,6 +7,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class LibrariesViewModel
@@ -26,6 +27,7 @@ class LibrariesViewModel
     private val _pinViewState = MutableLiveData<ViewState<Unit>>()
     private val _deleteLiveData = MutableLiveData<ViewState<Unit>>()
     private val triggerLiveData = MutableLiveData<Unit>()
+    private val _lastUpdateCheckLiveData = MutableLiveData<ViewState<String>>()
 
     val pinViewState: LiveData<ViewState<Unit>> = _pinViewState
     val librariesViewState: LiveData<ViewState<List<Library>>> =
@@ -37,6 +39,7 @@ class LibrariesViewModel
             }
         }
     val deleteViewState: LiveData<ViewState<Unit>> = _deleteLiveData
+    val lastUpdateCheckViewState: LiveData<ViewState<String>> = _lastUpdateCheckLiveData
 
     private fun getSortingOrder(): LibraryRepository.Order =
         when (order) {
@@ -83,6 +86,17 @@ class LibrariesViewModel
         } catch (t: Throwable) {
             val message = exceptionParser.getMessage(t)
             _deleteLiveData.value = ViewState.error(message)
+        }
+
+    }
+
+    fun getLastUpdateCheck() {
+
+        viewModelScope.launch {
+            localStorage.getLastUpdateCheck()
+                .collect {
+                    _lastUpdateCheckLiveData.value = ViewState.success(it)
+                }
         }
 
     }

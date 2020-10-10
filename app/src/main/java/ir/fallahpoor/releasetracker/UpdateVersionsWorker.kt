@@ -7,19 +7,25 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
+import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.*
 
 class UpdateVersionsWorker
 @WorkerInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val libraryRepository: LibraryRepository,
-    private val networkUtils: NetworkUtils
+    private val networkUtils: NetworkUtils,
+    private val localStorage: LocalStorage
 ) : CoroutineWorker(context, workerParams) {
+
+    private val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
@@ -33,6 +39,8 @@ class UpdateVersionsWorker
                             getLatestVersion(library)
                         }
                     }
+                Timber.d("Update check: %s", simpleDateFormat.format(Date()))
+                localStorage.setLastUpdateCheck(simpleDateFormat.format(Date()))
                 Result.success()
             }
 

@@ -7,6 +7,7 @@ object Dependencies {
     private const val roomVersion = "2.2.5"
     private const val retrofitVersion = "2.9.0"
     private const val lifeCycleVersion = "2.2.0"
+    private const val kprefs = "2.0.3"
 
     private object Common {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -17,7 +18,7 @@ object Dependencies {
     object App {
         const val kotlinStdLib = Common.kotlinStdLib
         const val core = Common.core
-        const val preference = "androidx.preference:preference-ktx:1.1.1"
+        const val preference = "androidx.preference:preference-ktx:1.1.0"
         const val appCompat = "androidx.appcompat:appcompat:1.2.0"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.1"
         const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
@@ -51,6 +52,8 @@ object Dependencies {
         const val retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
         const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
         const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycleVersion"
+        const val rxkprefs = "com.afollestad.rxkprefs:core:$kprefs"
+        const val rxkprefsCoroutines = "com.afollestad.rxkprefs:coroutines:$kprefs"
     }
 
 }

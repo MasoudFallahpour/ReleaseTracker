@@ -54,6 +54,7 @@ class LibrariesFragment : Fragment() {
         setupViews()
         observeViewModel()
         librariesViewModel.getLibraries()
+        librariesViewModel.getLastUpdateCheck()
     }
 
     private fun setupViews() {
@@ -136,6 +137,16 @@ class LibrariesFragment : Fragment() {
                     is ViewState.ErrorState -> handleErrorState(viewState)
                 }
             }
+        librariesViewModel.lastUpdateCheckViewState
+            .observe(viewLifecycleOwner) { viewState: ViewState<String> ->
+                if (viewState is ViewState.DataLoadedState) {
+                    handleUpdateDateLoadedState(viewState)
+                }
+            }
+    }
+
+    private fun handleUpdateDateLoadedState(viewState: ViewState.DataLoadedState<String>) {
+        lastCheckTextView.text = viewState.data
     }
 
     private fun showPrimaryLoading() {

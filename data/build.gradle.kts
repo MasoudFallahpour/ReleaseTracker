@@ -58,4 +58,6 @@ dependencies {
     implementation(Dependencies.Data.retrofitConverterGson)
     implementation(Dependencies.Data.okhttpLoggingInterceptor)
     implementation(Dependencies.Data.liveData)
+    implementation(Dependencies.Data.rxkprefs)
+    implementation(Dependencies.Data.rxkprefsCoroutines)
 }
