@@ -155,7 +155,9 @@ class LibrariesFragment : Fragment() {
 
     private fun handleLibrariesLoadedState(viewState: ViewState.DataLoadedState<List<Library>>) {
         hidePrimaryLoading()
-        librariesAdapter.submitList(viewState.data)
+        val libraries: List<Library> = viewState.data
+        librariesAdapter.submitList(libraries)
+        noLibrariesTextView.isVisible = libraries.isEmpty()
     }
 
     private fun <T> handleErrorState(viewState: ViewState.ErrorState<T>) {
@@ -264,7 +266,7 @@ class LibrariesFragment : Fragment() {
         showDialogFragment(dialogFragment, SortDialog.TAG)
     }
 
-    inner class ActionModeCallback : ActionMode.Callback {
+    private inner class ActionModeCallback : ActionMode.Callback {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
             actionMode = mode

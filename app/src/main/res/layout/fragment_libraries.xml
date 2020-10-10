@@ -29,7 +29,22 @@
         android:id="@+id/librariesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <TextView
+        android:id="@+id/noLibrariesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.1"
+        android:maxLines="2"
+        android:padding="@dimen/space_very_large"
+        android:text="@string/no_libraries"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_normal"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addLibraryButton"
