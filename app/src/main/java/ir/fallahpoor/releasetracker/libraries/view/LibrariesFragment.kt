@@ -58,6 +58,7 @@ class LibrariesFragment : Fragment() {
 
     private fun setupViews() {
         addLibraryButton.setOnClickListener {
+            actionMode?.finish()
             findNavController().navigate(R.id.action_librariesFragment_to_addLibraryFragment)
         }
         setupRecyclerView()
@@ -294,7 +295,6 @@ class LibrariesFragment : Fragment() {
             }
             librariesViewModel.deleteLibraries(libraryNames)
             actionMode?.finish()
-            actionMode = null
             dialogFragment.dismiss()
         }
 
@@ -311,11 +311,11 @@ class LibrariesFragment : Fragment() {
 
     }
 
-    private fun getSortingOrder(order: SortDialog.Order): LibrariesViewModel.SortingOrder {
+    private fun getSortingOrder(order: SortDialog.Order): LibrariesViewModel.Order {
         return when (order) {
-            SortDialog.Order.A_TO_Z -> LibrariesViewModel.SortingOrder.A_TO_Z
-            SortDialog.Order.Z_TO_A -> LibrariesViewModel.SortingOrder.Z_TO_A
-            SortDialog.Order.PINNED_FIRST -> LibrariesViewModel.SortingOrder.PINNED_FIRST
+            SortDialog.Order.A_TO_Z -> LibrariesViewModel.Order.A_TO_Z
+            SortDialog.Order.Z_TO_A -> LibrariesViewModel.Order.Z_TO_A
+            SortDialog.Order.PINNED_FIRST -> LibrariesViewModel.Order.PINNED_FIRST
         }
     }
 

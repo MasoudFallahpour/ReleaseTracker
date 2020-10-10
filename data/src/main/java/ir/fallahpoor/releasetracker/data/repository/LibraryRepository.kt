@@ -5,7 +5,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 
 interface LibraryRepository {
 
-    enum class SortingOrder {
+    enum class Order {
         A_TO_Z,
         Z_TO_A,
         PINNED_FIRST
@@ -17,7 +17,7 @@ interface LibraryRepository {
 
     suspend fun getLibrary(libraryName: String): Library?
 
-    fun getLibrariesByLiveData(sortingOrder: SortingOrder): LiveData<List<Library>>
+    fun getLibrariesByLiveData(order: Order): LiveData<List<Library>>
 
     suspend fun getLibraries(): List<Library>
 

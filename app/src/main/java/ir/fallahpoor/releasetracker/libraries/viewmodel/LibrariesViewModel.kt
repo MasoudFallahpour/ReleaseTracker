@@ -16,13 +16,13 @@ class LibrariesViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    enum class SortingOrder {
+    enum class Order {
         A_TO_Z,
         Z_TO_A,
         PINNED_FIRST
     }
 
-    private var sortingOrder = getDefaultSortingOrder()
+    private var order = getDefaultOrder()
     private val _pinViewState = MutableLiveData<ViewState<Unit>>()
     private val _deleteLiveData = MutableLiveData<ViewState<Unit>>()
     private val triggerLiveData = MutableLiveData<Unit>()
@@ -31,27 +31,27 @@ class LibrariesViewModel
     val librariesViewState: LiveData<ViewState<List<Library>>> =
         Transformations.switchMap(triggerLiveData) {
             val sortingOrder = getSortingOrder()
-            localStorage.setSortingOrder(sortingOrder.name)
+            localStorage.setOrder(sortingOrder.name)
             Transformations.map(libraryRepository.getLibrariesByLiveData(sortingOrder)) { libraries: List<Library> ->
                 ViewState.success(libraries)
             }
         }
     val deleteViewState: LiveData<ViewState<Unit>> = _deleteLiveData
 
-    private fun getSortingOrder(): LibraryRepository.SortingOrder =
-        when (sortingOrder) {
-            SortingOrder.A_TO_Z -> LibraryRepository.SortingOrder.A_TO_Z
-            SortingOrder.Z_TO_A -> LibraryRepository.SortingOrder.Z_TO_A
-            SortingOrder.PINNED_FIRST -> LibraryRepository.SortingOrder.PINNED_FIRST
+    private fun getSortingOrder(): LibraryRepository.Order =
+        when (order) {
+            Order.A_TO_Z -> LibraryRepository.Order.A_TO_Z
+            Order.Z_TO_A -> LibraryRepository.Order.Z_TO_A
+            Order.PINNED_FIRST -> LibraryRepository.Order.PINNED_FIRST
         }
 
-    fun getLibraries(sortingOrder: SortingOrder = getDefaultSortingOrder()) {
-        this.sortingOrder = sortingOrder
+    fun getLibraries(order: Order = getDefaultOrder()) {
+        this.order = order
         triggerLiveData.value = Unit
     }
 
-    private fun getDefaultSortingOrder(): SortingOrder =
-        SortingOrder.valueOf(localStorage.getSortingOrder() ?: SortingOrder.A_TO_Z.name)
+    private fun getDefaultOrder(): Order =
+        Order.valueOf(localStorage.getOrder() ?: Order.A_TO_Z.name)
 
     fun setPinned(library: Library, isPinned: Boolean) {
 

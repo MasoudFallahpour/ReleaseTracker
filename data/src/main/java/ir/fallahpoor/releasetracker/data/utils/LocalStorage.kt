@@ -7,15 +7,15 @@ import javax.inject.Inject
 class LocalStorage @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
     private companion object {
-        const val KEY_SORTING_ORDER = "sorting_order"
+        const val KEY_ORDER = "order"
     }
 
-    fun setSortingOrder(sortingOrder: String) {
-        putString(KEY_SORTING_ORDER, sortingOrder)
+    fun setOrder(order: String) {
+        putString(KEY_ORDER, order)
     }
 
-    fun getSortingOrder(): String? {
-        return getString(KEY_SORTING_ORDER)
+    fun getOrder(): String? {
+        return getString(KEY_ORDER)
     }
 
     private fun putString(key: String, value: String) {

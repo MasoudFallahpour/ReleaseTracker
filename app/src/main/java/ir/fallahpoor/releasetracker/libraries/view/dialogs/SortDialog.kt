@@ -35,7 +35,7 @@ class SortDialog : BaseBottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sortingOrder = localStorage.getSortingOrder()
+        val sortingOrder = localStorage.getOrder()
         defaultOrder = if (sortingOrder != null) {
             Order.valueOf(sortingOrder)
         } else {

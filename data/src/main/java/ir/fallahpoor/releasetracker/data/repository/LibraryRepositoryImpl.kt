@@ -35,13 +35,13 @@ class LibraryRepositoryImpl
     }
 
     override fun getLibrariesByLiveData(
-        sortingOrder: LibraryRepository.SortingOrder
+        order: LibraryRepository.Order
     ): LiveData<List<Library>> {
 
-        val query = when (sortingOrder) {
-            LibraryRepository.SortingOrder.A_TO_Z -> "SELECT * FROM library ORDER BY name ASC"
-            LibraryRepository.SortingOrder.Z_TO_A -> "SELECT * FROM library ORDER BY name DESC"
-            LibraryRepository.SortingOrder.PINNED_FIRST -> "SELECT * FROM library ORDER BY pinned DESC, name ASC"
+        val query = when (order) {
+            LibraryRepository.Order.A_TO_Z -> "SELECT * FROM library ORDER BY name ASC"
+            LibraryRepository.Order.Z_TO_A -> "SELECT * FROM library ORDER BY name DESC"
+            LibraryRepository.Order.PINNED_FIRST -> "SELECT * FROM library ORDER BY pinned DESC, name ASC"
         }
 
         return libraryDao.getAllLiveData(SimpleSQLiteQuery(query))
