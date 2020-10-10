@@ -2,12 +2,15 @@ package ir.fallahpoor.releasetracker.data.utils
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.afollestad.rxkprefs.RxkPrefs
 import com.afollestad.rxkprefs.coroutines.asFlow
-import com.afollestad.rxkprefs.rxkPrefs
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class LocalStorage @Inject constructor(private val sharedPreferences: SharedPreferences) {
+class LocalStorage @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
+    private val rxkPrefs: RxkPrefs
+) {
 
     private companion object {
         const val KEY_ORDER = "order"
@@ -23,12 +26,12 @@ class LocalStorage @Inject constructor(private val sharedPreferences: SharedPref
     }
 
     fun setLastUpdateCheck(date: String) {
-        putString(KEY_LAST_UPDATE_CHECK, date)
+        rxkPrefs.string(KEY_LAST_UPDATE_CHECK)
+            .set(date)
     }
 
     fun getLastUpdateCheck(): Flow<String> =
-        rxkPrefs(sharedPreferences)
-            .string(KEY_LAST_UPDATE_CHECK, defaultValue = "N/A")
+        rxkPrefs.string(KEY_LAST_UPDATE_CHECK, defaultValue = "N/A")
             .asFlow()
 
     private fun putString(key: String, value: String) {

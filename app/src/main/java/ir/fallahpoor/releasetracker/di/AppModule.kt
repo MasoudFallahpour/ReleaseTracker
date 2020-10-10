@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 
 import androidx.room.Room
+import com.afollestad.rxkprefs.RxkPrefs
+import com.afollestad.rxkprefs.rxkPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +27,10 @@ object AppModule {
     @Provides
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
+
+    @Provides
+    fun provideRxkPrefs(sharedPreferences: SharedPreferences): RxkPrefs =
+        rxkPrefs(sharedPreferences)
 
     @Provides
     @Singleton

@@ -67,5 +67,6 @@ dependencies {
     implementation(platform(Dependencies.App.firebase))
     implementation(Dependencies.App.crashlytics)
     implementation(Dependencies.App.recyclerViewSelection)
+    implementation(Dependencies.App.rxkprefs)
     implementation(project(":data"))
 }

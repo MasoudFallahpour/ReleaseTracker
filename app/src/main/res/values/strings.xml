@@ -22,4 +22,5 @@
     <string name="delete">Delete</string>
     <string name="delete_selected_libraries">Delete selected libraries?</string>
     <string name="libraries_deleted">Libraries deleted successfully</string>
+    <string name="last_check_for_updates">Last check: %s</string>
 </resources>

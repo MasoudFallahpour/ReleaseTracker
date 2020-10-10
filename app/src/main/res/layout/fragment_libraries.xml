@@ -6,20 +6,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/lastCheckTextView"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:padding="@dimen/space_normal"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_size_normal"
-        tools:text="Last Check" />
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:elevation="0dp">
+
+        <TextView
+            android:id="@+id/lastCheckTextView"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center_vertical"
+            android:padding="@dimen/space_small"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_normal"
+            app:layout_scrollFlags="scroll"
+            tools:text="Last Check" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/librariesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addLibraryButton"

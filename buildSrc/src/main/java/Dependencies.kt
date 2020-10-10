@@ -13,6 +13,7 @@ object Dependencies {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         const val room = "androidx.room:room-runtime:$roomVersion"
         const val core = "androidx.core:core-ktx:1.3.1"
+        const val rxkprefs = "com.afollestad.rxkprefs:core:$kprefs"
     }
 
     object App {
@@ -39,6 +40,7 @@ object Dependencies {
         const val firebase = "com.google.firebase:firebase-bom:25.12.0"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
         const val recyclerViewSelection = "androidx.recyclerview:recyclerview-selection:1.0.0"
+        const val rxkprefs = Common.rxkprefs
     }
 
     object Data {
@@ -52,7 +54,7 @@ object Dependencies {
         const val retrofitConverterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
         const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
         const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycleVersion"
-        const val rxkprefs = "com.afollestad.rxkprefs:core:$kprefs"
+        const val rxkprefs = Common.rxkprefs
         const val rxkprefsCoroutines = "com.afollestad.rxkprefs:coroutines:$kprefs"
     }
 
