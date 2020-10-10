@@ -133,7 +133,7 @@ class LibrariesFragment : Fragment() {
             .observe(viewLifecycleOwner) { viewState: ViewState<Unit> ->
                 when (viewState) {
                     is ViewState.LoadingState -> showSecondaryLoading()
-                    is ViewState.DataLoadedState -> hideSecondaryLoading()
+                    is ViewState.DataLoadedState -> handleLibrariesDeletedState()
                     is ViewState.ErrorState -> handleErrorState(viewState)
                 }
             }
@@ -143,10 +143,6 @@ class LibrariesFragment : Fragment() {
                     handleUpdateDateLoadedState(viewState)
                 }
             }
-    }
-
-    private fun handleUpdateDateLoadedState(viewState: ViewState.DataLoadedState<String>) {
-        lastCheckTextView.text = viewState.data
     }
 
     private fun showPrimaryLoading() {
@@ -175,9 +171,18 @@ class LibrariesFragment : Fragment() {
         librariesPrimaryProgressBar.isVisible = false
     }
 
+    private fun handleLibrariesDeletedState() {
+        hideSecondaryLoading()
+        showSnackbar(getString(R.string.libraries_deleted))
+    }
+
+    private fun handleUpdateDateLoadedState(viewState: ViewState.DataLoadedState<String>) {
+        lastCheckTextView.text = viewState.data
+    }
+
     private fun showSnackbar(message: String) {
         Snackbar.make(
-            librariesRootLayout,
+            addLibraryButton,
             message,
             Snackbar.LENGTH_LONG
         ).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)

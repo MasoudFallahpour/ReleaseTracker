@@ -21,4 +21,5 @@
     <string name="content_description_delete">Delete libraries</string>
     <string name="delete">Delete</string>
     <string name="delete_selected_libraries">Delete selected libraries?</string>
+    <string name="libraries_deleted">Libraries deleted successfully</string>
 </resources>
