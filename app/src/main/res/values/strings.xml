@@ -24,4 +24,11 @@
     <string name="libraries_deleted">Libraries deleted successfully</string>
     <string name="last_check_for_updates">Last check: %s</string>
     <string name="no_libraries">There are no libraries. Add one using the button at the bottom.</string>
+    <string name="content_description_night_mode">Set night mode</string>
+    <string name="night_mode">Night mode</string>
+    <string name="select_night_mode">Select night mode</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
+    <string name="auto">Auto</string>
+    <string name="night_mode_not_supported">Night mode is not supported on your device</string>
 </resources>

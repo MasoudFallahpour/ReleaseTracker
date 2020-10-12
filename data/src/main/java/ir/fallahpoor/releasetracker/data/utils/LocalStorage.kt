@@ -15,6 +15,7 @@ class LocalStorage @Inject constructor(
     private companion object {
         const val KEY_ORDER = "order"
         const val KEY_LAST_UPDATE_CHECK = "last_update_check"
+        const val KEY_NIGHT_MODE = "night_mode"
     }
 
     fun setOrder(order: String) {
@@ -33,6 +34,14 @@ class LocalStorage @Inject constructor(
     fun getLastUpdateCheck(): Flow<String> =
         rxkPrefs.string(KEY_LAST_UPDATE_CHECK, defaultValue = "N/A")
             .asFlow()
+
+    fun getNightMode(): String? {
+        return getString(KEY_NIGHT_MODE)
+    }
+
+    fun setNightMode(mode: String) {
+        return putString(KEY_NIGHT_MODE, mode)
+    }
 
     private fun putString(key: String, value: String) {
         sharedPreferences.edit(commit = true) {

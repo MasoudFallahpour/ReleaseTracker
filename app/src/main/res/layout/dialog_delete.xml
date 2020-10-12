@@ -12,7 +12,7 @@
         android:maxLines="2"
         android:padding="@dimen/space_normal"
         android:text="@string/delete_selected_libraries"
-        android:textColor="@android:color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/text_size_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

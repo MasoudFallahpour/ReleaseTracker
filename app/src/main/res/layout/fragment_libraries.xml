@@ -18,7 +18,7 @@
             android:layout_height="?attr/actionBarSize"
             android:gravity="center_vertical"
             android:padding="@dimen/space_small"
-            android:textColor="@android:color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="@dimen/text_size_normal"
             app:layout_scrollFlags="scroll"
             tools:text="Last Check" />
@@ -41,7 +41,6 @@
         android:maxLines="2"
         android:padding="@dimen/space_very_large"
         android:text="@string/no_libraries"
-        android:textColor="@android:color/black"
         android:textSize="@dimen/text_size_normal"
         android:visibility="gone"
         tools:visibility="visible" />

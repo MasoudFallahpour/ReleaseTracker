@@ -18,15 +18,13 @@
         app:layout_constraintEnd_toStartOf="@id/pinCheckBox"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/colorAccent"
         tools:visibility="visible" />
 
     <CheckBox
         android:id="@+id/pinCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/sl_favourite"
-        app:buttonTint="@color/colorAccent"
+        android:button="@drawable/sl_pin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/checkImageView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +38,7 @@
         android:maxLines="1"
         android:paddingStart="@dimen/space_small"
         android:paddingEnd="@dimen/space_small"
-        android:textColor="@android:color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/text_size_normal"
         app:layout_constraintBottom_toTopOf="@id/libraryUrlTextView"
         app:layout_constraintEnd_toStartOf="@id/libraryVersionTextView"
@@ -57,7 +55,7 @@
         android:maxLines="1"
         android:paddingStart="@dimen/space_small"
         android:paddingEnd="@dimen/space_small"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="@dimen/text_size_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/libraryVersionTextView"
@@ -75,7 +73,7 @@
         android:padding="@dimen/space_normal"
         android:paddingStart="@dimen/space_normal"
         android:paddingEnd="@dimen/space_normal"
-        android:textColor="@android:color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/text_size_normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

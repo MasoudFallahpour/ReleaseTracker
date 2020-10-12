@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
 import dagger.hilt.android.HiltAndroidApp
+import ir.fallahpoor.releasetracker.common.NightModeManager
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -13,11 +14,14 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+    @Inject
+    lateinit var nightModeManager: NightModeManager
 
     override fun onCreate() {
         super.onCreate()
         setupTimber()
         startUpdateWorker()
+        nightModeManager.setDefaultNightMode()
     }
 
     private fun setupTimber() {

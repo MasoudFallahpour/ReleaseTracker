@@ -6,5 +6,10 @@
         android:contentDescription="@string/content_description_sort"
         android:icon="@drawable/ic_sort"
         android:title="@string/sort"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_night_mode"
+        android:contentDescription="@string/content_description_night_mode"
+        android:title="@string/night_mode"
+        app:showAsAction="never" />
 </menu>

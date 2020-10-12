@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteDialog
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortDialog
 import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemDetailsLookup
 import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemKeyProvider
@@ -252,18 +254,34 @@ class LibrariesFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.action_sort) {
-            showSortingOrderSelectionDialog()
-            true
-        } else {
-            false
+        return when (item.itemId) {
+            R.id.action_sort -> {
+                showSortingOrderSelectionDialog()
+                true
+            }
+            R.id.action_night_mode -> {
+                if (nightModeSupported()) {
+                    showSelectNightModeDialog()
+                } else {
+                    showSnackbar(resources.getString(R.string.night_mode_not_supported))
+                }
+                true
+            }
+            else -> false
         }
     }
+
+    private fun nightModeSupported(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     private fun showSortingOrderSelectionDialog() {
         val dialogFragment = SortDialog()
         dialogFragment.setListener(SortListener())
         showDialogFragment(dialogFragment, SortDialog.TAG)
+    }
+
+    private fun showSelectNightModeDialog() {
+        val dialogFragment = NightModeDialog()
+        showDialogFragment(dialogFragment, NightModeDialog.TAG)
     }
 
     private inner class ActionModeCallback : ActionMode.Callback {
