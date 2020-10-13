@@ -28,14 +28,10 @@ android {
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile(
-                    "proguard-android-optimize.txt"
+                    "proguard-android.txt"
                 ),
                 "proguard-rules.pro"
             )
-        }
-        getByName("debug") {
-            buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
-            isMinifyEnabled = false
         }
     }
     compileOptions {

@@ -21,13 +21,13 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
-                    getDefaultProguardFile(
-                            "proguard-android-optimize.txt"
-                    ),
-                    "proguard-rules.pro"
+                getDefaultProguardFile(
+                    "proguard-android.txt"
+                ),
+                "proguard-rules.pro"
             )
-
         }
     }
     compileOptions {
