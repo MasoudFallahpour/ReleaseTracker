@@ -19,6 +19,9 @@ Now you're good to go. Good luck!
 
 If you want to track the latest version of AndroidX libraries then take a look at [Jetpack Release Tracker](https://github.com/lmj0011/jetpack-release-tracker).
 
+# Contributing
+Pull requests are welcome! If you have a feature request or bug report, please open a new issue so I can track it.
+
 License
 =======
 
