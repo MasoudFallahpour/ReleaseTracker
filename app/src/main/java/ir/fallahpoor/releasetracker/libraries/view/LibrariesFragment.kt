@@ -30,7 +30,6 @@ import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemKeyPro
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import kotlinx.android.synthetic.main.fragment_libraries.*
 
-
 @AndroidEntryPoint
 class LibrariesFragment : Fragment() {
 
@@ -85,9 +84,8 @@ class LibrariesFragment : Fragment() {
     private fun setupAdapter() {
         librariesAdapter = LibrariesAdapter(
             clickListener = { library: Library ->
-                val urlLibrary = library.url
                 val intent = Intent(Intent.ACTION_VIEW).apply {
-                    data = Uri.parse(urlLibrary)
+                    data = Uri.parse(library.url)
                 }
                 startActivity(intent)
             },
@@ -358,12 +356,10 @@ class LibrariesFragment : Fragment() {
 
     }
 
-    private fun getSortingOrder(order: SortDialog.Order): LibrariesViewModel.Order {
-        return when (order) {
-            SortDialog.Order.A_TO_Z -> LibrariesViewModel.Order.A_TO_Z
-            SortDialog.Order.Z_TO_A -> LibrariesViewModel.Order.Z_TO_A
-            SortDialog.Order.PINNED_FIRST -> LibrariesViewModel.Order.PINNED_FIRST
-        }
+    private fun getSortingOrder(order: SortDialog.Order) = when (order) {
+        SortDialog.Order.A_TO_Z -> LibrariesViewModel.Order.A_TO_Z
+        SortDialog.Order.Z_TO_A -> LibrariesViewModel.Order.Z_TO_A
+        SortDialog.Order.PINNED_FIRST -> LibrariesViewModel.Order.PINNED_FIRST
     }
 
 }
