@@ -16,11 +16,25 @@ To build the app, clone the repository and import it into Android Studio. Then a
 
 Now you're good to go. Good luck!
 
-
 If you want to track the latest version of AndroidX libraries then take a look at [Jetpack Release Tracker](https://github.com/lmj0011/jetpack-release-tracker).
 
+# Technology Stack
+Release Tracker uses (almost) the latest and greatest technologies of Android development. The following list highlights
+the tech stack of Release Tracker:
+- MVVM
+- ViewModel
+- Coroutines
+- LiveData
+- Room
+- Navigation
+- Dagger Hilt
+- Material Design Components
+- WorkManager
+- Retrofit
+- Timber
+
 # Contributing
-Pull requests are welcome! If you have a feature request or bug report, please open a new issue so I can track it.
+Pull requests are welcome! If you have a feature request or bug report, please open a new issue so it could be tracked.
 
 License
 =======
