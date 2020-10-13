@@ -1,5 +1,7 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -27,6 +29,7 @@ import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemDetail
 import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemKeyProvider
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import kotlinx.android.synthetic.main.fragment_libraries.*
+
 
 @AndroidEntryPoint
 class LibrariesFragment : Fragment() {
@@ -81,6 +84,13 @@ class LibrariesFragment : Fragment() {
 
     private fun setupAdapter() {
         librariesAdapter = LibrariesAdapter(
+            clickListener = { library: Library ->
+                val urlLibrary = library.url
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(urlLibrary)
+                }
+                startActivity(intent)
+            },
             pinClickListener = { library: Library, pinned: Boolean ->
                 librariesViewModel.setPinned(library, pinned)
             }
