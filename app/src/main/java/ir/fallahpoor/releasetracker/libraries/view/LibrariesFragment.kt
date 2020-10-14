@@ -268,11 +268,7 @@ class LibrariesFragment : Fragment() {
                 true
             }
             R.id.action_night_mode -> {
-                if (nightModeSupported()) {
-                    showSelectNightModeDialog()
-                } else {
-                    showSnackbar(resources.getString(R.string.night_mode_not_supported))
-                }
+                showSelectNightModeDialog()
                 true
             }
             else -> false
@@ -288,8 +284,22 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun showSelectNightModeDialog() {
-        val dialogFragment = NightModeDialog()
-        showDialogFragment(dialogFragment, NightModeDialog.TAG)
+        if (nightModeSupported()) {
+            val dialogFragment = NightModeDialog()
+            showDialogFragment(dialogFragment, NightModeDialog.TAG)
+        } else {
+            showSnackbar(resources.getString(R.string.night_mode_not_supported))
+        }
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val dialogFragment = DeleteDialog()
+        dialogFragment.setListener(DeleteListener())
+        showDialogFragment(dialogFragment, DeleteDialog.TAG)
+    }
+
+    private fun showDialogFragment(dialogFragment: DialogFragment?, tag: String) {
+        dialogFragment?.show(requireActivity().supportFragmentManager, tag)
     }
 
     private inner class ActionModeCallback : ActionMode.Callback {
@@ -316,16 +326,6 @@ class LibrariesFragment : Fragment() {
             actionMode = null
         }
 
-    }
-
-    private fun showDeleteConfirmationDialog() {
-        val dialogFragment = DeleteDialog()
-        dialogFragment.setListener(DeleteListener())
-        showDialogFragment(dialogFragment, DeleteDialog.TAG)
-    }
-
-    private fun showDialogFragment(dialogFragment: DialogFragment?, tag: String) {
-        dialogFragment?.show(requireActivity().supportFragmentManager, tag)
     }
 
     private inner class DeleteListener : DeleteDialog.DeleteListener {
