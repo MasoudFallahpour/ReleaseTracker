@@ -44,7 +44,7 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
                 1,
                 TimeUnit.HOURS
             )
-            .setInitialDelay(1, TimeUnit.MINUTES)
+            .setInitialDelay(10, TimeUnit.SECONDS)
             .addTag(getString(R.string.worker_tag))
             .build()
 
