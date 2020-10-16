@@ -8,7 +8,6 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class LibrariesViewModel
@@ -25,12 +24,21 @@ class LibrariesViewModel
     }
 
     private var order = getDefaultOrder()
-    private val _pinViewState = MutableLiveData<ViewState<Unit>>()
-    private val _deleteLiveData = SingleLiveData<ViewState<Unit>>()
-    private val triggerLiveData = MutableLiveData<Unit>()
-    private val _lastUpdateCheckLiveData = MutableLiveData<ViewState<String>>()
 
+    private val _pinViewState = MutableLiveData<ViewState<Unit>>()
     val pinViewState: LiveData<ViewState<Unit>> = _pinViewState
+
+    private val _deleteLiveData = SingleLiveData<ViewState<Unit>>()
+    val deleteViewState: LiveData<ViewState<Unit>> = _deleteLiveData
+
+    val lastUpdateCheckViewState: LiveData<ViewState<String>> =
+        libraryRepository.getLastUpdateCheck()
+            .asLiveData()
+            .map {
+                ViewState.success(it)
+            }
+
+    private val triggerLiveData = MutableLiveData<Unit>()
     val librariesViewState: LiveData<ViewState<List<Library>>> =
         Transformations.switchMap(triggerLiveData) {
             val sortingOrder = getSortingOrder()
@@ -39,22 +47,20 @@ class LibrariesViewModel
                 ViewState.success(libraries)
             }
         }
-    val deleteViewState: LiveData<ViewState<Unit>> = _deleteLiveData
-    val lastUpdateCheckViewState: LiveData<ViewState<String>> = _lastUpdateCheckLiveData
 
-    private fun getSortingOrder(): LibraryRepository.Order =
-        when (order) {
-            Order.A_TO_Z -> LibraryRepository.Order.A_TO_Z
-            Order.Z_TO_A -> LibraryRepository.Order.Z_TO_A
-            Order.PINNED_FIRST -> LibraryRepository.Order.PINNED_FIRST
-        }
+
+    private fun getSortingOrder() = when (order) {
+        Order.A_TO_Z -> LibraryRepository.Order.A_TO_Z
+        Order.Z_TO_A -> LibraryRepository.Order.Z_TO_A
+        Order.PINNED_FIRST -> LibraryRepository.Order.PINNED_FIRST
+    }
 
     fun getLibraries(order: Order = getDefaultOrder()) {
         this.order = order
         triggerLiveData.value = Unit
     }
 
-    private fun getDefaultOrder(): Order =
+    private fun getDefaultOrder() =
         Order.valueOf(localStorage.getOrder() ?: Order.A_TO_Z.name)
 
     fun setPinned(library: Library, isPinned: Boolean) {
@@ -87,17 +93,6 @@ class LibrariesViewModel
         } catch (t: Throwable) {
             val message = exceptionParser.getMessage(t)
             _deleteLiveData.value = ViewState.error(message)
-        }
-
-    }
-
-    fun getLastUpdateCheck() {
-
-        viewModelScope.launch {
-            localStorage.getLastUpdateCheck()
-                .collect {
-                    _lastUpdateCheckLiveData.value = ViewState.success(it)
-                }
         }
 
     }

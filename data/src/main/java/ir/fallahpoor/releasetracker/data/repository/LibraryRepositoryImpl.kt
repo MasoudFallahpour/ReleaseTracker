@@ -5,11 +5,14 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
+import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
 @Inject constructor(
+    private val localStorage: LocalStorage,
     private val libraryDao: LibraryDao,
     private val githubWebservice: GithubWebservice
 ) : LibraryRepository {
@@ -93,6 +96,10 @@ class LibraryRepositoryImpl
     override suspend fun setPinned(library: Library, pinned: Boolean) {
         val newLibrary = library.copy(pinned = if (pinned) 1 else 0)
         libraryDao.update(newLibrary)
+    }
+
+    override fun getLastUpdateCheck(): Flow<String> {
+        return localStorage.getLastUpdateCheck()
     }
 
 }

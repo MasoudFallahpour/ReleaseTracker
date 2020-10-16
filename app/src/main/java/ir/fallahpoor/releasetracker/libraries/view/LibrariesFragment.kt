@@ -58,7 +58,6 @@ class LibrariesFragment : Fragment() {
         setupViews()
         observeViewModel()
         librariesViewModel.getLibraries()
-        librariesViewModel.getLastUpdateCheck()
     }
 
     private fun setupViews() {

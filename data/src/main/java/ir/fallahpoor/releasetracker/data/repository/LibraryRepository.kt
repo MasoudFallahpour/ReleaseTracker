@@ -2,6 +2,7 @@ package ir.fallahpoor.releasetracker.data.repository
 
 import androidx.lifecycle.LiveData
 import ir.fallahpoor.releasetracker.data.entity.Library
+import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
 
@@ -26,5 +27,7 @@ interface LibraryRepository {
     suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String
 
     suspend fun setPinned(library: Library, pinned: Boolean)
+
+    fun getLastUpdateCheck(): Flow<String>
 
 }
