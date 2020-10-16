@@ -22,9 +22,9 @@ class AddLibraryViewModel
 
     fun addLibrary(libraryName: String, libraryUrl: String) {
 
-        viewModelScope.launch {
+        _viewStateLiveData.value = ViewState.loading()
 
-            _viewStateLiveData.value = ViewState.loading()
+        viewModelScope.launch {
 
             try {
                 val library: Library? = libraryRepository.getLibrary(libraryName)

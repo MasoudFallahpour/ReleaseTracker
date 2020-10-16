@@ -34,10 +34,10 @@ class LibrariesViewModel
 
     val lastUpdateCheckViewState: LiveData<ViewState<String>> =
         libraryRepository.getLastUpdateCheck()
-            .asLiveData()
             .map {
                 ViewState.success(it)
             }
+            .asLiveData()
 
     private val triggerLiveData = MutableLiveData<Unit>()
     val librariesViewState: LiveData<ViewState<List<Library>>> =
