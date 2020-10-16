@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import ir.fallahpoor.releasetracker.data.database.DatabaseContract
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.LibraryDatabase
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
@@ -35,7 +36,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLibraryDatabase(@ApplicationContext context: Context): LibraryDatabase =
-        Room.databaseBuilder(context, LibraryDatabase::class.java, "ReleaseTracker.db")
+        Room.databaseBuilder(context, LibraryDatabase::class.java, DatabaseContract.DATABASE_NAME)
             .createFromAsset("database/libraries.db")
             .build()
 

@@ -11,7 +11,7 @@ interface LibraryDao {
     @RawQuery(observedEntities = [Library::class])
     fun getAll(query: SupportSQLiteQuery): Flow<List<Library>>
 
-    @Query("SELECT * FROM library ORDER BY name")
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME}")
     suspend fun getAll(): List<Library>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
@@ -20,10 +20,10 @@ interface LibraryDao {
     @Update
     suspend fun update(library: Library)
 
-    @Query("DELETE FROM library WHERE name IN (:ids)")
+    @Query("DELETE FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} IN (:ids)")
     suspend fun delete(ids: List<String>)
 
-    @Query("SELECT * FROM library WHERE name = :libraryName COLLATE NOCASE LIMIT 1")
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} = :libraryName COLLATE NOCASE LIMIT 1")
     suspend fun get(libraryName: String): Library?
 
 }
