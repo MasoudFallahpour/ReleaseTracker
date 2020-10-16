@@ -33,11 +33,6 @@ import kotlinx.android.synthetic.main.fragment_libraries.*
 @AndroidEntryPoint
 class LibrariesFragment : Fragment() {
 
-    companion object {
-        private const val KEY_ACTION_MODE_ENABLED = "action_mode_enabled"
-        private const val KEY_NUM_SELECTED_ITEMS = "num_selected_items"
-    }
-
     private val librariesViewModel: LibrariesViewModel by viewModels()
     private lateinit var selectionTracker: SelectionTracker<String>
     private lateinit var librariesAdapter: LibrariesAdapter
@@ -114,15 +109,23 @@ class LibrariesFragment : Fragment() {
                     items.isEmpty -> actionMode?.finish()
                     items.size() == 1 -> {
                         startActionMode()
-                        actionMode?.title = getString(R.string.selected, items.size())
+                        setActionModeTitle(items.size())
                     }
-                    else -> actionMode?.title = getString(R.string.selected, items.size())
+                    else -> setActionModeTitle(items.size())
                 }
             }
         })
 
         return selectionTracker
 
+    }
+
+    private fun setActionModeTitle(numSelectedItems: Int) {
+        actionMode?.title = if (numSelectedItems > 0) {
+            getString(R.string.selected, numSelectedItems)
+        } else {
+            ""
+        }
     }
 
     private fun observeViewModel() {
@@ -212,8 +215,8 @@ class LibrariesFragment : Fragment() {
 
     private fun saveState(outState: Bundle) {
         selectionTracker.onSaveInstanceState(outState)
-        outState.putBoolean(KEY_ACTION_MODE_ENABLED, actionMode != null)
-        outState.putInt(KEY_NUM_SELECTED_ITEMS, selectionTracker.selection.size())
+        librariesViewModel.isActionModeEnabled = actionMode != null
+        librariesViewModel.numSelectedItems = selectionTracker.selection.size()
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -223,12 +226,10 @@ class LibrariesFragment : Fragment() {
 
     private fun restoreState(savedInstanceState: Bundle?) {
         selectionTracker.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState?.let {
-            val actionModeEnabled = it.getBoolean(KEY_ACTION_MODE_ENABLED)
-            val numSelectedItems = it.getInt(KEY_NUM_SELECTED_ITEMS)
-            if (actionModeEnabled) {
-                startActionMode(numSelectedItems)
-            }
+        val actionModeEnabled = librariesViewModel.isActionModeEnabled
+        if (actionModeEnabled) {
+            val numSelectedItems = librariesViewModel.numSelectedItems
+            startActionMode(numSelectedItems)
         }
     }
 
@@ -236,11 +237,7 @@ class LibrariesFragment : Fragment() {
         if (actionMode == null) {
             actionMode =
                 (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
-            actionMode?.title = if (numSelectedItems > 0) {
-                getString(R.string.selected, numSelectedItems)
-            } else {
-                ""
-            }
+            setActionModeTitle(numSelectedItems)
         }
     }
 

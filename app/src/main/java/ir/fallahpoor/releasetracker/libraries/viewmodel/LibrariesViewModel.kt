@@ -25,6 +25,8 @@ class LibrariesViewModel
     }
 
     private var order = getDefaultOrder()
+    var isActionModeEnabled = false
+    var numSelectedItems = 0
 
     private val _pinViewState = MutableLiveData<ViewState<Unit>>()
     val pinViewState: LiveData<ViewState<Unit>> = _pinViewState
