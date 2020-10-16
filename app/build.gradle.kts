@@ -55,6 +55,7 @@ dependencies {
     implementation(Dependencies.App.navigationUi)
     implementation(Dependencies.App.material)
     implementation(Dependencies.App.viewModel)
+    implementation(Dependencies.App.liveDataKtx)
     implementation(Dependencies.App.hilt)
     kapt(Dependencies.App.hiltCompiler)
     implementation(Dependencies.App.hiltViewModel)

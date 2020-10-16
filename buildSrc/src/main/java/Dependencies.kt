@@ -33,6 +33,7 @@ object Dependencies {
         const val hiltJetpackCompiler = "androidx.hilt:hilt-compiler:$hiltJetpackVersion"
         const val hiltWorkManager = "androidx.hilt:hilt-work:$hiltJetpackVersion"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:$lifeCycleVersion"
+        const val liveDataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycleVersion"
         const val room = Common.room
         const val materialProgressBar = "me.zhanghai.android.materialprogressbar:library:1.6.1"
         const val workManager = "androidx.work:work-runtime-ktx:2.4.0"

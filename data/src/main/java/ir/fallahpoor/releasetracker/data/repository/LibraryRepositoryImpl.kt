@@ -1,6 +1,5 @@
 package ir.fallahpoor.releasetracker.data.repository
 
-import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
@@ -37,9 +36,7 @@ class LibraryRepositoryImpl
         return libraryDao.get(libraryName)
     }
 
-    override fun getLibrariesByLiveData(
-        order: LibraryRepository.Order
-    ): LiveData<List<Library>> {
+    override fun getLibraries(order: LibraryRepository.Order): Flow<List<Library>> {
 
         val query = when (order) {
             LibraryRepository.Order.A_TO_Z -> "SELECT * FROM library ORDER BY name ASC"
@@ -47,7 +44,7 @@ class LibraryRepositoryImpl
             LibraryRepository.Order.PINNED_FIRST -> "SELECT * FROM library ORDER BY pinned DESC, name ASC"
         }
 
-        return libraryDao.getAllLiveData(SimpleSQLiteQuery(query))
+        return libraryDao.getAll(SimpleSQLiteQuery(query))
 
     }
 
@@ -72,9 +69,8 @@ class LibraryRepositoryImpl
             .replace("v", "", ignoreCase = true) // Remove the letter 'v'
             .trim()
 
-    override suspend fun getLibraries(): List<Library> {
-        return libraryDao.getAll()
-    }
+    override suspend fun getLibraries(): List<Library> =
+        libraryDao.getAll()
 
     override suspend fun deleteLibraries(libraryNames: List<String>) {
         libraryDao.delete(libraryNames)
@@ -98,8 +94,7 @@ class LibraryRepositoryImpl
         libraryDao.update(newLibrary)
     }
 
-    override fun getLastUpdateCheck(): Flow<String> {
-        return localStorage.getLastUpdateCheck()
-    }
+    override fun getLastUpdateCheck(): Flow<String> =
+        localStorage.getLastUpdateCheck()
 
 }

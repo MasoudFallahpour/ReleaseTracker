@@ -1,6 +1,5 @@
 package ir.fallahpoor.releasetracker.data.repository
 
-import androidx.lifecycle.LiveData
 import ir.fallahpoor.releasetracker.data.entity.Library
 import kotlinx.coroutines.flow.Flow
 
@@ -18,7 +17,7 @@ interface LibraryRepository {
 
     suspend fun getLibrary(libraryName: String): Library?
 
-    fun getLibrariesByLiveData(order: Order): LiveData<List<Library>>
+    fun getLibraries(order: Order): Flow<List<Library>>
 
     suspend fun getLibraries(): List<Library>
 

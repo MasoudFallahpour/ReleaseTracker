@@ -8,6 +8,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class LibrariesViewModel
@@ -40,12 +41,14 @@ class LibrariesViewModel
 
     private val triggerLiveData = MutableLiveData<Unit>()
     val librariesViewState: LiveData<ViewState<List<Library>>> =
-        Transformations.switchMap(triggerLiveData) {
+        triggerLiveData.switchMap {
             val sortingOrder = getSortingOrder()
             localStorage.setOrder(sortingOrder.name)
-            Transformations.map(libraryRepository.getLibrariesByLiveData(sortingOrder)) { libraries: List<Library> ->
-                ViewState.success(libraries)
-            }
+            libraryRepository.getLibraries(sortingOrder)
+                .map { libraries: List<Library> ->
+                    ViewState.success(libraries)
+                }
+                .asLiveData()
         }
 
 
