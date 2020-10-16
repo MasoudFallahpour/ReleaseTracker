@@ -25,27 +25,31 @@ class UpdateVersionsWorker
     private val localStorage: LocalStorage
 ) : CoroutineWorker(context, workerParams) {
 
-    private val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
-
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
         val result: Result =
             if (!networkUtils.networkReachable()) {
                 Result.retry()
             } else {
-                libraryRepository.getLibraries()
-                    .forEach { library: Library ->
-                        launch {
-                            getLatestVersion(library)
-                        }
+                val libraries: List<Library> = libraryRepository.getLibraries()
+                libraries.forEach { library: Library ->
+                    launch {
+                        getLatestVersion(library)
                     }
-                Timber.d("Update check: %s", simpleDateFormat.format(Date()))
-                localStorage.setLastUpdateCheck(simpleDateFormat.format(Date()))
+                }
+                saveUpdateDate(libraries)
                 Result.success()
             }
 
         result
 
+    }
+
+    private fun saveUpdateDate(libraries: List<Library>) {
+        if (libraries.isNotEmpty()) {
+            val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
+            localStorage.setLastUpdateCheck(simpleDateFormat.format(Date()))
+        }
     }
 
     private suspend fun getLatestVersion(library: Library) {
