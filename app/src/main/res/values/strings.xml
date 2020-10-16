@@ -31,4 +31,5 @@
     <string name="on">On</string>
     <string name="auto">Auto</string>
     <string name="night_mode_not_supported">Night mode is not supported on your device</string>
+    <string name="selected">%d selected</string>
 </resources>

@@ -35,6 +35,7 @@ class LibrariesFragment : Fragment() {
 
     companion object {
         private const val KEY_ACTION_MODE_ENABLED = "action_mode_enabled"
+        private const val KEY_NUM_SELECTED_ITEMS = "num_selected_items"
     }
 
     private val librariesViewModel: LibrariesViewModel by viewModels()
@@ -109,10 +110,13 @@ class LibrariesFragment : Fragment() {
         selectionTracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
                 val items = selectionTracker.selection
-                if (items.isEmpty) {
-                    actionMode?.finish()
-                } else if (items.size() == 1) {
-                    startActionMode()
+                when {
+                    items.isEmpty -> actionMode?.finish()
+                    items.size() == 1 -> {
+                        startActionMode()
+                        actionMode?.title = getString(R.string.selected, items.size())
+                    }
+                    else -> actionMode?.title = getString(R.string.selected, items.size())
                 }
             }
         })
@@ -209,6 +213,7 @@ class LibrariesFragment : Fragment() {
     private fun saveState(outState: Bundle) {
         selectionTracker.onSaveInstanceState(outState)
         outState.putBoolean(KEY_ACTION_MODE_ENABLED, actionMode != null)
+        outState.putInt(KEY_NUM_SELECTED_ITEMS, selectionTracker.selection.size())
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -220,15 +225,22 @@ class LibrariesFragment : Fragment() {
         selectionTracker.onRestoreInstanceState(savedInstanceState)
         savedInstanceState?.let {
             val actionModeEnabled = it.getBoolean(KEY_ACTION_MODE_ENABLED)
+            val numSelectedItems = it.getInt(KEY_NUM_SELECTED_ITEMS)
             if (actionModeEnabled) {
-                startActionMode()
+                startActionMode(numSelectedItems)
             }
         }
     }
 
-    private fun startActionMode() {
+    private fun startActionMode(numSelectedItems: Int = 0) {
         if (actionMode == null) {
-            (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
+            actionMode =
+                (activity as? AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
+            actionMode?.title = if (numSelectedItems > 0) {
+                getString(R.string.selected, numSelectedItems)
+            } else {
+                ""
+            }
         }
     }
 
@@ -304,7 +316,6 @@ class LibrariesFragment : Fragment() {
     private inner class ActionModeCallback : ActionMode.Callback {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            actionMode = mode
             mode.menuInflater.inflate(R.menu.menu_libraries_context, menu)
             return true
         }
