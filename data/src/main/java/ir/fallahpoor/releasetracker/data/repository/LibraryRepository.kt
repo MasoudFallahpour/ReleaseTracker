@@ -29,4 +29,6 @@ interface LibraryRepository {
 
     fun getLastUpdateCheck(): Flow<String>
 
+    fun setLastUpdateCheck(date: String)
+
 }

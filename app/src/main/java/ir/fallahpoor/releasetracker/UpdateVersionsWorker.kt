@@ -7,7 +7,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
-import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,8 +20,7 @@ class UpdateVersionsWorker
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val libraryRepository: LibraryRepository,
-    private val networkUtils: NetworkUtils,
-    private val localStorage: LocalStorage
+    private val networkUtils: NetworkUtils
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
@@ -48,7 +46,9 @@ class UpdateVersionsWorker
     private fun saveUpdateDate(libraries: List<Library>) {
         if (libraries.isNotEmpty()) {
             val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
-            localStorage.setLastUpdateCheck(simpleDateFormat.format(Date()))
+            libraryRepository.setLastUpdateCheck(simpleDateFormat.format(Date()))
+        } else {
+            libraryRepository.setLastUpdateCheck("N/A")
         }
     }
 

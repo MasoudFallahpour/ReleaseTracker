@@ -97,4 +97,8 @@ class LibraryRepositoryImpl
     override fun getLastUpdateCheck(): Flow<String> =
         localStorage.getLastUpdateCheck()
 
+    override fun setLastUpdateCheck(date: String) {
+        localStorage.setLastUpdateCheck(date)
+    }
+
 }
