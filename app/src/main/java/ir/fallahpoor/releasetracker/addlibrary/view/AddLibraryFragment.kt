@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
+import ir.fallahpoor.releasetracker.common.DeviceUtils
 import ir.fallahpoor.releasetracker.common.ViewState
 import kotlinx.android.synthetic.main.fragment_add_library.*
 
@@ -49,6 +50,7 @@ class AddLibraryFragment : Fragment() {
 
     private fun handleDataLoadedState() {
         hideLoading()
+        DeviceUtils.closeKeyboard(requireContext(), requireView().rootView)
         addLibraryButton.isEnabled = true
         libraryNameEditText.setText("")
         libraryNameEditText.requestFocus()

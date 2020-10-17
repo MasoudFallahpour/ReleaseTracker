@@ -77,7 +77,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="@dimen/space_normal"
-        android:text="@string/add_library"
-        app:layout_behavior=".common.MoveUpwardBehavior" />
+        android:text="@string/add_library" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
