@@ -36,15 +36,19 @@ class LibraryRepositoryImpl
         return libraryDao.get(libraryName)
     }
 
-    override fun getLibraries(order: LibraryRepository.Order): Flow<List<Library>> {
+    override fun getLibraries(
+        order: LibraryRepository.Order,
+        searchTerm: String
+    ): Flow<List<Library>> {
 
+        val queryPrefix = "SELECT * FROM library WHERE name LIKE '%' || ? || '%' ORDER BY "
         val query = when (order) {
-            LibraryRepository.Order.A_TO_Z -> "SELECT * FROM library ORDER BY name ASC"
-            LibraryRepository.Order.Z_TO_A -> "SELECT * FROM library ORDER BY name DESC"
-            LibraryRepository.Order.PINNED_FIRST -> "SELECT * FROM library ORDER BY pinned DESC, name ASC"
+            LibraryRepository.Order.A_TO_Z -> queryPrefix + "name ASC"
+            LibraryRepository.Order.Z_TO_A -> queryPrefix + "name DESC"
+            LibraryRepository.Order.PINNED_FIRST -> queryPrefix + "pinned DESC, name ASC"
         }
 
-        return libraryDao.getAll(SimpleSQLiteQuery(query))
+        return libraryDao.getAll(SimpleSQLiteQuery(query, arrayOf(searchTerm)))
 
     }
 

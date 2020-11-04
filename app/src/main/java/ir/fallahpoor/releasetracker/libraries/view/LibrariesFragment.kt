@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -266,7 +267,26 @@ class LibrariesFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
         inflater.inflate(R.menu.menu_libraries, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        setupSearchView(searchItem.actionView as SearchView)
+
+    }
+
+    private fun setupSearchView(searchView: SearchView) {
+        searchView.queryHint = getString(R.string.hint_search)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                librariesViewModel.getLibraries(searchTerm = query)
+                return true
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

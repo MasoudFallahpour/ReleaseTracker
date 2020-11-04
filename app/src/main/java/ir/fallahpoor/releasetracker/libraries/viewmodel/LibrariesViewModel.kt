@@ -24,7 +24,8 @@ class LibrariesViewModel
         PINNED_FIRST
     }
 
-    private var order = getDefaultOrder()
+    private var order: Order = getDefaultOrder()
+    private var searchTerm = ""
     var isActionModeEnabled = false
     var numSelectedItems = 0
 
@@ -44,9 +45,9 @@ class LibrariesViewModel
     private val triggerLiveData = MutableLiveData<Unit>()
     val librariesViewState: LiveData<ViewState<List<Library>>> =
         triggerLiveData.switchMap {
-            val sortingOrder = getSortingOrder()
-            localStorage.setOrder(sortingOrder.name)
-            libraryRepository.getLibraries(sortingOrder)
+            val order = getOrder()
+            localStorage.setOrder(order.name)
+            libraryRepository.getLibraries(order, searchTerm)
                 .map { libraries: List<Library> ->
                     ViewState.success(libraries)
                 }
@@ -54,14 +55,15 @@ class LibrariesViewModel
         }
 
 
-    private fun getSortingOrder() = when (order) {
+    private fun getOrder() = when (order) {
         Order.A_TO_Z -> LibraryRepository.Order.A_TO_Z
         Order.Z_TO_A -> LibraryRepository.Order.Z_TO_A
         Order.PINNED_FIRST -> LibraryRepository.Order.PINNED_FIRST
     }
 
-    fun getLibraries(order: Order = getDefaultOrder()) {
+    fun getLibraries(order: Order = getDefaultOrder(), searchTerm: String = "") {
         this.order = order
+        this.searchTerm = searchTerm
         triggerLiveData.value = Unit
     }
 
