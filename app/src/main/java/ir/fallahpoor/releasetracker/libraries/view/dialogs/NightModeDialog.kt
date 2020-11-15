@@ -8,7 +8,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
-import kotlinx.android.synthetic.main.dialog_night_mode.*
+import ir.fallahpoor.releasetracker.databinding.DialogNightModeBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -24,14 +24,25 @@ class NightModeDialog : BaseBottomSheetDialogFragment() {
     @Inject
     lateinit var localStorage: LocalStorage
 
+    private var _binding: DialogNightModeBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.dialog_night_mode, container, false)
+    ): View? {
+        _binding = DialogNightModeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun setupViews() {
@@ -39,11 +50,11 @@ class NightModeDialog : BaseBottomSheetDialogFragment() {
             localStorage.getNightMode() ?: NightModeManager.Mode.OFF.name
         )
         when (currentMode) {
-            NightModeManager.Mode.OFF -> nightModeOffButton.isChecked = true
-            NightModeManager.Mode.ON -> nightModeOnButton.isChecked = true
-            NightModeManager.Mode.AUTO -> nightModeAutoButton.isChecked = true
+            NightModeManager.Mode.OFF -> binding.nightModeOffButton.isChecked = true
+            NightModeManager.Mode.ON -> binding.nightModeOnButton.isChecked = true
+            NightModeManager.Mode.AUTO -> binding.nightModeAutoButton.isChecked = true
         }
-        nightModeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+        binding.nightModeRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.nightModeOffButton -> nightModeManager.setNightMode(NightModeManager.Mode.OFF)
                 R.id.nightModeOnButton -> nightModeManager.setNightMode(NightModeManager.Mode.ON)

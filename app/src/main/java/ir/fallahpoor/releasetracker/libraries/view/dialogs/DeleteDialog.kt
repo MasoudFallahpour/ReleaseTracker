@@ -5,8 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import ir.fallahpoor.releasetracker.R
-import kotlinx.android.synthetic.main.dialog_delete.*
+import ir.fallahpoor.releasetracker.databinding.DialogDeleteBinding
 
 class DeleteDialog : BaseBottomSheetDialogFragment() {
 
@@ -23,22 +22,32 @@ class DeleteDialog : BaseBottomSheetDialogFragment() {
     }
 
     private var deleteListener: DeleteListener? = null
+    private var _binding: DialogDeleteBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.dialog_delete, container, false)
+    ): View? {
+        _binding = DialogDeleteBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     private fun setupViews() {
-        cancelButton.setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             deleteListener?.cancelClicked(this)
         }
-        deleteButton.setOnClickListener {
+        binding.deleteButton.setOnClickListener {
             deleteListener?.deleteClicked(this)
         }
     }

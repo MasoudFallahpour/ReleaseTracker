@@ -8,7 +8,7 @@ import androidx.annotation.Nullable
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
-import kotlinx.android.synthetic.main.dialog_sort.*
+import ir.fallahpoor.releasetracker.databinding.DialogSortBinding
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,6 +32,8 @@ class SortDialog : BaseBottomSheetDialogFragment() {
     lateinit var localStorage: LocalStorage
     private var listener: SortListener? = null
     private var defaultOrder: Order = Order.A_TO_Z
+    private var _binding: DialogSortBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,10 +50,18 @@ class SortDialog : BaseBottomSheetDialogFragment() {
         inflater: LayoutInflater,
         @Nullable container: ViewGroup?,
         @Nullable savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.dialog_sort, container, false)
+    ): View? {
+        _binding = DialogSortBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun setupViews() {
@@ -68,14 +78,14 @@ class SortDialog : BaseBottomSheetDialogFragment() {
         }
 
         when (defaultOrder) {
-            Order.A_TO_Z -> sortingOrderAtoZTextView.isSelected = true
-            Order.Z_TO_A -> sortingOrderZtoATextView.isSelected = true
-            Order.PINNED_FIRST -> sortingOrderPinnedFirstTextView.isSelected = true
+            Order.A_TO_Z -> binding.sortingOrderAtoZTextView.isSelected = true
+            Order.Z_TO_A -> binding.sortingOrderZtoATextView.isSelected = true
+            Order.PINNED_FIRST -> binding.sortingOrderPinnedFirstTextView.isSelected = true
         }
 
-        sortingOrderAtoZTextView.setOnClickListener(onClickListener)
-        sortingOrderZtoATextView.setOnClickListener(onClickListener)
-        sortingOrderPinnedFirstTextView.setOnClickListener(onClickListener)
+        binding.sortingOrderAtoZTextView.setOnClickListener(onClickListener)
+        binding.sortingOrderZtoATextView.setOnClickListener(onClickListener)
+        binding.sortingOrderPinnedFirstTextView.setOnClickListener(onClickListener)
 
     }
 

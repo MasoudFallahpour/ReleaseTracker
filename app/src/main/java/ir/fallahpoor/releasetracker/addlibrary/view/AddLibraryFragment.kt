@@ -14,22 +14,32 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.DeviceUtils
 import ir.fallahpoor.releasetracker.common.ViewState
-import kotlinx.android.synthetic.main.fragment_add_library.*
+import ir.fallahpoor.releasetracker.databinding.FragmentAddLibraryBinding
 
 @AndroidEntryPoint
 class AddLibraryFragment : Fragment() {
 
     private val addLibraryViewModel: AddLibraryViewModel by viewModels()
+    private var _binding: FragmentAddLibraryBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_add_library, container, false)
+    ): View? {
+        _binding = FragmentAddLibraryBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         observeViewModel()
         setupViews()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun observeViewModel() {
@@ -45,30 +55,30 @@ class AddLibraryFragment : Fragment() {
 
     private fun handleLoadingState() {
         showLoading()
-        addLibraryButton.isEnabled = false
+        binding.addLibraryButton.isEnabled = false
     }
 
     private fun handleDataLoadedState() {
         hideLoading()
         DeviceUtils.closeKeyboard(requireContext(), requireView().rootView)
-        addLibraryButton.isEnabled = true
-        libraryNameEditText.setText("")
-        libraryNameEditText.requestFocus()
-        libraryUrlEditText.setText("")
+        binding.addLibraryButton.isEnabled = true
+        binding.libraryNameEditText.setText("")
+        binding.libraryNameEditText.requestFocus()
+        binding.libraryUrlEditText.setText("")
         showSnackbar(R.string.library_added)
     }
 
     private fun handleErrorState(viewState: ViewState.ErrorState<Unit>) {
         hideLoading()
-        addLibraryButton.isEnabled = true
+        binding.addLibraryButton.isEnabled = true
         showSnackbar(viewState.errorMessage)
     }
 
     private fun setupViews() {
-        addLibraryButton.setOnClickListener {
+        binding.addLibraryButton.setOnClickListener {
             if (inputsAreValid()) {
-                val libraryName = libraryNameEditText.text.toString()
-                val libraryUrl = libraryUrlEditText.text.toString()
+                val libraryName = binding.libraryNameEditText.text.toString()
+                val libraryUrl = binding.libraryUrlEditText.text.toString()
                 addLibraryViewModel.addLibrary(libraryName, "https://github.com/$libraryUrl")
             }
         }
@@ -81,9 +91,9 @@ class AddLibraryFragment : Fragment() {
     }
 
     private fun libraryNameIsValid(): Boolean {
-        val libraryName = libraryNameEditText.text.toString()
+        val libraryName = binding.libraryNameEditText.text.toString()
         val isValid = libraryName.isNotBlank()
-        libraryNameTextInputLayout.error =
+        binding.libraryNameTextInputLayout.error =
             if (!isValid) {
                 getString(R.string.library_name_empty)
             } else {
@@ -94,19 +104,19 @@ class AddLibraryFragment : Fragment() {
 
     private fun libraryUrlIsValid(): Boolean {
 
-        val libraryUrl = libraryUrlEditText.text.toString()
+        val libraryUrl = binding.libraryUrlEditText.text.toString()
 
         return when {
             libraryUrl.isBlank() -> {
-                libraryUrlTextInputLayout.error = getString(R.string.library_url_empty)
+                binding.libraryUrlTextInputLayout.error = getString(R.string.library_url_empty)
                 false
             }
             !isGithubUrl(libraryUrl) -> {
-                libraryUrlTextInputLayout.error = getString(R.string.library_url_invalid)
+                binding.libraryUrlTextInputLayout.error = getString(R.string.library_url_invalid)
                 false
             }
             else -> {
-                libraryUrlTextInputLayout.error = ""
+                binding.libraryUrlTextInputLayout.error = ""
                 true
             }
         }
@@ -119,11 +129,11 @@ class AddLibraryFragment : Fragment() {
     }
 
     private fun showLoading() {
-        addLibraryProgressBar.isVisible = true
+        binding.addLibraryProgressBar.isVisible = true
     }
 
     private fun hideLoading() {
-        addLibraryProgressBar.isVisible = false
+        binding.addLibraryProgressBar.isVisible = false
     }
 
     private fun showSnackbar(@StringRes message: Int) {
@@ -132,7 +142,7 @@ class AddLibraryFragment : Fragment() {
 
     private fun showSnackbar(message: String) {
         Snackbar.make(
-            addLibraryRootLayout,
+            binding.addLibraryRootLayout,
             message,
             Snackbar.LENGTH_LONG
         ).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)

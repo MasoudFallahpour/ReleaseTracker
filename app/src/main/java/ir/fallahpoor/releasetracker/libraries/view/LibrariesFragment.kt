@@ -25,13 +25,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.databinding.FragmentLibrariesBinding
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortDialog
 import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemDetailsLookup
 import ir.fallahpoor.releasetracker.libraries.view.selection.LibrariesItemKeyProvider
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
-import kotlinx.android.synthetic.main.fragment_libraries.*
 
 @AndroidEntryPoint
 class LibrariesFragment : Fragment() {
@@ -41,6 +41,8 @@ class LibrariesFragment : Fragment() {
     private lateinit var librariesAdapter: LibrariesAdapter
     private var currentOrder: SortDialog.Order? = null
     private var actionMode: ActionMode? = null
+    private var _binding: FragmentLibrariesBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +53,10 @@ class LibrariesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_libraries, container, false)
+    ): View? {
+        _binding = FragmentLibrariesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupViews()
@@ -59,8 +64,13 @@ class LibrariesFragment : Fragment() {
         librariesViewModel.getLibraries()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setupViews() {
-        addLibraryButton.setOnClickListener {
+        binding.addLibraryButton.setOnClickListener {
             actionMode?.finish()
             findNavController().navigate(R.id.action_librariesFragment_to_addLibraryFragment)
         }
@@ -69,7 +79,7 @@ class LibrariesFragment : Fragment() {
 
     private fun setupRecyclerView() {
         setupAdapter()
-        with(librariesRecyclerView) {
+        with(binding.librariesRecyclerView) {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = librariesAdapter
@@ -97,9 +107,9 @@ class LibrariesFragment : Fragment() {
 
         val selectionTracker = SelectionTracker.Builder(
             "LibrariesSelectionTracker",
-            librariesRecyclerView,
+            binding.librariesRecyclerView,
             LibrariesItemKeyProvider(librariesAdapter),
-            LibrariesItemDetailsLookup(librariesRecyclerView),
+            LibrariesItemDetailsLookup(binding.librariesRecyclerView),
             StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectAnything()
@@ -165,18 +175,18 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun showPrimaryLoading() {
-        librariesPrimaryProgressBar.isVisible = true
+        binding.librariesPrimaryProgressBar.isVisible = true
     }
 
     private fun hideSecondaryLoading() {
-        librariesSecondaryProgressBar.isVisible = false
+        binding.librariesSecondaryProgressBar.isVisible = false
     }
 
     private fun handleLibrariesLoadedState(viewState: ViewState.DataLoadedState<List<Library>>) {
         hidePrimaryLoading()
         val libraries: List<Library> = viewState.data
         librariesAdapter.submitList(libraries)
-        noLibrariesTextView.isVisible = libraries.isEmpty()
+        binding.noLibrariesTextView.isVisible = libraries.isEmpty()
     }
 
     private fun <T> handleErrorState(viewState: ViewState.ErrorState<T>) {
@@ -185,11 +195,11 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun showSecondaryLoading() {
-        librariesSecondaryProgressBar.isVisible = true
+        binding.librariesSecondaryProgressBar.isVisible = true
     }
 
     private fun hidePrimaryLoading() {
-        librariesPrimaryProgressBar.isVisible = false
+        binding.librariesPrimaryProgressBar.isVisible = false
     }
 
     private fun handleLibrariesDeletedState() {
@@ -199,12 +209,12 @@ class LibrariesFragment : Fragment() {
 
     private fun handleUpdateDateLoadedState(viewState: ViewState.DataLoadedState<String>) {
         val lastCheckDate = viewState.data
-        lastCheckTextView.text = getString(R.string.last_check_for_updates, lastCheckDate)
+        binding.lastCheckTextView.text = getString(R.string.last_check_for_updates, lastCheckDate)
     }
 
     private fun showSnackbar(message: String) {
         Snackbar.make(
-            addLibraryButton,
+            binding.addLibraryButton,
             message,
             Snackbar.LENGTH_LONG
         ).setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)

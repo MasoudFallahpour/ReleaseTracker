@@ -3,9 +3,6 @@ package ir.fallahpoor.releasetracker.libraries.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
@@ -14,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.databinding.ListItemLibraryBinding
 
 class LibrariesAdapter(
     private val clickListener: (Library) -> Unit,
@@ -42,22 +40,18 @@ class LibrariesAdapter(
 
     inner class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val nameTextView: TextView = itemView.findViewById(R.id.libraryNameTextView)
-        private val urlTextView: TextView = itemView.findViewById(R.id.libraryUrlTextView)
-        private val versionTextView: TextView = itemView.findViewById(R.id.libraryVersionTextView)
-        private val pinCheckBox: CheckBox = itemView.findViewById(R.id.pinCheckBox)
-        private val checkImageView: ImageView = itemView.findViewById(R.id.checkImageView)
+        private val binding = ListItemLibraryBinding.bind(itemView)
 
         fun bindData(library: Library, isSelected: Boolean) {
-            nameTextView.text = library.name
-            urlTextView.text = library.url
-            versionTextView.text = library.version
-            pinCheckBox.isChecked = library.pinned == 1
-            pinCheckBox.setOnClickListener {
+            binding.libraryNameTextView.text = library.name
+            binding.libraryUrlTextView.text = library.url
+            binding.libraryVersionTextView.text = library.version
+            binding.pinCheckBox.isChecked = library.pinned == 1
+            binding.pinCheckBox.setOnClickListener {
                 val isChecked = library.pinned == 0
                 pinClickListener.invoke(library, isChecked)
             }
-            checkImageView.isGone = !isSelected
+            binding.checkImageView.isGone = !isSelected
             itemView.setOnClickListener {
                 clickListener.invoke(library)
             }
