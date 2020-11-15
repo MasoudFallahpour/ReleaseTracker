@@ -71,10 +71,10 @@ class LibraryRepositoryImpl
             .replace("version", "", ignoreCase = true) // Remove the word "version"
             .replace("release", "", ignoreCase = true) // Remove the word "release"
             .replace("v", "", ignoreCase = true) // Remove the letter 'v'
+            .replace("r", "", ignoreCase = true) // Remove the letter 'r'
             .trim()
 
-    override suspend fun getLibraries(): List<Library> =
-        libraryDao.getAll()
+    override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
 
     override suspend fun deleteLibraries(libraryNames: List<String>) {
         libraryDao.delete(libraryNames)
