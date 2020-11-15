@@ -5,9 +5,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -276,6 +278,15 @@ class LibrariesFragment : Fragment() {
     }
 
     private fun setupSearchView(searchView: SearchView) {
+        val searchTextView =
+            searchView.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
+        searchTextView.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        searchTextView.setHintTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                android.R.color.darker_gray
+            )
+        )
         searchView.queryHint = getString(R.string.hint_search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
