@@ -2,7 +2,7 @@ object Dependencies {
 
     const val kotlinVersion = "1.4.10"
     const val composeVersion = "1.0.0-alpha07"
-    private const val navigationVersion = "2.3.0"
+    private const val navigationVersion = "2.3.1"
     private const val hiltVersion = "2.28-alpha"
     private const val hiltJetpackVersion = "1.0.0-alpha01"
     private const val roomVersion = "2.2.5"
@@ -22,12 +22,12 @@ object Dependencies {
         const val core = Common.core
         const val preference = "androidx.preference:preference-ktx:1.1.0"
         const val appCompat = "androidx.appcompat:appcompat:1.2.0"
-        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.1"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
         const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
         const val navigationFragment =
             "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
         const val navigationUi = "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-        const val material = "com.google.android.material:material:1.3.0-alpha01"
+        const val material = "com.google.android.material:material:1.3.0-alpha03"
         const val hilt = "com.google.dagger:hilt-android:$hiltVersion"
         const val hiltCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
         const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion"
