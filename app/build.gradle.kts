@@ -35,9 +35,15 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+        useIR = true
     }
     buildFeatures {
         viewBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Dependencies.composeVersion
+        kotlinCompilerVersion = Dependencies.kotlinVersion
     }
 }
 
@@ -71,5 +77,8 @@ dependencies {
     implementation(Dependencies.App.crashlytics)
     implementation(Dependencies.App.recyclerViewSelection)
     implementation(Dependencies.App.rxkprefs)
+    implementation(Dependencies.App.composeUi)
+    implementation(Dependencies.App.composeMaterial)
+    implementation(Dependencies.App.composeUiTooling)
     implementation(project(":data"))
 }

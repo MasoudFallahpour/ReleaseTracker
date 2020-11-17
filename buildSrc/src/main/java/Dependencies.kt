@@ -1,6 +1,7 @@
 object Dependencies {
 
-    private const val kotlinVersion = "1.4.10"
+    const val kotlinVersion = "1.4.10"
+    const val composeVersion = "1.0.0-alpha07"
     private const val navigationVersion = "2.3.0"
     private const val hiltVersion = "2.28-alpha"
     private const val hiltJetpackVersion = "1.0.0-alpha01"
@@ -42,6 +43,9 @@ object Dependencies {
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
         const val recyclerViewSelection = "androidx.recyclerview:recyclerview-selection:1.0.0"
         const val rxkprefs = Common.rxkprefs
+        const val composeUi = "androidx.compose.ui:ui:$composeVersion"
+        const val composeMaterial = "androidx.compose.material:material:$composeVersion"
+        const val composeUiTooling = "androidx.ui:ui-tooling:$composeVersion"
     }
 
     object Data {
