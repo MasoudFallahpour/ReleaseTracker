@@ -1,7 +1,7 @@
 object Dependencies {
 
-    const val kotlinVersion = "1.4.10"
-    const val composeVersion = "1.0.0-alpha07"
+    const val kotlinVersion = "1.4.21"
+    const val composeVersion = "1.0.0-alpha10"
     private const val navigationVersion = "2.3.1"
     private const val hiltVersion = "2.28-alpha"
     private const val hiltJetpackVersion = "1.0.0-alpha01"
@@ -13,7 +13,7 @@ object Dependencies {
     private object Common {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         const val room = "androidx.room:room-runtime:$roomVersion"
-        const val core = "androidx.core:core-ktx:1.3.1"
+        const val core = "androidx.core:core-ktx:1.3.2"
         const val rxkprefs = "com.afollestad.rxkprefs:core:$kprefs"
     }
 
@@ -27,7 +27,7 @@ object Dependencies {
         const val navigationFragment =
             "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
         const val navigationUi = "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-        const val material = "com.google.android.material:material:1.3.0-alpha03"
+        const val material = "com.google.android.material:material:1.3.0-rc01"
         const val hilt = "com.google.dagger:hilt-android:$hiltVersion"
         const val hiltCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
         const val hiltViewModel = "androidx.hilt:hilt-lifecycle-viewmodel:$hiltJetpackVersion"
@@ -44,8 +44,11 @@ object Dependencies {
         const val recyclerViewSelection = "androidx.recyclerview:recyclerview-selection:1.0.0"
         const val rxkprefs = Common.rxkprefs
         const val composeUi = "androidx.compose.ui:ui:$composeVersion"
+        const val composeTooling = "androidx.compose.ui:ui-tooling:$composeVersion"
         const val composeMaterial = "androidx.compose.material:material:$composeVersion"
-        const val composeUiTooling = "androidx.ui:ui-tooling:$composeVersion"
+        const val composeRuntime = "androidx.compose.runtime:runtime:$composeVersion"
+        const val composeRuntimeLiveDate =
+            "androidx.compose.runtime:runtime-livedata:$composeVersion"
     }
 
     object Data {

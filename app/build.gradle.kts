@@ -78,7 +78,9 @@ dependencies {
     implementation(Dependencies.App.recyclerViewSelection)
     implementation(Dependencies.App.rxkprefs)
     implementation(Dependencies.App.composeUi)
+    implementation(Dependencies.App.composeTooling)
     implementation(Dependencies.App.composeMaterial)
-    implementation(Dependencies.App.composeUiTooling)
+    implementation(Dependencies.App.composeRuntime)
+    implementation(Dependencies.App.composeRuntimeLiveDate)
     implementation(project(":data"))
 }
