@@ -13,9 +13,7 @@ private val lightColors: Colors = lightColors(
     onPrimary = White,
     secondary = Teal,
     onSecondary = Black,
-    error = LightRed,
-    background = White,
-    onBackground = Black
+    error = LightRed
 )
 
 private val darkColors: Colors = darkColors(
@@ -24,9 +22,7 @@ private val darkColors: Colors = darkColors(
     onPrimary = Black,
     secondary = Teal,
     onSecondary = Black,
-    error = DarkRed,
-    background = Black,
-    onBackground = White
+    error = DarkRed
 )
 
 @Composable

@@ -13,10 +13,8 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.databinding.ListItemLibraryBinding
 
-class LibrariesAdapter(
-    private val clickListener: (Library) -> Unit,
-    private val pinClickListener: (Library, Boolean) -> Unit
-) : ListAdapter<Library, LibrariesAdapter.LibraryViewHolder>(LibraryDiffCallback()) {
+class LibrariesAdapter :
+    ListAdapter<Library, LibrariesAdapter.LibraryViewHolder>(LibraryDiffCallback()) {
 
     var selectionTracker: SelectionTracker<String>? = null
 
@@ -31,9 +29,8 @@ class LibrariesAdapter(
     }
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
-        val library: Library = getItem(position)
         val isSelected = selectionTracker?.isSelected(getItem(position).name) ?: false
-        holder.bindData(library, isSelected)
+        holder.bindData(isSelected)
     }
 
     override fun getItemId(position: Int): Long = getItem(position).hashCode().toLong()
@@ -42,19 +39,8 @@ class LibrariesAdapter(
 
         private val binding = ListItemLibraryBinding.bind(itemView)
 
-        fun bindData(library: Library, isSelected: Boolean) {
-            binding.libraryNameTextView.text = library.name
-            binding.libraryUrlTextView.text = library.url
-            binding.libraryVersionTextView.text = library.version
-            binding.pinCheckBox.isChecked = library.pinned == 1
-            binding.pinCheckBox.setOnClickListener {
-                val isChecked = library.pinned == 0
-                pinClickListener.invoke(library, isChecked)
-            }
+        fun bindData(isSelected: Boolean) {
             binding.checkImageView.isGone = !isSelected
-            itemView.setOnClickListener {
-                clickListener.invoke(library)
-            }
         }
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<String> =
@@ -62,7 +48,7 @@ class LibrariesAdapter(
 
                 override fun getPosition(): Int = adapterPosition
 
-                override fun getSelectionKey(): String? = getItem(adapterPosition).name
+                override fun getSelectionKey(): String = getItem(adapterPosition).name
 
             }
 

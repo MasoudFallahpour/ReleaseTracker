@@ -35,12 +35,15 @@ class LocalStorage @Inject constructor(
         rxkPrefs.string(KEY_LAST_UPDATE_CHECK, defaultValue = "N/A")
             .asFlow()
 
-    fun getNightMode(): String? {
-        return getString(KEY_NIGHT_MODE)
-    }
+    fun getNightModeAsFlow(): Flow<String> =
+        rxkPrefs.string(KEY_NIGHT_MODE)
+            .asFlow()
+
+    fun getNightMode(): String? = getString(KEY_NIGHT_MODE)
 
     fun setNightMode(mode: String) {
-        return putString(KEY_NIGHT_MODE, mode)
+        rxkPrefs.string(KEY_NIGHT_MODE)
+            .set(mode)
     }
 
     private fun putString(key: String, value: String) {

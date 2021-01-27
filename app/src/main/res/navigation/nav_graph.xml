@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/librariesFragment">
 
     <fragment
         android:id="@+id/librariesFragment"
-        android:name="ir.fallahpoor.releasetracker.libraries.view.LibrariesFragment"
-        android:label="@string/libraries"
-        tools:layout="@layout/fragment_libraries">
+        android:name="ir.fallahpoor.releasetracker.libraries.view.LibrariesFragmentCompose"
+        android:label="@string/libraries">
         <action
-            android:id="@+id/action_librariesFragment_to_addLibraryFragment"
+            android:id="@+id/action_to_addLibraryFragment"
             app:destination="@id/addLibraryFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
@@ -21,6 +19,5 @@
     <fragment
         android:id="@+id/addLibraryFragment"
         android:name="ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryFragment"
-        android:label="@string/add_library"
-        tools:layout="@layout/fragment_add_library" />
+        android:label="@string/add_library" />
 </navigation>

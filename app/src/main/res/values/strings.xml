@@ -25,7 +25,7 @@
     <string name="last_check_for_updates">Last check: %s</string>
     <string name="no_libraries">There are no libraries</string>
     <string name="content_description_night_mode">Set night mode</string>
-    <string name="night_mode">Night mode</string>
+    <string name="night_mode">Night mode…</string>
     <string name="select_night_mode">Select night mode</string>
     <string name="off">Off</string>
     <string name="on">On</string>

@@ -33,7 +33,7 @@ class NightModeManager
     }
 
     fun getCurrentNightMode(): Mode {
-        return Mode.valueOf(localStorage.getNightMode() ?: Mode.OFF.name)
+        return Mode.valueOf(localStorage.getNightMode() ?: Mode.AUTO.name)
     }
 
     private fun setMode(currentMode: Mode) {

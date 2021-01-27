@@ -15,75 +15,8 @@
         android:src="@drawable/ic_check"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/pinCheckBoxContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
-
-    <FrameLayout
-        android:id="@+id/pinCheckBoxContainer"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/checkImageView"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <CheckBox
-            android:id="@+id/pinCheckBox"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:button="@drawable/sl_pin" />
-
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/libraryNameTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:paddingEnd="@dimen/space_small"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/text_size_normal"
-        app:layout_constraintBottom_toTopOf="@id/libraryUrlTextView"
-        app:layout_constraintEnd_toStartOf="@id/libraryVersionTextView"
-        app:layout_constraintStart_toEndOf="@id/pinCheckBoxContainer"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Library name" />
-
-    <TextView
-        android:id="@+id/libraryUrlTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:paddingEnd="@dimen/space_small"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="@dimen/text_size_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/libraryVersionTextView"
-        app:layout_constraintStart_toEndOf="@id/pinCheckBoxContainer"
-        app:layout_constraintTop_toBottomOf="@id/libraryNameTextView"
-        tools:text="Library URL" />
-
-    <TextView
-        android:id="@+id/libraryVersionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:padding="@dimen/space_normal"
-        android:paddingStart="@dimen/space_normal"
-        android:paddingEnd="@dimen/space_normal"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/text_size_normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Library version" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.dimensionResource
@@ -30,9 +29,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.NightModeManager
+import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
+import ir.fallahpoor.releasetracker.common.SnackbarState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -80,7 +79,7 @@ class AddLibraryFragment : Fragment() {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(dimensionResource(R.dimen.space_normal))
+                    .padding(SPACE_NORMAL.dp)
             ) {
                 LibraryNameTextField(state)
                 if (state is State.EmptyLibraryName) {
@@ -97,10 +96,13 @@ class AddLibraryFragment : Fragment() {
             AddLibraryButton(state)
             if (state is State.Error) {
                 val errorMessage = (state as State.Error).message
-                MessageSnackbar(snackbarState, errorMessage)
+                ir.fallahpoor.releasetracker.common.Snackbar(snackbarState, errorMessage)
             }
             if (state is State.LibraryAdded) {
-                MessageSnackbar(snackbarState, stringResource(R.string.library_added))
+                ir.fallahpoor.releasetracker.common.Snackbar(
+                    snackbarState,
+                    stringResource(R.string.library_added)
+                )
             }
         }
     }
@@ -146,7 +148,7 @@ class AddLibraryFragment : Fragment() {
     @Composable
     private fun AddLibraryButton(state: State) {
         Button(
-            modifier = Modifier.padding(dimensionResource(R.dimen.space_normal)),
+            modifier = Modifier.padding(SPACE_NORMAL.dp),
             onClick = { addLibraryViewModel.addLibrary() },
             enabled = state !is State.Loading
         ) {
@@ -156,19 +158,6 @@ class AddLibraryFragment : Fragment() {
                 modifier = Modifier.fillMaxWidth()
             )
         }
-    }
-
-    @Composable
-    private fun MessageSnackbar(snackbarState: SnackbarState, message: String) {
-        TransientSnackbar(
-            modifier = Modifier.padding(
-                start = dimensionResource(R.dimen.space_normal),
-                end = dimensionResource(R.dimen.space_normal),
-                bottom = dimensionResource(R.dimen.space_normal)
-            ),
-            snackbarState = snackbarState,
-            text = message
-        )
     }
 
     @Composable
@@ -199,27 +188,6 @@ class AddLibraryFragment : Fragment() {
             isErrorValue = isErrorValue,
             modifier = modifier
         )
-    }
-
-    @Composable
-    fun TransientSnackbar(
-        modifier: Modifier = Modifier,
-        snackbarState: SnackbarState,
-        text: String,
-        timeout: Long = 4_000
-    ) {
-
-        if (snackbarState.show) {
-            Snackbar(modifier = modifier) {
-                Text(text = text)
-            }
-            val coroutineScope = rememberCoroutineScope()
-            coroutineScope.launch {
-                delay(timeout)
-                snackbarState.show = false
-            }
-        }
-
     }
 
     @Preview(name = "Add Library Screen")

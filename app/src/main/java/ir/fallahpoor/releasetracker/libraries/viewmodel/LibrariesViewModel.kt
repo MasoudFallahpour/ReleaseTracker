@@ -3,11 +3,13 @@ package ir.fallahpoor.releasetracker.libraries.viewmodel
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import ir.fallahpoor.releasetracker.common.SingleLiveData
-import ir.fallahpoor.releasetracker.common.ViewState
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
+import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
+import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
+import ir.fallahpoor.releasetracker.libraries.view.states.LibraryPinState
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -24,36 +26,38 @@ class LibrariesViewModel
         PINNED_FIRST
     }
 
+    private val triggerLiveData = MutableLiveData<Unit>()
+
+    val librariesListState: LiveData<LibrariesListState> = triggerLiveData.switchMap {
+        val order = getOrder()
+        localStorage.setOrder(order.name)
+        libraryRepository.getLibraries(order, searchTerm)
+            .map { libraries: List<Library> ->
+                LibrariesListState.LibrariesLoaded(libraries)
+            }
+            .asLiveData()
+    }
+
     private var order: Order = getDefaultOrder()
     private var searchTerm = ""
     var isActionModeEnabled = false
     var numSelectedItems = 0
 
-    private val _pinViewState = MutableLiveData<ViewState<Unit>>()
-    val pinViewState: LiveData<ViewState<Unit>> = _pinViewState
+    private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
+    val deleteState: LiveData<LibraryDeleteState> = _deleteLiveData
 
-    private val _deleteLiveData = SingleLiveData<ViewState<Unit>>()
-    val deleteViewState: LiveData<ViewState<Unit>> = _deleteLiveData
+    private val _pinLiveData = SingleLiveData<LibraryPinState>()
+    val pinState: LiveData<LibraryPinState> = _pinLiveData
 
-    val lastUpdateCheckViewState: LiveData<ViewState<String>> =
+    val lastUpdateCheckState: LiveData<String> =
         libraryRepository.getLastUpdateCheck()
-            .map {
-                ViewState.success(it)
-            }
+            .map { it }
             .asLiveData()
 
-    private val triggerLiveData = MutableLiveData<Unit>()
-    val librariesViewState: LiveData<ViewState<List<Library>>> =
-        triggerLiveData.switchMap {
-            val order = getOrder()
-            localStorage.setOrder(order.name)
-            libraryRepository.getLibraries(order, searchTerm)
-                .map { libraries: List<Library> ->
-                    ViewState.success(libraries)
-                }
-                .asLiveData()
-        }
-
+    val nightMode: LiveData<String> =
+        localStorage.getNightModeAsFlow()
+            .map { it }
+            .asLiveData()
 
     private fun getOrder() = when (order) {
         Order.A_TO_Z -> LibraryRepository.Order.A_TO_Z
@@ -70,18 +74,17 @@ class LibrariesViewModel
     private fun getDefaultOrder() =
         Order.valueOf(localStorage.getOrder() ?: Order.A_TO_Z.name)
 
-    fun setPinned(library: Library, isPinned: Boolean) {
+    fun setPinned(library: Library, pin: Boolean) {
 
-        _pinViewState.value = ViewState.loading()
+        _pinLiveData.value = LibraryPinState.InProgress
 
         viewModelScope.launch {
 
             try {
-                libraryRepository.setPinned(library, isPinned)
-                _pinViewState.value = ViewState.success(Unit)
+                libraryRepository.setPinned(library, pin)
             } catch (t: Throwable) {
                 val message = exceptionParser.getMessage(t)
-                _pinViewState.value = ViewState.error(message)
+                _pinLiveData.value = LibraryPinState.Error(message)
             }
 
         }
@@ -90,16 +93,16 @@ class LibrariesViewModel
 
     fun deleteLibraries(libraryNames: List<String>) {
 
-        _deleteLiveData.value = ViewState.loading()
+        _deleteLiveData.value = LibraryDeleteState.InProgress
 
         try {
             viewModelScope.launch {
                 libraryRepository.deleteLibraries(libraryNames)
-                _deleteLiveData.value = ViewState.success(Unit)
+                _deleteLiveData.value = LibraryDeleteState.Deleted
             }
         } catch (t: Throwable) {
             val message = exceptionParser.getMessage(t)
-            _deleteLiveData.value = ViewState.error(message)
+            _deleteLiveData.value = LibraryDeleteState.Error(message)
         }
 
     }

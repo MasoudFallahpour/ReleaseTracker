@@ -16,4 +16,8 @@ data class Library(
     val version: String,
     @ColumnInfo(name = DatabaseContract.FIELD_PINNED)
     val pinned: Int = 0
-)
+) {
+
+    fun isPinned() = pinned != 0
+
+}
