@@ -1,6 +1,8 @@
 package ir.fallahpoor.releasetracker.common
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import javax.inject.Inject
 
@@ -43,6 +45,15 @@ class NightModeManager
             Mode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
         localStorage.setNightMode(currentMode.name)
+    }
+
+    @Composable
+    fun isDarkTheme(): Boolean {
+        return when (getCurrentNightMode()) {
+            Mode.OFF -> false
+            Mode.ON -> true
+            Mode.AUTO -> isSystemInDarkTheme()
+        }
     }
 
 }

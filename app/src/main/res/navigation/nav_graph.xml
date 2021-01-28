@@ -6,8 +6,7 @@
 
     <fragment
         android:id="@+id/librariesFragment"
-        android:name="ir.fallahpoor.releasetracker.libraries.view.LibrariesFragmentCompose"
-        android:label="@string/libraries">
+        android:name="ir.fallahpoor.releasetracker.libraries.view.LibrariesFragmentCompose">
         <action
             android:id="@+id/action_to_addLibraryFragment"
             app:destination="@id/addLibraryFragment"

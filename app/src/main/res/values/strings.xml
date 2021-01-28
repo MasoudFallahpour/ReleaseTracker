@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Release Tracker</string>
-    <string name="libraries">Libraries</string>
     <string name="add_library">Add library</string>
     <string name="library_name">Library name</string>
     <string name="library_url">Library URL</string>
@@ -30,7 +29,6 @@
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="auto">Auto</string>
-    <string name="night_mode_not_supported">Night mode is not supported on your device</string>
     <string name="selected">%d selected</string>
     <string name="content_description_search">Search for libraries</string>
     <string name="search">Search</string>
