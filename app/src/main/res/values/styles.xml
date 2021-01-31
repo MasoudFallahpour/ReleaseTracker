@@ -1,20 +1,6 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorError">@color/colorError</item>
-        <item name="android:colorBackground">@color/colorBackground</item>
-        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeStyle">@style/Widget.App.ActionMode</item>
-        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
     </style>
 
-    <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">
-        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
-        <item name="background">@color/colorPrimaryVariant</item>
-    </style>
 </resources>

@@ -1,17 +1,13 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.databinding.ListItemLibraryBinding
 
 class LibrariesAdapter :
     ListAdapter<Library, LibrariesAdapter.LibraryViewHolder>(LibraryDiffCallback()) {
@@ -23,9 +19,7 @@ class LibrariesAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.list_item_library, parent, false)
-        return LibraryViewHolder(view)
+        return LibraryViewHolder(View(parent.context))
     }
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
@@ -37,10 +31,8 @@ class LibrariesAdapter :
 
     inner class LibraryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val binding = ListItemLibraryBinding.bind(itemView)
-
         fun bindData(isSelected: Boolean) {
-            binding.checkImageView.isGone = !isSelected
+//            binding.checkImageView.isGone = !isSelected
         }
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<String> =
