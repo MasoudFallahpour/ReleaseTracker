@@ -74,11 +74,7 @@ class LibrariesFragmentCompose : Fragment() {
                                 ActionButtons()
                             }
                         )
-                    },
-                    floatingActionButton = {
-                        AddLibraryButton()
-                    },
-                    floatingActionButtonPosition = FabPosition.Center
+                    }
                 ) {
                     LibrariesListScreen()
                 }
@@ -249,6 +245,7 @@ class LibrariesFragmentCompose : Fragment() {
                         }
                     }
                 }
+                AddLibraryButton()
                 Snackbar(libraryDeleteState, snackbarState)
             }
         }
@@ -342,7 +339,8 @@ class LibrariesFragmentCompose : Fragment() {
         FloatingActionButton(
             onClick = {
                 findNavController().navigate(R.id.action_to_addLibraryFragment)
-            }
+            },
+            modifier = Modifier.padding(SPACE_NORMAL.dp)
         ) {
             Icon(imageVector = Icons.Filled.Add)
         }
