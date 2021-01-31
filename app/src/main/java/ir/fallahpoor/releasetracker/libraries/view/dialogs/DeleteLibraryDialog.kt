@@ -15,14 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.DialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
+import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import javax.inject.Inject
 
@@ -33,18 +35,10 @@ class DeleteLibraryDialog : BaseBottomSheetDialogFragment() {
         const val TAG = "DeleteDialog"
     }
 
-    interface DeleteListener {
-
-        fun cancelClicked(dialogFragment: DialogFragment)
-
-        fun deleteClicked(dialogFragment: DialogFragment)
-
-    }
-
     @Inject
     lateinit var nightModeManager: NightModeManager
 
-    private var deleteListener: DeleteListener? = null
+    private var deleteListener: (() -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,20 +55,32 @@ class DeleteLibraryDialog : BaseBottomSheetDialogFragment() {
     @Composable
     private fun DeleteLibraryScreen() {
         Column {
-            Text(
-                text = stringResource(R.string.delete_selected_libraries),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(SPACE_NORMAL.dp)
-            )
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Button(text = android.R.string.cancel) {
-                    deleteListener?.cancelClicked(this@DeleteLibraryDialog)
-                }
-                Button(R.string.delete) {
-                    deleteListener?.deleteClicked(this@DeleteLibraryDialog)
-                }
+            Title()
+            ActionButtons()
+        }
+    }
+
+    @Composable
+    private fun Title() {
+        Text(
+            text = stringResource(R.string.delete_selected_library),
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(SPACE_NORMAL.dp)
+        )
+    }
+
+
+    @Composable
+    private fun ActionButtons() {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Button(text = android.R.string.cancel) {
+                dismiss()
+            }
+            Button(R.string.delete) {
+                deleteListener?.invoke()
+                dismiss()
             }
         }
     }
@@ -84,11 +90,15 @@ class DeleteLibraryDialog : BaseBottomSheetDialogFragment() {
         TextButton(
             onClick = clickListener
         ) {
-            Text(text = stringResource(text))
+            Text(
+                text = stringResource(text),
+                style = TextStyle(fontWeight = FontWeight.W600),
+                modifier = Modifier.padding(SPACE_SMALL.dp)
+            )
         }
     }
 
-    fun setListener(deleteListener: DeleteListener) {
+    fun setListener(deleteListener: () -> Unit) {
         this.deleteListener = deleteListener
     }
 

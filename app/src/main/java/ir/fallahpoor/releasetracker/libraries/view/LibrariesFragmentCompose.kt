@@ -34,6 +34,7 @@ import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SnackbarState
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
@@ -189,6 +190,9 @@ class LibrariesFragmentCompose : Fragment() {
                             }
                             startActivity(intent)
                         },
+                        longClickListener = { library: Library ->
+                            showDeleteConfirmationDialog(library)
+                        },
                         pinClickListener = { library: Library, pin: Boolean ->
                             librariesViewModel.setPinned(library, pin)
                         })
@@ -198,6 +202,14 @@ class LibrariesFragmentCompose : Fragment() {
             }
         }
 
+    }
+
+    private fun showDeleteConfirmationDialog(library: Library) {
+        val dialogFragment = DeleteLibraryDialog()
+        dialogFragment.setListener {
+            librariesViewModel.deleteLibrary(library.name)
+        }
+        showDialogFragment(dialogFragment, DeleteLibraryDialog.TAG)
     }
 
     @Composable
@@ -214,6 +226,7 @@ class LibrariesFragmentCompose : Fragment() {
         libraryDeleteState: LibraryDeleteState,
         snackbarState: SnackbarState,
         clickListener: (Library) -> Unit,
+        longClickListener: (Library) -> Unit,
         pinClickListener: (Library, Boolean) -> Unit
     ) {
         if (libraries.isEmpty()) {
@@ -225,7 +238,12 @@ class LibrariesFragmentCompose : Fragment() {
             Box(contentAlignment = Alignment.BottomStart, modifier = Modifier.fillMaxSize()) {
                 LazyColumn {
                     itemsIndexed(libraries) { index: Int, library: Library ->
-                        LibraryItem(library, clickListener, pinClickListener)
+                        LibraryItem(
+                            library = library,
+                            clickListener = clickListener,
+                            longClickListener = longClickListener,
+                            pinClickListener = pinClickListener
+                        )
                         if (index != libraries.lastIndex) {
                             Divider()
                         }
@@ -250,12 +268,19 @@ class LibrariesFragmentCompose : Fragment() {
     private fun LibraryItem(
         library: Library,
         clickListener: (Library) -> Unit,
+        longClickListener: (Library) -> Unit,
         pinClickListener: (Library, Boolean) -> Unit
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable(onClick = { clickListener.invoke(library) })
+                .clickable(
+                    onClick = {
+                        clickListener.invoke(library)
+                    },
+                    onLongClick = {
+                        longClickListener.invoke(library)
+                    })
                 .padding(
                     end = SPACE_NORMAL.dp,
                     top = SPACE_NORMAL.dp,
@@ -316,7 +341,6 @@ class LibrariesFragmentCompose : Fragment() {
     private fun AddLibraryButton() {
         FloatingActionButton(
             onClick = {
-                // TODO Finish the action mode
                 findNavController().navigate(R.id.action_to_addLibraryFragment)
             }
         ) {
@@ -339,7 +363,7 @@ class LibrariesFragmentCompose : Fragment() {
             is LibraryDeleteState.Deleted -> {
                 ir.fallahpoor.releasetracker.common.Snackbar(
                     snackbarState,
-                    stringResource(R.string.libraries_deleted)
+                    stringResource(R.string.library_deleted)
                 )
             }
         }

@@ -19,8 +19,8 @@
     <string name="pinned_first">Pinned first</string>
     <string name="content_description_delete">Delete libraries</string>
     <string name="delete">Delete</string>
-    <string name="delete_selected_libraries">Delete selected libraries?</string>
-    <string name="libraries_deleted">Libraries deleted successfully</string>
+    <string name="delete_selected_library">Delete selected library?</string>
+    <string name="library_deleted">Library deleted successfully</string>
     <string name="last_check_for_updates">Last check: %s</string>
     <string name="no_libraries">There are no libraries</string>
     <string name="content_description_night_mode">Set night mode</string>
@@ -29,7 +29,6 @@
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="auto">Auto</string>
-    <string name="selected">%d selected</string>
     <string name="content_description_search">Search for libraries</string>
     <string name="search">Search</string>
     <string name="hint_search">Search libraries</string>

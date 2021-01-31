@@ -32,16 +32,14 @@ class LibrariesViewModel
         val order = getOrder()
         localStorage.setOrder(order.name)
         libraryRepository.getLibraries(order, searchTerm)
-            .map { libraries: List<Library> ->
-                LibrariesListState.LibrariesLoaded(libraries)
+            .map {
+                LibrariesListState.LibrariesLoaded(it)
             }
             .asLiveData()
     }
 
     private var order: Order = getDefaultOrder()
     private var searchTerm = ""
-    var isActionModeEnabled = false
-    var numSelectedItems = 0
 
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
     val deleteState: LiveData<LibraryDeleteState> = _deleteLiveData
@@ -91,13 +89,13 @@ class LibrariesViewModel
 
     }
 
-    fun deleteLibraries(libraryNames: List<String>) {
+    fun deleteLibrary(libraryName: String) {
 
         _deleteLiveData.value = LibraryDeleteState.InProgress
 
         try {
             viewModelScope.launch {
-                libraryRepository.deleteLibraries(libraryNames)
+                libraryRepository.deleteLibrary(libraryName)
                 _deleteLiveData.value = LibraryDeleteState.Deleted
             }
         } catch (t: Throwable) {

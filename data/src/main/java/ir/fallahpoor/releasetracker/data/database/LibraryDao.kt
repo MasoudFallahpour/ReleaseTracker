@@ -20,8 +20,8 @@ interface LibraryDao {
     @Update
     suspend fun update(library: Library)
 
-    @Query("DELETE FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} IN (:ids)")
-    suspend fun delete(ids: List<String>)
+    @Query("DELETE FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} = :libraryName")
+    suspend fun delete(libraryName: String)
 
     @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} = :libraryName COLLATE NOCASE LIMIT 1")
     suspend fun get(libraryName: String): Library?

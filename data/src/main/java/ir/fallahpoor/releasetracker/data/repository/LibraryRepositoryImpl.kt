@@ -76,8 +76,8 @@ class LibraryRepositoryImpl
 
     override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
 
-    override suspend fun deleteLibraries(libraryNames: List<String>) {
-        libraryDao.delete(libraryNames)
+    override suspend fun deleteLibrary(libraryName: String) {
+        libraryDao.delete(libraryName)
     }
 
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
