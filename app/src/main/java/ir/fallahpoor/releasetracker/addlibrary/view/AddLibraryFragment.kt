@@ -49,7 +49,17 @@ class AddLibraryFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             ReleaseTrackerTheme(darkTheme = isDarkTheme()) {
-                AddLibraryScreen()
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(text = stringResource(R.string.add_library))
+                            }
+                        )
+                    }
+                ) {
+                    AddLibraryScreen()
+                }
             }
         }
     }
