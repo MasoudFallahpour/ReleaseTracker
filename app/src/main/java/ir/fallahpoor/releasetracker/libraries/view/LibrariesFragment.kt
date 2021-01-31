@@ -44,7 +44,7 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LibrariesFragmentCompose : Fragment() {
+class LibrariesFragment : Fragment() {
 
     @Inject
     lateinit var nightModeManager: NightModeManager
