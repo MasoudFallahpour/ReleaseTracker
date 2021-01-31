@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -30,6 +29,7 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
+import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.SnackbarState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import javax.inject.Inject
@@ -85,7 +85,7 @@ class AddLibraryFragment : Fragment() {
                 if (state is State.EmptyLibraryName) {
                     ErrorText(R.string.library_name_empty)
                 }
-                Spacer(modifier = Modifier.height(dimensionResource(R.dimen.space_small)))
+                Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
                 LibraryUrlTextField(state)
                 if (state is State.EmptyLibraryUrl) {
                     ErrorText(R.string.library_url_empty)
