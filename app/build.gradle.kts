@@ -82,6 +82,6 @@ dependencies {
     implementation(Dependencies.App.composeMaterial)
     implementation(Dependencies.App.composeMaterialIcons)
     implementation(Dependencies.App.composeRuntime)
-    implementation(Dependencies.App.composeRuntimeLiveDate)
+    implementation(Dependencies.App.composeRuntimeLiveData)
     implementation(project(":data"))
 }

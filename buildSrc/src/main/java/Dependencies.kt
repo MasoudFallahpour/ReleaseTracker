@@ -49,7 +49,7 @@ object Dependencies {
         const val composeMaterialIcons =
             "androidx.compose.material:material-icons-extended:$composeVersion"
         const val composeRuntime = "androidx.compose.runtime:runtime:$composeVersion"
-        const val composeRuntimeLiveDate =
+        const val composeRuntimeLiveData =
             "androidx.compose.runtime:runtime-livedata:$composeVersion"
     }
 
