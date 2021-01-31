@@ -9,6 +9,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -24,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
@@ -54,6 +57,9 @@ class AddLibraryFragment : Fragment() {
                         TopAppBar(
                             title = {
                                 Text(text = stringResource(R.string.add_library))
+                            },
+                            navigationIcon = {
+                                BackButton()
                             }
                         )
                     }
@@ -61,6 +67,17 @@ class AddLibraryFragment : Fragment() {
                     AddLibraryScreen()
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun BackButton() {
+        IconButton(
+            onClick = {
+                findNavController().popBackStack()
+            }
+        ) {
+            Icon(imageVector = Icons.Filled.ArrowBack)
         }
     }
 
