@@ -1,6 +1,6 @@
 object Dependencies {
 
-    const val kotlinVersion = "1.4.21"
+    const val kotlinVersion = "1.4.30"
     const val composeVersion = "1.0.0-alpha10"
     private const val navigationVersion = "2.3.1"
     private const val hiltVersion = "2.28-alpha"
@@ -22,8 +22,6 @@ object Dependencies {
         const val core = Common.core
         const val preference = "androidx.preference:preference-ktx:1.1.0"
         const val appCompat = "androidx.appcompat:appcompat:1.2.0"
-        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
-        const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
         const val navigationFragment =
             "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
         const val navigationUi = "androidx.navigation:navigation-ui-ktx:$navigationVersion"
@@ -36,12 +34,10 @@ object Dependencies {
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:$lifeCycleVersion"
         const val liveDataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycleVersion"
         const val room = Common.room
-        const val materialProgressBar = "me.zhanghai.android.materialprogressbar:library:1.6.1"
         const val workManager = "androidx.work:work-runtime-ktx:2.4.0"
         const val timber = "com.jakewharton.timber:timber:4.7.1"
         const val firebase = "com.google.firebase:firebase-bom:25.12.0"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
-        const val recyclerViewSelection = "androidx.recyclerview:recyclerview-selection:1.0.0"
         const val rxkprefs = Common.rxkprefs
         const val composeUi = "androidx.compose.ui:ui:$composeVersion"
         const val composeTooling = "androidx.compose.ui:ui-tooling:$composeVersion"
