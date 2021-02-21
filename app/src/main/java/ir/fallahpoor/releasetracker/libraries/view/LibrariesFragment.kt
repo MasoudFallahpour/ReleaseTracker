@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -41,13 +43,11 @@ import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
-import javax.inject.Inject
 
 @AndroidEntryPoint
+@ExperimentalFoundationApi
 class LibrariesFragment : Fragment() {
 
-    @Inject
-    lateinit var nightModeManager: NightModeManager
     private val librariesViewModel: LibrariesViewModel by viewModels()
     private var currentOrder: SortDialog.Order? = null
 
@@ -58,12 +58,12 @@ class LibrariesFragment : Fragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             val nightMode by librariesViewModel.nightMode.observeAsState()
-            val isNightMode = when (nightMode) {
+            val isNightModeOn = when (nightMode) {
                 NightModeManager.Mode.OFF.name -> false
                 NightModeManager.Mode.ON.name -> true
                 else -> isSystemInDarkTheme()
             }
-            ReleaseTrackerTheme(darkTheme = isNightMode) {
+            ReleaseTrackerTheme(darkTheme = isNightModeOn) {
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -86,29 +86,36 @@ class LibrariesFragment : Fragment() {
     private fun ActionButtons() {
 
         IconButton(onClick = { showSortDialog() }) {
-            Icon(imageVector = Icons.Filled.Sort)
+            Icon(
+                imageVector = Icons.Filled.Sort,
+                contentDescription = stringResource(R.string.sort)
+            )
         }
 
         IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Filled.Search)
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = stringResource(R.string.search)
+            )
         }
 
         val nightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
         if (nightModeSupported) {
-            var showMenu by remember { mutableStateOf(false) }
+            var showDropwownMenu by remember { mutableStateOf(false) }
+            IconButton(onClick = { showDropwownMenu = !showDropwownMenu }) {
+                Icon(
+                    Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.more_options)
+                )
+            }
             DropdownMenu(
-                toggle = {
-                    IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert)
-                    }
-                },
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false })
+                expanded = showDropwownMenu,
+                onDismissRequest = { showDropwownMenu = false })
             {
                 DropdownMenuItem(
                     onClick = {
-                        showMenu = false
+                        showDropwownMenu = false
                         showNightModeDialog()
                     }
                 ) {
@@ -271,13 +278,14 @@ class LibrariesFragment : Fragment() {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .clickable(
+                .combinedClickable(
                     onClick = {
                         clickListener.invoke(library)
                     },
                     onLongClick = {
                         longClickListener.invoke(library)
-                    })
+                    }
+                )
                 .padding(
                     end = SPACE_NORMAL.dp,
                     top = SPACE_NORMAL.dp,
@@ -304,7 +312,8 @@ class LibrariesFragment : Fragment() {
             val pinImage = if (library.isPinned()) Icons.Filled.PushPin else Icons.Outlined.PushPin
             Icon(
                 imageVector = pinImage,
-                tint = MaterialTheme.colors.secondary
+                tint = MaterialTheme.colors.secondary,
+                contentDescription = stringResource(R.string.pin_library)
             )
         }
     }
@@ -342,7 +351,10 @@ class LibrariesFragment : Fragment() {
             },
             modifier = Modifier.padding(SPACE_NORMAL.dp)
         ) {
-            Icon(imageVector = Icons.Filled.Add)
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = stringResource(R.string.add_library)
+            )
         }
     }
 

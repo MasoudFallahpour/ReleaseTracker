@@ -17,7 +17,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -77,7 +76,7 @@ class AddLibraryFragment : Fragment() {
                 findNavController().popBackStack()
             }
         ) {
-            Icon(imageVector = Icons.Filled.ArrowBack)
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
         }
     }
 
@@ -206,11 +205,6 @@ class AddLibraryFragment : Fragment() {
                 keyboardType = KeyboardType.Text,
                 imeAction = imeAction
             ),
-            onImeActionPerformed = { imeAction: ImeAction, softwareKeyboardController: SoftwareKeyboardController? ->
-                if (imeAction == ImeAction.Done) {
-                    softwareKeyboardController?.hideSoftwareKeyboard()
-                }
-            },
             singleLine = true,
             isErrorValue = isErrorValue,
             modifier = modifier

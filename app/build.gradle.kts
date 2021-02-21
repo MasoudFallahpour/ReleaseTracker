@@ -49,7 +49,13 @@ android {
 
 kapt {
     correctErrorTypes = true
+}
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java) {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
+    }
 }
 
 dependencies {

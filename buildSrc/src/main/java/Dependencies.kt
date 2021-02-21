@@ -1,7 +1,7 @@
 object Dependencies {
 
     const val kotlinVersion = "1.4.30"
-    const val composeVersion = "1.0.0-alpha10"
+    const val composeVersion = "1.0.0-alpha12"
     private const val navigationVersion = "2.3.1"
     private const val hiltVersion = "2.28-alpha"
     private const val hiltJetpackVersion = "1.0.0-alpha01"
