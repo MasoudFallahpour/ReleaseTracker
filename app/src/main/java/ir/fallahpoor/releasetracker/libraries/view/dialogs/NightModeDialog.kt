@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.RadioButton
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
@@ -55,14 +57,16 @@ class NightModeDialog : BaseBottomSheetDialogFragment() {
 
     @Composable
     private fun NightModeScreen(currentMode: NightModeManager.Mode) {
-        Column {
-            Text(
-                text = stringResource(R.string.select_night_mode),
-                modifier = Modifier.padding(SPACE_NORMAL.dp)
-            )
-            NightModeItem(R.string.off, NightModeManager.Mode.OFF, currentMode)
-            NightModeItem(R.string.on, NightModeManager.Mode.ON, currentMode)
-            NightModeItem(R.string.auto, NightModeManager.Mode.AUTO, currentMode)
+        Surface {
+            Column {
+                Text(
+                    text = stringResource(R.string.select_night_mode),
+                    modifier = Modifier.padding(SPACE_NORMAL.dp)
+                )
+                NightModeItem(R.string.off, NightModeManager.Mode.OFF, currentMode)
+                NightModeItem(R.string.on, NightModeManager.Mode.ON, currentMode)
+                NightModeItem(R.string.auto, NightModeManager.Mode.AUTO, currentMode)
+            }
         }
     }
 
@@ -97,6 +101,12 @@ class NightModeDialog : BaseBottomSheetDialogFragment() {
                     )
             )
         }
+    }
+
+    @Composable
+    @Preview(name = "Night Mode Dialog")
+    private fun NightModeScreenPreview() {
+        NightModeScreen(currentMode = NightModeManager.Mode.OFF)
     }
 
 }
