@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -62,25 +60,32 @@ class DeleteLibraryDialog : BaseBottomSheetDialogFragment() {
 
     @Composable
     private fun Title() {
-        Text(
-            text = stringResource(R.string.delete_selected_library),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(SPACE_NORMAL.dp)
-        )
+        Surface {
+            Text(
+                text = stringResource(R.string.delete_selected_library),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(SPACE_NORMAL.dp),
+            )
+        }
     }
 
 
     @Composable
     private fun ActionButtons() {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(text = android.R.string.cancel) {
-                dismiss()
-            }
-            Button(R.string.delete) {
-                deleteListener?.invoke()
-                dismiss()
+        Surface {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(text = android.R.string.cancel) {
+                    dismiss()
+                }
+                Button(R.string.delete) {
+                    deleteListener?.invoke()
+                    dismiss()
+                }
             }
         }
     }
@@ -88,12 +93,12 @@ class DeleteLibraryDialog : BaseBottomSheetDialogFragment() {
     @Composable
     private fun Button(@StringRes text: Int, clickListener: () -> Unit) {
         TextButton(
-            onClick = clickListener
+            onClick = clickListener,
         ) {
             Text(
                 text = stringResource(text),
                 style = TextStyle(fontWeight = FontWeight.W600),
-                modifier = Modifier.padding(SPACE_SMALL.dp)
+                modifier = Modifier.padding(SPACE_SMALL.dp),
             )
         }
     }
