@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -25,15 +24,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
+import ir.fallahpoor.releasetracker.common.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
-import ir.fallahpoor.releasetracker.common.SnackbarState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,21 +51,31 @@ class AddLibraryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            ReleaseTrackerTheme(darkTheme = isDarkTheme()) {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Text(text = stringResource(R.string.add_library))
-                            },
-                            navigationIcon = {
-                                BackButton()
-                            }
-                        )
-                    }
-                ) {
-                    AddLibraryScreen()
+            AddLibraryScreen()
+        }
+    }
+
+    @Composable
+    private fun AddLibraryScreen() {
+        ReleaseTrackerTheme(darkTheme = nightModeManager.isDarkTheme()) {
+            val scaffoldState = rememberScaffoldState()
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(text = stringResource(R.string.add_library))
+                        },
+                        navigationIcon = {
+                            BackButton()
+                        }
+                    )
+                },
+                scaffoldState = scaffoldState,
+                snackbarHost = {
+                    scaffoldState.snackbarHostState
                 }
+            ) {
+                AddLibraryContent(scaffoldState)
             }
         }
     }
@@ -81,19 +92,9 @@ class AddLibraryFragment : Fragment() {
     }
 
     @Composable
-    private fun isDarkTheme(): Boolean {
-        return when (nightModeManager.getCurrentNightMode()) {
-            NightModeManager.Mode.OFF -> false
-            NightModeManager.Mode.ON -> true
-            NightModeManager.Mode.AUTO -> isSystemInDarkTheme()
-        }
-    }
-
-    @Composable
-    private fun AddLibraryScreen() {
+    private fun AddLibraryContent(scafoldState: ScaffoldState) {
 
         val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
-        val snackbarState = SnackbarState()
 
         Column(
             modifier = Modifier
@@ -122,14 +123,19 @@ class AddLibraryFragment : Fragment() {
             AddLibraryButton(state)
             if (state is State.Error) {
                 val errorMessage = (state as State.Error).message
-                ir.fallahpoor.releasetracker.common.Snackbar(snackbarState, errorMessage)
+                lifecycleScope.launch {
+                    scafoldState.snackbarHostState.showSnackbar(message = errorMessage)
+                }
             }
             if (state is State.LibraryAdded) {
-                ir.fallahpoor.releasetracker.common.Snackbar(
-                    snackbarState,
-                    stringResource(R.string.library_added)
-                )
+                val message = stringResource(R.string.library_added)
+                lifecycleScope.launch {
+                    scafoldState.snackbarHostState.showSnackbar(message = message)
+                }
             }
+            DefaultSnackbar(
+                snackbarHostState = scafoldState.snackbarHostState
+            )
         }
     }
 

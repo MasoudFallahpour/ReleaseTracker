@@ -29,12 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.common.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
-import ir.fallahpoor.releasetracker.common.SnackbarState
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
@@ -43,6 +44,7 @@ import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @ExperimentalFoundationApi
@@ -57,29 +59,42 @@ class LibrariesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
-            val nightMode by librariesViewModel.nightMode.observeAsState()
-            val isNightModeOn = when (nightMode) {
-                NightModeManager.Mode.OFF.name -> false
-                NightModeManager.Mode.ON.name -> true
-                else -> isSystemInDarkTheme()
-            }
-            ReleaseTrackerTheme(darkTheme = isNightModeOn) {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Text(text = stringResource(R.string.app_name))
-                            },
-                            actions = {
-                                ActionButtons()
-                            }
-                        )
-                    }
-                ) {
-                    LibrariesListScreen()
+            LibrariesListScreen()
+        }
+    }
+
+    @Composable
+    private fun LibrariesListScreen() {
+
+        val nightMode by librariesViewModel.nightMode.observeAsState()
+        val isNightModeOn = when (nightMode) {
+            NightModeManager.Mode.OFF.name -> false
+            NightModeManager.Mode.ON.name -> true
+            else -> isSystemInDarkTheme()
+        }
+        val scaffoldState = rememberScaffoldState()
+
+        ReleaseTrackerTheme(darkTheme = isNightModeOn) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(text = stringResource(R.string.app_name))
+                        },
+                        actions = {
+                            ActionButtons()
+                        }
+                    )
+                },
+                scaffoldState = scaffoldState,
+                snackbarHost = {
+                    scaffoldState.snackbarHostState
                 }
+            ) {
+                LibrariesListContent(scaffoldState)
             }
         }
+
     }
 
     @Composable
@@ -102,20 +117,20 @@ class LibrariesFragment : Fragment() {
         val nightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
         if (nightModeSupported) {
-            var showDropwownMenu by remember { mutableStateOf(false) }
-            IconButton(onClick = { showDropwownMenu = !showDropwownMenu }) {
+            var showDropdownMenu by remember { mutableStateOf(false) }
+            IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = stringResource(R.string.more_options)
                 )
             }
             DropdownMenu(
-                expanded = showDropwownMenu,
-                onDismissRequest = { showDropwownMenu = false })
+                expanded = showDropdownMenu,
+                onDismissRequest = { showDropdownMenu = false })
             {
                 DropdownMenuItem(
                     onClick = {
-                        showDropwownMenu = false
+                        showDropdownMenu = false
                         showNightModeDialog()
                     }
                 ) {
@@ -163,14 +178,13 @@ class LibrariesFragment : Fragment() {
     }
 
     @Composable
-    private fun LibrariesListScreen() {
+    private fun LibrariesListContent(scaffoldState: ScaffoldState) {
 
         val librariesListState: LibrariesListState by librariesViewModel.librariesListState.observeAsState(
             LibrariesListState.Fresh
         )
         val lastUpdateCheckState by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
         val libraryDeleteState by librariesViewModel.deleteState.observeAsState(LibraryDeleteState.Fresh)
-        val snackbarState = SnackbarState()
 
         Column(
             modifier = Modifier.fillMaxHeight()
@@ -184,9 +198,9 @@ class LibrariesFragment : Fragment() {
                     val libraries: List<Library> =
                         (librariesListState as LibrariesListState.LibrariesLoaded).libraries
                     LibrariesList(
+                        scaffoldState = scaffoldState,
                         libraries = libraries,
                         libraryDeleteState = libraryDeleteState,
-                        snackbarState = snackbarState,
                         clickListener = { library: Library ->
                             val intent = Intent(Intent.ACTION_VIEW).apply {
                                 data = Uri.parse(library.url)
@@ -225,9 +239,9 @@ class LibrariesFragment : Fragment() {
 
     @Composable
     private fun LibrariesList(
+        scaffoldState: ScaffoldState,
         libraries: List<Library>,
         libraryDeleteState: LibraryDeleteState,
-        snackbarState: SnackbarState,
         clickListener: (Library) -> Unit,
         longClickListener: (Library) -> Unit,
         pinClickListener: (Library, Boolean) -> Unit
@@ -253,7 +267,26 @@ class LibrariesFragment : Fragment() {
                     }
                 }
                 AddLibraryButton()
-                Snackbar(libraryDeleteState, snackbarState)
+                when (libraryDeleteState) {
+                    is LibraryDeleteState.Error -> {
+                        lifecycleScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                message = libraryDeleteState.message
+                            )
+                        }
+                    }
+                    is LibraryDeleteState.Deleted -> {
+                        val message = stringResource(R.string.library_deleted)
+                        lifecycleScope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(
+                                message = message
+                            )
+                        }
+                    }
+                }
+                DefaultSnackbar(
+                    snackbarHostState = scaffoldState.snackbarHostState
+                )
             }
         }
     }
@@ -355,27 +388,6 @@ class LibrariesFragment : Fragment() {
                 imageVector = Icons.Filled.Add,
                 contentDescription = stringResource(R.string.add_library)
             )
-        }
-    }
-
-    @Composable
-    private fun Snackbar(
-        libraryDeleteState: LibraryDeleteState,
-        snackbarState: SnackbarState
-    ) {
-        when (libraryDeleteState) {
-            is LibraryDeleteState.Error -> {
-                ir.fallahpoor.releasetracker.common.Snackbar(
-                    snackbarState,
-                    libraryDeleteState.message
-                )
-            }
-            is LibraryDeleteState.Deleted -> {
-                ir.fallahpoor.releasetracker.common.Snackbar(
-                    snackbarState,
-                    stringResource(R.string.library_deleted)
-                )
-            }
         }
     }
 
