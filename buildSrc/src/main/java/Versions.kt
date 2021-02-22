@@ -15,6 +15,6 @@ object Versions {
     const val hiltJetpackVersion = "1.0.0-alpha01"
     const val roomVersion = "2.2.5"
     const val retrofitVersion = "2.9.0"
-    const val lifeCycleVersion = "2.2.0"
+    const val lifeCycleVersion = "2.3.0"
     const val kprefs = "2.0.3"
 }
