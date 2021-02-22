@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -77,26 +78,30 @@ class SortDialog : BaseBottomSheetDialogFragment() {
 
     @Composable
     private fun SortScreen(currentOrder: Order) {
-        Column {
-            Text(
-                text = stringResource(R.string.select_sorting_order),
-                modifier = Modifier.padding(SPACE_NORMAL.dp)
-            )
-            SortItem(
-                text = stringResource(R.string.a_to_z),
-                order = Order.A_TO_Z,
-                currentOrder = currentOrder
-            )
-            SortItem(
-                text = stringResource(R.string.z_to_a),
-                order = Order.Z_TO_A,
-                currentOrder = currentOrder
-            )
-            SortItem(
-                text = stringResource(R.string.pinned_first),
-                order = Order.PINNED_FIRST,
-                currentOrder = currentOrder
-            )
+        Surface {
+            Column {
+                Text(
+                    text = stringResource(R.string.select_sorting_order),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(SPACE_NORMAL.dp)
+                )
+                SortItem(
+                    text = stringResource(R.string.a_to_z),
+                    order = Order.A_TO_Z,
+                    currentOrder = currentOrder
+                )
+                SortItem(
+                    text = stringResource(R.string.z_to_a),
+                    order = Order.Z_TO_A,
+                    currentOrder = currentOrder
+                )
+                SortItem(
+                    text = stringResource(R.string.pinned_first),
+                    order = Order.PINNED_FIRST,
+                    currentOrder = currentOrder
+                )
+            }
         }
     }
 
@@ -126,8 +131,8 @@ class SortDialog : BaseBottomSheetDialogFragment() {
         this.listener = listener
     }
 
-    @Preview
     @Composable
+    @Preview(name = "Sort Dialog")
     private fun SortScreenPreview() {
         SortScreen(Order.PINNED_FIRST)
     }
