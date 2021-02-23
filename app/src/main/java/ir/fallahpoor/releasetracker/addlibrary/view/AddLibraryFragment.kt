@@ -22,7 +22,6 @@ import androidx.navigation.NavController
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.DefaultSnackbar
-import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
@@ -32,11 +31,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddLibraryScreen(
     navController: NavController,
-    nightModeManager: NightModeManager,
+    isNightModeOn: Boolean,
     addLibraryViewModel: AddLibraryViewModel
 ) {
-
-    ReleaseTrackerTheme(darkTheme = nightModeManager.isDarkTheme()) {
+    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
         val scaffoldState = rememberScaffoldState()
         Scaffold(
             topBar = {
@@ -45,7 +43,9 @@ fun AddLibraryScreen(
                         Text(text = stringResource(R.string.add_library))
                     },
                     navigationIcon = {
-                        BackButton(navController)
+                        BackButton {
+                            navController.popBackStack()
+                        }
                     }
                 )
             },
@@ -60,12 +60,8 @@ fun AddLibraryScreen(
 }
 
 @Composable
-private fun BackButton(navController: NavController) {
-    IconButton(
-        onClick = {
-            navController.popBackStack()
-        }
-    ) {
+private fun BackButton(onBackClicked: () -> Unit) {
+    IconButton(onClick = onBackClicked) {
         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
     }
 }

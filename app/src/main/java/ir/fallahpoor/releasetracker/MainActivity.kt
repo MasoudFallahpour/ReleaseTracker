@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 composable(Screen.AddLibrary.route) {
                     AddLibraryScreen(
                         navController = navController,
-                        nightModeManager = nightModeManager,
+                        isNightModeOn = nightModeManager.isDarkTheme(),
                         addLibraryViewModel = addLibraryViewModel
                     )
                 }
