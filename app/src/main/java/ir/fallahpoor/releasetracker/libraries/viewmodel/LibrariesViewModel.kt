@@ -26,6 +26,8 @@ class LibrariesViewModel
         PINNED_FIRST
     }
 
+    var libraryToDelete: Library? = null
+
     private val triggerLiveData = MutableLiveData<Unit>()
 
     val librariesListState: LiveData<LibrariesListState> = triggerLiveData.switchMap {

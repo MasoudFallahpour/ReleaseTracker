@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +20,39 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
-fun NightModeScreen(
+fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager: NightModeManager) {
+    var nightMode: NightModeManager.Mode? = null
+    AlertDialog(
+        onDismissRequest = {
+            showDialog.value = false
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.select_night_mode)
+            )
+        },
+        text = {
+            NightModeScreen(nightModeManager) {
+                nightMode = it
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    nightMode?.let {
+                        nightModeManager.setNightMode(it)
+                    }
+                    showDialog.value = false
+                }
+            ) {
+                Text(text = stringResource(android.R.string.ok))
+            }
+        }
+    )
+}
+
+@Composable
+private fun NightModeScreen(
     nightModeManager: NightModeManager,
     itemClickListener: (NightModeManager.Mode) -> Unit
 ) {

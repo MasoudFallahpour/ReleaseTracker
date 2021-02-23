@@ -29,7 +29,8 @@ import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.Screen
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeScreen
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
@@ -148,38 +149,6 @@ private fun ActionButtons(nightModeManager: NightModeManager) {
 //
 //}
 
-@Composable
-private fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager: NightModeManager) {
-    var nightMode: NightModeManager.Mode? = null
-    AlertDialog(
-        onDismissRequest = {
-            showDialog.value = false
-        },
-        title = {
-            Text(
-                text = stringResource(R.string.select_night_mode)
-            )
-        },
-        text = {
-            NightModeScreen(nightModeManager) {
-                nightMode = it
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    nightMode?.let {
-                        nightModeManager.setNightMode(it)
-                    }
-                    showDialog.value = false
-                }
-            ) {
-                Text(text = stringResource(android.R.string.ok))
-            }
-        }
-    )
-}
-
 @ExperimentalFoundationApi
 @Composable
 private fun LibrariesListContent(
@@ -205,6 +174,7 @@ private fun LibrariesListContent(
             is LibrariesListState.LibrariesLoaded -> {
                 val libraries: List<Library> =
                     (librariesListState as LibrariesListState.LibrariesLoaded).libraries
+                val showDeleteLibraryDialog = remember { mutableStateOf(false) }
                 LibrariesList(
                     navController = navController,
                     scaffoldState = scaffoldState,
@@ -217,11 +187,17 @@ private fun LibrariesListContent(
 //                        LocalContext.current.startActivity(intent)
                     },
                     longClickListener = { library: Library ->
-//                        showDeleteConfirmationDialog(library)
+                        showDeleteLibraryDialog.value = true
+                        librariesViewModel.libraryToDelete = library
                     },
                     pinClickListener = { library: Library, pin: Boolean ->
                         librariesViewModel.setPinned(library, pin)
                     })
+                DeleteLibraryDialog(showDeleteLibraryDialog) {
+                    librariesViewModel.libraryToDelete?.let {
+                        librariesViewModel.deleteLibrary(it.name)
+                    }
+                }
             }
             LibrariesListState.Fresh -> {
             }
@@ -229,14 +205,6 @@ private fun LibrariesListContent(
     }
 
 }
-
-//private fun showDeleteConfirmationDialog(library: Library) {
-//    val dialogFragment = DeleteLibraryDialog()
-//    dialogFragment.setListener {
-//        librariesViewModel.deleteLibrary(library.name)
-//    }
-//    showDialogFragment(dialogFragment, DeleteLibraryDialog.TAG)
-//}
 
 @Composable
 private fun LastUpdateCheckText(lastUpdateCheck: String) {
