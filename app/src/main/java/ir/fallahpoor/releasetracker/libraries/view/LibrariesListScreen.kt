@@ -2,7 +2,6 @@ package ir.fallahpoor.releasetracker.libraries.view
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -95,9 +94,7 @@ private fun ActionButtons(nightModeManager: NightModeManager) {
         )
     }
 
-    val nightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-
-    if (nightModeSupported) {
+    if (nightModeManager.isNightModeSupported) {
         var showDropdownMenu by remember { mutableStateOf(false) }
         val showNightModeDialog = remember { mutableStateOf(false) }
         IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
@@ -119,9 +116,7 @@ private fun ActionButtons(nightModeManager: NightModeManager) {
                 Text(text = stringResource(R.string.night_mode))
             }
         }
-        if (showNightModeDialog.value) {
-            NightModeDialog(showNightModeDialog, nightModeManager)
-        }
+        NightModeDialog(showNightModeDialog, nightModeManager)
     }
 
 }
@@ -246,29 +241,38 @@ private fun LibrariesList(
                 }
             }
             AddLibraryButton(navController)
-            val coroutineScope = rememberCoroutineScope()
-            when (libraryDeleteState) {
-                is LibraryDeleteState.Error -> {
-                    coroutineScope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = libraryDeleteState.message
-                        )
-                    }
-                }
-                is LibraryDeleteState.Deleted -> {
-                    val message = stringResource(R.string.library_deleted)
-                    coroutineScope.launch {
-                        scaffoldState.snackbarHostState.showSnackbar(
-                            message = message
-                        )
-                    }
-                }
-            }
-            DefaultSnackbar(
-                snackbarHostState = scaffoldState.snackbarHostState
-            )
+            Snackbar(libraryDeleteState, scaffoldState)
         }
     }
+}
+
+@Composable
+private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: ScaffoldState) {
+
+    val coroutineScope = rememberCoroutineScope()
+
+    when (libraryDeleteState) {
+        is LibraryDeleteState.Error -> {
+            coroutineScope.launch {
+                scaffoldState.snackbarHostState.showSnackbar(
+                    message = libraryDeleteState.message
+                )
+            }
+        }
+        is LibraryDeleteState.Deleted -> {
+            val message = stringResource(R.string.library_deleted)
+            coroutineScope.launch {
+                scaffoldState.snackbarHostState.showSnackbar(
+                    message = message
+                )
+            }
+        }
+    }
+
+    DefaultSnackbar(
+        snackbarHostState = scaffoldState.snackbarHostState
+    )
+
 }
 
 @Composable
@@ -334,7 +338,10 @@ private fun PinToggleButton(library: Library, onCheckedChange: (Library, Boolean
 
 @Composable
 private fun LibraryNameText(library: Library) {
-    EllipsisText(text = library.name, style = MaterialTheme.typography.body1)
+    EllipsisText(
+        text = library.name,
+        style = MaterialTheme.typography.body1
+    )
 }
 
 @Composable

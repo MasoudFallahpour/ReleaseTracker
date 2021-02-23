@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.common
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
@@ -24,6 +25,8 @@ class NightModeManager
         localStorage.getNightModeAsFlow()
             .map { it }
             .asLiveData()
+
+    val isNightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     fun setNightMode(mode: Mode) {
 

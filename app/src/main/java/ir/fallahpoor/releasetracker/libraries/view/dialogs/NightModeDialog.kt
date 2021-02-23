@@ -21,34 +21,36 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager: NightModeManager) {
-    var nightMode: NightModeManager.Mode? = null
-    AlertDialog(
-        onDismissRequest = {
-            showDialog.value = false
-        },
-        title = {
-            Text(
-                text = stringResource(R.string.select_night_mode)
-            )
-        },
-        text = {
-            NightModeScreen(nightModeManager) {
-                nightMode = it
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    nightMode?.let {
-                        nightModeManager.setNightMode(it)
-                    }
-                    showDialog.value = false
+    if (showDialog.value) {
+        var nightMode: NightModeManager.Mode? = null
+        AlertDialog(
+            onDismissRequest = {
+                showDialog.value = false
+            },
+            title = {
+                Text(
+                    text = stringResource(R.string.select_night_mode)
+                )
+            },
+            text = {
+                NightModeScreen(nightModeManager) {
+                    nightMode = it
                 }
-            ) {
-                Text(text = stringResource(android.R.string.ok))
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        nightMode?.let {
+                            nightModeManager.setNightMode(it)
+                        }
+                        showDialog.value = false
+                    }
+                ) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
