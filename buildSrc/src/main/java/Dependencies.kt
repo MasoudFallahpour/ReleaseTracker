@@ -12,10 +12,12 @@ object Dependencies {
         const val core = Common.core
         const val preference = "androidx.preference:preference-ktx:1.1.0"
         const val appCompat = "androidx.appcompat:appcompat:1.2.0"
+        const val activityCompose = "androidx.activity:activity-compose:1.3.0-alpha02"
         const val navigationFragment =
             "androidx.navigation:navigation-fragment-ktx:${Versions.navigationVersion}"
         const val navigationUi =
             "androidx.navigation:navigation-ui-ktx:${Versions.navigationVersion}"
+        const val navigationCompose = "androidx.navigation:navigation-compose:1.0.0-alpha07"
         const val material = "com.google.android.material:material:1.3.0-rc01"
         const val hilt = "com.google.dagger:hilt-android:${Versions.hiltVersion}"
         const val hiltCompiler = "com.google.dagger:hilt-android-compiler:${Versions.hiltVersion}"
