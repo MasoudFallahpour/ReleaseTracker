@@ -74,59 +74,36 @@ private fun AddLibraryContent(
 
     val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
 
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-    ) {
-        if (state is State.Loading) {
-            ProgressIndicator()
-        }
+    Column(modifier = Modifier.fillMaxHeight()) {
+        ProgressIndicator(state)
         Column(
             modifier = Modifier
                 .weight(1f)
                 .padding(SPACE_NORMAL.dp)
         ) {
             LibraryNameTextField(addLibraryViewModel.libraryName, state)
-            if (state is State.EmptyLibraryName) {
-                ErrorText(R.string.library_name_empty)
-            }
+            LibraryNameErrorText(state)
             Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
             LibraryUrlTextField(addLibraryViewModel.libraryUrl, state)
-            if (state is State.EmptyLibraryUrl) {
-                ErrorText(R.string.library_url_empty)
-            } else if (state is State.InvalidLibraryUrl) {
-                ErrorText(R.string.library_url_invalid)
-            }
+            LibraryUrlErrorText(state)
         }
         AddLibraryButton(state) {
             addLibraryViewModel.addLibrary()
         }
-        val coroutineScope = rememberCoroutineScope()
-        if (state is State.Error) {
-            val errorMessage = (state as State.Error).message
-            coroutineScope.launch {
-                scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
-            }
-        }
-        if (state is State.LibraryAdded) {
-            val message = stringResource(R.string.library_added)
-            coroutineScope.launch {
-                scaffoldState.snackbarHostState.showSnackbar(message = message)
-            }
-        }
-        DefaultSnackbar(
-            snackbarHostState = scaffoldState.snackbarHostState
-        )
+        Snackbar(state, scaffoldState)
     }
+
 }
 
 @Composable
-private fun ProgressIndicator() {
-    LinearProgressIndicator(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(2.dp)
-    )
+private fun ProgressIndicator(state: State) {
+    if (state is State.Loading) {
+        LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(2.dp)
+        )
+    }
 }
 
 @Composable
@@ -142,6 +119,13 @@ private fun LibraryNameTextField(libraryName: MutableState<String>, state: State
 }
 
 @Composable
+private fun LibraryNameErrorText(state: State) {
+    if (state is State.EmptyLibraryName) {
+        ErrorText(R.string.library_name_empty)
+    }
+}
+
+@Composable
 private fun LibraryUrlTextField(libraryUrl: MutableState<String>, state: State) {
     TextFieldWithHint(
         text = libraryUrl.value,
@@ -151,6 +135,15 @@ private fun LibraryUrlTextField(libraryUrl: MutableState<String>, state: State) 
         modifier = Modifier.fillMaxWidth(),
         isErrorValue = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl
     )
+}
+
+@Composable
+private fun LibraryUrlErrorText(state: State) {
+    if (state is State.EmptyLibraryUrl) {
+        ErrorText(R.string.library_url_empty)
+    } else if (state is State.InvalidLibraryUrl) {
+        ErrorText(R.string.library_url_invalid)
+    }
 }
 
 @Composable
@@ -171,6 +164,31 @@ private fun AddLibraryButton(state: State, clickListener: () -> Unit) {
             modifier = Modifier.fillMaxWidth()
         )
     }
+}
+
+@Composable
+private fun Snackbar(state: State, scaffoldState: ScaffoldState) {
+
+    val coroutineScope = rememberCoroutineScope()
+
+    if (state is State.Error) {
+        val errorMessage = state.message
+        coroutineScope.launch {
+            scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
+        }
+    }
+
+    if (state is State.LibraryAdded) {
+        val message = stringResource(R.string.library_added)
+        coroutineScope.launch {
+            scaffoldState.snackbarHostState.showSnackbar(message = message)
+        }
+    }
+
+    DefaultSnackbar(
+        snackbarHostState = scaffoldState.snackbarHostState
+    )
+
 }
 
 @Composable
