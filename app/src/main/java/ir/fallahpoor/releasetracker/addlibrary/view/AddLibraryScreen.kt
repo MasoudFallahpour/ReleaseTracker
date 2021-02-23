@@ -27,6 +27,12 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import kotlinx.coroutines.launch
 
+// TODO: When 'library name' TextField has focus, clicking the 'next' button of the keyboard should
+//  move the focus to the 'library URL' TextField.
+// TODO When 'library URL' TextField has focus, clicking the 'done' button of the keyboard should
+//  add the library to the database and close the keyboard.
+// TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
+
 @ExperimentalMaterialApi
 @Composable
 fun AddLibraryScreen(
