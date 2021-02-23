@@ -1,8 +1,6 @@
 package ir.fallahpoor.releasetracker.addlibrary.viewmodel
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,22 +20,22 @@ class AddLibraryViewModel
 
     private val _state: MutableLiveData<State> = MutableLiveData()
     val state: LiveData<State> = _state
-    var libraryName by mutableStateOf("")
-    var libraryUrl by mutableStateOf("")
+    var libraryName = mutableStateOf("")
+    var libraryUrl = mutableStateOf("")
 
     fun addLibrary() {
 
-        if (libraryName.isEmpty()) {
+        if (libraryName.value.isEmpty()) {
             _state.value = State.EmptyLibraryName
             return
         }
 
-        if (libraryUrl.isEmpty()) {
+        if (libraryUrl.value.isEmpty()) {
             _state.value = State.EmptyLibraryUrl
             return
         }
 
-        if (!isGithubUrl(libraryUrl)) {
+        if (!isGithubUrl(libraryUrl.value)) {
             _state.value = State.InvalidLibraryUrl
             return
         }
@@ -48,20 +46,20 @@ class AddLibraryViewModel
 
             _state.value =
                 try {
-                    val library: Library? = libraryRepository.getLibrary(libraryName)
+                    val library: Library? = libraryRepository.getLibrary(libraryName.value)
                     val libraryAlreadyExists = library != null
                     if (libraryAlreadyExists) {
                         State.Error("Library already exists")
                     } else {
                         val libraryVersion: String =
-                            libraryRepository.getLibraryVersion(libraryName, libraryUrl)
+                            libraryRepository.getLibraryVersion(libraryName.value, libraryUrl.value)
                         libraryRepository.addLibrary(
-                            libraryName,
-                            libraryUrl,
+                            libraryName.value,
+                            libraryUrl.value,
                             libraryVersion
                         )
-                        libraryName = ""
-                        libraryUrl = ""
+                        libraryName.value = ""
+                        libraryUrl.value = ""
                         State.LibraryAdded
                     }
                 } catch (t: Throwable) {

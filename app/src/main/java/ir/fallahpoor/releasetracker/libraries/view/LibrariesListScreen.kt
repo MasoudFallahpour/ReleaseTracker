@@ -34,6 +34,7 @@ import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @Composable
@@ -155,7 +156,9 @@ private fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager:
             showDialog.value = false
         },
         title = {
-            Text(text = stringResource(R.string.select_night_mode))
+            Text(
+                text = stringResource(R.string.select_night_mode)
+            )
         },
         text = {
             NightModeScreen(nightModeManager) {
@@ -211,7 +214,7 @@ private fun LibrariesListContent(
                         val intent = Intent(Intent.ACTION_VIEW).apply {
                             data = Uri.parse(library.url)
                         }
-//                        startActivity(intent)
+//                        LocalContext.current.startActivity(intent)
                     },
                     longClickListener = { library: Library ->
 //                        showDeleteConfirmationDialog(library)
@@ -275,23 +278,24 @@ private fun LibrariesList(
                 }
             }
             AddLibraryButton(navController)
-//            when (libraryDeleteState) {
-//                is LibraryDeleteState.Error -> {
-//                    lifecycleScope.launch {
-//                        scaffoldState.snackbarHostState.showSnackbar(
-//                            message = libraryDeleteState.message
-//                        )
-//                    }
-//                }
-//                is LibraryDeleteState.Deleted -> {
-//                    val message = stringResource(R.string.library_deleted)
-//                    lifecycleScope.launch {
-//                        scaffoldState.snackbarHostState.showSnackbar(
-//                            message = message
-//                        )
-//                    }
-//                }
-//            }
+            val coroutineScope = rememberCoroutineScope()
+            when (libraryDeleteState) {
+                is LibraryDeleteState.Error -> {
+                    coroutineScope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = libraryDeleteState.message
+                        )
+                    }
+                }
+                is LibraryDeleteState.Deleted -> {
+                    val message = stringResource(R.string.library_deleted)
+                    coroutineScope.launch {
+                        scaffoldState.snackbarHostState.showSnackbar(
+                            message = message
+                        )
+                    }
+                }
+            }
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState
             )
