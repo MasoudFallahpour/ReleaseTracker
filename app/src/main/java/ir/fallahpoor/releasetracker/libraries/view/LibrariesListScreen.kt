@@ -47,7 +47,7 @@ fun LibrariesListScreen(
 
     librariesViewModel.getLibraries()
 
-    val nightMode by librariesViewModel.nightMode.observeAsState()
+    val nightMode by nightModeManager.nightMode.observeAsState()
     val isNightModeOn = when (nightMode) {
         NightModeManager.Mode.OFF.name -> false
         NightModeManager.Mode.ON.name -> true

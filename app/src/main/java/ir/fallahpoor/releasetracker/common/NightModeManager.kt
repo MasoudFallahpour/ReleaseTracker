@@ -3,7 +3,10 @@ package ir.fallahpoor.releasetracker.common
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class NightModeManager
@@ -16,6 +19,11 @@ class NightModeManager
         OFF,
         AUTO
     }
+
+    val nightMode: LiveData<String> =
+        localStorage.getNightModeAsFlow()
+            .map { it }
+            .asLiveData()
 
     fun setNightMode(mode: Mode) {
 

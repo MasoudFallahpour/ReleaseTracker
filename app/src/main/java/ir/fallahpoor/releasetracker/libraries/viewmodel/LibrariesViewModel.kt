@@ -54,11 +54,6 @@ class LibrariesViewModel
             .map { it }
             .asLiveData()
 
-    val nightMode: LiveData<String> =
-        localStorage.getNightModeAsFlow()
-            .map { it }
-            .asLiveData()
-
     private fun getOrder() = when (order) {
         Order.A_TO_Z -> LibraryRepository.Order.A_TO_Z
         Order.Z_TO_A -> LibraryRepository.Order.Z_TO_A
