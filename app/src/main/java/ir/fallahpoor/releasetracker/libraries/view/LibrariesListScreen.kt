@@ -48,8 +48,8 @@ fun LibrariesListScreen(
 
     val nightMode by nightModeManager.nightMode.observeAsState()
     val isNightModeOn = when (nightMode) {
-        NightModeManager.Mode.OFF.name -> false
-        NightModeManager.Mode.ON.name -> true
+        NightModeManager.Mode.OFF -> false
+        NightModeManager.Mode.ON -> true
         else -> isSystemInDarkTheme()
     }
     val scaffoldState = rememberScaffoldState()

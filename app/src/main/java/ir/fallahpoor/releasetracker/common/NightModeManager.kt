@@ -21,10 +21,11 @@ class NightModeManager
         AUTO
     }
 
-    val nightMode: LiveData<String> =
+    val nightMode: LiveData<Mode> =
         localStorage.getNightModeAsFlow()
-            .map { it }
-            .asLiveData()
+            .map {
+                Mode.valueOf(it)
+            }.asLiveData()
 
     val isNightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
