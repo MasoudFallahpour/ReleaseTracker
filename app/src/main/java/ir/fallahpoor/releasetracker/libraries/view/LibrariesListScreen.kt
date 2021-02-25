@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.*
@@ -58,15 +59,23 @@ fun LibrariesListScreen(
     }
     val scaffoldState = rememberScaffoldState()
 
-    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
+    ReleaseTrackerTheme(
+        darkTheme = isNightModeOn
+    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = stringResource(R.string.app_name))
+                        Text(
+                            text = stringResource(R.string.app_name)
+                        )
                     },
                     actions = {
-                        ActionButtons(nightModeManager, localStorage, librariesViewModel)
+                        ActionButtons(
+                            librariesViewModel = librariesViewModel,
+                            nightModeManager = nightModeManager,
+                            localStorage = localStorage
+                        )
                     }
                 )
             },
@@ -75,7 +84,11 @@ fun LibrariesListScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
-            LibrariesListContent(librariesViewModel, navController, scaffoldState)
+            LibrariesListContent(
+                librariesViewModel = librariesViewModel,
+                navController = navController,
+                scaffoldState = scaffoldState
+            )
         }
     }
 
@@ -83,9 +96,9 @@ fun LibrariesListScreen(
 
 @Composable
 private fun ActionButtons(
+    librariesViewModel: LibrariesViewModel,
     nightModeManager: NightModeManager,
-    localStorage: LocalStorage,
-    librariesViewModel: LibrariesViewModel
+    localStorage: LocalStorage
 ) {
     SortOrderButton(localStorage, librariesViewModel)
     SearchButton()
@@ -135,7 +148,10 @@ private fun getSortingOrder(order: SortOrder) = when (order) {
 
 @Composable
 private fun SearchButton() {
-    IconButton(onClick = { /*TODO*/ }) {
+    IconButton(
+        onClick = {
+        }
+    ) {
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = stringResource(R.string.search)
