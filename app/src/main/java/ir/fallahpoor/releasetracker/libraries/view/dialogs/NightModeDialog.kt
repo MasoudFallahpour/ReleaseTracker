@@ -20,7 +20,12 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
-fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager: NightModeManager) {
+fun NightModeDialog(
+    showDialog: MutableState<Boolean>,
+    isDarkTheme: Boolean,
+    currentNightMode: NightModeManager.Mode,
+    onNightModeClick: (NightModeManager.Mode) -> Unit
+) {
     if (showDialog.value) {
         var nightMode: NightModeManager.Mode? = null
         AlertDialog(
@@ -33,7 +38,7 @@ fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager: NightMo
                 )
             },
             text = {
-                NightModeScreen(nightModeManager) {
+                NightModeScreen(currentNightMode, isDarkTheme) {
                     nightMode = it
                 }
             },
@@ -41,7 +46,7 @@ fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager: NightMo
                 Button(
                     onClick = {
                         nightMode?.let {
-                            nightModeManager.setNightMode(it)
+                            onNightModeClick(it)
                         }
                         showDialog.value = false
                     }
@@ -55,29 +60,30 @@ fun NightModeDialog(showDialog: MutableState<Boolean>, nightModeManager: NightMo
 
 @Composable
 private fun NightModeScreen(
-    nightModeManager: NightModeManager,
+    currentNightMode: NightModeManager.Mode,
+    isDarkTheme: Boolean,
     itemClickListener: (NightModeManager.Mode) -> Unit
 ) {
-    ReleaseTrackerTheme(darkTheme = nightModeManager.isDarkTheme()) {
+    ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         Surface {
             Column {
-                val currentNightMode = mutableStateOf(nightModeManager.getCurrentNightMode())
+                val currentNightModeState = mutableStateOf(currentNightMode)
                 NightModeItem(
                     text = R.string.off,
                     mode = NightModeManager.Mode.OFF,
-                    currentNightMode = currentNightMode,
+                    currentNightMode = currentNightModeState,
                     itemClickListener = itemClickListener
                 )
                 NightModeItem(
                     text = R.string.on,
                     mode = NightModeManager.Mode.ON,
-                    currentNightMode = currentNightMode,
+                    currentNightMode = currentNightModeState,
                     itemClickListener = itemClickListener
                 )
                 NightModeItem(
                     text = R.string.auto,
                     mode = NightModeManager.Mode.AUTO,
-                    currentNightMode = currentNightMode,
+                    currentNightMode = currentNightModeState,
                     itemClickListener = itemClickListener
                 )
             }

@@ -116,7 +116,13 @@ private fun ActionButtons(nightModeManager: NightModeManager) {
                 Text(text = stringResource(R.string.night_mode))
             }
         }
-        NightModeDialog(showNightModeDialog, nightModeManager)
+        NightModeDialog(
+            showDialog = showNightModeDialog,
+            isDarkTheme = nightModeManager.isDarkTheme(),
+            currentNightMode = nightModeManager.getCurrentNightMode(),
+        ) { nightMode: NightModeManager.Mode ->
+            nightModeManager.setNightMode(nightMode)
+        }
     }
 
 }
