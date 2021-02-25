@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,10 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,8 +32,6 @@ import kotlinx.coroutines.launch
 
 // TODO: When 'library name' TextField has focus, clicking the 'next' button of the keyboard should
 //  move the focus to the 'library URL' TextField.
-// TODO When 'library URL' TextField has focus, clicking the 'done' button of the keyboard should
-//  add the library to the database and close the keyboard.
 // TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
 @ExperimentalAnimationApi
@@ -104,6 +103,7 @@ private fun AddLibraryContent(
             )
             Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
             LibraryUrlTextField(
+                addLibraryViewModel = addLibraryViewModel,
                 libraryUrl = addLibraryViewModel.libraryUrl,
                 isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl
             )
@@ -155,12 +155,23 @@ private fun LibraryNameErrorText(show: Boolean) {
 }
 
 @Composable
-private fun LibraryUrlTextField(libraryUrl: MutableState<String>, isError: Boolean) {
+private fun LibraryUrlTextField(
+    addLibraryViewModel: AddLibraryViewModel,
+    libraryUrl: MutableState<String>,
+    isError: Boolean
+) {
+    val focusManager = LocalFocusManager.current
     TextFieldWithHint(
         text = libraryUrl.value,
         hint = stringResource(R.string.library_url),
         onTextChange = { libraryUrl.value = it },
         imeAction = ImeAction.Done,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                addLibraryViewModel.addLibrary()
+                focusManager.clearFocus()
+            }
+        ),
         modifier = Modifier.fillMaxWidth(),
         isError = isError
     )
@@ -231,6 +242,7 @@ private fun TextFieldWithHint(
     hint: String,
     onTextChange: (String) -> Unit,
     imeAction: ImeAction,
+    keyboardActions: KeyboardActions = KeyboardActions(),
     isError: Boolean,
     modifier: Modifier
 ) {
@@ -241,9 +253,9 @@ private fun TextFieldWithHint(
         },
         onValueChange = onTextChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
             imeAction = imeAction
         ),
+        keyboardActions = keyboardActions,
         singleLine = true,
         isError = isError,
         modifier = modifier
