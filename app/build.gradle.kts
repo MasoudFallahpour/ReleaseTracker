@@ -38,7 +38,6 @@ android {
         useIR = true
     }
     buildFeatures {
-        viewBinding = true
         compose = true
     }
     composeOptions {
@@ -63,8 +62,6 @@ dependencies {
     implementation(Dependencies.App.preference)
     implementation(Dependencies.App.appCompat)
     implementation(Dependencies.App.activityCompose)
-    implementation(Dependencies.App.navigationFragment)
-    implementation(Dependencies.App.navigationUi)
     implementation(Dependencies.App.navigationCompose)
     implementation(Dependencies.App.material)
     implementation(Dependencies.App.viewModel)
