@@ -23,16 +23,14 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 
 @Composable
 fun NightModeDialog(
-    showDialog: MutableState<Boolean>,
+    showDialog: Boolean,
     currentNightMode: NightModeManager.Mode,
     onNightModeClick: (NightModeManager.Mode) -> Unit
 ) {
-    if (showDialog.value) {
+    if (showDialog) {
         var nightMode: NightModeManager.Mode? = null
         AlertDialog(
-            onDismissRequest = {
-                showDialog.value = false
-            },
+            onDismissRequest = {},
             title = {
                 Text(
                     text = stringResource(R.string.select_night_mode)
@@ -49,7 +47,6 @@ fun NightModeDialog(
                         nightMode?.let {
                             onNightModeClick(it)
                         }
-                        showDialog.value = false
                     }
                 ) {
                     Text(text = stringResource(android.R.string.ok))

@@ -28,8 +28,11 @@ import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.Screen
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrder
+import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrderDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
@@ -39,9 +42,10 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @Composable
 fun LibrariesListScreen(
-    navController: NavController,
+    librariesViewModel: LibrariesViewModel,
     nightModeManager: NightModeManager,
-    librariesViewModel: LibrariesViewModel
+    localStorage: LocalStorage,
+    navController: NavController,
 ) {
 
     librariesViewModel.getLibraries()
@@ -62,7 +66,7 @@ fun LibrariesListScreen(
                         Text(text = stringResource(R.string.app_name))
                     },
                     actions = {
-                        ActionButtons(nightModeManager)
+                        ActionButtons(nightModeManager, localStorage, librariesViewModel)
                     }
                 )
             },
@@ -78,28 +82,79 @@ fun LibrariesListScreen(
 }
 
 @Composable
-private fun ActionButtons(nightModeManager: NightModeManager) {
+private fun ActionButtons(
+    nightModeManager: NightModeManager,
+    localStorage: LocalStorage,
+    librariesViewModel: LibrariesViewModel
+) {
+    SortOrderButton(localStorage, librariesViewModel)
+    SearchButton()
+    NightModeButton(nightModeManager)
+}
 
-    IconButton(onClick = { /*showSortDialog()*/ }) {
+@Composable
+private fun SortOrderButton(
+    localStorage: LocalStorage,
+    librariesViewModel: LibrariesViewModel
+) {
+    var showSortOrderDialog by remember { mutableStateOf(false) }
+    IconButton(
+        onClick = {
+            showSortOrderDialog = true
+        }
+    ) {
         Icon(
             imageVector = Icons.Filled.Sort,
             contentDescription = stringResource(R.string.sort)
         )
     }
+    SortOrderDialog(
+        showDialog = showSortOrderDialog,
+        currentSortOrder = getCurrentOrder(localStorage),
+        onSortOrderClick = { sortOrder: SortOrder ->
+            showSortOrderDialog = false
+            librariesViewModel.getLibraries(getSortingOrder(sortOrder))
+        }
+    )
+}
 
+private fun getCurrentOrder(localStorage: LocalStorage): SortOrder {
+    val sortingOrder = localStorage.getOrder()
+    return if (sortingOrder != null) {
+        SortOrder.valueOf(sortingOrder)
+    } else {
+        SortOrder.A_TO_Z
+    }
+}
+
+private fun getSortingOrder(order: SortOrder) = when (order) {
+    SortOrder.A_TO_Z -> LibrariesViewModel.Order.A_TO_Z
+    SortOrder.Z_TO_A -> LibrariesViewModel.Order.Z_TO_A
+    SortOrder.PINNED_FIRST -> LibrariesViewModel.Order.PINNED_FIRST
+}
+
+@Composable
+private fun SearchButton() {
     IconButton(onClick = { /*TODO*/ }) {
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = stringResource(R.string.search)
         )
     }
+}
 
+@Composable
+private fun NightModeButton(nightModeManager: NightModeManager) {
     if (nightModeManager.isNightModeSupported) {
         var showDropdownMenu by remember { mutableStateOf(false) }
-        val showNightModeDialog = remember { mutableStateOf(false) }
-        IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
+        var showNightModeDialog by remember { mutableStateOf(false) }
+        IconButton(
+            onClick = {
+                showDropdownMenu = !showDropdownMenu
+            }
+        ) {
             Icon(
-                Icons.Default.MoreVert,
+                imageVector = Default.MoreVert,
                 contentDescription = stringResource(R.string.more_options)
             )
         }
@@ -110,10 +165,12 @@ private fun ActionButtons(nightModeManager: NightModeManager) {
             DropdownMenuItem(
                 onClick = {
                     showDropdownMenu = false
-                    showNightModeDialog.value = true
+                    showNightModeDialog = true
                 }
             ) {
-                Text(text = stringResource(R.string.night_mode))
+                Text(
+                    text = stringResource(R.string.night_mode)
+                )
             }
         }
         NightModeDialog(
@@ -121,33 +178,10 @@ private fun ActionButtons(nightModeManager: NightModeManager) {
             currentNightMode = nightModeManager.getCurrentNightMode(),
         ) { nightMode: NightModeManager.Mode ->
             nightModeManager.setNightMode(nightMode)
+            showNightModeDialog = false
         }
     }
-
 }
-
-//private fun showSortDialog() {
-//    val dialogDialog = SortDialog()
-//    dialogDialog.setListener(SortListener())
-//    showDialogFragment(dialogDialog, SortDialog.TAG)
-//}
-
-//private class SortListener : SortDialog.SortListener {
-//
-//    override fun orderSelected(order: SortDialog.Order) {
-//        if (order != currentOrder) {
-//            currentOrder = order
-//            librariesViewModel.getLibraries(getSortingOrder(order))
-//        }
-//    }
-//
-//    private fun getSortingOrder(order: SortDialog.Order) = when (order) {
-//        SortDialog.Order.A_TO_Z -> LibrariesViewModel.Order.A_TO_Z
-//        SortDialog.Order.Z_TO_A -> LibrariesViewModel.Order.Z_TO_A
-//        SortDialog.Order.PINNED_FIRST -> LibrariesViewModel.Order.PINNED_FIRST
-//    }
-//
-//}
 
 @ExperimentalFoundationApi
 @Composable

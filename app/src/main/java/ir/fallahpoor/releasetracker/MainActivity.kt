@@ -15,6 +15,7 @@ import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreen
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.Screen
+import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import javax.inject.Inject
@@ -27,6 +28,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var nightModeManager: NightModeManager
+
+    @Inject
+    lateinit var localStorage: LocalStorage
     private val librariesViewModel: LibrariesViewModel by viewModels()
     private val addLibraryViewModel: AddLibraryViewModel by viewModels()
 
@@ -41,9 +45,10 @@ class MainActivity : AppCompatActivity() {
             NavHost(navController, startDestination = Screen.LibrariesList.route) {
                 composable(Screen.LibrariesList.route) {
                     LibrariesListScreen(
-                        navController = navController,
+                        librariesViewModel = librariesViewModel,
                         nightModeManager = nightModeManager,
-                        librariesViewModel = librariesViewModel
+                        localStorage = localStorage,
+                        navController = navController
                     )
                 }
                 composable(Screen.AddLibrary.route) {
