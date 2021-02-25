@@ -9,31 +9,28 @@ import ir.fallahpoor.releasetracker.R
 
 @Composable
 fun DeleteLibraryDialog(
-    showDialog: Boolean,
     onDeleteClicked: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                onDismiss()
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.delete_selected_library)
-                )
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        onDeleteClicked()
-                    }
-                ) {
-                    Text(
-                        text = stringResource(R.string.delete)
-                    )
+    AlertDialog(
+        onDismissRequest = {
+            onDismiss()
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.delete_selected_library)
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onDeleteClicked()
                 }
+            ) {
+                Text(
+                    text = stringResource(R.string.delete)
+                )
             }
-        )
-    }
+        }
+    )
 }

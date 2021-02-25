@@ -193,17 +193,18 @@ private fun NightModeButton(nightModeManager: NightModeManager) {
                 )
             }
         }
-        NightModeDialog(
-            showDialog = showNightModeDialog,
-            currentNightMode = nightModeManager.getCurrentNightMode(),
-            onNightModeClick = { nightMode: NightModeManager.Mode ->
-                nightModeManager.setNightMode(nightMode)
-                showNightModeDialog = false
-            },
-            onDismiss = {
-                showDropdownMenu = false
-            }
-        )
+        if (showNightModeDialog) {
+            NightModeDialog(
+                currentNightMode = nightModeManager.getCurrentNightMode(),
+                onNightModeClick = { nightMode: NightModeManager.Mode ->
+                    nightModeManager.setNightMode(nightMode)
+                    showNightModeDialog = false
+                },
+                onDismiss = {
+                    showDropdownMenu = false
+                }
+            )
+        }
     }
 }
 
@@ -252,18 +253,19 @@ private fun LibrariesListContent(
                         librariesViewModel.setPinned(library, pin)
                     }
                 )
-                DeleteLibraryDialog(
-                    showDeleteLibraryDialog,
-                    onDeleteClicked = {
-                        showDeleteLibraryDialog = false
-                        librariesViewModel.libraryToDelete?.let {
-                            librariesViewModel.deleteLibrary(it.name)
+                if (showDeleteLibraryDialog) {
+                    DeleteLibraryDialog(
+                        onDeleteClicked = {
+                            showDeleteLibraryDialog = false
+                            librariesViewModel.libraryToDelete?.let {
+                                librariesViewModel.deleteLibrary(it.name)
+                            }
+                        },
+                        onDismiss = {
+                            showDeleteLibraryDialog = false
                         }
-                    },
-                    onDismiss = {
-                        showDeleteLibraryDialog = false
-                    }
-                )
+                    )
+                }
             }
             LibrariesListState.Fresh -> {
             }

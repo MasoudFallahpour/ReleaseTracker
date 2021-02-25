@@ -22,27 +22,24 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 
 @Composable
 fun NightModeDialog(
-    showDialog: Boolean,
     currentNightMode: NightModeManager.Mode,
     onNightModeClick: (NightModeManager.Mode) -> Unit,
     onDismiss: () -> Unit
 ) {
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                onDismiss()
-            },
-            title = {
-                Text(
-                    text = stringResource(R.string.select_night_mode)
-                )
-            },
-            text = {
-                NightModeScreen(currentNightMode, onNightModeClick)
-            },
-            confirmButton = {}
-        )
-    }
+    AlertDialog(
+        onDismissRequest = {
+            onDismiss()
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.select_night_mode)
+            )
+        },
+        text = {
+            NightModeScreen(currentNightMode, onNightModeClick)
+        },
+        confirmButton = {}
+    )
 }
 
 @Composable
