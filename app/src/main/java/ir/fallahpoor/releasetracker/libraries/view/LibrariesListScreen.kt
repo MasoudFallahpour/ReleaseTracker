@@ -121,14 +121,18 @@ private fun SortOrderButton(
             contentDescription = stringResource(R.string.sort)
         )
     }
-    SortOrderDialog(
-        showDialog = showSortOrderDialog,
-        currentSortOrder = getCurrentOrder(localStorage),
-        onSortOrderClick = { sortOrder: SortOrder ->
-            showSortOrderDialog = false
-            librariesViewModel.getLibraries(getSortingOrder(sortOrder))
-        }
-    )
+    if (showSortOrderDialog) {
+        SortOrderDialog(
+            currentSortOrder = getCurrentOrder(localStorage),
+            onSortOrderClick = { sortOrder: SortOrder ->
+                showSortOrderDialog = false
+                librariesViewModel.getLibraries(getSortingOrder(sortOrder))
+            },
+            onDismiss = {
+                showSortOrderDialog = false
+            }
+        )
+    }
 }
 
 private fun getCurrentOrder(localStorage: LocalStorage): SortOrder {
@@ -192,10 +196,14 @@ private fun NightModeButton(nightModeManager: NightModeManager) {
         NightModeDialog(
             showDialog = showNightModeDialog,
             currentNightMode = nightModeManager.getCurrentNightMode(),
-        ) { nightMode: NightModeManager.Mode ->
-            nightModeManager.setNightMode(nightMode)
-            showNightModeDialog = false
-        }
+            onNightModeClick = { nightMode: NightModeManager.Mode ->
+                nightModeManager.setNightMode(nightMode)
+                showNightModeDialog = false
+            },
+            onDismiss = {
+                showDropdownMenu = false
+            }
+        )
     }
 }
 
@@ -224,7 +232,7 @@ private fun LibrariesListContent(
             is LibrariesListState.LibrariesLoaded -> {
                 val libraries: List<Library> =
                     (librariesListState as LibrariesListState.LibrariesLoaded).libraries
-                val showDeleteLibraryDialog = remember { mutableStateOf(false) }
+                var showDeleteLibraryDialog by remember { mutableStateOf(false) }
                 LibrariesList(
                     navController = navController,
                     scaffoldState = scaffoldState,
@@ -237,17 +245,25 @@ private fun LibrariesListContent(
 //                        LocalContext.current.startActivity(intent)
                     },
                     longClickListener = { library: Library ->
-                        showDeleteLibraryDialog.value = true
                         librariesViewModel.libraryToDelete = library
+                        showDeleteLibraryDialog = true
                     },
                     pinClickListener = { library: Library, pin: Boolean ->
                         librariesViewModel.setPinned(library, pin)
-                    })
-                DeleteLibraryDialog(showDeleteLibraryDialog) {
-                    librariesViewModel.libraryToDelete?.let {
-                        librariesViewModel.deleteLibrary(it.name)
                     }
-                }
+                )
+                DeleteLibraryDialog(
+                    showDeleteLibraryDialog,
+                    onDeleteClicked = {
+                        showDeleteLibraryDialog = false
+                        librariesViewModel.libraryToDelete?.let {
+                            librariesViewModel.deleteLibrary(it.name)
+                        }
+                    },
+                    onDismiss = {
+                        showDeleteLibraryDialog = false
+                    }
+                )
             }
             LibrariesListState.Fresh -> {
             }
@@ -353,10 +369,10 @@ private fun LibraryItem(
         modifier = Modifier
             .combinedClickable(
                 onClick = {
-                    clickListener.invoke(library)
+                    clickListener(library)
                 },
                 onLongClick = {
-                    longClickListener.invoke(library)
+                    longClickListener(library)
                 }
             )
             .padding(
@@ -379,7 +395,7 @@ private fun PinToggleButton(library: Library, onCheckedChange: (Library, Boolean
     IconToggleButton(
         checked = library.isPinned(),
         onCheckedChange = {
-            onCheckedChange.invoke(library, it)
+            onCheckedChange(library, it)
         }
     ) {
         val pinImage = if (library.isPinned()) Icons.Filled.PushPin else Icons.Outlined.PushPin

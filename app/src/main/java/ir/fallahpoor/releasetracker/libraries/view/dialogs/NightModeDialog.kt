@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,33 +24,23 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 fun NightModeDialog(
     showDialog: Boolean,
     currentNightMode: NightModeManager.Mode,
-    onNightModeClick: (NightModeManager.Mode) -> Unit
+    onNightModeClick: (NightModeManager.Mode) -> Unit,
+    onDismiss: () -> Unit
 ) {
     if (showDialog) {
-        var nightMode: NightModeManager.Mode? = null
         AlertDialog(
-            onDismissRequest = {},
+            onDismissRequest = {
+                onDismiss()
+            },
             title = {
                 Text(
                     text = stringResource(R.string.select_night_mode)
                 )
             },
             text = {
-                NightModeScreen(currentNightMode) {
-                    nightMode = it
-                }
+                NightModeScreen(currentNightMode, onNightModeClick)
             },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        nightMode?.let {
-                            onNightModeClick(it)
-                        }
-                    }
-                ) {
-                    Text(text = stringResource(android.R.string.ok))
-                }
-            }
+            confirmButton = {}
         )
     }
 }
@@ -59,7 +48,7 @@ fun NightModeDialog(
 @Composable
 private fun NightModeScreen(
     currentNightMode: NightModeManager.Mode,
-    itemClickListener: (NightModeManager.Mode) -> Unit
+    onNightModeClick: (NightModeManager.Mode) -> Unit
 ) {
     Column {
         val currentNightModeState = mutableStateOf(currentNightMode)
@@ -67,19 +56,19 @@ private fun NightModeScreen(
             text = R.string.off,
             mode = NightModeManager.Mode.OFF,
             currentNightMode = currentNightModeState,
-            itemClickListener = itemClickListener
+            onNightModeClick = onNightModeClick
         )
         NightModeItem(
             text = R.string.on,
             mode = NightModeManager.Mode.ON,
             currentNightMode = currentNightModeState,
-            itemClickListener = itemClickListener
+            onNightModeClick = onNightModeClick
         )
         NightModeItem(
             text = R.string.auto,
             mode = NightModeManager.Mode.AUTO,
             currentNightMode = currentNightModeState,
-            itemClickListener = itemClickListener
+            onNightModeClick = onNightModeClick
         )
     }
 }
@@ -89,22 +78,24 @@ private fun NightModeItem(
     @StringRes text: Int,
     mode: NightModeManager.Mode,
     currentNightMode: MutableState<NightModeManager.Mode>,
-    itemClickListener: (NightModeManager.Mode) -> Unit
+    onNightModeClick: (NightModeManager.Mode) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = {
-                currentNightMode.value = mode
-                itemClickListener.invoke(mode)
-            }),
+            .clickable(
+                onClick = {
+                    currentNightMode.value = mode
+                    onNightModeClick(mode)
+                }
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = mode == currentNightMode.value,
             onClick = {
                 currentNightMode.value = mode
-                itemClickListener.invoke(mode)
+                onNightModeClick(mode)
             },
             modifier = Modifier.padding(
                 top = SPACE_SMALL.dp,

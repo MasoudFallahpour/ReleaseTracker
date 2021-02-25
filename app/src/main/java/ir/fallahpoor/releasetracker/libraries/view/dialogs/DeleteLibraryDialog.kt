@@ -4,31 +4,34 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.res.stringResource
 import ir.fallahpoor.releasetracker.R
 
 @Composable
 fun DeleteLibraryDialog(
-    showDialog: MutableState<Boolean>,
-    onDeleteClicked: () -> Unit
+    showDialog: Boolean,
+    onDeleteClicked: () -> Unit,
+    onDismiss: () -> Unit
 ) {
-    if (showDialog.value) {
+    if (showDialog) {
         AlertDialog(
             onDismissRequest = {
-                showDialog.value = false
+                onDismiss()
             },
             text = {
-                Text(text = stringResource(R.string.delete_selected_library))
+                Text(
+                    text = stringResource(R.string.delete_selected_library)
+                )
             },
             confirmButton = {
                 Button(
                     onClick = {
-                        showDialog.value = false
-                        onDeleteClicked.invoke()
+                        onDeleteClicked()
                     }
                 ) {
-                    Text(text = stringResource(R.string.delete))
+                    Text(
+                        text = stringResource(R.string.delete)
+                    )
                 }
             }
         )
