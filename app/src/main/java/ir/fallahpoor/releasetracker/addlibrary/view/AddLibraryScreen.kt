@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -30,8 +31,6 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import kotlinx.coroutines.launch
 
-// TODO: When 'library name' TextField has focus, clicking the 'next' button of the keyboard should
-//  move the focus to the 'library URL' TextField.
 // TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
 @ExperimentalAnimationApi
@@ -136,10 +135,16 @@ private fun ProgressIndicator(state: State) {
 
 @Composable
 private fun LibraryNameTextField(libraryName: MutableState<String>, isError: Boolean) {
+    val focusManager = LocalFocusManager.current
     TextFieldWithHint(
         text = libraryName.value,
         hint = stringResource(R.string.library_name),
         imeAction = ImeAction.Next,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                focusManager.moveFocus(focusDirection = FocusDirection.Down)
+            }
+        ),
         onTextChange = { libraryName.value = it },
         modifier = Modifier.fillMaxWidth(),
         isError = isError
