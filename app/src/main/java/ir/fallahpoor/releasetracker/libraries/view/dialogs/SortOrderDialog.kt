@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.SPACE_SMALL
+import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 enum class SortOrder {
@@ -93,13 +93,13 @@ private fun SortItem(
                 onClick = {
                     onSortOrderClick(sortOrder)
                 })
-            .padding(SPACE_SMALL.dp)
+            .padding(SPACE_NORMAL.dp)
     )
 }
 
 @Preview
 @Composable
-private fun SortOrderScreenPreview() {
+private fun SortOrderDialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
             SortOrderDialog(
