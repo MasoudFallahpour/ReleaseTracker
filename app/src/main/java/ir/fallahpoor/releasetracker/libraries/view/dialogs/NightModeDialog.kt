@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.RadioButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -17,12 +20,10 @@ import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
-import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun NightModeDialog(
     showDialog: MutableState<Boolean>,
-    isDarkTheme: Boolean,
     currentNightMode: NightModeManager.Mode,
     onNightModeClick: (NightModeManager.Mode) -> Unit
 ) {
@@ -38,7 +39,7 @@ fun NightModeDialog(
                 )
             },
             text = {
-                NightModeScreen(currentNightMode, isDarkTheme) {
+                NightModeScreen(currentNightMode) {
                     nightMode = it
                 }
             },
@@ -61,33 +62,28 @@ fun NightModeDialog(
 @Composable
 private fun NightModeScreen(
     currentNightMode: NightModeManager.Mode,
-    isDarkTheme: Boolean,
     itemClickListener: (NightModeManager.Mode) -> Unit
 ) {
-    ReleaseTrackerTheme(darkTheme = isDarkTheme) {
-        Surface {
-            Column {
-                val currentNightModeState = mutableStateOf(currentNightMode)
-                NightModeItem(
-                    text = R.string.off,
-                    mode = NightModeManager.Mode.OFF,
-                    currentNightMode = currentNightModeState,
-                    itemClickListener = itemClickListener
-                )
-                NightModeItem(
-                    text = R.string.on,
-                    mode = NightModeManager.Mode.ON,
-                    currentNightMode = currentNightModeState,
-                    itemClickListener = itemClickListener
-                )
-                NightModeItem(
-                    text = R.string.auto,
-                    mode = NightModeManager.Mode.AUTO,
-                    currentNightMode = currentNightModeState,
-                    itemClickListener = itemClickListener
-                )
-            }
-        }
+    Column {
+        val currentNightModeState = mutableStateOf(currentNightMode)
+        NightModeItem(
+            text = R.string.off,
+            mode = NightModeManager.Mode.OFF,
+            currentNightMode = currentNightModeState,
+            itemClickListener = itemClickListener
+        )
+        NightModeItem(
+            text = R.string.on,
+            mode = NightModeManager.Mode.ON,
+            currentNightMode = currentNightModeState,
+            itemClickListener = itemClickListener
+        )
+        NightModeItem(
+            text = R.string.auto,
+            mode = NightModeManager.Mode.AUTO,
+            currentNightMode = currentNightModeState,
+            itemClickListener = itemClickListener
+        )
     }
 }
 
