@@ -37,15 +37,15 @@ class LibraryRepositoryImpl
     }
 
     override fun getLibraries(
-        order: LibraryRepository.Order,
+        sortOrder: LibraryRepository.SortOrder,
         searchTerm: String
     ): Flow<List<Library>> {
 
         val queryPrefix = "SELECT * FROM library WHERE name LIKE '%' || ? || '%' ORDER BY "
-        val query = when (order) {
-            LibraryRepository.Order.A_TO_Z -> queryPrefix + "name ASC"
-            LibraryRepository.Order.Z_TO_A -> queryPrefix + "name DESC"
-            LibraryRepository.Order.PINNED_FIRST -> queryPrefix + "pinned DESC, name ASC"
+        val query = when (sortOrder) {
+            LibraryRepository.SortOrder.A_TO_Z -> queryPrefix + "name ASC"
+            LibraryRepository.SortOrder.Z_TO_A -> queryPrefix + "name DESC"
+            LibraryRepository.SortOrder.PINNED_FIRST -> queryPrefix + "pinned DESC, name ASC"
         }
 
         return libraryDao.getAll(SimpleSQLiteQuery(query, arrayOf(searchTerm)))
@@ -76,8 +76,8 @@ class LibraryRepositoryImpl
 
     override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
 
-    override suspend fun deleteLibrary(libraryName: String) {
-        libraryDao.delete(libraryName)
+    override suspend fun deleteLibrary(library: Library) {
+        libraryDao.delete(library.name)
     }
 
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
@@ -93,7 +93,7 @@ class LibraryRepositoryImpl
 
     }
 
-    override suspend fun setPinned(library: Library, pinned: Boolean) {
+    override suspend fun pinLibrary(library: Library, pinned: Boolean) {
         val newLibrary = library.copy(pinned = if (pinned) 1 else 0)
         libraryDao.update(newLibrary)
     }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
 
-    enum class Order {
+    enum class SortOrder {
         A_TO_Z,
         Z_TO_A,
         PINNED_FIRST
@@ -17,15 +17,15 @@ interface LibraryRepository {
 
     suspend fun getLibrary(libraryName: String): Library?
 
-    fun getLibraries(order: Order, searchTerm: String): Flow<List<Library>>
+    fun getLibraries(sortOrder: SortOrder, searchTerm: String): Flow<List<Library>>
 
     suspend fun getLibraries(): List<Library>
 
-    suspend fun deleteLibrary(libraryName: String)
+    suspend fun deleteLibrary(library: Library)
 
     suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String
 
-    suspend fun setPinned(library: Library, pinned: Boolean)
+    suspend fun pinLibrary(library: Library, pinned: Boolean)
 
     fun getLastUpdateCheck(): Flow<String>
 

@@ -250,7 +250,7 @@ private fun LibrariesListContent(
                         showDeleteLibraryDialog = true
                     },
                     pinClickListener = { library: Library, pin: Boolean ->
-                        librariesViewModel.setPinned(library, pin)
+                        librariesViewModel.pinLibrary(library, pin)
                     }
                 )
                 if (showDeleteLibraryDialog) {
@@ -258,7 +258,7 @@ private fun LibrariesListContent(
                         onDeleteClicked = {
                             showDeleteLibraryDialog = false
                             librariesViewModel.libraryToDelete?.let {
-                                librariesViewModel.deleteLibrary(it.name)
+                                librariesViewModel.deleteLibrary(it)
                             }
                         },
                         onDismiss = {

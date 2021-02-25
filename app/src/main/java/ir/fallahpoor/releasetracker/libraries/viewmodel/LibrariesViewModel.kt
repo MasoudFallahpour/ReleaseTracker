@@ -9,7 +9,6 @@ import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
-import ir.fallahpoor.releasetracker.libraries.view.states.LibraryPinState
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -46,18 +45,15 @@ class LibrariesViewModel
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
     val deleteState: LiveData<LibraryDeleteState> = _deleteLiveData
 
-    private val _pinLiveData = SingleLiveData<LibraryPinState>()
-    val pinState: LiveData<LibraryPinState> = _pinLiveData
-
     val lastUpdateCheckState: LiveData<String> =
         libraryRepository.getLastUpdateCheck()
             .map { it }
             .asLiveData()
 
     private fun getOrder() = when (sortOrder) {
-        SortOrder.A_TO_Z -> LibraryRepository.Order.A_TO_Z
-        SortOrder.Z_TO_A -> LibraryRepository.Order.Z_TO_A
-        SortOrder.PINNED_FIRST -> LibraryRepository.Order.PINNED_FIRST
+        SortOrder.A_TO_Z -> LibraryRepository.SortOrder.A_TO_Z
+        SortOrder.Z_TO_A -> LibraryRepository.SortOrder.Z_TO_A
+        SortOrder.PINNED_FIRST -> LibraryRepository.SortOrder.PINNED_FIRST
     }
 
     fun getLibraries(sortOrder: SortOrder = getDefaultSortOrder(), searchTerm: String = "") {
@@ -69,30 +65,26 @@ class LibrariesViewModel
     private fun getDefaultSortOrder() =
         SortOrder.valueOf(localStorage.getOrder() ?: SortOrder.A_TO_Z.name)
 
-    fun setPinned(library: Library, pin: Boolean) {
-
-        _pinLiveData.value = LibraryPinState.InProgress
+    fun pinLibrary(library: Library, pin: Boolean) {
 
         viewModelScope.launch {
 
             try {
-                libraryRepository.setPinned(library, pin)
+                libraryRepository.pinLibrary(library, pin)
             } catch (t: Throwable) {
-                val message = exceptionParser.getMessage(t)
-                _pinLiveData.value = LibraryPinState.Error(message)
             }
 
         }
 
     }
 
-    fun deleteLibrary(libraryName: String) {
+    fun deleteLibrary(library: Library) {
 
         _deleteLiveData.value = LibraryDeleteState.InProgress
 
         try {
             viewModelScope.launch {
-                libraryRepository.deleteLibrary(libraryName)
+                libraryRepository.deleteLibrary(library)
                 _deleteLiveData.value = LibraryDeleteState.Deleted
             }
         } catch (t: Throwable) {
