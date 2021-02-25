@@ -129,7 +129,7 @@ private fun LibraryNameTextField(libraryName: MutableState<String>, state: State
         imeAction = ImeAction.Next,
         onTextChange = { libraryName.value = it },
         modifier = Modifier.fillMaxWidth(),
-        isErrorValue = state is State.EmptyLibraryName
+        isError = state is State.EmptyLibraryName
     )
 }
 
@@ -149,7 +149,7 @@ private fun LibraryUrlTextField(libraryUrl: MutableState<String>, state: State) 
         onTextChange = { libraryUrl.value = it },
         imeAction = ImeAction.Done,
         modifier = Modifier.fillMaxWidth(),
-        isErrorValue = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl
+        isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl
     )
 }
 
@@ -218,7 +218,7 @@ private fun TextFieldWithHint(
     hint: String,
     onTextChange: (String) -> Unit,
     imeAction: ImeAction,
-    isErrorValue: Boolean,
+    isError: Boolean,
     modifier: Modifier
 ) {
     OutlinedTextField(
@@ -232,7 +232,7 @@ private fun TextFieldWithHint(
             imeAction = imeAction
         ),
         singleLine = true,
-        isErrorValue = isErrorValue,
+        isError = isError,
         modifier = modifier
     )
 }
