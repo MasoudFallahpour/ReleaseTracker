@@ -36,7 +36,6 @@ import kotlinx.coroutines.launch
 // TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
 @ExperimentalAnimationApi
-@ExperimentalMaterialApi
 @Composable
 fun AddLibraryScreen(
     addLibraryViewModel: AddLibraryViewModel,
@@ -89,23 +88,37 @@ private fun AddLibraryContent(
 
     val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
 
-    Column(modifier = Modifier.fillMaxHeight()) {
+    Column(modifier = Modifier.fillMaxSize()) {
         ProgressIndicator(state)
         Column(
             modifier = Modifier
                 .weight(1f)
                 .padding(SPACE_NORMAL.dp)
         ) {
-            LibraryNameTextField(addLibraryViewModel.libraryName, state)
-            LibraryNameErrorText(state)
+            LibraryNameTextField(
+                libraryName = addLibraryViewModel.libraryName,
+                isError = state is State.EmptyLibraryName
+            )
+            LibraryNameErrorText(
+                show = state is State.EmptyLibraryName
+            )
             Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
-            LibraryUrlTextField(addLibraryViewModel.libraryUrl, state)
+            LibraryUrlTextField(
+                libraryUrl = addLibraryViewModel.libraryUrl,
+                isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl
+            )
             LibraryUrlErrorText(state)
         }
-        AddLibraryButton(state) {
-            addLibraryViewModel.addLibrary()
-        }
-        Snackbar(state, scaffoldState)
+        AddLibraryButton(
+            isEnabled = state !is State.Loading,
+            clickListener = {
+                addLibraryViewModel.addLibrary()
+            }
+        )
+        Snackbar(
+            state = state,
+            scaffoldState = scaffoldState
+        )
     }
 
 }
@@ -122,34 +135,34 @@ private fun ProgressIndicator(state: State) {
 }
 
 @Composable
-private fun LibraryNameTextField(libraryName: MutableState<String>, state: State) {
+private fun LibraryNameTextField(libraryName: MutableState<String>, isError: Boolean) {
     TextFieldWithHint(
         text = libraryName.value,
         hint = stringResource(R.string.library_name),
         imeAction = ImeAction.Next,
         onTextChange = { libraryName.value = it },
         modifier = Modifier.fillMaxWidth(),
-        isError = state is State.EmptyLibraryName
+        isError = isError
     )
 }
 
 @ExperimentalAnimationApi
 @Composable
-private fun LibraryNameErrorText(state: State) {
-    AnimatedVisibility(visible = state is State.EmptyLibraryName) {
+private fun LibraryNameErrorText(show: Boolean) {
+    AnimatedVisibility(visible = show) {
         ErrorText(R.string.library_name_empty)
     }
 }
 
 @Composable
-private fun LibraryUrlTextField(libraryUrl: MutableState<String>, state: State) {
+private fun LibraryUrlTextField(libraryUrl: MutableState<String>, isError: Boolean) {
     TextFieldWithHint(
         text = libraryUrl.value,
         hint = stringResource(R.string.library_url),
         onTextChange = { libraryUrl.value = it },
         imeAction = ImeAction.Done,
         modifier = Modifier.fillMaxWidth(),
-        isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl
+        isError = isError
     )
 }
 
@@ -173,11 +186,11 @@ private fun ErrorText(@StringRes textRes: Int) {
 }
 
 @Composable
-private fun AddLibraryButton(state: State, clickListener: () -> Unit) {
+private fun AddLibraryButton(isEnabled: Boolean, clickListener: () -> Unit) {
     Button(
         modifier = Modifier.padding(SPACE_NORMAL.dp),
         onClick = clickListener,
-        enabled = state !is State.Loading
+        enabled = isEnabled
     ) {
         Text(
             text = stringResource(R.string.add_library),
