@@ -123,10 +123,10 @@ private fun SortOrderButton(
     }
     if (showSortOrderDialog) {
         SortOrderDialog(
-            currentSortOrder = getCurrentOrder(localStorage),
+            currentSortOrder = getCurrentSortOrder(localStorage),
             onSortOrderClick = { sortOrder: SortOrder ->
                 showSortOrderDialog = false
-                librariesViewModel.getLibraries(getSortingOrder(sortOrder))
+                librariesViewModel.getLibraries(mapSortOrder(sortOrder))
             },
             onDismiss = {
                 showSortOrderDialog = false
@@ -135,7 +135,7 @@ private fun SortOrderButton(
     }
 }
 
-private fun getCurrentOrder(localStorage: LocalStorage): SortOrder {
+private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
     val sortingOrder = localStorage.getOrder()
     return if (sortingOrder != null) {
         SortOrder.valueOf(sortingOrder)
@@ -144,10 +144,10 @@ private fun getCurrentOrder(localStorage: LocalStorage): SortOrder {
     }
 }
 
-private fun getSortingOrder(order: SortOrder) = when (order) {
-    SortOrder.A_TO_Z -> LibrariesViewModel.Order.A_TO_Z
-    SortOrder.Z_TO_A -> LibrariesViewModel.Order.Z_TO_A
-    SortOrder.PINNED_FIRST -> LibrariesViewModel.Order.PINNED_FIRST
+private fun mapSortOrder(order: SortOrder) = when (order) {
+    SortOrder.A_TO_Z -> LibrariesViewModel.SortOrder.A_TO_Z
+    SortOrder.Z_TO_A -> LibrariesViewModel.SortOrder.Z_TO_A
+    SortOrder.PINNED_FIRST -> LibrariesViewModel.SortOrder.PINNED_FIRST
 }
 
 @Composable
@@ -313,7 +313,11 @@ private fun LibrariesList(
                     }
                 }
             }
-            AddLibraryButton(navController)
+            AddLibraryButton(
+                clickListener = {
+                    navController.navigate(Screen.AddLibrary.route)
+                }
+            )
             Snackbar(libraryDeleteState, scaffoldState)
         }
     }
@@ -438,11 +442,9 @@ private fun EllipsisText(text: String, style: TextStyle, modifier: Modifier = Mo
 }
 
 @Composable
-private fun AddLibraryButton(navController: NavController) {
+private fun AddLibraryButton(clickListener: () -> Unit) {
     FloatingActionButton(
-        onClick = {
-            navController.navigate(Screen.AddLibrary.route)
-        },
+        onClick = clickListener,
         modifier = Modifier.padding(SPACE_NORMAL.dp)
     ) {
         Icon(

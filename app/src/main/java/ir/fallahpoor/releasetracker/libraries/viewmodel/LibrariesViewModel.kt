@@ -20,7 +20,7 @@ class LibrariesViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    enum class Order {
+    enum class SortOrder {
         A_TO_Z,
         Z_TO_A,
         PINNED_FIRST
@@ -40,7 +40,7 @@ class LibrariesViewModel
             .asLiveData()
     }
 
-    private var order: Order = getDefaultOrder()
+    private var sortOrder: SortOrder = getDefaultSortOrder()
     private var searchTerm = ""
 
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
@@ -54,20 +54,20 @@ class LibrariesViewModel
             .map { it }
             .asLiveData()
 
-    private fun getOrder() = when (order) {
-        Order.A_TO_Z -> LibraryRepository.Order.A_TO_Z
-        Order.Z_TO_A -> LibraryRepository.Order.Z_TO_A
-        Order.PINNED_FIRST -> LibraryRepository.Order.PINNED_FIRST
+    private fun getOrder() = when (sortOrder) {
+        SortOrder.A_TO_Z -> LibraryRepository.Order.A_TO_Z
+        SortOrder.Z_TO_A -> LibraryRepository.Order.Z_TO_A
+        SortOrder.PINNED_FIRST -> LibraryRepository.Order.PINNED_FIRST
     }
 
-    fun getLibraries(order: Order = getDefaultOrder(), searchTerm: String = "") {
-        this.order = order
+    fun getLibraries(sortOrder: SortOrder = getDefaultSortOrder(), searchTerm: String = "") {
+        this.sortOrder = sortOrder
         this.searchTerm = searchTerm
         triggerLiveData.value = Unit
     }
 
-    private fun getDefaultOrder() =
-        Order.valueOf(localStorage.getOrder() ?: Order.A_TO_Z.name)
+    private fun getDefaultSortOrder() =
+        SortOrder.valueOf(localStorage.getOrder() ?: SortOrder.A_TO_Z.name)
 
     fun setPinned(library: Library, pin: Boolean) {
 
