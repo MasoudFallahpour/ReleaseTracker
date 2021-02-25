@@ -1,6 +1,8 @@
 package ir.fallahpoor.releasetracker.addlibrary.view
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -33,14 +35,15 @@ import kotlinx.coroutines.launch
 //  add the library to the database and close the keyboard.
 // TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun AddLibraryScreen(
     navController: NavController,
-    isNightModeOn: Boolean,
+    isDarkTheme: Boolean,
     addLibraryViewModel: AddLibraryViewModel
 ) {
-    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
+    ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         val scaffoldState = rememberScaffoldState()
         Scaffold(
             topBar = {
@@ -72,6 +75,7 @@ private fun BackButton(onBackClicked: () -> Unit) {
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun AddLibraryContent(
     scaffoldState: ScaffoldState,
@@ -124,9 +128,10 @@ private fun LibraryNameTextField(libraryName: MutableState<String>, state: State
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun LibraryNameErrorText(state: State) {
-    if (state is State.EmptyLibraryName) {
+    AnimatedVisibility(visible = state is State.EmptyLibraryName) {
         ErrorText(R.string.library_name_empty)
     }
 }
@@ -143,11 +148,13 @@ private fun LibraryUrlTextField(libraryUrl: MutableState<String>, state: State) 
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun LibraryUrlErrorText(state: State) {
-    if (state is State.EmptyLibraryUrl) {
+    AnimatedVisibility(visible = state is State.EmptyLibraryUrl) {
         ErrorText(R.string.library_url_empty)
-    } else if (state is State.InvalidLibraryUrl) {
+    }
+    AnimatedVisibility(visible = state is State.InvalidLibraryUrl) {
         ErrorText(R.string.library_url_invalid)
     }
 }

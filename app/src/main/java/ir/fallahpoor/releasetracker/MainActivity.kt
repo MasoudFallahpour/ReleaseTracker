@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.compose.NavHost
@@ -18,6 +19,7 @@ import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import javax.inject.Inject
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @AndroidEntryPoint
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                 composable(Screen.AddLibrary.route) {
                     AddLibraryScreen(
                         navController = navController,
-                        isNightModeOn = nightModeManager.isDarkTheme(),
+                        isDarkTheme = nightModeManager.isDarkTheme(),
                         addLibraryViewModel = addLibraryViewModel
                     )
                 }
