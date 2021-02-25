@@ -39,9 +39,9 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun AddLibraryScreen(
+    addLibraryViewModel: AddLibraryViewModel,
     navController: NavController,
-    isDarkTheme: Boolean,
-    addLibraryViewModel: AddLibraryViewModel
+    isDarkTheme: Boolean
 ) {
     ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         val scaffoldState = rememberScaffoldState()
@@ -70,8 +70,13 @@ fun AddLibraryScreen(
 
 @Composable
 private fun BackButton(onBackClicked: () -> Unit) {
-    IconButton(onClick = onBackClicked) {
-        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+    IconButton(
+        onClick = onBackClicked
+    ) {
+        Icon(
+            imageVector = Icons.Filled.ArrowBack,
+            contentDescription = null
+        )
     }
 }
 
@@ -161,7 +166,10 @@ private fun LibraryUrlErrorText(state: State) {
 
 @Composable
 private fun ErrorText(@StringRes textRes: Int) {
-    Text(text = stringResource(textRes), style = TextStyle(color = MaterialTheme.colors.error))
+    Text(
+        text = stringResource(textRes),
+        style = TextStyle(color = MaterialTheme.colors.error)
+    )
 }
 
 @Composable
