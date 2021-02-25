@@ -7,17 +7,14 @@
     <string name="library_name_empty">Library name cannot be empty</string>
     <string name="library_url_empty">Library URL cannot be empty</string>
     <string name="library_url_invalid">Library URL is invalid</string>
-    <string name="library_name_already_exists">Library name already exists</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="github_base_url">https://github.com/</string>
     <string name="worker_tag">UPDATE_VERSION_WORKER</string>
     <string name="sort">Sort</string>
-    <string name="content_description_sort">Set sorting order</string>
     <string name="select_sorting_order">Select the sorting order</string>
     <string name="a_to_z">A to Z</string>
     <string name="z_to_a">Z to A</string>
     <string name="pinned_first">Pinned first</string>
-    <string name="content_description_delete">Delete libraries</string>
     <string name="delete">Delete</string>
     <string name="delete_selected_library">Delete selected library?</string>
     <string name="library_deleted">Library deleted successfully</string>
