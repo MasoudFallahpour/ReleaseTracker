@@ -154,6 +154,7 @@ private fun mapSortOrder(order: SortOrder) = when (order) {
 private fun SearchButton() {
     IconButton(
         onClick = {
+            /* TODO */
         }
     ) {
         Icon(
@@ -299,14 +300,17 @@ private fun LibrariesList(
         if (libraryDeleteState is LibraryDeleteState.InProgress) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
-        Box(contentAlignment = Alignment.BottomStart, modifier = Modifier.fillMaxSize()) {
+        Box(
+            contentAlignment = Alignment.BottomStart,
+            modifier = Modifier.fillMaxSize()
+        ) {
             LazyColumn {
                 itemsIndexed(libraries) { index: Int, library: Library ->
                     LibraryItem(
                         library = library,
                         clickListener = clickListener,
                         longClickListener = longClickListener,
-                        pinClickListener = pinClickListener
+                        onPinCheckedChange = pinClickListener
                     )
                     if (index != libraries.lastIndex) {
                         Divider()
@@ -354,7 +358,10 @@ private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: Scaf
 
 @Composable
 private fun NoLibrariesText() {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
         Text(
             text = stringResource(R.string.no_libraries),
             modifier = Modifier.padding(SPACE_NORMAL.dp)
@@ -368,7 +375,7 @@ private fun LibraryItem(
     library: Library,
     clickListener: (Library) -> Unit,
     longClickListener: (Library) -> Unit,
-    pinClickListener: (Library, Boolean) -> Unit
+    onPinCheckedChange: (Library, Boolean) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -387,7 +394,10 @@ private fun LibraryItem(
                 bottom = SPACE_NORMAL.dp
             )
     ) {
-        PinToggleButton(library, pinClickListener)
+        PinToggleButton(
+            library = library,
+            onPinCheckedChange = onPinCheckedChange
+        )
         Column(modifier = Modifier.weight(1f)) {
             LibraryNameText(library)
             LibraryUrlText(library)
@@ -397,14 +407,18 @@ private fun LibraryItem(
 }
 
 @Composable
-private fun PinToggleButton(library: Library, onCheckedChange: (Library, Boolean) -> Unit) {
+private fun PinToggleButton(library: Library, onPinCheckedChange: (Library, Boolean) -> Unit) {
     IconToggleButton(
         checked = library.isPinned(),
         onCheckedChange = {
-            onCheckedChange(library, it)
+            onPinCheckedChange(library, it)
         }
     ) {
-        val pinImage = if (library.isPinned()) Icons.Filled.PushPin else Icons.Outlined.PushPin
+        val pinImage = if (library.isPinned()) {
+            Icons.Filled.PushPin
+        } else {
+            Icons.Outlined.PushPin
+        }
         Icon(
             imageVector = pinImage,
             tint = MaterialTheme.colors.secondary,
