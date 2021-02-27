@@ -127,7 +127,7 @@ private fun mapSortOrder(order: SortOrder) = when (order) {
 @Composable
 private fun SortOrderButton(localStorage: LocalStorage, sortOrderSelected: (SortOrder) -> Unit) {
 
-    var showSortOrderDialog by remember { mutableStateOf(false) }
+    var showSortOrderDialog by rememberSaveable { mutableStateOf(false) }
 
     IconButton(
         onClick = {
@@ -184,7 +184,7 @@ private fun NightModeButton(
 ) {
 
     var showDropdownMenu by remember { mutableStateOf(false) }
-    var showNightModeDialog by remember { mutableStateOf(false) }
+    var showNightModeDialog by rememberSaveable { mutableStateOf(false) }
 
     IconButton(
         onClick = {
@@ -253,7 +253,7 @@ private fun LibrariesListContent(
             is LibrariesListState.LibrariesLoaded -> {
                 val libraries: List<Library> =
                     (librariesListState as LibrariesListState.LibrariesLoaded).libraries
-                var showDeleteLibraryDialog by remember { mutableStateOf(false) }
+                var showDeleteLibraryDialog by rememberSaveable { mutableStateOf(false) }
                 LibrariesList(
                     navController = navController,
                     scaffoldState = scaffoldState,
