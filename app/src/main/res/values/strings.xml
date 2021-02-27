@@ -16,7 +16,7 @@
     <string name="z_to_a">Z to A</string>
     <string name="pinned_first">Pinned first</string>
     <string name="delete">Delete</string>
-    <string name="delete_selected_library">Delete selected library?</string>
+    <string name="delete_selected_library">Delete \"%s\"?</string>
     <string name="library_deleted">Library deleted successfully</string>
     <string name="last_check_for_updates">Last check: %s</string>
     <string name="no_libraries">There are no libraries</string>

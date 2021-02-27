@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -274,6 +275,7 @@ private fun LibrariesListContent(
                 )
                 if (showDeleteLibraryDialog) {
                     DeleteLibraryDialog(
+                        libraryName = librariesViewModel.libraryToDelete?.name ?: "",
                         onDeleteClicked = {
                             showDeleteLibraryDialog = false
                             librariesViewModel.libraryToDelete?.let {
