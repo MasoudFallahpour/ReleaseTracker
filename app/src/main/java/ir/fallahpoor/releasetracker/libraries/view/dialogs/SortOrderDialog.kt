@@ -37,7 +37,7 @@ fun SortOrderDialog(
         },
         title = {
             Text(
-                text = stringResource(R.string.select_night_mode)
+                text = stringResource(R.string.select_sorting_order)
             )
         },
         text = {

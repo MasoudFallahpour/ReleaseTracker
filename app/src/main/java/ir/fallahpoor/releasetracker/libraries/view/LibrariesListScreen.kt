@@ -220,7 +220,7 @@ private fun NightModeButton(
                 showNightModeDialog = false
             },
             onDismiss = {
-                showDropdownMenu = false
+                showNightModeDialog = false
             }
         )
     }
