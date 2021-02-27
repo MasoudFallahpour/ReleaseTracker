@@ -100,17 +100,34 @@ private fun ActionButtons(
     nightModeManager: NightModeManager,
     localStorage: LocalStorage
 ) {
-    SortOrderButton(localStorage, librariesViewModel)
+    SortOrderButton(
+        localStorage = localStorage,
+        sortOrderSelected = { sortOrder ->
+            librariesViewModel.getLibraries(mapSortOrder(sortOrder))
+        }
+    )
     SearchButton()
-    NightModeButton(nightModeManager)
+    if (nightModeManager.isNightModeSupported) {
+        NightModeButton(
+            currentNightMode = nightModeManager.getCurrentNightMode(),
+            onNightModeSelected = { nightMode: NightModeManager.Mode ->
+                nightModeManager.setNightMode(nightMode)
+            }
+        )
+    }
+}
+
+private fun mapSortOrder(order: SortOrder) = when (order) {
+    SortOrder.A_TO_Z -> LibrariesViewModel.SortOrder.A_TO_Z
+    SortOrder.Z_TO_A -> LibrariesViewModel.SortOrder.Z_TO_A
+    SortOrder.PINNED_FIRST -> LibrariesViewModel.SortOrder.PINNED_FIRST
 }
 
 @Composable
-private fun SortOrderButton(
-    localStorage: LocalStorage,
-    librariesViewModel: LibrariesViewModel
-) {
+private fun SortOrderButton(localStorage: LocalStorage, sortOrderSelected: (SortOrder) -> Unit) {
+
     var showSortOrderDialog by remember { mutableStateOf(false) }
+
     IconButton(
         onClick = {
             showSortOrderDialog = true
@@ -126,13 +143,14 @@ private fun SortOrderButton(
             currentSortOrder = getCurrentSortOrder(localStorage),
             onSortOrderClick = { sortOrder: SortOrder ->
                 showSortOrderDialog = false
-                librariesViewModel.getLibraries(mapSortOrder(sortOrder))
+                sortOrderSelected(sortOrder)
             },
             onDismiss = {
                 showSortOrderDialog = false
             }
         )
     }
+
 }
 
 private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
@@ -142,12 +160,6 @@ private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
     } else {
         SortOrder.A_TO_Z
     }
-}
-
-private fun mapSortOrder(order: SortOrder) = when (order) {
-    SortOrder.A_TO_Z -> LibrariesViewModel.SortOrder.A_TO_Z
-    SortOrder.Z_TO_A -> LibrariesViewModel.SortOrder.Z_TO_A
-    SortOrder.PINNED_FIRST -> LibrariesViewModel.SortOrder.PINNED_FIRST
 }
 
 @Composable
@@ -165,48 +177,54 @@ private fun SearchButton() {
 }
 
 @Composable
-private fun NightModeButton(nightModeManager: NightModeManager) {
-    if (nightModeManager.isNightModeSupported) {
-        var showDropdownMenu by remember { mutableStateOf(false) }
-        var showNightModeDialog by remember { mutableStateOf(false) }
-        IconButton(
+private fun NightModeButton(
+    currentNightMode: NightModeManager.Mode,
+    onNightModeSelected: (NightModeManager.Mode) -> Unit
+) {
+
+    var showDropdownMenu by remember { mutableStateOf(false) }
+    var showNightModeDialog by remember { mutableStateOf(false) }
+
+    IconButton(
+        onClick = {
+            showDropdownMenu = !showDropdownMenu
+        }
+    ) {
+        Icon(
+            imageVector = Default.MoreVert,
+            contentDescription = stringResource(R.string.more_options)
+        )
+    }
+
+    DropdownMenu(
+        expanded = showDropdownMenu,
+        onDismissRequest = { showDropdownMenu = false })
+    {
+        DropdownMenuItem(
             onClick = {
-                showDropdownMenu = !showDropdownMenu
+                showDropdownMenu = false
+                showNightModeDialog = true
             }
         ) {
-            Icon(
-                imageVector = Default.MoreVert,
-                contentDescription = stringResource(R.string.more_options)
-            )
-        }
-        DropdownMenu(
-            expanded = showDropdownMenu,
-            onDismissRequest = { showDropdownMenu = false })
-        {
-            DropdownMenuItem(
-                onClick = {
-                    showDropdownMenu = false
-                    showNightModeDialog = true
-                }
-            ) {
-                Text(
-                    text = stringResource(R.string.night_mode)
-                )
-            }
-        }
-        if (showNightModeDialog) {
-            NightModeDialog(
-                currentNightMode = nightModeManager.getCurrentNightMode(),
-                onNightModeClick = { nightMode: NightModeManager.Mode ->
-                    nightModeManager.setNightMode(nightMode)
-                    showNightModeDialog = false
-                },
-                onDismiss = {
-                    showDropdownMenu = false
-                }
+            Text(
+                text = stringResource(R.string.night_mode)
             )
         }
     }
+
+    if (showNightModeDialog) {
+        NightModeDialog(
+            currentNightMode = currentNightMode,
+            onNightModeSelected = { nightMode: NightModeManager.Mode ->
+                onNightModeSelected(nightMode)
+                showNightModeDialog = false
+            },
+            onDismiss = {
+                showDropdownMenu = false
+            }
+        )
+    }
+
 }
 
 @ExperimentalFoundationApi
@@ -240,17 +258,17 @@ private fun LibrariesListContent(
                     scaffoldState = scaffoldState,
                     libraries = libraries,
                     libraryDeleteState = libraryDeleteState,
-                    clickListener = { library: Library ->
+                    onLibraryClicked = { library: Library ->
                         val intent = Intent(Intent.ACTION_VIEW).apply {
                             data = Uri.parse(library.url)
                         }
 //                        LocalContext.current.startActivity(intent)
                     },
-                    longClickListener = { library: Library ->
+                    onLibraryLongClicked = { library: Library ->
                         librariesViewModel.libraryToDelete = library
                         showDeleteLibraryDialog = true
                     },
-                    pinClickListener = { library: Library, pin: Boolean ->
+                    libraryPinCheckChanged = { library: Library, pin: Boolean ->
                         librariesViewModel.pinLibrary(library, pin)
                     }
                 )
@@ -290,9 +308,9 @@ private fun LibrariesList(
     scaffoldState: ScaffoldState,
     libraries: List<Library>,
     libraryDeleteState: LibraryDeleteState,
-    clickListener: (Library) -> Unit,
-    longClickListener: (Library) -> Unit,
-    pinClickListener: (Library, Boolean) -> Unit
+    onLibraryClicked: (Library) -> Unit,
+    onLibraryLongClicked: (Library) -> Unit,
+    libraryPinCheckChanged: (Library, Boolean) -> Unit
 ) {
     if (libraries.isEmpty()) {
         NoLibrariesText()
@@ -308,9 +326,9 @@ private fun LibrariesList(
                 itemsIndexed(libraries) { index: Int, library: Library ->
                     LibraryItem(
                         library = library,
-                        clickListener = clickListener,
-                        longClickListener = longClickListener,
-                        onPinCheckedChange = pinClickListener
+                        onLibraryClicked = onLibraryClicked,
+                        onLibraryLongClicked = onLibraryLongClicked,
+                        onLibraryPinCheckChanged = libraryPinCheckChanged
                     )
                     if (index != libraries.lastIndex) {
                         Divider()
@@ -373,19 +391,19 @@ private fun NoLibrariesText() {
 @Composable
 private fun LibraryItem(
     library: Library,
-    clickListener: (Library) -> Unit,
-    longClickListener: (Library) -> Unit,
-    onPinCheckedChange: (Library, Boolean) -> Unit
+    onLibraryClicked: (Library) -> Unit,
+    onLibraryLongClicked: (Library) -> Unit,
+    onLibraryPinCheckChanged: (Library, Boolean) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .combinedClickable(
                 onClick = {
-                    clickListener(library)
+                    onLibraryClicked(library)
                 },
                 onLongClick = {
-                    longClickListener(library)
+                    onLibraryLongClicked(library)
                 }
             )
             .padding(
@@ -396,7 +414,7 @@ private fun LibraryItem(
     ) {
         PinToggleButton(
             library = library,
-            onPinCheckedChange = onPinCheckedChange
+            onPinCheckedChange = onLibraryPinCheckChanged
         )
         Column(modifier = Modifier.weight(1f)) {
             LibraryNameText(library)

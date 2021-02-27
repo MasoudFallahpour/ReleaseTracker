@@ -23,7 +23,7 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 @Composable
 fun NightModeDialog(
     currentNightMode: NightModeManager.Mode,
-    onNightModeClick: (NightModeManager.Mode) -> Unit,
+    onNightModeSelected: (NightModeManager.Mode) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -36,7 +36,7 @@ fun NightModeDialog(
             )
         },
         text = {
-            NightModeScreen(currentNightMode, onNightModeClick)
+            NightModeScreen(currentNightMode, onNightModeSelected)
         },
         confirmButton = {}
     )
