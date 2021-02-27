@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.RadioButton
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -15,10 +16,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
+import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun NightModeDialog(
@@ -103,5 +106,19 @@ private fun NightModeItem(
         Text(
             text = stringResource(text)
         )
+    }
+}
+
+@Preview
+@Composable
+private fun NightModeDialogPreview() {
+    ReleaseTrackerTheme(darkTheme = false) {
+        Surface {
+            NightModeDialog(
+                currentNightMode = NightModeManager.Mode.OFF,
+                onNightModeSelected = {},
+                onDismiss = {}
+            )
+        }
     }
 }
