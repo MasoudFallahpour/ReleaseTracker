@@ -87,7 +87,9 @@ private fun AddLibraryContent(
     val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
 
     Column(modifier = Modifier.fillMaxSize()) {
-        ProgressIndicator(state)
+        if (state is State.Loading) {
+            ProgressIndicator()
+        }
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -123,14 +125,12 @@ private fun AddLibraryContent(
 }
 
 @Composable
-private fun ProgressIndicator(state: State) {
-    if (state is State.Loading) {
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(2.dp)
-        )
-    }
+private fun ProgressIndicator() {
+    LinearProgressIndicator(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(2.dp)
+    )
 }
 
 @Composable
