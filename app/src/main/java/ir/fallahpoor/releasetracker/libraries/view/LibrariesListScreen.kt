@@ -215,8 +215,8 @@ private fun NightModeButton(
 
     if (showNightModeDialog) {
         NightModeDialog(
-            currentNightMode = currentNightMode,
-            onNightModeSelected = { nightMode: NightModeManager.Mode ->
+            defaultNightMode = currentNightMode,
+            onNightModeClick = { nightMode: NightModeManager.Mode ->
                 onNightModeSelected(nightMode)
                 showNightModeDialog = false
             },

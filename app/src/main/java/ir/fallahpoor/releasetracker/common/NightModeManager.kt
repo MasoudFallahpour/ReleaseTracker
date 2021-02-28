@@ -15,10 +15,10 @@ class NightModeManager
     private val localStorage: LocalStorage
 ) {
 
-    enum class Mode {
-        ON,
-        OFF,
-        AUTO
+    enum class Mode(val value: String) {
+        ON("On"),
+        OFF("Off"),
+        AUTO("Auto")
     }
 
     val nightMode: LiveData<Mode> =

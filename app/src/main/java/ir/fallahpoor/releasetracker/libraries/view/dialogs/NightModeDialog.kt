@@ -1,6 +1,5 @@
 package ir.fallahpoor.releasetracker.libraries.view.dialogs
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,8 +10,9 @@ import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,21 +25,22 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun NightModeDialog(
-    currentNightMode: NightModeManager.Mode,
-    onNightModeSelected: (NightModeManager.Mode) -> Unit,
+    defaultNightMode: NightModeManager.Mode,
+    onNightModeClick: (NightModeManager.Mode) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = {
-            onDismiss()
-        },
+        onDismissRequest = onDismiss,
         title = {
             Text(
                 text = stringResource(R.string.select_night_mode)
             )
         },
         text = {
-            NightModeScreen(currentNightMode, onNightModeSelected)
+            NightModeScreen(
+                defaultNightMode = defaultNightMode,
+                onNightModeClick = onNightModeClick
+            )
         },
         confirmButton = {}
     )
@@ -47,55 +48,46 @@ fun NightModeDialog(
 
 @Composable
 private fun NightModeScreen(
-    currentNightMode: NightModeManager.Mode,
+    defaultNightMode: NightModeManager.Mode,
     onNightModeClick: (NightModeManager.Mode) -> Unit
 ) {
     Column {
-        val currentNightModeState = mutableStateOf(currentNightMode)
-        NightModeItem(
-            text = R.string.off,
-            mode = NightModeManager.Mode.OFF,
-            currentNightMode = currentNightModeState,
-            onNightModeClick = onNightModeClick
-        )
-        NightModeItem(
-            text = R.string.on,
-            mode = NightModeManager.Mode.ON,
-            currentNightMode = currentNightModeState,
-            onNightModeClick = onNightModeClick
-        )
-        NightModeItem(
-            text = R.string.auto,
-            mode = NightModeManager.Mode.AUTO,
-            currentNightMode = currentNightModeState,
-            onNightModeClick = onNightModeClick
-        )
+        var currentNightMode by mutableStateOf(defaultNightMode)
+        NightModeManager.Mode.values().forEach {
+            NightModeItem(
+                text = it.value,
+                nightMode = it,
+                onNightModeChange = { nightMode: NightModeManager.Mode ->
+                    onNightModeClick(nightMode)
+                    currentNightMode = nightMode
+                },
+                isSelected = currentNightMode == it
+            )
+        }
     }
 }
 
 @Composable
 private fun NightModeItem(
-    @StringRes text: Int,
-    mode: NightModeManager.Mode,
-    currentNightMode: MutableState<NightModeManager.Mode>,
-    onNightModeClick: (NightModeManager.Mode) -> Unit
+    text: String,
+    nightMode: NightModeManager.Mode,
+    onNightModeChange: (NightModeManager.Mode) -> Unit,
+    isSelected: Boolean
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
                 onClick = {
-                    currentNightMode.value = mode
-                    onNightModeClick(mode)
+                    onNightModeChange(nightMode)
                 }
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
-            selected = mode == currentNightMode.value,
+            selected = isSelected,
             onClick = {
-                currentNightMode.value = mode
-                onNightModeClick(mode)
+                onNightModeChange(nightMode)
             },
             modifier = Modifier.padding(
                 top = SPACE_SMALL.dp,
@@ -104,7 +96,7 @@ private fun NightModeItem(
             )
         )
         Text(
-            text = stringResource(text)
+            text = text
         )
     }
 }
@@ -115,8 +107,8 @@ private fun NightModeDialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
             NightModeDialog(
-                currentNightMode = NightModeManager.Mode.OFF,
-                onNightModeSelected = {},
+                defaultNightMode = NightModeManager.Mode.OFF,
+                onNightModeClick = {},
                 onDismiss = {}
             )
         }
