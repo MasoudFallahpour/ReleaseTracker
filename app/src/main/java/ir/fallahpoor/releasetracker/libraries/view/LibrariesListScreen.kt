@@ -2,6 +2,7 @@ package ir.fallahpoor.releasetracker.libraries.view
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -25,10 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.DefaultSnackbar
-import ir.fallahpoor.releasetracker.common.NightModeManager
-import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
-import ir.fallahpoor.releasetracker.common.Screen
+import ir.fallahpoor.releasetracker.common.*
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
@@ -41,6 +39,7 @@ import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import kotlinx.coroutines.launch
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun LibrariesListScreen(
@@ -65,20 +64,71 @@ fun LibrariesListScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.app_name)
-                        )
-                    },
-                    actions = {
-                        ActionButtons(
-                            librariesViewModel = librariesViewModel,
-                            nightModeManager = nightModeManager,
-                            localStorage = localStorage
-                        )
+                TopAppBar {
+                    var showSearchBar by rememberSaveable { mutableStateOf(false) }
+                    var searchQuery by rememberSaveable { mutableStateOf("") }
+                    Box(
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text = stringResource(R.string.app_name),
+                                style = MaterialTheme.typography.h6
+                            )
+                            SortOrderButton(
+                                localStorage = localStorage,
+                                sortOrderSelected = { sortOrder ->
+                                    librariesViewModel.getLibraries(mapSortOrder(sortOrder))
+                                }
+                            )
+                            SearchButton(
+                                onClick = {
+                                    showSearchBar = true
+                                }
+                            )
+                            if (nightModeManager.isNightModeSupported) {
+                                NightModeButton(
+                                    currentNightMode = nightModeManager.getCurrentNightMode(),
+                                    onNightModeSelected = { nightMode: NightModeManager.Mode ->
+                                        nightModeManager.setNightMode(nightMode)
+                                    }
+                                )
+                            }
+                        }
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = showSearchBar
+                        ) {
+                            SearchBar(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                shape = MaterialTheme.shapes.small,
+                                elevation = 8.dp,
+                                hint = stringResource(R.string.search),
+                                query = searchQuery,
+                                onQueryChange = {
+                                    searchQuery = it
+                                    librariesViewModel.getLibraries(searchTerm = it)
+                                },
+                                onQuerySubmit = {
+                                    librariesViewModel.getLibraries(searchTerm = it)
+                                },
+                                onClearClick = {
+                                    searchQuery = ""
+                                    librariesViewModel.getLibraries(searchTerm = "")
+                                },
+                                onBackClick = {
+                                    showSearchBar = false
+                                    searchQuery = ""
+                                    librariesViewModel.getLibraries(searchTerm = "")
+                                }
+                            )
+                        }
                     }
-                )
+                }
             },
             scaffoldState = scaffoldState,
             snackbarHost = {
@@ -93,29 +143,6 @@ fun LibrariesListScreen(
         }
     }
 
-}
-
-@Composable
-private fun ActionButtons(
-    librariesViewModel: LibrariesViewModel,
-    nightModeManager: NightModeManager,
-    localStorage: LocalStorage
-) {
-    SortOrderButton(
-        localStorage = localStorage,
-        sortOrderSelected = { sortOrder ->
-            librariesViewModel.getLibraries(mapSortOrder(sortOrder))
-        }
-    )
-    SearchButton()
-    if (nightModeManager.isNightModeSupported) {
-        NightModeButton(
-            currentNightMode = nightModeManager.getCurrentNightMode(),
-            onNightModeSelected = { nightMode: NightModeManager.Mode ->
-                nightModeManager.setNightMode(nightMode)
-            }
-        )
-    }
 }
 
 private fun mapSortOrder(order: SortOrder) = when (order) {
@@ -164,11 +191,9 @@ private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
 }
 
 @Composable
-private fun SearchButton() {
+private fun SearchButton(onClick: () -> Unit) {
     IconButton(
-        onClick = {
-            /* TODO */
-        }
+        onClick = onClick
     ) {
         Icon(
             imageVector = Icons.Filled.Search,
@@ -324,7 +349,9 @@ private fun LibrariesList(
             contentAlignment = Alignment.BottomStart,
             modifier = Modifier.fillMaxSize()
         ) {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
                 itemsIndexed(libraries) { index: Int, library: Library ->
                     LibraryItem(
                         library = library,

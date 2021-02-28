@@ -1,15 +1,22 @@
 package ir.fallahpoor.releasetracker.common
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
@@ -31,29 +38,45 @@ fun DefaultSnackbar(
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
+    shape: Shape,
+    elevation: Dp,
     hint: String,
     query: String,
     onQueryChange: (String) -> Unit,
     onQuerySubmit: (String) -> Unit,
     onClearClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
-    TextField(
-        modifier = modifier,
-        value = query,
-        onValueChange = onQueryChange,
-        placeholder = {
-            Text(
-                text = hint
+    Surface(
+        shape = shape
+    ) {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = onBackClick
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = null
+                )
+            }
+            BasicTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                value = query,
+                onValueChange = onQueryChange,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onQuerySubmit(query)
+                    }
+                ),
+                textStyle = MaterialTheme.typography.body1
             )
-        },
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Filled.Search,
-                contentDescription = null
-            )
-        },
-        trailingIcon = {
             IconButton(
                 onClick = onClearClick
             ) {
@@ -62,45 +85,25 @@ fun SearchBar(
                     contentDescription = null
                 )
             }
-        },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                onQuerySubmit(query)
-            }
-        )
-    )
+        }
+    }
 }
 
 @Composable
 @Preview
 private fun SearchBarPreview() {
-    ReleaseTrackerTheme {
+    ReleaseTrackerTheme(darkTheme = false) {
         Surface {
             SearchBar(
+                shape = MaterialTheme.shapes.small,
+                elevation = 8.dp,
                 hint = "Search",
                 query = "Coil",
                 onQueryChange = {},
                 onClearClick = {},
+                onBackClick = {},
                 onQuerySubmit = {}
             )
         }
     }
 }
-
-//SearchBar(
-//modifier = Modifier.fillMaxWidth(),
-//hint = stringResource(R.string.search),
-//query = searchQuery,
-//onQueryChange = {
-//    searchQuery = it
-//    librariesViewModel.getLibraries(searchTerm = it)
-//},
-//onQuerySubmit = {
-//    librariesViewModel.getLibraries(searchTerm = it)
-//},
-//onClearClick = {
-//    searchQuery = ""
-//    librariesViewModel.getLibraries(searchTerm = "")
-//}
-//)
