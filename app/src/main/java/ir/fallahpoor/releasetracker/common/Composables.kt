@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.common
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
@@ -10,9 +11,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -48,7 +51,8 @@ fun SearchBar(
     onBackClick: () -> Unit
 ) {
     Surface(
-        shape = shape
+        shape = shape,
+        elevation = elevation
     ) {
         Row(
             modifier = modifier,
@@ -62,21 +66,34 @@ fun SearchBar(
                     contentDescription = null
                 )
             }
-            BasicTextField(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                value = query,
-                onValueChange = onQueryChange,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(
-                    onSearch = {
-                        onQuerySubmit(query)
+                    .weight(1f)
+            ) {
+                if (query.isBlank()) {
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = hint
+                        )
                     }
-                ),
-                textStyle = MaterialTheme.typography.body1
-            )
+                }
+                BasicTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = query,
+                    onValueChange = onQueryChange,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            onQuerySubmit(query)
+                        }
+                    ),
+                    textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
+                    cursorBrush = SolidColor(MaterialTheme.colors.onSurface)
+                )
+            }
             IconButton(
                 onClick = onClearClick
             ) {
