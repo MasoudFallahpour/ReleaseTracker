@@ -12,8 +12,12 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
@@ -85,8 +89,11 @@ private fun SearchTextField(
     onQueryChange: (String) -> Unit,
     onQuerySubmit: (String) -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
     BasicTextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
         value = query,
         onValueChange = onQueryChange,
         singleLine = true,
@@ -99,6 +106,10 @@ private fun SearchTextField(
         textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
         cursorBrush = SolidColor(MaterialTheme.colors.onSurface)
     )
+    DisposableEffect(Unit) {
+        focusRequester.requestFocus()
+        onDispose { }
+    }
 }
 
 @Composable
