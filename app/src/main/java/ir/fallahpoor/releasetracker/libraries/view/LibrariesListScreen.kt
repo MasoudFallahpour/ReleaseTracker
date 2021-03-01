@@ -109,8 +109,6 @@ fun LibrariesListScreen(
                             SearchBar(
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                shape = MaterialTheme.shapes.small,
-                                elevation = 8.dp,
                                 hint = stringResource(R.string.search),
                                 query = searchQuery,
                                 onQueryChange = {

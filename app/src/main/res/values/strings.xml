@@ -29,5 +29,6 @@
     <string name="hint_search">Search libraries</string>
     <string name="pin_library">Pin library</string>
     <string name="more_options">More options</string>
-    <string name="clear_search">Clear search field</string>
+    <string name="clear_search_field">Clear search field</string>
+    <string name="close_search_bar">Clear search bar</string>
 </resources>

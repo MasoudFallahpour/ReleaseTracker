@@ -20,17 +20,19 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    shape: Shape,
-    elevation: Dp,
+    shape: Shape = MaterialTheme.shapes.small,
+    elevation: Dp = 8.dp,
     hint: String,
     query: String,
     onQueryChange: (String) -> Unit,
@@ -78,7 +80,7 @@ private fun CloseButton(onCloseClick: () -> Unit) {
     ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
-            contentDescription = null
+            contentDescription = stringResource(R.string.close_search_bar)
         )
     }
 }
@@ -129,7 +131,7 @@ private fun ClearButton(onClearClick: () -> Unit) {
     ) {
         Icon(
             imageVector = Icons.Filled.Clear,
-            contentDescription = null
+            contentDescription = stringResource(R.string.clear_search_field)
         )
     }
 }
