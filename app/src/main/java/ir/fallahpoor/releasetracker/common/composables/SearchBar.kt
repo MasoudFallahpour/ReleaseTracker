@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.common
+package ir.fallahpoor.releasetracker.common.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,22 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
-
-@Composable
-fun DefaultSnackbar(
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
-) {
-    SnackbarHost(
-        hostState = snackbarHostState,
-        snackbar = { snackbarData: SnackbarData ->
-            Snackbar(
-                snackbarData = snackbarData
-            )
-        },
-        modifier = modifier
-    )
-}
 
 @Composable
 fun SearchBar(

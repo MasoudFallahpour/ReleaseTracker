@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
-import ir.fallahpoor.releasetracker.common.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
+import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import kotlinx.coroutines.launch
 
