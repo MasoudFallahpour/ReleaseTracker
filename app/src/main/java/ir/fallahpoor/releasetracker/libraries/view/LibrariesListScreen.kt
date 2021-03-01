@@ -120,7 +120,7 @@ fun LibrariesListScreen(
                                     searchQuery = ""
                                     librariesViewModel.getLibraries(searchTerm = "")
                                 },
-                                onBackClick = {
+                                onCloseClick = {
                                     showSearchBar = false
                                     searchQuery = ""
                                     librariesViewModel.getLibraries(searchTerm = "")

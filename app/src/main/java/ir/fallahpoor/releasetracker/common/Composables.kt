@@ -48,61 +48,94 @@ fun SearchBar(
     onQueryChange: (String) -> Unit,
     onQuerySubmit: (String) -> Unit,
     onClearClick: () -> Unit,
-    onBackClick: () -> Unit
+    onCloseClick: () -> Unit
 ) {
     Surface(
+        modifier = modifier,
         shape = shape,
         elevation = elevation
     ) {
         Row(
-            modifier = modifier,
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = onBackClick
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = null
-                )
-            }
+            CloseButton(
+                onCloseClick = onCloseClick
+            )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
                 if (query.isBlank()) {
-                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = hint
-                        )
-                    }
+                    HintText(
+                        hint = hint
+                    )
                 }
-                BasicTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = query,
-                    onValueChange = onQueryChange,
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(
-                        onSearch = {
-                            onQuerySubmit(query)
-                        }
-                    ),
-                    textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
-                    cursorBrush = SolidColor(MaterialTheme.colors.onSurface)
+                SearchTextField(
+                    query = query,
+                    onQueryChange = onQueryChange,
+                    onQuerySubmit = onQuerySubmit
                 )
             }
-            IconButton(
-                onClick = onClearClick
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Clear,
-                    contentDescription = null
-                )
-            }
+            ClearButton(onClearClick)
         }
+    }
+}
+
+@Composable
+private fun CloseButton(onCloseClick: () -> Unit) {
+    IconButton(
+        onClick = onCloseClick
+    ) {
+        Icon(
+            imageVector = Icons.Filled.ArrowBack,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun SearchTextField(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onQuerySubmit: (String) -> Unit
+) {
+    BasicTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = query,
+        onValueChange = onQueryChange,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                onQuerySubmit(query)
+            }
+        ),
+        textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
+        cursorBrush = SolidColor(MaterialTheme.colors.onSurface)
+    )
+}
+
+@Composable
+private fun HintText(hint: String) {
+    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.disabled) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = hint
+        )
+    }
+}
+
+@Composable
+private fun ClearButton(onClearClick: () -> Unit) {
+    IconButton(
+        onClick = onClearClick
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Clear,
+            contentDescription = null
+        )
     }
 }
 
@@ -118,7 +151,7 @@ private fun SearchBarPreview() {
                 query = "Coil",
                 onQueryChange = {},
                 onClearClick = {},
-                onBackClick = {},
+                onCloseClick = {},
                 onQuerySubmit = {}
             )
         }
