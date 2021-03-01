@@ -56,7 +56,10 @@ class LibrariesViewModel
         SortOrder.PINNED_FIRST -> LibraryRepository.SortOrder.PINNED_FIRST
     }
 
-    fun getLibraries(sortOrder: SortOrder = getDefaultSortOrder(), searchTerm: String = "") {
+    fun getLibraries(
+        sortOrder: SortOrder = getDefaultSortOrder(),
+        searchTerm: String = this.searchTerm
+    ) {
         this.sortOrder = sortOrder
         this.searchTerm = searchTerm
         triggerLiveData.value = Unit
