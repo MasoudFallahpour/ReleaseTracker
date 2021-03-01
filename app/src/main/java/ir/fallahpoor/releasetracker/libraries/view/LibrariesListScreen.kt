@@ -11,8 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.Icons.Default
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -30,13 +30,12 @@ import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.Screen
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
-import ir.fallahpoor.releasetracker.common.composables.SearchBar
+import ir.fallahpoor.releasetracker.common.composables.Toolbar
+import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrder
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrderDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
@@ -68,69 +67,34 @@ fun LibrariesListScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBar {
-                    var showSearchBar by rememberSaveable { mutableStateOf(false) }
-                    var searchQuery by rememberSaveable { mutableStateOf("") }
-                    Box(
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier.weight(1f),
-                                text = stringResource(R.string.app_name),
-                                style = MaterialTheme.typography.h6
-                            )
-                            SortOrderButton(
-                                localStorage = localStorage,
-                                sortOrderSelected = { sortOrder ->
-                                    librariesViewModel.getLibraries(mapSortOrder(sortOrder))
-                                }
-                            )
-                            SearchButton(
-                                onClick = {
-                                    showSearchBar = true
-                                }
-                            )
-                            if (nightModeManager.isNightModeSupported) {
-                                NightModeButton(
-                                    currentNightMode = nightModeManager.getCurrentNightMode(),
-                                    onNightModeSelected = { nightMode: NightModeManager.Mode ->
-                                        nightModeManager.setNightMode(nightMode)
-                                    }
-                                )
-                            }
+                var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
+                Toolbar(
+                    toolbarMode = toolbarMode,
+                    onToolbarModeChange = {
+                        toolbarMode = it
+                        if (it == ToolbarMode.Normal) {
+                            librariesViewModel.getLibraries(searchTerm = "")
                         }
-                        androidx.compose.animation.AnimatedVisibility(
-                            visible = showSearchBar
-                        ) {
-                            SearchBar(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                hint = stringResource(R.string.search),
-                                query = searchQuery,
-                                onQueryChange = {
-                                    searchQuery = it
-                                    librariesViewModel.getLibraries(searchTerm = it)
-                                },
-                                onQuerySubmit = {
-                                    librariesViewModel.getLibraries(searchTerm = it)
-                                },
-                                onClearClick = {
-                                    searchQuery = ""
-                                    librariesViewModel.getLibraries(searchTerm = "")
-                                },
-                                onCloseClick = {
-                                    showSearchBar = false
-                                    searchQuery = ""
-                                    librariesViewModel.getLibraries(searchTerm = "")
-                                }
-                            )
-                        }
+                    },
+                    currentSortOrder = getCurrentSortOrder(localStorage),
+                    onSortOrderChange = {
+                        librariesViewModel.getLibraries(mapSortOrder(it))
+                    },
+                    isNightModeSupported = nightModeManager.isNightModeSupported,
+                    currentNightMode = nightModeManager.getCurrentNightMode(),
+                    onNightModeChange = {
+                        nightModeManager.setNightMode(it)
+                    },
+                    onSearchQueryChange = {
+                        librariesViewModel.getLibraries(searchTerm = it)
+                    },
+                    onSearchQuerySubmit = {
+                        librariesViewModel.getLibraries(searchTerm = it)
+                    },
+                    onSearchQueryClear = {
+                        librariesViewModel.getLibraries(searchTerm = "")
                     }
-                }
+                )
             },
             scaffoldState = scaffoldState,
             snackbarHost = {
@@ -153,36 +117,6 @@ private fun mapSortOrder(order: SortOrder) = when (order) {
     SortOrder.PINNED_FIRST -> LibrariesViewModel.SortOrder.PINNED_FIRST
 }
 
-@Composable
-private fun SortOrderButton(localStorage: LocalStorage, sortOrderSelected: (SortOrder) -> Unit) {
-
-    var showSortOrderDialog by rememberSaveable { mutableStateOf(false) }
-
-    IconButton(
-        onClick = {
-            showSortOrderDialog = true
-        }
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Sort,
-            contentDescription = stringResource(R.string.sort)
-        )
-    }
-    if (showSortOrderDialog) {
-        SortOrderDialog(
-            currentSortOrder = getCurrentSortOrder(localStorage),
-            onSortOrderClick = { sortOrder: SortOrder ->
-                showSortOrderDialog = false
-                sortOrderSelected(sortOrder)
-            },
-            onDismiss = {
-                showSortOrderDialog = false
-            }
-        )
-    }
-
-}
-
 private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
     val sortingOrder = localStorage.getOrder()
     return if (sortingOrder != null) {
@@ -190,69 +124,6 @@ private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
     } else {
         SortOrder.A_TO_Z
     }
-}
-
-@Composable
-private fun SearchButton(onClick: () -> Unit) {
-    IconButton(
-        onClick = onClick
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Search,
-            contentDescription = stringResource(R.string.search)
-        )
-    }
-}
-
-@Composable
-private fun NightModeButton(
-    currentNightMode: NightModeManager.Mode,
-    onNightModeSelected: (NightModeManager.Mode) -> Unit
-) {
-
-    var showDropdownMenu by remember { mutableStateOf(false) }
-    var showNightModeDialog by rememberSaveable { mutableStateOf(false) }
-
-    IconButton(
-        onClick = {
-            showDropdownMenu = !showDropdownMenu
-        }
-    ) {
-        Icon(
-            imageVector = Default.MoreVert,
-            contentDescription = stringResource(R.string.more_options)
-        )
-    }
-
-    DropdownMenu(
-        expanded = showDropdownMenu,
-        onDismissRequest = { showDropdownMenu = false })
-    {
-        DropdownMenuItem(
-            onClick = {
-                showDropdownMenu = false
-                showNightModeDialog = true
-            }
-        ) {
-            Text(
-                text = stringResource(R.string.night_mode)
-            )
-        }
-    }
-
-    if (showNightModeDialog) {
-        NightModeDialog(
-            defaultNightMode = currentNightMode,
-            onNightModeClick = { nightMode: NightModeManager.Mode ->
-                onNightModeSelected(nightMode)
-                showNightModeDialog = false
-            },
-            onDismiss = {
-                showNightModeDialog = false
-            }
-        )
-    }
-
 }
 
 @ExperimentalFoundationApi
