@@ -149,30 +149,32 @@ private fun NightModeButton(
     var showDropdownMenu by remember { mutableStateOf(false) }
     var showNightModeDialog by rememberSaveable { mutableStateOf(false) }
 
-    IconButton(
-        onClick = {
-            showDropdownMenu = !showDropdownMenu
-        }
-    ) {
-        Icon(
-            imageVector = Icons.Default.MoreVert,
-            contentDescription = stringResource(R.string.more_options)
-        )
-    }
-
-    DropdownMenu(
-        expanded = showDropdownMenu,
-        onDismissRequest = { showDropdownMenu = false })
-    {
-        DropdownMenuItem(
+    Box {
+        IconButton(
             onClick = {
-                showDropdownMenu = false
-                showNightModeDialog = true
+                showDropdownMenu = !showDropdownMenu
             }
         ) {
-            Text(
-                text = stringResource(R.string.night_mode)
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(R.string.more_options)
             )
+        }
+
+        DropdownMenu(
+            expanded = showDropdownMenu,
+            onDismissRequest = { showDropdownMenu = false })
+        {
+            DropdownMenuItem(
+                onClick = {
+                    showDropdownMenu = false
+                    showNightModeDialog = true
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.night_mode)
+                )
+            }
         }
     }
 
