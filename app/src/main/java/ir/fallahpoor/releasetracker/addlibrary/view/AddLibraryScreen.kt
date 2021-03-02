@@ -88,7 +88,9 @@ private fun AddLibraryContent(
 
     val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         if (state is State.Loading) {
             ProgressIndicator()
         }
@@ -104,13 +106,19 @@ private fun AddLibraryContent(
             LibraryNameErrorText(
                 show = state is State.EmptyLibraryName
             )
-            Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
-            LibraryUrlTextField(
-                addLibraryViewModel = addLibraryViewModel,
-                libraryUrl = addLibraryViewModel.libraryUrl,
-                isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl
+            Spacer(
+                modifier = Modifier.height(SPACE_SMALL.dp)
             )
-            LibraryUrlErrorText(state)
+            LibraryUrlTextField(
+                libraryUrl = addLibraryViewModel.libraryUrl,
+                isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl,
+                onDoneClick = {
+                    addLibraryViewModel.addLibrary()
+                }
+            )
+            LibraryUrlErrorText(
+                state = state
+            )
         }
         AddLibraryButton(
             isEnabled = state !is State.Loading,
@@ -156,16 +164,18 @@ private fun LibraryNameTextField(libraryName: MutableState<String>, isError: Boo
 @ExperimentalAnimationApi
 @Composable
 private fun LibraryNameErrorText(show: Boolean) {
-    AnimatedVisibility(visible = show) {
+    AnimatedVisibility(
+        visible = show
+    ) {
         ErrorText(R.string.library_name_empty)
     }
 }
 
 @Composable
 private fun LibraryUrlTextField(
-    addLibraryViewModel: AddLibraryViewModel,
     libraryUrl: MutableState<String>,
-    isError: Boolean
+    isError: Boolean,
+    onDoneClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     TextFieldWithHint(
@@ -175,7 +185,7 @@ private fun LibraryUrlTextField(
         imeAction = ImeAction.Done,
         keyboardActions = KeyboardActions(
             onDone = {
-                addLibraryViewModel.addLibrary()
+                onDoneClick()
                 focusManager.clearFocus()
             }
         ),
@@ -187,10 +197,14 @@ private fun LibraryUrlTextField(
 @ExperimentalAnimationApi
 @Composable
 private fun LibraryUrlErrorText(state: State) {
-    AnimatedVisibility(visible = state is State.EmptyLibraryUrl) {
+    AnimatedVisibility(
+        visible = state is State.EmptyLibraryUrl
+    ) {
         ErrorText(R.string.library_url_empty)
     }
-    AnimatedVisibility(visible = state is State.InvalidLibraryUrl) {
+    AnimatedVisibility(
+        visible = state is State.InvalidLibraryUrl
+    ) {
         ErrorText(R.string.library_url_invalid)
     }
 }
