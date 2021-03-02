@@ -1,7 +1,5 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -23,17 +21,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
-import ir.fallahpoor.releasetracker.common.Screen
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.Toolbar
 import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
@@ -48,8 +42,9 @@ import kotlinx.coroutines.launch
 fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel,
     nightModeManager: NightModeManager,
-    localStorage: LocalStorage,
-    navController: NavController,
+    currentSortOrder: SortOrder,
+    onLibraryClick: (Library) -> Unit,
+    onAddLibraryClick: () -> Unit
 ) {
 
     librariesViewModel.getLibraries()
@@ -76,7 +71,7 @@ fun LibrariesListScreen(
                             librariesViewModel.getLibraries(searchTerm = "")
                         }
                     },
-                    currentSortOrder = getCurrentSortOrder(localStorage),
+                    currentSortOrder = currentSortOrder,
                     onSortOrderChange = {
                         librariesViewModel.getLibraries(mapSortOrder(it))
                     },
@@ -103,8 +98,9 @@ fun LibrariesListScreen(
         ) {
             LibrariesListContent(
                 librariesViewModel = librariesViewModel,
-                navController = navController,
-                scaffoldState = scaffoldState
+                scaffoldState = scaffoldState,
+                onLibraryClick = onLibraryClick,
+                onAddLibraryClick = onAddLibraryClick,
             )
         }
     }
@@ -117,21 +113,13 @@ private fun mapSortOrder(order: SortOrder) = when (order) {
     SortOrder.PINNED_FIRST -> LibrariesViewModel.SortOrder.PINNED_FIRST
 }
 
-private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
-    val sortingOrder = localStorage.getOrder()
-    return if (sortingOrder != null) {
-        SortOrder.valueOf(sortingOrder)
-    } else {
-        SortOrder.A_TO_Z
-    }
-}
-
 @ExperimentalFoundationApi
 @Composable
 private fun LibrariesListContent(
     librariesViewModel: LibrariesViewModel,
-    navController: NavController,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
+    onLibraryClick: (Library) -> Unit,
+    onAddLibraryClick: () -> Unit,
 ) {
 
     val librariesListState: LibrariesListState by librariesViewModel.librariesListState.observeAsState(
@@ -153,15 +141,11 @@ private fun LibrariesListContent(
                     (librariesListState as LibrariesListState.LibrariesLoaded).libraries
                 var showDeleteLibraryDialog by rememberSaveable { mutableStateOf(false) }
                 LibrariesList(
-                    navController = navController,
                     scaffoldState = scaffoldState,
                     libraries = libraries,
                     libraryDeleteState = libraryDeleteState,
                     onLibraryClicked = { library: Library ->
-                        val intent = Intent(Intent.ACTION_VIEW).apply {
-                            data = Uri.parse(library.url)
-                        }
-//                        LocalContext.current.startActivity(intent)
+                        onLibraryClick(library)
                     },
                     onLibraryLongClicked = { library: Library ->
                         librariesViewModel.libraryToDelete = library
@@ -169,7 +153,8 @@ private fun LibrariesListContent(
                     },
                     libraryPinCheckChanged = { library: Library, pin: Boolean ->
                         librariesViewModel.pinLibrary(library, pin)
-                    }
+                    },
+                    onAddLibraryClick = onAddLibraryClick
                 )
                 if (showDeleteLibraryDialog) {
                     DeleteLibraryDialog(
@@ -204,13 +189,13 @@ private fun LastUpdateCheckText(lastUpdateCheck: String) {
 @ExperimentalFoundationApi
 @Composable
 private fun LibrariesList(
-    navController: NavController,
     scaffoldState: ScaffoldState,
     libraries: List<Library>,
     libraryDeleteState: LibraryDeleteState,
     onLibraryClicked: (Library) -> Unit,
     onLibraryLongClicked: (Library) -> Unit,
-    libraryPinCheckChanged: (Library, Boolean) -> Unit
+    libraryPinCheckChanged: (Library, Boolean) -> Unit,
+    onAddLibraryClick: () -> Unit
 ) {
     if (libraries.isEmpty()) {
         NoLibrariesText()
@@ -238,9 +223,7 @@ private fun LibrariesList(
                 }
             }
             AddLibraryButton(
-                clickListener = {
-                    navController.navigate(Screen.AddLibrary.route)
-                }
+                clickListener = onAddLibraryClick
             )
             Snackbar(libraryDeleteState, scaffoldState)
         }
