@@ -63,6 +63,7 @@ dependencies {
     implementation(Dependencies.App.appCompat)
     implementation(Dependencies.App.activityCompose)
     implementation(Dependencies.App.navigationCompose)
+    implementation(Dependencies.App.hiltNavigation)
     implementation(Dependencies.App.material)
     implementation(Dependencies.App.viewModel)
     implementation(Dependencies.App.liveDataKtx)
