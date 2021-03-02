@@ -22,7 +22,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
@@ -37,8 +36,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddLibraryScreen(
     addLibraryViewModel: AddLibraryViewModel,
-    navController: NavController,
-    isDarkTheme: Boolean
+    isDarkTheme: Boolean,
+    onBackClick: () -> Unit
 ) {
     ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         val scaffoldState = rememberScaffoldState()
@@ -49,9 +48,9 @@ fun AddLibraryScreen(
                         Text(text = stringResource(R.string.add_library))
                     },
                     navigationIcon = {
-                        BackButton {
-                            navController.popBackStack()
-                        }
+                        BackButton(
+                            onBackClick = onBackClick
+                        )
                     }
                 )
             },
@@ -60,15 +59,18 @@ fun AddLibraryScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
-            AddLibraryContent(scaffoldState, addLibraryViewModel)
+            AddLibraryContent(
+                scaffoldState = scaffoldState,
+                addLibraryViewModel = addLibraryViewModel
+            )
         }
     }
 }
 
 @Composable
-private fun BackButton(onBackClicked: () -> Unit) {
+private fun BackButton(onBackClick: () -> Unit) {
     IconButton(
-        onClick = onBackClicked
+        onClick = onBackClick
     ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,

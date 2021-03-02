@@ -71,8 +71,10 @@ class MainActivity : AppCompatActivity() {
                         viewModel(AddLibraryViewModel::class.simpleName, factory)
                     AddLibraryScreen(
                         addLibraryViewModel = addLibraryViewModel,
-                        navController = navController,
-                        isDarkTheme = nightModeManager.isDarkTheme()
+                        isDarkTheme = nightModeManager.isDarkTheme(),
+                        onBackClick = {
+                            navController.popBackStack()
+                        }
                     )
                 }
             }
