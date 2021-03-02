@@ -11,7 +11,7 @@ object Versions {
     const val kotlinVersion = "1.4.30"
     const val composeVersion = "1.0.0-beta01"
     const val hiltVersion = "2.33-beta"
-    const val hiltJetpackVersion = "1.0.0-alpha01"
+    const val hiltJetpackVersion = "1.0.0-alpha03"
     const val roomVersion = "2.2.5"
     const val retrofitVersion = "2.9.0"
     const val lifeCycleVersion = "2.3.0"

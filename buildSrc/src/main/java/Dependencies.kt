@@ -18,8 +18,9 @@ object Dependencies {
         const val hilt = "com.google.dagger:hilt-android:${Versions.hiltVersion}"
         const val hiltCompiler = "com.google.dagger:hilt-android-compiler:${Versions.hiltVersion}"
         const val hiltJetpackCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltJetpackVersion}"
-        const val hiltWork = "androidx.hilt:hilt-work:1.0.0-alpha03"
-        const val hiltNavigation = "androidx.hilt:hilt-navigation-fragment:1.0.0-alpha03"
+        const val hiltWork = "androidx.hilt:hilt-work:${Versions.hiltJetpackVersion}"
+        const val hiltNavigation =
+            "androidx.hilt:hilt-navigation-fragment:${Versions.hiltJetpackVersion}"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:${Versions.lifeCycleVersion}"
         const val liveDataKtx =
             "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifeCycleVersion}"
