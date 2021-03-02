@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
@@ -58,9 +59,24 @@ fun AddLibraryScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
+            val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
             AddLibraryContent(
+                state = state,
                 scaffoldState = scaffoldState,
-                addLibraryViewModel = addLibraryViewModel
+                libraryName = addLibraryViewModel.libraryName,
+                onLibraryNameChange = { libraryName: String ->
+                    addLibraryViewModel.libraryName = libraryName
+                },
+                libraryUrl = addLibraryViewModel.libraryUrl,
+                onLibraryUrlChange = { libraryUrl: String ->
+                    addLibraryViewModel.libraryUrl = libraryUrl
+                },
+                onAddLibrary = { libraryName: String, libraryUrl: String ->
+                    addLibraryViewModel.addLibrary(
+                        libraryName = libraryName,
+                        libraryUrl = libraryUrl
+                    )
+                }
             )
         }
     }
@@ -81,11 +97,14 @@ private fun BackButton(onBackClick: () -> Unit) {
 @ExperimentalAnimationApi
 @Composable
 private fun AddLibraryContent(
+    state: State,
     scaffoldState: ScaffoldState,
-    addLibraryViewModel: AddLibraryViewModel
+    libraryName: String,
+    onLibraryNameChange: (String) -> Unit,
+    libraryUrl: String,
+    onLibraryUrlChange: (String) -> Unit,
+    onAddLibrary: (libraryName: String, libraryUrl: String) -> Unit,
 ) {
-
-    val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -99,9 +118,9 @@ private fun AddLibraryContent(
                 .padding(SPACE_NORMAL.dp)
         ) {
             LibraryNameTextField(
-                libraryName = addLibraryViewModel.libraryName,
+                libraryName = libraryName,
                 onLibraryNameChange = { libraryName: String ->
-                    addLibraryViewModel.libraryName = libraryName
+                    onLibraryNameChange(libraryName)
                 },
                 isError = state is State.EmptyLibraryName
             )
@@ -112,13 +131,13 @@ private fun AddLibraryContent(
                 modifier = Modifier.height(SPACE_SMALL.dp)
             )
             LibraryUrlTextField(
-                libraryUrl = addLibraryViewModel.libraryUrl,
+                libraryUrl = libraryUrl,
                 onLibraryUrlChange = { libraryUrl: String ->
-                    addLibraryViewModel.libraryUrl = libraryUrl
+                    onLibraryUrlChange(libraryUrl)
                 },
                 isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl,
                 onDoneClick = {
-                    addLibraryViewModel.addLibrary()
+                    onAddLibrary(libraryName, libraryUrl)
                 }
             )
             LibraryUrlErrorText(
@@ -128,7 +147,7 @@ private fun AddLibraryContent(
         AddLibraryButton(
             isEnabled = state !is State.Loading,
             clickListener = {
-                addLibraryViewModel.addLibrary()
+                onAddLibrary(libraryName, libraryUrl)
             }
         )
         Snackbar(
@@ -280,7 +299,9 @@ private fun TextFieldWithHint(
     OutlinedTextField(
         value = text,
         label = {
-            Text(text = hint)
+            Text(
+                text = hint
+            )
         },
         onValueChange = onTextChange,
         keyboardOptions = KeyboardOptions(
@@ -291,4 +312,24 @@ private fun TextFieldWithHint(
         isError = isError,
         modifier = modifier
     )
+}
+
+@ExperimentalAnimationApi
+@Composable
+@Preview
+private fun AddLibraryContentPreview() {
+    ReleaseTrackerTheme {
+        Surface {
+            AddLibraryContent(
+                state = State.Fresh,
+                scaffoldState = rememberScaffoldState(),
+                libraryName = "",
+                onLibraryNameChange = {},
+                libraryUrl = "",
+                onLibraryUrlChange = {},
+                onAddLibrary = { _, _ ->
+                }
+            )
+        }
+    }
 }

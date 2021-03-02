@@ -27,7 +27,7 @@ class AddLibraryViewModel
     var libraryName by mutableStateOf("")
     var libraryUrl by mutableStateOf("")
 
-    fun addLibrary() {
+    fun addLibrary(libraryName: String, libraryUrl: String) {
 
         if (libraryName.isEmpty()) {
             _state.value = State.EmptyLibraryName
@@ -62,8 +62,8 @@ class AddLibraryViewModel
                             libraryUrl,
                             libraryVersion
                         )
-                        libraryName = ""
-                        libraryUrl = ""
+                        this@AddLibraryViewModel.libraryName = ""
+                        this@AddLibraryViewModel.libraryUrl = ""
                         State.LibraryAdded
                     }
                 } catch (t: Throwable) {
