@@ -10,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -101,6 +100,9 @@ private fun AddLibraryContent(
         ) {
             LibraryNameTextField(
                 libraryName = addLibraryViewModel.libraryName,
+                onLibraryNameChange = { libraryName: String ->
+                    addLibraryViewModel.libraryName = libraryName
+                },
                 isError = state is State.EmptyLibraryName
             )
             LibraryNameErrorText(
@@ -111,6 +113,9 @@ private fun AddLibraryContent(
             )
             LibraryUrlTextField(
                 libraryUrl = addLibraryViewModel.libraryUrl,
+                onLibraryUrlChange = { libraryUrl: String ->
+                    addLibraryViewModel.libraryUrl = libraryUrl
+                },
                 isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl,
                 onDoneClick = {
                     addLibraryViewModel.addLibrary()
@@ -144,10 +149,14 @@ private fun ProgressIndicator() {
 }
 
 @Composable
-private fun LibraryNameTextField(libraryName: MutableState<String>, isError: Boolean) {
+private fun LibraryNameTextField(
+    libraryName: String,
+    onLibraryNameChange: (String) -> Unit,
+    isError: Boolean
+) {
     val focusManager = LocalFocusManager.current
     TextFieldWithHint(
-        text = libraryName.value,
+        text = libraryName,
         hint = stringResource(R.string.library_name),
         imeAction = ImeAction.Next,
         keyboardActions = KeyboardActions(
@@ -155,7 +164,7 @@ private fun LibraryNameTextField(libraryName: MutableState<String>, isError: Boo
                 focusManager.moveFocus(focusDirection = FocusDirection.Down)
             }
         ),
-        onTextChange = { libraryName.value = it },
+        onTextChange = onLibraryNameChange,
         modifier = Modifier.fillMaxWidth(),
         isError = isError
     )
@@ -173,15 +182,16 @@ private fun LibraryNameErrorText(show: Boolean) {
 
 @Composable
 private fun LibraryUrlTextField(
-    libraryUrl: MutableState<String>,
+    libraryUrl: String,
+    onLibraryUrlChange: (String) -> Unit,
     isError: Boolean,
     onDoneClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     TextFieldWithHint(
-        text = libraryUrl.value,
+        text = libraryUrl,
         hint = stringResource(R.string.library_url),
-        onTextChange = { libraryUrl.value = it },
+        onTextChange = onLibraryUrlChange,
         imeAction = ImeAction.Done,
         keyboardActions = KeyboardActions(
             onDone = {
