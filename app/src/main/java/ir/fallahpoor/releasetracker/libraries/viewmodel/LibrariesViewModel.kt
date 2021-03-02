@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.libraries.viewmodel
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.common.SingleLiveData
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
@@ -11,9 +11,11 @@ import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@HiltViewModel
 class LibrariesViewModel
-@ViewModelInject constructor(
+@Inject constructor(
     private val libraryRepository: LibraryRepository,
     private val localStorage: LocalStorage,
     private val exceptionParser: ExceptionParser

@@ -17,10 +17,8 @@ object Dependencies {
         const val material = "com.google.android.material:material:1.3.0-rc01"
         const val hilt = "com.google.dagger:hilt-android:${Versions.hiltVersion}"
         const val hiltCompiler = "com.google.dagger:hilt-android-compiler:${Versions.hiltVersion}"
-        const val hiltViewModel =
-            "androidx.hilt:hilt-lifecycle-viewmodel:${Versions.hiltJetpackVersion}"
         const val hiltJetpackCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltJetpackVersion}"
-        const val hiltWorkManager = "androidx.hilt:hilt-work:${Versions.hiltJetpackVersion}"
+        const val hiltWork = "androidx.hilt:hilt-work:1.0.0-alpha03"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:${Versions.lifeCycleVersion}"
         const val liveDataKtx =
             "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifeCycleVersion}"

@@ -1,19 +1,21 @@
 package ir.fallahpoor.releasetracker.addlibrary.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.addlibrary.view.State
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@HiltViewModel
 class AddLibraryViewModel
-@ViewModelInject constructor(
+@Inject constructor(
     private val libraryRepository: LibraryRepository,
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {

@@ -1,10 +1,11 @@
 package ir.fallahpoor.releasetracker
 
 import android.content.Context
-import androidx.hilt.Assisted
-import androidx.hilt.work.WorkerInject
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
@@ -15,8 +16,9 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
+@HiltWorker
 class UpdateVersionsWorker
-@WorkerInject constructor(
+@AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val libraryRepository: LibraryRepository,
