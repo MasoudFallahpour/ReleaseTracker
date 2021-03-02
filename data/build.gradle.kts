@@ -50,14 +50,18 @@ android {
 dependencies {
     implementation(Dependencies.Data.kotlinStdLib)
     implementation(Dependencies.Data.core)
+    implementation(Dependencies.Data.liveData)
+
     implementation(Dependencies.Data.room)
     kapt(Dependencies.Data.roomCompiler)
     implementation(Dependencies.Data.roomKtx)
+
     implementation(Dependencies.Data.inject)
+
     implementation(Dependencies.Data.retrofit)
     implementation(Dependencies.Data.retrofitConverterGson)
     implementation(Dependencies.Data.okhttpLoggingInterceptor)
-    implementation(Dependencies.Data.liveData)
+    
     implementation(Dependencies.Data.rxkprefs)
     implementation(Dependencies.Data.rxkprefsCoroutines)
 }
