@@ -49,7 +49,6 @@ class LibrariesViewModel
 
     val lastUpdateCheckState: LiveData<String> =
         libraryRepository.getLastUpdateCheck()
-            .map { it }
             .asLiveData()
 
     private fun getOrder() = when (sortOrder) {
