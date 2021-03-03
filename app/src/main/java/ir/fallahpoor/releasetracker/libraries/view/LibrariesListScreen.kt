@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.NightModeManager
@@ -47,18 +48,23 @@ fun LibrariesListScreen(
     onAddLibraryClick: () -> Unit
 ) {
 
-    librariesViewModel.getLibraries()
-
     val nightMode by nightModeManager.nightMode.observeAsState()
-    val isNightModeOn = when (nightMode) {
+    val isDarkTheme = when (nightMode) {
         NightModeManager.Mode.OFF -> false
         NightModeManager.Mode.ON -> true
         else -> isSystemInDarkTheme()
     }
+    val librariesListState by librariesViewModel.librariesListState.observeAsState(
+        LibrariesListState.Loading
+    )
+    val lastUpdateCheck by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
+    val libraryDeleteState by librariesViewModel.deleteState.observeAsState(LibraryDeleteState.Fresh)
     val scaffoldState = rememberScaffoldState()
 
+    librariesViewModel.getLibraries()
+
     ReleaseTrackerTheme(
-        darkTheme = isNightModeOn
+        darkTheme = isDarkTheme
     ) {
         Scaffold(
             topBar = {
@@ -96,12 +102,36 @@ fun LibrariesListScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
+            var showDeleteLibraryDialog by rememberSaveable { mutableStateOf(false) }
             LibrariesListContent(
-                librariesViewModel = librariesViewModel,
+                librariesListState = librariesListState,
+                libraryDeleteState = libraryDeleteState,
                 scaffoldState = scaffoldState,
+                lastUpdateCheck = lastUpdateCheck,
                 onLibraryClick = onLibraryClick,
+                onLibraryLongClick = { library: Library ->
+                    librariesViewModel.libraryToDelete = library
+                    showDeleteLibraryDialog = true
+                },
+                onPinLibraryClick = { library: Library, pinned: Boolean ->
+                    librariesViewModel.pinLibrary(library, pinned)
+                },
                 onAddLibraryClick = onAddLibraryClick,
             )
+            if (showDeleteLibraryDialog) {
+                DeleteLibraryDialog(
+                    libraryName = librariesViewModel.libraryToDelete?.name ?: "",
+                    onDeleteClicked = {
+                        showDeleteLibraryDialog = false
+                        librariesViewModel.libraryToDelete?.let {
+                            librariesViewModel.deleteLibrary(it)
+                        }
+                    },
+                    onDismiss = {
+                        showDeleteLibraryDialog = false
+                    }
+                )
+            }
         }
     }
 
@@ -116,85 +146,59 @@ private fun mapSortOrder(order: SortOrder) = when (order) {
 @ExperimentalFoundationApi
 @Composable
 private fun LibrariesListContent(
-    librariesViewModel: LibrariesViewModel,
+    librariesListState: LibrariesListState,
+    libraryDeleteState: LibraryDeleteState,
     scaffoldState: ScaffoldState,
+    lastUpdateCheck: String,
     onLibraryClick: (Library) -> Unit,
+    onLibraryLongClick: (Library) -> Unit,
+    onPinLibraryClick: (Library, Boolean) -> Unit,
     onAddLibraryClick: () -> Unit,
 ) {
-
-    val librariesListState: LibrariesListState by librariesViewModel.librariesListState.observeAsState(
-        LibrariesListState.Fresh
-    )
-    val lastUpdateCheckState by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
-    val libraryDeleteState by librariesViewModel.deleteState.observeAsState(LibraryDeleteState.Fresh)
-
     Column(
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LastUpdateCheckText(lastUpdateCheckState)
+        LastUpdateCheckText(lastUpdateCheck)
         when (librariesListState) {
-            is LibrariesListState.Loading -> {
-                CircularProgressIndicator()
-            }
+            is LibrariesListState.Loading -> CircularProgressIndicator()
             is LibrariesListState.LibrariesLoaded -> {
-                val libraries: List<Library> =
-                    (librariesListState as LibrariesListState.LibrariesLoaded).libraries
-                var showDeleteLibraryDialog by rememberSaveable { mutableStateOf(false) }
+                val libraries: List<Library> = librariesListState.libraries
                 LibrariesList(
-                    scaffoldState = scaffoldState,
                     libraries = libraries,
+                    scaffoldState = scaffoldState,
                     libraryDeleteState = libraryDeleteState,
-                    onLibraryClicked = { library: Library ->
-                        onLibraryClick(library)
-                    },
-                    onLibraryLongClicked = { library: Library ->
-                        librariesViewModel.libraryToDelete = library
-                        showDeleteLibraryDialog = true
-                    },
-                    libraryPinCheckChanged = { library: Library, pin: Boolean ->
-                        librariesViewModel.pinLibrary(library, pin)
-                    },
+                    onLibraryClick = onLibraryClick,
+                    onLibraryLongClick = onLibraryLongClick,
+                    onPinLibraryClick = onPinLibraryClick,
                     onAddLibraryClick = onAddLibraryClick
                 )
-                if (showDeleteLibraryDialog) {
-                    DeleteLibraryDialog(
-                        libraryName = librariesViewModel.libraryToDelete?.name ?: "",
-                        onDeleteClicked = {
-                            showDeleteLibraryDialog = false
-                            librariesViewModel.libraryToDelete?.let {
-                                librariesViewModel.deleteLibrary(it)
-                            }
-                        },
-                        onDismiss = {
-                            showDeleteLibraryDialog = false
-                        }
-                    )
-                }
             }
             LibrariesListState.Fresh -> {
             }
         }
     }
-
 }
 
 @Composable
 private fun LastUpdateCheckText(lastUpdateCheck: String) {
     Text(
         text = stringResource(R.string.last_check_for_updates, lastUpdateCheck),
-        modifier = Modifier.padding(SPACE_NORMAL.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(SPACE_NORMAL.dp)
     )
 }
 
 @ExperimentalFoundationApi
 @Composable
 private fun LibrariesList(
-    scaffoldState: ScaffoldState,
     libraries: List<Library>,
+    scaffoldState: ScaffoldState,
     libraryDeleteState: LibraryDeleteState,
-    onLibraryClicked: (Library) -> Unit,
-    onLibraryLongClicked: (Library) -> Unit,
-    libraryPinCheckChanged: (Library, Boolean) -> Unit,
+    onLibraryClick: (Library) -> Unit,
+    onLibraryLongClick: (Library) -> Unit,
+    onPinLibraryClick: (Library, Boolean) -> Unit,
     onAddLibraryClick: () -> Unit
 ) {
     if (libraries.isEmpty()) {
@@ -213,9 +217,9 @@ private fun LibrariesList(
                 itemsIndexed(libraries) { index: Int, library: Library ->
                     LibraryItem(
                         library = library,
-                        onLibraryClicked = onLibraryClicked,
-                        onLibraryLongClicked = onLibraryLongClicked,
-                        onLibraryPinCheckChanged = libraryPinCheckChanged
+                        onLibraryClick = onLibraryClick,
+                        onLibraryLongClick = onLibraryLongClick,
+                        onPinLibraryClick = onPinLibraryClick
                     )
                     if (index != libraries.lastIndex) {
                         Divider()
@@ -276,19 +280,19 @@ private fun NoLibrariesText() {
 @Composable
 private fun LibraryItem(
     library: Library,
-    onLibraryClicked: (Library) -> Unit,
-    onLibraryLongClicked: (Library) -> Unit,
-    onLibraryPinCheckChanged: (Library, Boolean) -> Unit
+    onLibraryClick: (Library) -> Unit,
+    onLibraryLongClick: (Library) -> Unit,
+    onPinLibraryClick: (Library, Boolean) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .combinedClickable(
                 onClick = {
-                    onLibraryClicked(library)
+                    onLibraryClick(library)
                 },
                 onLongClick = {
-                    onLibraryLongClicked(library)
+                    onLibraryLongClick(library)
                 }
             )
             .padding(
@@ -299,7 +303,7 @@ private fun LibraryItem(
     ) {
         PinToggleButton(
             library = library,
-            onPinCheckedChange = onLibraryPinCheckChanged
+            onPinCheckedChange = onPinLibraryClick
         )
         Column(modifier = Modifier.weight(1f)) {
             LibraryNameText(library)
@@ -368,5 +372,25 @@ private fun AddLibraryButton(clickListener: () -> Unit) {
             imageVector = Icons.Filled.Add,
             contentDescription = stringResource(R.string.add_library)
         )
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview
+@Composable
+private fun LibrariesListContentPreview() {
+    ReleaseTrackerTheme {
+        Surface {
+            LibrariesListContent(
+                librariesListState = LibrariesListState.Loading,
+                libraryDeleteState = LibraryDeleteState.Fresh,
+                scaffoldState = rememberScaffoldState(),
+                lastUpdateCheck = "N/A",
+                onLibraryClick = {},
+                onLibraryLongClick = {},
+                onPinLibraryClick = { _, _ -> },
+                onAddLibraryClick = {}
+            )
+        }
     }
 }
