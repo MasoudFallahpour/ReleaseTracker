@@ -195,16 +195,18 @@ private fun LibrariesList(
     onPinLibraryClick: (Library, Boolean) -> Unit,
     onAddLibraryClick: () -> Unit
 ) {
-    if (libraries.isEmpty()) {
-        NoLibrariesText()
-    } else {
-        if (libraryDeleteState is LibraryDeleteState.InProgress) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
-        Box(
-            contentAlignment = Alignment.BottomStart,
-            modifier = Modifier.fillMaxSize()
-        ) {
+    Box(
+        contentAlignment = Alignment.BottomStart,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (libraries.isEmpty()) {
+            NoLibrariesText()
+        } else {
+            if (libraryDeleteState is LibraryDeleteState.InProgress) {
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -220,11 +222,11 @@ private fun LibrariesList(
                     }
                 }
             }
-            AddLibraryButton(
-                clickListener = onAddLibraryClick
-            )
-            Snackbar(libraryDeleteState, scaffoldState)
         }
+        AddLibraryButton(
+            clickListener = onAddLibraryClick
+        )
+        Snackbar(libraryDeleteState, scaffoldState)
     }
 }
 
