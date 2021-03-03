@@ -22,10 +22,12 @@ class NightModeManager
         AUTO("Auto")
     }
 
+    private val defaultNightMode = Mode.AUTO
+
     val isNightModeOn: LiveData<Boolean> = localStorage.getNightModeAsFlow()
         .asLiveData()
         .map { mode: String ->
-            Mode.valueOf(if (mode.isNotBlank()) mode else Mode.AUTO.name)
+            Mode.valueOf(if (mode.isNotBlank()) mode else defaultNightMode.name)
         }
         .map { mode: Mode ->
             when (mode) {
@@ -50,7 +52,7 @@ class NightModeManager
     }
 
     fun getNightMode(): Mode {
-        return Mode.valueOf(localStorage.getNightMode() ?: Mode.AUTO.name)
+        return Mode.valueOf(localStorage.getNightMode() ?: defaultNightMode.name)
     }
 
     private fun setMode(mode: Mode) {
