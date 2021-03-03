@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -7,9 +8,12 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.HiltViewModelFactory
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
@@ -45,11 +49,17 @@ class MainActivity : AppCompatActivity() {
 
             val navController = rememberNavController()
 
-            NavHost(navController, startDestination = Screen.LibrariesList.route) {
-                composable(Screen.LibrariesList.route) {
-                    val factory = HiltViewModelFactory(LocalContext.current, it)
-                    val librariesViewModel: LibrariesViewModel =
-                        viewModel(LibrariesViewModel::class.simpleName, factory)
+            NavHost(
+                navController = navController,
+                startDestination = Screen.LibrariesList.route
+            ) {
+                composable(
+                    route = Screen.LibrariesList.route
+                ) { navBackStackEntry: NavBackStackEntry ->
+                    val librariesViewModel = getViewModel<LibrariesViewModel>(
+                        context = LocalContext.current,
+                        navBackStackEntry = navBackStackEntry
+                    )
                     LibrariesListScreen(
                         librariesViewModel = librariesViewModel,
                         nightModeManager = nightModeManager,
@@ -65,10 +75,13 @@ class MainActivity : AppCompatActivity() {
                         }
                     )
                 }
-                composable(Screen.AddLibrary.route) {
-                    val factory = HiltViewModelFactory(LocalContext.current, it)
-                    val addLibraryViewModel: AddLibraryViewModel =
-                        viewModel(AddLibraryViewModel::class.simpleName, factory)
+                composable(
+                    route = Screen.AddLibrary.route
+                ) { navBackStackEntry: NavBackStackEntry ->
+                    val addLibraryViewModel = getViewModel<AddLibraryViewModel>(
+                        context = LocalContext.current,
+                        navBackStackEntry = navBackStackEntry
+                    )
                     AddLibraryScreen(
                         addLibraryViewModel = addLibraryViewModel,
                         isDarkTheme = nightModeManager.isNightModeOn(),
@@ -81,6 +94,15 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    @Composable
+    private inline fun <reified T : ViewModel> getViewModel(
+        context: Context,
+        navBackStackEntry: NavBackStackEntry
+    ): T {
+        val factory = HiltViewModelFactory(context, navBackStackEntry)
+        return viewModel(T::class.simpleName, factory)
     }
 
     private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
