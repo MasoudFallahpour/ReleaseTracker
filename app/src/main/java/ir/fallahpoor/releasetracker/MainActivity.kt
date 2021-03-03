@@ -31,6 +31,9 @@ import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrder
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import javax.inject.Inject
 
+// FIXME: when navigating back from AddLibraryScreen, LibrariesListScreen runs twice.
+// FIXME: app crashes when clicking on a library
+
 @ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
