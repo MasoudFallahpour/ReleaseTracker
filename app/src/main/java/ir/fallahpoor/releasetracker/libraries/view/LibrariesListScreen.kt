@@ -305,11 +305,15 @@ private fun LibraryItem(
             library = library,
             onPinCheckedChange = onPinLibraryClick
         )
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
             LibraryNameText(library)
             LibraryUrlText(library)
         }
-        Text(text = library.version)
+        Text(
+            text = library.version
+        )
     }
 }
 
