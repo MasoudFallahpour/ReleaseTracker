@@ -77,9 +77,7 @@ fun LibrariesListScreen(
                     },
                     isNightModeSupported = nightModeManager.isNightModeSupported,
                     currentNightMode = nightModeManager.getNightMode(),
-                    onNightModeChange = {
-                        nightModeManager.setNightMode(it)
-                    },
+                    onNightModeChange = nightModeManager::setNightMode,
                     onSearchQueryChange = {
                         librariesViewModel.getLibraries(searchTerm = it)
                     },

@@ -45,7 +45,9 @@ fun AddLibraryScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = stringResource(R.string.add_library))
+                        Text(
+                            text = stringResource(R.string.add_library)
+                        )
                     },
                     navigationIcon = {
                         BackButton(
@@ -71,12 +73,7 @@ fun AddLibraryScreen(
                 onLibraryUrlChange = { libraryUrl: String ->
                     addLibraryViewModel.libraryUrl = libraryUrl
                 },
-                onAddLibrary = { libraryName: String, libraryUrl: String ->
-                    addLibraryViewModel.addLibrary(
-                        libraryName = libraryName,
-                        libraryUrl = libraryUrl
-                    )
-                }
+                onAddLibrary = addLibraryViewModel::addLibrary
             )
         }
     }
