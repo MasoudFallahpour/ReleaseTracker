@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                         addLibraryViewModel = addLibraryViewModel,
                         isDarkTheme = nightModeManager.isNightModeOn(),
                         onBackClick = {
-                            navController.popBackStack()
+                            navController.navigateUp()
                         }
                     )
                 }
