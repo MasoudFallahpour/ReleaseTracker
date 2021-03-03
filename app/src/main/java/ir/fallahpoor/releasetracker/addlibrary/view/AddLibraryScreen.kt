@@ -13,9 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -32,6 +35,7 @@ import kotlinx.coroutines.launch
 
 // TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
+@ExperimentalComposeUiApi
 @ExperimentalAnimationApi
 @Composable
 fun AddLibraryScreen(
@@ -62,6 +66,8 @@ fun AddLibraryScreen(
             }
         ) {
             val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
+            val keyboardController: SoftwareKeyboardController? =
+                LocalSoftwareKeyboardController.current
             AddLibraryContent(
                 state = state,
                 scaffoldState = scaffoldState,
@@ -73,7 +79,10 @@ fun AddLibraryScreen(
                 onLibraryUrlChange = { libraryUrl: String ->
                     addLibraryViewModel.libraryUrl = libraryUrl
                 },
-                onAddLibrary = addLibraryViewModel::addLibrary
+                onAddLibrary = { libraryName: String, libraryUrl: String ->
+                    addLibraryViewModel.addLibrary(libraryName, libraryUrl)
+                    keyboardController?.hideSoftwareKeyboard()
+                }
             )
         }
     }
