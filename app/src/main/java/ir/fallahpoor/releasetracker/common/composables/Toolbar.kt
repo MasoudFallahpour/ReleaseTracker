@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
@@ -191,4 +192,22 @@ private fun NightModeButton(
         )
     }
 
+}
+
+@Preview
+@Composable
+@ExperimentalAnimationApi
+private fun ToolbarPreview() {
+    Toolbar(
+        toolbarMode = ToolbarMode.Search,
+        onToolbarModeChange = {},
+        currentSortOrder = SortOrder.A_TO_Z,
+        onSortOrderChange = {},
+        isNightModeSupported = true,
+        currentNightMode = NightModeManager.Mode.AUTO,
+        onNightModeChange = {},
+        onSearchQueryChange = {},
+        onSearchQuerySubmit = {},
+        onSearchQueryClear = {}
+    )
 }
