@@ -43,7 +43,9 @@ fun AddLibraryScreen(
     isDarkTheme: Boolean,
     onBackClick: () -> Unit
 ) {
-    ReleaseTrackerTheme(darkTheme = isDarkTheme) {
+    ReleaseTrackerTheme(
+        darkTheme = isDarkTheme
+    ) {
         val scaffoldState = rememberScaffoldState()
         Scaffold(
             topBar = {
@@ -138,9 +140,7 @@ private fun AddLibraryContent(
             )
             LibraryUrlTextField(
                 libraryUrl = libraryUrl,
-                onLibraryUrlChange = { libraryUrl: String ->
-                    onLibraryUrlChange(libraryUrl)
-                },
+                onLibraryUrlChange = onLibraryUrlChange,
                 isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl,
                 onDoneClick = {
                     onAddLibrary(libraryName, libraryUrl)
