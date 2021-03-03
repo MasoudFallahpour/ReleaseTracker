@@ -3,7 +3,6 @@ package ir.fallahpoor.releasetracker.libraries.view
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -48,12 +47,7 @@ fun LibrariesListScreen(
     onAddLibraryClick: () -> Unit
 ) {
 
-    val nightMode by nightModeManager.nightMode.observeAsState()
-    val isDarkTheme = when (nightMode) {
-        NightModeManager.Mode.OFF -> false
-        NightModeManager.Mode.ON -> true
-        else -> isSystemInDarkTheme()
-    }
+    val isNightModeOn by nightModeManager.isNightModeOn.observeAsState(false)
     val librariesListState by librariesViewModel.librariesListState.observeAsState(
         LibrariesListState.Loading
     )
@@ -64,7 +58,7 @@ fun LibrariesListScreen(
     librariesViewModel.getLibraries()
 
     ReleaseTrackerTheme(
-        darkTheme = isDarkTheme
+        darkTheme = isNightModeOn
     ) {
         Scaffold(
             topBar = {
@@ -82,7 +76,7 @@ fun LibrariesListScreen(
                         librariesViewModel.getLibraries(mapSortOrder(it))
                     },
                     isNightModeSupported = nightModeManager.isNightModeSupported,
-                    currentNightMode = nightModeManager.getCurrentNightMode(),
+                    currentNightMode = nightModeManager.getNightMode(),
                     onNightModeChange = {
                         nightModeManager.setNightMode(it)
                     },

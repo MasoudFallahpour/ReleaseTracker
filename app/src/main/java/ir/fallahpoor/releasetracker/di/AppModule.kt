@@ -26,7 +26,12 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+    fun provideContext(@ApplicationContext context: Context): Context {
+        return context
+    }
+
+    @Provides
+    fun provideSharedPreferences(context: Context): SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
 
     @Provides
@@ -35,7 +40,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLibraryDatabase(@ApplicationContext context: Context): LibraryDatabase =
+    fun provideLibraryDatabase(context: Context): LibraryDatabase =
         Room.databaseBuilder(context, LibraryDatabase::class.java, DatabaseContract.DATABASE_NAME)
             .createFromAsset("database/libraries.db")
             .build()
