@@ -21,12 +21,12 @@ class LocalStorage @Inject constructor(
 
     private val defaultNightMode = NightMode.AUTO
 
-    fun setOrder(order: String) {
-        putString(KEY_ORDER, order)
+    fun setSortOrder(sortOrder: SortOrder) {
+        putString(KEY_ORDER, sortOrder.name)
     }
 
-    fun getOrder(): String? {
-        return getString(KEY_ORDER)
+    fun getSortOrder(): SortOrder {
+        return SortOrder.valueOf(getString(KEY_ORDER) ?: SortOrder.A_TO_Z.name)
     }
 
     fun setLastUpdateCheck(date: String) {

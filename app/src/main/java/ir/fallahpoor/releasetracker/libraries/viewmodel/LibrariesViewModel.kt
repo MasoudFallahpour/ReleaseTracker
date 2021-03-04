@@ -7,6 +7,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
+import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import kotlinx.coroutines.flow.map
@@ -21,27 +22,20 @@ class LibrariesViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    enum class SortOrder {
-        A_TO_Z,
-        Z_TO_A,
-        PINNED_FIRST
-    }
-
     var libraryToDelete: Library? = null
 
     private val triggerLiveData = MutableLiveData<Unit>()
 
     val librariesListState: LiveData<LibrariesListState> = triggerLiveData.switchMap {
-        val order = getOrder()
-        localStorage.setOrder(order.name)
-        libraryRepository.getLibraries(order, searchTerm)
+        localStorage.setSortOrder(sortOrder)
+        libraryRepository.getLibraries(sortOrder, searchTerm)
             .map {
                 LibrariesListState.LibrariesLoaded(it)
             }
             .asLiveData()
     }
 
-    private var sortOrder: SortOrder = getDefaultSortOrder()
+    private var sortOrder: SortOrder = localStorage.getSortOrder()
     private var searchTerm = ""
 
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
@@ -51,23 +45,14 @@ class LibrariesViewModel
         libraryRepository.getLastUpdateCheck()
             .asLiveData()
 
-    private fun getOrder() = when (sortOrder) {
-        SortOrder.A_TO_Z -> LibraryRepository.SortOrder.A_TO_Z
-        SortOrder.Z_TO_A -> LibraryRepository.SortOrder.Z_TO_A
-        SortOrder.PINNED_FIRST -> LibraryRepository.SortOrder.PINNED_FIRST
-    }
-
     fun getLibraries(
-        sortOrder: SortOrder = getDefaultSortOrder(),
+        sortOrder: SortOrder = localStorage.getSortOrder(),
         searchTerm: String = this.searchTerm
     ) {
         this.sortOrder = sortOrder
         this.searchTerm = searchTerm
         triggerLiveData.value = Unit
     }
-
-    private fun getDefaultSortOrder() =
-        SortOrder.valueOf(localStorage.getOrder() ?: SortOrder.A_TO_Z.name)
 
     fun pinLibrary(library: Library, pin: Boolean) {
 

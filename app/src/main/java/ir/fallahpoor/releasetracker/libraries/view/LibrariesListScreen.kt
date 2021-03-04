@@ -28,8 +28,8 @@ import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.Toolbar
 import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
@@ -77,7 +77,7 @@ fun LibrariesListScreen(
                     },
                     currentSortOrder = currentSortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
-                        librariesViewModel.getLibraries(mapSortOrder(sortOrder))
+                        librariesViewModel.getLibraries(sortOrder)
                     },
                     isNightModeSupported = nightModeManager.isNightModeSupported,
                     currentNightMode = nightModeManager.getNightMode(),
@@ -131,12 +131,6 @@ fun LibrariesListScreen(
         }
     }
 
-}
-
-private fun mapSortOrder(order: SortOrder) = when (order) {
-    SortOrder.A_TO_Z -> LibrariesViewModel.SortOrder.A_TO_Z
-    SortOrder.Z_TO_A -> LibrariesViewModel.SortOrder.Z_TO_A
-    SortOrder.PINNED_FIRST -> LibrariesViewModel.SortOrder.PINNED_FIRST
 }
 
 @ExperimentalFoundationApi

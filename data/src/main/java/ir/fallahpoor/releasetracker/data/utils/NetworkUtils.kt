@@ -13,7 +13,7 @@ class NetworkUtils
         return urlExists("https://www.google.com")
     }
 
-    suspend fun urlExists(url: String): Boolean = withContext(Dispatchers.IO) {
+    private suspend fun urlExists(url: String): Boolean = withContext(Dispatchers.IO) {
 
         val url = URL(url)
         val httpURLConnection: HttpURLConnection = url.openConnection() as HttpURLConnection

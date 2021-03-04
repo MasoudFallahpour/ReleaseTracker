@@ -5,6 +5,7 @@ import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
+import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -37,15 +38,15 @@ class LibraryRepositoryImpl
     }
 
     override fun getLibraries(
-        sortOrder: LibraryRepository.SortOrder,
+        sortOrder: SortOrder,
         searchTerm: String
     ): Flow<List<Library>> {
 
         val queryPrefix = "SELECT * FROM library WHERE name LIKE '%' || ? || '%' ORDER BY "
         val query = when (sortOrder) {
-            LibraryRepository.SortOrder.A_TO_Z -> queryPrefix + "name ASC"
-            LibraryRepository.SortOrder.Z_TO_A -> queryPrefix + "name DESC"
-            LibraryRepository.SortOrder.PINNED_FIRST -> queryPrefix + "pinned DESC, name ASC"
+            SortOrder.A_TO_Z -> queryPrefix + "name ASC"
+            SortOrder.Z_TO_A -> queryPrefix + "name DESC"
+            SortOrder.PINNED_FIRST -> queryPrefix + "pinned DESC, name ASC"
         }
 
         return libraryDao.getAll(SimpleSQLiteQuery(query, arrayOf(searchTerm)))

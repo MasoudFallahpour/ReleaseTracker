@@ -17,13 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
+import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
-
-enum class SortOrder {
-    A_TO_Z,
-    Z_TO_A,
-    PINNED_FIRST
-}
 
 @Composable
 fun SortOrderDialog(

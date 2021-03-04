@@ -5,3 +5,9 @@ enum class NightMode(val value: String) {
     OFF("Off"),
     AUTO("Auto")
 }
+
+enum class SortOrder {
+    A_TO_Z,
+    Z_TO_A,
+    PINNED_FIRST
+}

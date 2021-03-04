@@ -27,7 +27,6 @@ import ir.fallahpoor.releasetracker.common.Screen
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrder
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import javax.inject.Inject
 
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                     LibrariesListScreen(
                         librariesViewModel = librariesViewModel,
                         nightModeManager = nightModeManager,
-                        currentSortOrder = getCurrentSortOrder(localStorage),
+                        currentSortOrder = localStorage.getSortOrder(),
                         onLibraryClick = { library: Library ->
                             val intent = Intent(Intent.ACTION_VIEW).apply {
                                 data = Uri.parse(library.url)
@@ -108,15 +107,6 @@ class MainActivity : AppCompatActivity() {
     ): T {
         val factory = HiltViewModelFactory(context, navBackStackEntry)
         return viewModel(T::class.simpleName, factory)
-    }
-
-    private fun getCurrentSortOrder(localStorage: LocalStorage): SortOrder {
-        val sortingOrder = localStorage.getOrder()
-        return if (sortingOrder != null) {
-            SortOrder.valueOf(sortingOrder)
-        } else {
-            SortOrder.A_TO_Z
-        }
     }
 
 }
