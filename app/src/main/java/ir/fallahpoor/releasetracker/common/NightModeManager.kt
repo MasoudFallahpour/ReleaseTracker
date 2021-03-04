@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.data.utils.LocalStorage
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import javax.inject.Inject
 
 class NightModeManager
@@ -16,59 +17,42 @@ class NightModeManager
     private val localStorage: LocalStorage
 ) {
 
-    enum class Mode(val value: String) {
-        ON("On"),
-        OFF("Off"),
-        AUTO("Auto")
-    }
-
-    private val defaultNightMode = Mode.AUTO
-
     val isNightModeOn: LiveData<Boolean> = localStorage.getNightModeAsFlow()
         .asLiveData()
-        .map { mode: String ->
-            Mode.valueOf(if (mode.isNotBlank()) mode else defaultNightMode.name)
-        }
-        .map { mode: Mode ->
+        .map { mode: NightMode ->
             when (mode) {
-                Mode.OFF -> false
-                Mode.ON -> true
+                NightMode.OFF -> false
+                NightMode.ON -> true
                 else -> isSystemInDarkTheme()
             }
         }
 
     val isNightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    fun setNightMode(mode: Mode) {
-
+    fun setNightMode(nightMode: NightMode) {
         val currentMode = getNightMode()
-
-        if (mode == currentMode) {
+        if (nightMode == currentMode) {
             return
         }
-
-        setMode(mode)
-
+        setMode(nightMode)
     }
 
-    fun getNightMode(): Mode {
-        return Mode.valueOf(localStorage.getNightMode() ?: defaultNightMode.name)
-    }
+    fun getNightMode(): NightMode = localStorage.getNightMode()
 
-    private fun setMode(mode: Mode) {
-        when (mode) {
-            Mode.ON -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            Mode.OFF -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            Mode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    private fun setMode(nightMode: NightMode) {
+        when (nightMode) {
+            NightMode.ON -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            NightMode.OFF -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            NightMode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
-        localStorage.setNightMode(mode.name)
+        localStorage.setNightMode(nightMode)
     }
 
     fun isNightModeOn(): Boolean {
         return when (getNightMode()) {
-            Mode.OFF -> false
-            Mode.ON -> true
-            Mode.AUTO -> isSystemInDarkTheme()
+            NightMode.OFF -> false
+            NightMode.ON -> true
+            NightMode.AUTO -> isSystemInDarkTheme()
         }
     }
 

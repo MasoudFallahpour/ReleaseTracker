@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.NightModeManager
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.NightModeDialog
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.SortOrderDialog
@@ -34,8 +34,8 @@ fun Toolbar(
     currentSortOrder: SortOrder,
     onSortOrderChange: (SortOrder) -> Unit,
     isNightModeSupported: Boolean,
-    currentNightMode: NightModeManager.Mode,
-    onNightModeChange: (NightModeManager.Mode) -> Unit,
+    currentNightMode: NightMode,
+    onNightModeChange: (NightMode) -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onSearchQuerySubmit: (String) -> Unit,
     onSearchQueryClear: () -> Unit
@@ -143,8 +143,8 @@ private fun SearchButton(onClick: () -> Unit) {
 
 @Composable
 private fun NightModeButton(
-    currentNightMode: NightModeManager.Mode,
-    onNightModeChange: (NightModeManager.Mode) -> Unit
+    currentNightMode: NightMode,
+    onNightModeChange: (NightMode) -> Unit
 ) {
 
     var showDropdownMenu by remember { mutableStateOf(false) }
@@ -182,7 +182,7 @@ private fun NightModeButton(
     if (showNightModeDialog) {
         NightModeDialog(
             defaultNightMode = currentNightMode,
-            onNightModeClick = { nightMode: NightModeManager.Mode ->
+            onNightModeClick = { nightMode: NightMode ->
                 onNightModeChange(nightMode)
                 showNightModeDialog = false
             },
@@ -204,7 +204,7 @@ private fun ToolbarPreview() {
         currentSortOrder = SortOrder.A_TO_Z,
         onSortOrderChange = {},
         isNightModeSupported = true,
-        currentNightMode = NightModeManager.Mode.AUTO,
+        currentNightMode = NightMode.AUTO,
         onNightModeChange = {},
         onSearchQueryChange = {},
         onSearchQuerySubmit = {},

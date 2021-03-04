@@ -19,14 +19,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun NightModeDialog(
-    defaultNightMode: NightModeManager.Mode,
-    onNightModeClick: (NightModeManager.Mode) -> Unit,
+    defaultNightMode: NightMode,
+    onNightModeClick: (NightMode) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -48,16 +48,16 @@ fun NightModeDialog(
 
 @Composable
 private fun NightModeScreen(
-    defaultNightMode: NightModeManager.Mode,
-    onNightModeClick: (NightModeManager.Mode) -> Unit
+    defaultNightMode: NightMode,
+    onNightModeClick: (NightMode) -> Unit
 ) {
     Column {
         var currentNightMode by mutableStateOf(defaultNightMode)
-        NightModeManager.Mode.values().forEach {
+        NightMode.values().forEach {
             NightModeItem(
                 text = it.value,
                 nightMode = it,
-                onNightModeChange = { nightMode: NightModeManager.Mode ->
+                onNightModeChange = { nightMode: NightMode ->
                     onNightModeClick(nightMode)
                     currentNightMode = nightMode
                 },
@@ -70,8 +70,8 @@ private fun NightModeScreen(
 @Composable
 private fun NightModeItem(
     text: String,
-    nightMode: NightModeManager.Mode,
-    onNightModeChange: (NightModeManager.Mode) -> Unit,
+    nightMode: NightMode,
+    onNightModeChange: (NightMode) -> Unit,
     isSelected: Boolean
 ) {
     Row(
@@ -107,7 +107,7 @@ private fun NightModeDialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
             NightModeDialog(
-                defaultNightMode = NightModeManager.Mode.OFF,
+                defaultNightMode = NightMode.OFF,
                 onNightModeClick = {},
                 onDismiss = {}
             )

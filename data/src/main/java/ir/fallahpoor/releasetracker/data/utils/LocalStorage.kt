@@ -5,6 +5,7 @@ import androidx.core.content.edit
 import com.afollestad.rxkprefs.RxkPrefs
 import com.afollestad.rxkprefs.coroutines.asFlow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LocalStorage @Inject constructor(
@@ -17,6 +18,8 @@ class LocalStorage @Inject constructor(
         const val KEY_LAST_UPDATE_CHECK = "last_update_check"
         const val KEY_NIGHT_MODE = "night_mode"
     }
+
+    private val defaultNightMode = NightMode.AUTO
 
     fun setOrder(order: String) {
         putString(KEY_ORDER, order)
@@ -35,15 +38,21 @@ class LocalStorage @Inject constructor(
         rxkPrefs.string(KEY_LAST_UPDATE_CHECK, defaultValue = "N/A")
             .asFlow()
 
-    fun getNightModeAsFlow(): Flow<String> =
+    fun getNightModeAsFlow(): Flow<NightMode> =
         rxkPrefs.string(KEY_NIGHT_MODE)
             .asFlow()
+            .map { mode: String ->
+                NightMode.valueOf(if (mode.isNotBlank()) mode else defaultNightMode.name)
+            }
 
-    fun getNightMode(): String? = getString(KEY_NIGHT_MODE)
+    fun getNightMode(): NightMode {
+        val nightModeStr = getString(KEY_NIGHT_MODE)
+        return NightMode.valueOf(nightModeStr ?: defaultNightMode.name)
+    }
 
-    fun setNightMode(mode: String) {
+    fun setNightMode(nightMode: NightMode) {
         rxkPrefs.string(KEY_NIGHT_MODE)
-            .set(mode)
+            .set(nightMode.name)
     }
 
     private fun putString(key: String, value: String) {
