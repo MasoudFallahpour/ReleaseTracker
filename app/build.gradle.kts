@@ -60,7 +60,6 @@ dependencies {
     implementation(Dependencies.App.kotlinStdLib)
     implementation(Dependencies.App.core)
     implementation(Dependencies.App.preference)
-    implementation(Dependencies.App.appCompat)
     implementation(Dependencies.App.activityCompose)
     implementation(Dependencies.App.navigationCompose)
     implementation(Dependencies.App.material)
