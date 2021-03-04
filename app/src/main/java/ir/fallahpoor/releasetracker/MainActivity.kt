@@ -6,10 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.lifecycle.ViewModel
@@ -33,9 +30,6 @@ import javax.inject.Inject
 // FIXME: when navigating back from AddLibraryScreen, LibrariesListScreen runs twice.
 // FIXME: app crashes when clicking on a library
 
-@ExperimentalComposeUiApi
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

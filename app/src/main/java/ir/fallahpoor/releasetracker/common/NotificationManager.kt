@@ -7,9 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ir.fallahpoor.releasetracker.MainActivity
@@ -40,18 +37,12 @@ class NotificationManager
         }
     }
 
-    @ExperimentalFoundationApi
-    @ExperimentalAnimationApi
-    @ExperimentalComposeUiApi
     private fun showNotification(title: String, content: String) {
         val notification: Notification = createNotification(title, content)
         NotificationManagerCompat.from(context)
             .notify(0, notification)
     }
 
-    @ExperimentalFoundationApi
-    @ExperimentalAnimationApi
-    @ExperimentalComposeUiApi
     private fun createNotification(title: String, content: String): Notification =
         NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -63,9 +54,6 @@ class NotificationManager
             .setAutoCancel(true)
             .build()
 
-    @ExperimentalFoundationApi
-    @ExperimentalAnimationApi
-    @ExperimentalComposeUiApi
     private fun createContentIntent(): PendingIntent {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

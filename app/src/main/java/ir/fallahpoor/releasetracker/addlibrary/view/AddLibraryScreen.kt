@@ -35,8 +35,7 @@ import kotlinx.coroutines.launch
 
 // TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
-@ExperimentalComposeUiApi
-@ExperimentalAnimationApi
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddLibraryScreen(
     addLibraryViewModel: AddLibraryViewModel,
@@ -102,7 +101,6 @@ private fun BackButton(onBackClick: () -> Unit) {
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 private fun AddLibraryContent(
     state: State,
@@ -195,7 +193,7 @@ private fun LibraryNameTextField(
     )
 }
 
-@ExperimentalAnimationApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun LibraryNameErrorText(show: Boolean) {
     AnimatedVisibility(
@@ -229,7 +227,7 @@ private fun LibraryUrlTextField(
     )
 }
 
-@ExperimentalAnimationApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun LibraryUrlErrorText(state: State) {
     AnimatedVisibility(
@@ -320,7 +318,6 @@ private fun TextFieldWithHint(
     )
 }
 
-@ExperimentalAnimationApi
 @Composable
 @Preview
 private fun AddLibraryContentPreview() {

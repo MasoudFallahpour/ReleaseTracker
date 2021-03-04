@@ -10,6 +10,7 @@ plugins {
 android {
     compileSdkVersion(Versions.compileSdkVersion)
     buildToolsVersion(Versions.buildToolsVersion)
+
     defaultConfig {
         applicationId = "ir.fallahpoor.releasetracker"
         minSdkVersion(Versions.minSdkVersion)
@@ -17,6 +18,7 @@ android {
         versionCode = Versions.versionCode
         versionName = Versions.versionName
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -29,31 +31,27 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-        useIR = true
-    }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.composeVersion
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
 kapt {
     correctErrorTypes = true
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java) {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
-    }
 }
 
 dependencies {

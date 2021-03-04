@@ -26,7 +26,7 @@ enum class ToolbarMode {
     Search
 }
 
-@ExperimentalAnimationApi
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Toolbar(
     toolbarMode: ToolbarMode,

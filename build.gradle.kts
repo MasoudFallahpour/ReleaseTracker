@@ -24,3 +24,9 @@ allprojects {
 task("clean") {
     delete(rootProject.buildDir)
 }
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
+    kotlinOptions {
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+    }
+}

@@ -1,6 +1,5 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -36,8 +35,7 @@ import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import kotlinx.coroutines.launch
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel,
