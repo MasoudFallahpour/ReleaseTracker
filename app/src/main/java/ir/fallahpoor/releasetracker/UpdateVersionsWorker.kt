@@ -19,7 +19,7 @@ import java.util.*
 @HiltWorker
 class UpdateVersionsWorker
 @AssistedInject constructor(
-    @Assisted context: Context,
+    @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val libraryRepository: LibraryRepository,
     private val networkUtils: NetworkUtils

@@ -31,4 +31,6 @@
     <string name="more_options">More options</string>
     <string name="clear_search_field">Clear search field</string>
     <string name="close_search_bar">Clear search bar</string>
+    <string name="notification_channel_name">General</string>
+    <string name="notification_channel_description">All notifications of the app</string>
 </resources>
