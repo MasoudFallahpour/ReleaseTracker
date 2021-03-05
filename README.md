@@ -22,6 +22,7 @@ If you want to track the latest version of AndroidX libraries then take a look a
 Release Tracker uses (almost) the latest and greatest technologies of Android development. The following list highlights
 the tech stack of Release Tracker:
 - MVVM
+- Compose
 - ViewModel
 - Coroutines
 - LiveData
