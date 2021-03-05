@@ -53,6 +53,25 @@ class LibraryRepositoryImpl
 
     }
 
+    override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
+
+    override suspend fun deleteLibrary(library: Library) {
+        libraryDao.delete(library.name)
+    }
+
+    override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
+
+        val libraryPath = libraryUrl.removePrefix(GITHUB_BASE_URL)
+        val libraryOwner = libraryPath.substring(0 until libraryPath.indexOf("/"))
+        val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
+
+        val libraryVersion: LibraryVersion =
+            githubWebservice.getLatestVersion(libraryOwner, libraryRepo)
+
+        return getLibraryVersion(libraryName, libraryVersion)
+
+    }
+
     private fun getLibraryVersion(libraryName: String, libraryVersion: LibraryVersion): String {
         return if (libraryVersion.name.isNotBlank()) {
             getRefinedLibraryVersion(libraryName, libraryVersion.name)
@@ -74,25 +93,6 @@ class LibraryRepositoryImpl
             .replace("v", "", ignoreCase = true) // Remove the letter 'v'
             .replace("r", "", ignoreCase = true) // Remove the letter 'r'
             .trim()
-
-    override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
-
-    override suspend fun deleteLibrary(library: Library) {
-        libraryDao.delete(library.name)
-    }
-
-    override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
-
-        val libraryPath = libraryUrl.removePrefix(GITHUB_BASE_URL)
-        val libraryOwner = libraryPath.substring(0 until libraryPath.indexOf("/"))
-        val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
-
-        val libraryVersion: LibraryVersion =
-            githubWebservice.getLatestVersion(libraryOwner, libraryRepo)
-
-        return getLibraryVersion(libraryName, libraryVersion)
-
-    }
 
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
         val newLibrary = library.copy(pinned = if (pinned) 1 else 0)
