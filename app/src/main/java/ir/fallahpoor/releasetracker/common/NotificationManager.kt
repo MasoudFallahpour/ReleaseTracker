@@ -37,8 +37,8 @@ class NotificationManager
         }
     }
 
-    private fun showNotification(title: String, content: String) {
-        val notification: Notification = createNotification(title, content)
+    fun showNotification(title: String, body: String) {
+        val notification: Notification = createNotification(title, body)
         NotificationManagerCompat.from(context)
             .notify(0, notification)
     }

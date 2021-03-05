@@ -68,11 +68,14 @@ class LibraryRepositoryImpl
         val libraryVersion: LibraryVersion =
             githubWebservice.getLatestVersion(libraryOwner, libraryRepo)
 
-        return getLibraryVersion(libraryName, libraryVersion)
+        return getRefinedLibraryVersion(libraryName, libraryVersion)
 
     }
 
-    private fun getLibraryVersion(libraryName: String, libraryVersion: LibraryVersion): String {
+    private fun getRefinedLibraryVersion(
+        libraryName: String,
+        libraryVersion: LibraryVersion
+    ): String {
         return if (libraryVersion.name.isNotBlank()) {
             getRefinedLibraryVersion(libraryName, libraryVersion.name)
         } else {

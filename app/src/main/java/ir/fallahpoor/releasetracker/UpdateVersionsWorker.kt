@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import ir.fallahpoor.releasetracker.common.NotificationManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
@@ -22,27 +23,59 @@ class UpdateVersionsWorker
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val libraryRepository: LibraryRepository,
-    private val networkUtils: NetworkUtils
+    private val networkUtils: NetworkUtils,
+    private val notificationManager: NotificationManager
 ) : CoroutineWorker(context, workerParams) {
 
-    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+    override suspend fun doWork(): Result {
 
-        val result: Result =
+        val updatedLibraries = mutableListOf<String>()
+        val result: Result = withContext(Dispatchers.IO) {
             if (!networkUtils.networkReachable()) {
                 Result.retry()
             } else {
                 val libraries: List<Library> = libraryRepository.getLibraries()
                 libraries.forEach { library: Library ->
                     launch {
-                        getLatestVersion(library)
+                        val latestVersion: String? = getLatestVersion(library)
+                        if (latestVersion != null) {
+                            val libraryCopy = library.copy(version = latestVersion)
+                            libraryRepository.updateLibrary(libraryCopy)
+                            if (newVersionAvailable(latestVersion, library.version)) {
+                                updatedLibraries.add("${library.name}: ${library.version} -> $latestVersion")
+                            }
+                        }
                     }
                 }
                 saveUpdateDate(libraries)
                 Result.success()
             }
+        }
 
-        result
+        if (result is Result.Success && updatedLibraries.isNotEmpty()) {
+            showNotification(updatedLibraries)
+        }
 
+        return result
+
+    }
+
+    private suspend fun getLatestVersion(library: Library): String? {
+        return try {
+            val libraryVersion: String =
+                libraryRepository.getLibraryVersion(library.name, library.url)
+            Timber.d("Update SUCCESS (%s): %s", library.name, libraryVersion)
+            libraryVersion
+        } catch (t: Throwable) {
+            Timber.d("Update FAILURE (%s): %s", library.name, t.message)
+            null
+        }
+    }
+
+    private fun newVersionAvailable(latestVersion: String?, currentVersion: String): Boolean {
+        return latestVersion != null &&
+                currentVersion != "N/A" &&
+                latestVersion != currentVersion
     }
 
     private fun saveUpdateDate(libraries: List<Library>) {
@@ -54,22 +87,15 @@ class UpdateVersionsWorker
         }
     }
 
-    private suspend fun getLatestVersion(library: Library) {
-
-        try {
-
-            val libraryVersion: String =
-                libraryRepository.getLibraryVersion(library.name, library.url)
-
-            val library = library.copy(version = libraryVersion)
-            libraryRepository.updateLibrary(library)
-
-            Timber.d("Update SUCCESS (%s): %s", library.name, libraryVersion)
-
-        } catch (t: Throwable) {
-            Timber.d("Update FAILURE (%s): %s", library.name, t.message)
-        }
-
+    private fun showNotification(updatedLibraries: List<String>) {
+        val notificationBody = context.getString(
+            R.string.notification_body,
+            updatedLibraries.joinToString(separator = "\n")
+        )
+        notificationManager.showNotification(
+            title = context.getString(R.string.notification_title),
+            body = notificationBody
+        )
     }
 
 }
