@@ -6,11 +6,17 @@ import javax.inject.Inject
 
 class ExceptionParser @Inject constructor() {
 
+    companion object {
+        const val LIBRARY_DOES_NOT_EXIST = "Library URL does not exist."
+        const val INTERNET_NOT_CONNECTED = "Internet not connected."
+        const val SOMETHING_WENT_WRONG = "Unfortunately, something went wrong."
+    }
+
     fun getMessage(t: Throwable): String {
         return when (t) {
-            is HttpException -> "Library URL does not exist."
-            is IOException -> "Internet not connected."
-            else -> "Unfortunately, something went wrong."
+            is HttpException -> LIBRARY_DOES_NOT_EXIST
+            is IOException -> INTERNET_NOT_CONNECTED
+            else -> SOMETHING_WENT_WRONG
         }
     }
 

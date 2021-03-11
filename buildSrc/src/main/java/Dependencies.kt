@@ -63,4 +63,9 @@ object Dependencies {
         const val rxkprefsCoroutines = "com.afollestad.rxkprefs:coroutines:${Versions.kprefs}"
     }
 
+    object DataTest {
+        const val junit = "junit:junit:4.13.2"
+        const val truth = "com.google.truth:truth:1.1.2"
+    }
+
 }

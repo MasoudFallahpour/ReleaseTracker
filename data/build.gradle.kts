@@ -61,7 +61,10 @@ dependencies {
     implementation(Dependencies.Data.retrofit)
     implementation(Dependencies.Data.retrofitConverterGson)
     implementation(Dependencies.Data.okhttpLoggingInterceptor)
-    
+
     implementation(Dependencies.Data.rxkprefs)
     implementation(Dependencies.Data.rxkprefsCoroutines)
+
+    testImplementation(Dependencies.DataTest.junit)
+    testImplementation(Dependencies.DataTest.truth)
 }
