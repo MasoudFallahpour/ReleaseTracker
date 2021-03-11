@@ -1,6 +1,5 @@
 package ir.fallahpoor.releasetracker.data.repository
 
-import androidx.sqlite.db.SimpleSQLiteQuery
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
@@ -40,17 +39,10 @@ class LibraryRepositoryImpl
     override fun getLibraries(
         sortOrder: SortOrder,
         searchTerm: String
-    ): Flow<List<Library>> {
-
-        val queryPrefix = "SELECT * FROM library WHERE name LIKE '%' || ? || '%' ORDER BY "
-        val query = when (sortOrder) {
-            SortOrder.A_TO_Z -> queryPrefix + "name ASC"
-            SortOrder.Z_TO_A -> queryPrefix + "name DESC"
-            SortOrder.PINNED_FIRST -> queryPrefix + "pinned DESC, name ASC"
-        }
-
-        return libraryDao.getAll(SimpleSQLiteQuery(query, arrayOf(searchTerm)))
-
+    ): Flow<List<Library>> = when (sortOrder) {
+        SortOrder.A_TO_Z -> libraryDao.getAllSortedByNameAscending(searchTerm)
+        SortOrder.Z_TO_A -> libraryDao.getAllSortedByNameDescending(searchTerm)
+        SortOrder.PINNED_FIRST -> libraryDao.getAllSortedByPinnedFirst(searchTerm)
     }
 
     override suspend fun getLibraries(): List<Library> = libraryDao.getAll()

@@ -24,12 +24,12 @@ class FakeStorage : Storage {
 
     override fun getLastUpdateCheck(): Flow<String> =
         flow {
-            lastUpdateCheckDate
+           emit(lastUpdateCheckDate)
         }
 
     override fun getNightModeAsFlow(): Flow<NightMode> =
         flow {
-            nightMode
+            emit(nightMode)
         }
 
     override fun getNightMode() = nightMode

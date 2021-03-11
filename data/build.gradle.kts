@@ -67,4 +67,6 @@ dependencies {
 
     testImplementation(Dependencies.DataTest.junit)
     testImplementation(Dependencies.DataTest.truth)
+    testImplementation(Dependencies.DataTest.coroutinesTest)
+    testImplementation(Dependencies.DataTest.coreTesting)
 }

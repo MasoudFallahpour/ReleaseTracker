@@ -1,15 +1,20 @@
 package ir.fallahpoor.releasetracker.data.database
 
 import androidx.room.*
-import androidx.sqlite.db.SupportSQLiteQuery
 import ir.fallahpoor.releasetracker.data.entity.Library
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LibraryDao {
 
-    @RawQuery(observedEntities = [Library::class])
-    fun getAll(query: SupportSQLiteQuery): Flow<List<Library>>
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchTerm || '%' ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
+    fun getAllSortedByNameAscending(searchTerm: String): Flow<List<Library>>
+
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchTerm || '%' ORDER BY ${DatabaseContract.FIELD_NAME} DESC")
+    fun getAllSortedByNameDescending(searchTerm: String): Flow<List<Library>>
+
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchTerm || '%' ORDER BY ${DatabaseContract.FIELD_PINNED} DESC, ${DatabaseContract.FIELD_NAME} ASC")
+    fun getAllSortedByPinnedFirst(searchTerm: String): Flow<List<Library>>
 
     @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME}")
     suspend fun getAll(): List<Library>

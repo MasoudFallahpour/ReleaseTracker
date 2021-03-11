@@ -66,6 +66,8 @@ object Dependencies {
     object DataTest {
         const val junit = "junit:junit:4.13.2"
         const val truth = "com.google.truth:truth:1.1.2"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3"
+        const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
     }
 
 }
