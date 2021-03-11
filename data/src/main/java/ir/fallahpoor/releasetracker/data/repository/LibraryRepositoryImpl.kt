@@ -4,15 +4,15 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
-import ir.fallahpoor.releasetracker.data.utils.LocalStorage
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
 @Inject constructor(
-    private val localStorage: LocalStorage,
+    private val storage: Storage,
     private val libraryDao: LibraryDao,
     private val githubWebservice: GithubWebservice
 ) : LibraryRepository {
@@ -103,10 +103,10 @@ class LibraryRepositoryImpl
     }
 
     override fun getLastUpdateCheck(): Flow<String> =
-        localStorage.getLastUpdateCheck()
+        storage.getLastUpdateCheck()
 
     override fun setLastUpdateCheck(date: String) {
-        localStorage.setLastUpdateCheck(date)
+        storage.setLastUpdateCheck(date)
     }
 
 }

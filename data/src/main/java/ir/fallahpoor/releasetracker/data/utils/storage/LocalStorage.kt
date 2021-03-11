@@ -1,9 +1,11 @@
-package ir.fallahpoor.releasetracker.data.utils
+package ir.fallahpoor.releasetracker.data.utils.storage
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.afollestad.rxkprefs.RxkPrefs
 import com.afollestad.rxkprefs.coroutines.asFlow
+import ir.fallahpoor.releasetracker.data.utils.NightMode
+import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -11,7 +13,7 @@ import javax.inject.Inject
 class LocalStorage @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val rxkPrefs: RxkPrefs
-) {
+) : Storage {
 
     private companion object {
         const val KEY_ORDER = "order"
@@ -21,36 +23,36 @@ class LocalStorage @Inject constructor(
 
     private val defaultNightMode = NightMode.AUTO
 
-    fun setSortOrder(sortOrder: SortOrder) {
+    override fun setSortOrder(sortOrder: SortOrder) {
         putString(KEY_ORDER, sortOrder.name)
     }
 
-    fun getSortOrder(): SortOrder {
+    override fun getSortOrder(): SortOrder {
         return SortOrder.valueOf(getString(KEY_ORDER) ?: SortOrder.A_TO_Z.name)
     }
 
-    fun setLastUpdateCheck(date: String) {
+    override fun setLastUpdateCheck(date: String) {
         rxkPrefs.string(KEY_LAST_UPDATE_CHECK)
             .set(date)
     }
 
-    fun getLastUpdateCheck(): Flow<String> =
+    override fun getLastUpdateCheck(): Flow<String> =
         rxkPrefs.string(KEY_LAST_UPDATE_CHECK, defaultValue = "N/A")
             .asFlow()
 
-    fun getNightModeAsFlow(): Flow<NightMode> =
+    override fun getNightModeAsFlow(): Flow<NightMode> =
         rxkPrefs.string(KEY_NIGHT_MODE)
             .asFlow()
             .map { mode: String ->
                 NightMode.valueOf(if (mode.isNotBlank()) mode else defaultNightMode.name)
             }
 
-    fun getNightMode(): NightMode {
+    override fun getNightMode(): NightMode {
         val nightModeStr = getString(KEY_NIGHT_MODE)
         return NightMode.valueOf(nightModeStr ?: defaultNightMode.name)
     }
 
-    fun setNightMode(nightMode: NightMode) {
+    override fun setNightMode(nightMode: NightMode) {
         rxkPrefs.string(KEY_NIGHT_MODE)
             .set(nightMode.name)
     }
