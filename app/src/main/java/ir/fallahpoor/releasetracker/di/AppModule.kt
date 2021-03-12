@@ -12,6 +12,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ir.fallahpoor.releasetracker.BuildConfig
 import ir.fallahpoor.releasetracker.data.database.DatabaseContract
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.LibraryDatabase
@@ -54,7 +55,10 @@ object AppModule {
 
     @Provides
     fun provideGithubWebservice(webserviceFactory: WebserviceFactory): GithubWebservice {
-        return webserviceFactory.createGithubService(GithubWebservice::class.java)
+        return webserviceFactory.createGithubService(
+            serviceClass = GithubWebservice::class.java,
+            isDebugBuild = BuildConfig.DEBUG
+        )
     }
 
     @Provides

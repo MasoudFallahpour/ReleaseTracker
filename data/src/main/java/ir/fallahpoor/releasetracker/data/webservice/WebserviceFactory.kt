@@ -20,32 +20,29 @@ class WebserviceFactory @Inject constructor() {
         private const val HEADER_VALUE_AUTHORIZATION = "token $ACCESS_TOKEN"
     }
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(GITHUB_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(getOkhttpClient())
-        .build()
+    fun <S> createGithubService(serviceClass: Class<S>, isDebugBuild: Boolean): S =
+        Retrofit.Builder()
+            .baseUrl(GITHUB_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getOkhttpClient(isDebugBuild))
+            .build()
+            .create(serviceClass)
 
-    private fun getOkhttpClient(): OkHttpClient {
+    private fun getOkhttpClient(isDebugBuild: Boolean): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(HeadersInterceptor())
-            .addInterceptor(getLoggingInterceptor())
+            .addInterceptor(getLoggingInterceptor(isDebugBuild))
             .build()
     }
 
-    private fun getLoggingInterceptor(): HttpLoggingInterceptor {
-        return HttpLoggingInterceptor().apply {
-            if (BuildConfig.DEBUG) {
+    private fun getLoggingInterceptor(isDebugBuild: Boolean): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            if (isDebugBuild) {
                 setLevel(HttpLoggingInterceptor.Level.BODY)
             } else {
                 setLevel(HttpLoggingInterceptor.Level.NONE)
             }
         }
-    }
-
-    fun <S> createGithubService(serviceClass: Class<S>): S {
-        return retrofit.create(serviceClass)
-    }
 
     private inner class HeadersInterceptor : Interceptor {
 
