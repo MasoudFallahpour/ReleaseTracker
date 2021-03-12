@@ -15,7 +15,7 @@ class LocalStorage @Inject constructor(
     private val rxkPrefs: RxkPrefs
 ) : Storage {
 
-    private companion object {
+    companion object {
         const val KEY_ORDER = "order"
         const val KEY_LAST_UPDATE_CHECK = "last_update_check"
         const val KEY_NIGHT_MODE = "night_mode"

@@ -9,8 +9,10 @@ plugins {
 val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToken")
 
 android {
+
     compileSdkVersion(Versions.compileSdkVersion)
     buildToolsVersion(Versions.buildToolsVersion)
+
     defaultConfig {
         minSdkVersion(Versions.minSdkVersion)
         targetSdkVersion(Versions.targetSdkVersion)
@@ -22,6 +24,7 @@ android {
             }
         }
     }
+
     buildTypes {
         getByName("release") {
             buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
@@ -38,13 +41,16 @@ android {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
 }
 
 dependencies {
@@ -69,4 +75,7 @@ dependencies {
     testImplementation(Dependencies.DataTest.truth)
     testImplementation(Dependencies.DataTest.coroutinesTest)
     testImplementation(Dependencies.DataTest.coreTesting)
+    testImplementation(Dependencies.DataTest.mockito)
+    testImplementation(Dependencies.DataTest.testCore)
+    testImplementation(Dependencies.DataTest.robolectric)
 }
