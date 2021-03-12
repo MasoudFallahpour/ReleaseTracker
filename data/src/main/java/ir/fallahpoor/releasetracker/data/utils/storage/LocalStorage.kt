@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.data.utils.storage
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import androidx.core.content.edit
 import com.afollestad.rxkprefs.RxkPrefs
 import com.afollestad.rxkprefs.coroutines.asFlow
 import ir.fallahpoor.releasetracker.data.utils.NightMode
@@ -57,10 +57,11 @@ class LocalStorage @Inject constructor(
             .set(nightMode.name)
     }
 
+    @SuppressLint("ApplySharedPref")
     private fun putString(key: String, value: String) {
-        sharedPreferences.edit(commit = true) {
-            putString(key, value)
-        }
+        sharedPreferences.edit()
+            .putString(key, value)
+            .commit()
     }
 
     private fun getString(key: String): String? {

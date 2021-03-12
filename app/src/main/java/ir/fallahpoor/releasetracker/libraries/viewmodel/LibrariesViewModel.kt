@@ -7,7 +7,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
+import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import kotlinx.coroutines.flow.map
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class LibrariesViewModel
 @Inject constructor(
     private val libraryRepository: LibraryRepository,
-    private val localStorage: LocalStorage,
+    private val storage: Storage,
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
@@ -27,7 +27,7 @@ class LibrariesViewModel
     private val triggerLiveData = MutableLiveData<Unit>()
 
     val librariesListState: LiveData<LibrariesListState> = triggerLiveData.switchMap {
-        localStorage.setSortOrder(sortOrder)
+        storage.setSortOrder(sortOrder)
         libraryRepository.getLibraries(sortOrder, searchTerm)
             .map {
                 LibrariesListState.LibrariesLoaded(it)
@@ -35,7 +35,7 @@ class LibrariesViewModel
             .asLiveData()
     }
 
-    private var sortOrder: SortOrder = localStorage.getSortOrder()
+    private var sortOrder: SortOrder = storage.getSortOrder()
     private var searchTerm = ""
 
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
@@ -46,7 +46,7 @@ class LibrariesViewModel
             .asLiveData()
 
     fun getLibraries(
-        sortOrder: SortOrder = localStorage.getSortOrder(),
+        sortOrder: SortOrder = storage.getSortOrder(),
         searchTerm: String = this.searchTerm
     ) {
         this.sortOrder = sortOrder

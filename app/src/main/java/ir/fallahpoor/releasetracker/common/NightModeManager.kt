@@ -8,16 +8,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
+import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import javax.inject.Inject
 
 class NightModeManager
 @Inject constructor(
     private val context: Context,
-    private val localStorage: LocalStorage
+    private val storage: Storage
 ) {
 
-    val isNightModeOn: LiveData<Boolean> = localStorage.getNightModeAsFlow()
+    val isNightModeOn: LiveData<Boolean> = storage.getNightModeAsFlow()
         .asLiveData()
         .map { mode: NightMode ->
             when (mode) {
@@ -37,7 +37,7 @@ class NightModeManager
         setMode(nightMode)
     }
 
-    fun getNightMode(): NightMode = localStorage.getNightMode()
+    fun getNightMode(): NightMode = storage.getNightMode()
 
     private fun setMode(nightMode: NightMode) {
         when (nightMode) {
@@ -45,7 +45,7 @@ class NightModeManager
             NightMode.OFF -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             NightMode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
-        localStorage.setNightMode(nightMode)
+        storage.setNightMode(nightMode)
     }
 
     fun isNightModeOn(): Boolean {

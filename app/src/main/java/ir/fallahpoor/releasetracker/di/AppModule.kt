@@ -17,6 +17,8 @@ import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.LibraryDatabase
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepositoryImpl
+import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
+import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 import ir.fallahpoor.releasetracker.data.webservice.WebserviceFactory
 import javax.inject.Singleton
@@ -58,6 +60,11 @@ object AppModule {
     @Provides
     fun provideLibraryDao(libraryDatabase: LibraryDatabase): LibraryDao {
         return libraryDatabase.libraryDao()
+    }
+
+    @Provides
+    fun provideStorage(localStorage: LocalStorage): Storage {
+        return localStorage
     }
 
 }
