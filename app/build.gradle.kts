@@ -84,5 +84,10 @@ dependencies {
     implementation(Dependencies.App.composeRuntime)
     implementation(Dependencies.App.composeRuntimeLiveData)
 
+    testImplementation(Dependencies.AppTest.junit)
+    testImplementation(Dependencies.AppTest.truth)
+    testImplementation(Dependencies.AppTest.coreTesting)
+    testImplementation(Dependencies.AppTest.coroutinesTest)
+
     implementation(project(":data"))
 }

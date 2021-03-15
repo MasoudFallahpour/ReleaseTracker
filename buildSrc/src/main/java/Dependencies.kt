@@ -9,6 +9,13 @@ object Dependencies {
             "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifeCycleVersion}"
     }
 
+    private object CommonTest {
+        const val junit = "junit:junit:4.13.2"
+        const val truth = "com.google.truth:truth:1.1.2"
+        const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3"
+    }
+
     object App {
         const val kotlinStdLib = Common.kotlinStdLib
         const val core = Common.core
@@ -44,6 +51,13 @@ object Dependencies {
             "androidx.compose.runtime:runtime-livedata:${Versions.composeVersion}"
     }
 
+    object AppTest {
+        const val junit = CommonTest.junit
+        const val truth = CommonTest.truth
+        const val coreTesting = CommonTest.coreTesting
+        const val coroutinesTest = CommonTest.coroutinesTest
+    }
+
     object Data {
         const val kotlinStdLib = Common.kotlinStdLib
         const val core = Common.core
@@ -65,11 +79,10 @@ object Dependencies {
     }
 
     object DataTest {
-        const val junit = "junit:junit:4.13.2"
-        const val truth = "com.google.truth:truth:1.1.2"
-        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3"
-        const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
-        const val mockito = "org.mockito:mockito-core:3.8.0"
+        const val junit = CommonTest.junit
+        const val truth = CommonTest.truth
+        const val coroutinesTest = CommonTest.coroutinesTest
+        const val coreTesting = CommonTest.coreTesting
         const val testCore = "androidx.test:core:1.0.0"
         const val robolectric = "org.robolectric:robolectric:4.5.1"
     }
