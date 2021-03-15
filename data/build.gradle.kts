@@ -57,6 +57,7 @@ dependencies {
     implementation(Dependencies.Data.kotlinStdLib)
     implementation(Dependencies.Data.core)
     implementation(Dependencies.Data.liveData)
+    implementation(Dependencies.Data.coroutinesAndroid)
 
     implementation(Dependencies.Data.room)
     kapt(Dependencies.Data.roomCompiler)
@@ -75,7 +76,6 @@ dependencies {
     testImplementation(Dependencies.DataTest.truth)
     testImplementation(Dependencies.DataTest.coroutinesTest)
     testImplementation(Dependencies.DataTest.coreTesting)
-    testImplementation(Dependencies.DataTest.mockito)
     testImplementation(Dependencies.DataTest.testCore)
     testImplementation(Dependencies.DataTest.robolectric)
 }

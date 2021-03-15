@@ -49,6 +49,7 @@ object Dependencies {
         const val core = Common.core
         const val liveData = Common.liveData
         const val inject = "javax.inject:javax.inject:1"
+        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 
         const val room = Common.room
         const val roomCompiler = "androidx.room:room-compiler:${Versions.roomVersion}"
