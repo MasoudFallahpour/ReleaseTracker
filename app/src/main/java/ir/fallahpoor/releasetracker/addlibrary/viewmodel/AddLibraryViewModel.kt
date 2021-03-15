@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.fallahpoor.releasetracker.addlibrary.view.State
+import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
@@ -22,29 +22,29 @@ class AddLibraryViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    private val _state: MutableLiveData<State> = MutableLiveData()
-    val state: LiveData<State> = _state
+    private val _state: MutableLiveData<AddLibraryState> = MutableLiveData()
+    val state: LiveData<AddLibraryState> = _state
     var libraryName by mutableStateOf("")
     var libraryUrl by mutableStateOf("")
 
     fun addLibrary(libraryName: String, libraryUrl: String) {
 
         if (libraryName.isEmpty()) {
-            _state.value = State.EmptyLibraryName
+            _state.value = AddLibraryState.EmptyLibraryName
             return
         }
 
         if (libraryUrl.isEmpty()) {
-            _state.value = State.EmptyLibraryUrl
+            _state.value = AddLibraryState.EmptyLibraryUrl
             return
         }
 
         if (!isGithubUrl(libraryUrl)) {
-            _state.value = State.InvalidLibraryUrl
+            _state.value = AddLibraryState.InvalidLibraryUrl
             return
         }
 
-        _state.value = State.Loading
+        _state.value = AddLibraryState.Loading
 
         viewModelScope.launch {
 
@@ -53,7 +53,7 @@ class AddLibraryViewModel
                     val library: Library? = libraryRepository.getLibrary(libraryName)
                     val libraryAlreadyExists = library != null
                     if (libraryAlreadyExists) {
-                        State.Error("Library already exists")
+                        AddLibraryState.Error("Library already exists")
                     } else {
                         val libraryVersion: String =
                             libraryRepository.getLibraryVersion(libraryName, libraryUrl)
@@ -64,11 +64,11 @@ class AddLibraryViewModel
                         )
                         this@AddLibraryViewModel.libraryName = ""
                         this@AddLibraryViewModel.libraryUrl = ""
-                        State.LibraryAdded
+                        AddLibraryState.LibraryAdded
                     }
                 } catch (t: Throwable) {
                     val message = exceptionParser.getMessage(t)
-                    State.Error(message)
+                    AddLibraryState.Error(message)
                 }
 
         }

@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.MainCoroutineScopeRule
-import ir.fallahpoor.releasetracker.addlibrary.view.State
+import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -49,7 +49,7 @@ class AddLibraryViewModelTest {
         // Then
         Truth.assertThat(addLibraryViewModel)
         Truth.assertThat(addLibraryViewModel.state.value)
-            .isInstanceOf(State.EmptyLibraryName::class.java)
+            .isInstanceOf(AddLibraryState.EmptyLibraryName::class.java)
 
     }
 
@@ -66,7 +66,7 @@ class AddLibraryViewModelTest {
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
-            .isInstanceOf(State.EmptyLibraryUrl::class.java)
+            .isInstanceOf(AddLibraryState.EmptyLibraryUrl::class.java)
 
     }
 
@@ -83,7 +83,7 @@ class AddLibraryViewModelTest {
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
-            .isInstanceOf(State.InvalidLibraryUrl::class.java)
+            .isInstanceOf(AddLibraryState.InvalidLibraryUrl::class.java)
 
     }
 
@@ -100,7 +100,7 @@ class AddLibraryViewModelTest {
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
-            .isInstanceOf(State.Error::class.java)
+            .isInstanceOf(AddLibraryState.Error::class.java)
 
     }
 
@@ -117,7 +117,7 @@ class AddLibraryViewModelTest {
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
-            .isInstanceOf(State.LibraryAdded::class.java)
+            .isInstanceOf(AddLibraryState.LibraryAdded::class.java)
 
     }
 

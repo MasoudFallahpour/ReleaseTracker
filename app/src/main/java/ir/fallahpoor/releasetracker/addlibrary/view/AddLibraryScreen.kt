@@ -66,7 +66,7 @@ fun AddLibraryScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
-            val state: State by addLibraryViewModel.state.observeAsState(State.Fresh)
+            val state: AddLibraryState by addLibraryViewModel.state.observeAsState(AddLibraryState.Fresh)
             val keyboardController: SoftwareKeyboardController? =
                 LocalSoftwareKeyboardController.current
             AddLibraryContent(
@@ -103,7 +103,7 @@ private fun BackButton(onBackClick: () -> Unit) {
 
 @Composable
 private fun AddLibraryContent(
-    state: State,
+    state: AddLibraryState,
     scaffoldState: ScaffoldState,
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,
@@ -115,7 +115,7 @@ private fun AddLibraryContent(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        if (state is State.Loading) {
+        if (state is AddLibraryState.Loading) {
             ProgressIndicator()
         }
         Column(
@@ -128,10 +128,10 @@ private fun AddLibraryContent(
                 onLibraryNameChange = { libraryName: String ->
                     onLibraryNameChange(libraryName)
                 },
-                isError = state is State.EmptyLibraryName
+                isError = state is AddLibraryState.EmptyLibraryName
             )
             LibraryNameErrorText(
-                show = state is State.EmptyLibraryName
+                show = state is AddLibraryState.EmptyLibraryName
             )
             Spacer(
                 modifier = Modifier.height(SPACE_SMALL.dp)
@@ -139,7 +139,7 @@ private fun AddLibraryContent(
             LibraryUrlTextField(
                 libraryUrl = libraryUrl,
                 onLibraryUrlChange = onLibraryUrlChange,
-                isError = state is State.EmptyLibraryUrl || state is State.InvalidLibraryUrl,
+                isError = state is AddLibraryState.EmptyLibraryUrl || state is AddLibraryState.InvalidLibraryUrl,
                 onDoneClick = {
                     onAddLibrary(libraryName, libraryUrl)
                 }
@@ -149,7 +149,7 @@ private fun AddLibraryContent(
             )
         }
         AddLibraryButton(
-            isEnabled = state !is State.Loading,
+            isEnabled = state !is AddLibraryState.Loading,
             clickListener = {
                 onAddLibrary(libraryName, libraryUrl)
             }
@@ -229,14 +229,14 @@ private fun LibraryUrlTextField(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-private fun LibraryUrlErrorText(state: State) {
+private fun LibraryUrlErrorText(state: AddLibraryState) {
     AnimatedVisibility(
-        visible = state is State.EmptyLibraryUrl
+        visible = state is AddLibraryState.EmptyLibraryUrl
     ) {
         ErrorText(R.string.library_url_empty)
     }
     AnimatedVisibility(
-        visible = state is State.InvalidLibraryUrl
+        visible = state is AddLibraryState.InvalidLibraryUrl
     ) {
         ErrorText(R.string.library_url_invalid)
     }
@@ -266,18 +266,18 @@ private fun AddLibraryButton(isEnabled: Boolean, clickListener: () -> Unit) {
 }
 
 @Composable
-private fun Snackbar(state: State, scaffoldState: ScaffoldState) {
+private fun Snackbar(state: AddLibraryState, scaffoldState: ScaffoldState) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    if (state is State.Error) {
+    if (state is AddLibraryState.Error) {
         val errorMessage = state.message
         coroutineScope.launch {
             scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
         }
     }
 
-    if (state is State.LibraryAdded) {
+    if (state is AddLibraryState.LibraryAdded) {
         val message = stringResource(R.string.library_added)
         coroutineScope.launch {
             scaffoldState.snackbarHostState.showSnackbar(message = message)
@@ -324,7 +324,7 @@ private fun AddLibraryContentPreview() {
     ReleaseTrackerTheme {
         Surface {
             AddLibraryContent(
-                state = State.Fresh,
+                state = AddLibraryState.Fresh,
                 scaffoldState = rememberScaffoldState(),
                 libraryName = "",
                 onLibraryNameChange = {},
