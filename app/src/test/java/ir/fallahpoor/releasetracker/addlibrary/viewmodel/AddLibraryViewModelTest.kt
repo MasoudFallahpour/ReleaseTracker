@@ -2,10 +2,10 @@ package ir.fallahpoor.releasetracker.addlibrary.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.MainCoroutineScopeRule
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
+import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule

@@ -88,6 +88,8 @@ dependencies {
     testImplementation(Dependencies.AppTest.truth)
     testImplementation(Dependencies.AppTest.coreTesting)
     testImplementation(Dependencies.AppTest.coroutinesTest)
+    testImplementation(Dependencies.AppTest.testCore)
+    testImplementation(Dependencies.AppTest.robolectric)
 
     implementation(project(":data"))
 }

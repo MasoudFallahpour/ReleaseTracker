@@ -29,12 +29,11 @@ class NightModeManager
 
     val isNightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    fun setNightMode(nightMode: NightMode) {
-        val currentMode = getNightMode()
-        if (nightMode == currentMode) {
-            return
+    fun setNightMode(newNightMode: NightMode) {
+        val currentNightMode = getNightMode()
+        if (newNightMode != currentNightMode) {
+            setMode(newNightMode)
         }
-        setMode(nightMode)
     }
 
     fun getNightMode(): NightMode = storage.getNightMode()

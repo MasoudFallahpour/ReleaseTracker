@@ -14,6 +14,8 @@ object Dependencies {
         const val truth = "com.google.truth:truth:1.1.2"
         const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
         const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3"
+        const val testCore = "androidx.test:core:1.0.0"
+        const val robolectric = "org.robolectric:robolectric:4.5.1"
     }
 
     object App {
@@ -56,6 +58,8 @@ object Dependencies {
         const val truth = CommonTest.truth
         const val coreTesting = CommonTest.coreTesting
         const val coroutinesTest = CommonTest.coroutinesTest
+        const val testCore = CommonTest.testCore
+        const val robolectric = CommonTest.robolectric
     }
 
     object Data {
@@ -83,8 +87,8 @@ object Dependencies {
         const val truth = CommonTest.truth
         const val coroutinesTest = CommonTest.coroutinesTest
         const val coreTesting = CommonTest.coreTesting
-        const val testCore = "androidx.test:core:1.0.0"
-        const val robolectric = "org.robolectric:robolectric:4.5.1"
+        const val testCore = CommonTest.testCore
+        const val robolectric = CommonTest.robolectric
     }
 
 }
