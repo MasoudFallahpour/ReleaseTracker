@@ -8,13 +8,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Versions.compileSdkVersion)
-    buildToolsVersion(Versions.buildToolsVersion)
+
+    compileSdk = Versions.compileSdkVersion
+    buildToolsVersion = Versions.buildToolsVersion
 
     defaultConfig {
         applicationId = "ir.fallahpoor.releasetracker"
-        minSdkVersion(Versions.minSdkVersion)
-        targetSdkVersion(Versions.targetSdkVersion)
+        minSdk = Versions.minSdkVersion
+        targetSdk = Versions.targetSdkVersion
         versionCode = Versions.versionCode
         versionName = Versions.versionName
     }
@@ -22,7 +23,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
-            isShrinkResources = true
+//            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile(
                     "proguard-android.txt"
@@ -56,6 +57,7 @@ kapt {
 
 dependencies {
     implementation(Dependencies.App.kotlinStdLib)
+    implementation("androidx.appcompat:appcompat:1.3.0-rc01")
     implementation(Dependencies.App.core)
     implementation(Dependencies.App.preference)
     implementation(Dependencies.App.activityCompose)
