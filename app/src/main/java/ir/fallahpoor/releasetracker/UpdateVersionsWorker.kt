@@ -10,9 +10,6 @@ import ir.fallahpoor.releasetracker.common.NotificationManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,27 +27,24 @@ class UpdateVersionsWorker
     override suspend fun doWork(): Result {
 
         val updatedLibraries = mutableListOf<String>()
-        val result: Result = withContext(Dispatchers.IO) {
-            if (!networkUtils.networkReachable()) {
+        val result: Result =
+            if (!networkUtils.isNetworkReachable()) {
                 Result.retry()
             } else {
                 val libraries: List<Library> = libraryRepository.getLibraries()
                 libraries.forEach { library: Library ->
-                    launch {
-                        val latestVersion: String? = getLatestVersion(library)
-                        if (latestVersion != null) {
-                            val libraryCopy = library.copy(version = latestVersion)
-                            libraryRepository.updateLibrary(libraryCopy)
-                            if (newVersionAvailable(latestVersion, library.version)) {
-                                updatedLibraries.add("${library.name}: ${library.version} -> $latestVersion")
-                            }
+                    val latestVersion: String? = getLatestVersion(library)
+                    if (latestVersion != null) {
+                        val libraryCopy = library.copy(version = latestVersion)
+                        libraryRepository.updateLibrary(libraryCopy)
+                        if (newVersionAvailable(latestVersion, library.version)) {
+                            updatedLibraries.add("${library.name}: ${library.version} -> $latestVersion")
                         }
                     }
                 }
                 saveUpdateDate(libraries)
                 Result.success()
             }
-        }
 
         if (result is Result.Success && updatedLibraries.isNotEmpty()) {
             showNotification(updatedLibraries)
