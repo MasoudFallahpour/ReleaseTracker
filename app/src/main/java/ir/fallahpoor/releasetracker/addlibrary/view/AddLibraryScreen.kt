@@ -10,9 +10,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -31,7 +31,6 @@ import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
-import kotlinx.coroutines.launch
 
 // TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
@@ -82,7 +81,7 @@ fun AddLibraryScreen(
                 },
                 onAddLibrary = { libraryName: String, libraryUrl: String ->
                     addLibraryViewModel.addLibrary(libraryName, libraryUrl)
-                    keyboardController?.hideSoftwareKeyboard()
+                    keyboardController?.hide()
                 }
             )
         }
@@ -268,18 +267,16 @@ private fun AddLibraryButton(isEnabled: Boolean, clickListener: () -> Unit) {
 @Composable
 private fun Snackbar(state: AddLibraryState, scaffoldState: ScaffoldState) {
 
-    val coroutineScope = rememberCoroutineScope()
-
     if (state is AddLibraryState.Error) {
-        val errorMessage = state.message
-        coroutineScope.launch {
-            scaffoldState.snackbarHostState.showSnackbar(message = errorMessage)
+        val message = state.message
+        LaunchedEffect(scaffoldState.snackbarHostState) {
+            scaffoldState.snackbarHostState.showSnackbar(message = message)
         }
     }
 
     if (state is AddLibraryState.LibraryAdded) {
         val message = stringResource(R.string.library_added)
-        coroutineScope.launch {
+        LaunchedEffect(scaffoldState.snackbarHostState) {
             scaffoldState.snackbarHostState.showSnackbar(message = message)
         }
     }
