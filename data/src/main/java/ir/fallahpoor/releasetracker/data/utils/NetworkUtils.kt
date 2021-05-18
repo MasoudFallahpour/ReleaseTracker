@@ -9,19 +9,16 @@ import javax.inject.Inject
 class NetworkUtils
 @Inject constructor() {
 
-    suspend fun networkReachable(): Boolean {
-        return urlExists("https://www.google.com")
-    }
-
-    private suspend fun urlExists(url: String): Boolean = withContext(Dispatchers.IO) {
-
-        val url = URL(url)
-        val httpURLConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
-        httpURLConnection.requestMethod = "GET"
-        httpURLConnection.connect()
-        val code: Int = httpURLConnection.responseCode
-        code == 200
-
+    suspend fun isNetworkReachable(): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("https://www.google.com")
+            val httpURLConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            httpURLConnection.connect()
+            val code: Int = httpURLConnection.responseCode
+            code == 200
+        } catch (e: Exception) {
+            false
+        }
     }
 
 }
