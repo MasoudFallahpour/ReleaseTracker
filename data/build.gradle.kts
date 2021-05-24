@@ -16,8 +16,6 @@ android {
     defaultConfig {
         minSdk = Versions.minSdkVersion
         targetSdk = Versions.targetSdkVersion
-//        versionCode = Versions.versionCode
-//        versionName = Versions.versionName
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")

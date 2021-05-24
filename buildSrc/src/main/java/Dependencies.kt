@@ -20,6 +20,7 @@ object Dependencies {
 
     object App {
         const val kotlinStdLib = Common.kotlinStdLib
+        const val appCompat = "androidx.appcompat:appcompat:1.3.0-rc01"
         const val core = Common.core
         const val room = Common.room
         const val liveData = Common.liveData

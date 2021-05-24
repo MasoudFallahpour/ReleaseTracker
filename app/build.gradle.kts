@@ -23,7 +23,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
-//            isShrinkResources = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile(
                     "proguard-android.txt"
@@ -57,7 +57,7 @@ kapt {
 
 dependencies {
     implementation(Dependencies.App.kotlinStdLib)
-    implementation("androidx.appcompat:appcompat:1.3.0-rc01")
+    implementation(Dependencies.App.appCompat)
     implementation(Dependencies.App.core)
     implementation(Dependencies.App.preference)
     implementation(Dependencies.App.activityCompose)

@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-alpha15")
+        classpath("com.android.tools.build:gradle:7.0.0-beta02")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinVersion}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.hiltVersion}")
         classpath("com.google.gms:google-services:4.3.8")
@@ -23,10 +23,4 @@ allprojects {
 
 task("clean") {
     delete(rootProject.buildDir)
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlin.RequiresOptIn")
-    }
 }
