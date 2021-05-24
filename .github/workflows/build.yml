@@ -24,6 +24,6 @@ jobs:
       - name: Create local.properties file
         env:
           accessToken: ${{ secrets.ACCESS_TOKEN }}
-          run: echo accessToken=$accessToken > ./local.properties
+        run: echo accessToken=$accessToken > ./local.properties
       - name: Build with Gradle
         run: ./gradlew build
