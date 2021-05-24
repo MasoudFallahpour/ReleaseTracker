@@ -33,7 +33,6 @@ import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -227,11 +226,9 @@ private fun LibrariesList(
 @Composable
 private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: ScaffoldState) {
 
-    val coroutineScope = rememberCoroutineScope()
-
     when (libraryDeleteState) {
         is LibraryDeleteState.Error -> {
-            coroutineScope.launch {
+            LaunchedEffect(scaffoldState.snackbarHostState) {
                 scaffoldState.snackbarHostState.showSnackbar(
                     message = libraryDeleteState.message
                 )
@@ -239,7 +236,7 @@ private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: Scaf
         }
         is LibraryDeleteState.Deleted -> {
             val message = stringResource(R.string.library_deleted)
-            coroutineScope.launch {
+            LaunchedEffect(scaffoldState.snackbarHostState) {
                 scaffoldState.snackbarHostState.showSnackbar(
                     message = message
                 )
