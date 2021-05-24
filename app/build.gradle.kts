@@ -10,7 +10,6 @@ plugins {
 android {
 
     compileSdk = Versions.compileSdkVersion
-    buildToolsVersion = Versions.buildToolsVersion
 
     defaultConfig {
         applicationId = "ir.fallahpoor.releasetracker"

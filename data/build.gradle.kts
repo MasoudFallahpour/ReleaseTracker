@@ -11,7 +11,6 @@ val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToke
 android {
 
     compileSdk = Versions.compileSdkVersion
-    buildToolsVersion = Versions.buildToolsVersion
 
     defaultConfig {
         minSdk = Versions.minSdkVersion
