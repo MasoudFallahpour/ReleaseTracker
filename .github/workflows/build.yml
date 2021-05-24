@@ -21,7 +21,9 @@ jobs:
           java-version: '11'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build with Gradle
+      - name: Create local.properties file
         env:
           accessToken: ${{ secrets.ACCESS_TOKEN }}
+          run: echo accessToken=$accessToken > ./local.properties
+      - name: Build with Gradle
         run: ./gradlew build
