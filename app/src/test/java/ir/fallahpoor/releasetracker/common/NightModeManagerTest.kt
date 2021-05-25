@@ -93,7 +93,7 @@ class NightModeManagerTest {
         val actualIsNightModeOn = nightModeManager.isNightModeOn()
 
         // Then
-        Truth.assertThat(actualIsNightModeOn).isTrue()
+        Truth.assertThat(actualIsNightModeOn).isFalse()
 
     }
 
