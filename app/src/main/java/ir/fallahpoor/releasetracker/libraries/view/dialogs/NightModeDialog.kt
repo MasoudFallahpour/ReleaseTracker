@@ -9,10 +9,7 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -52,7 +49,7 @@ private fun NightModeScreen(
     onNightModeClick: (NightMode) -> Unit
 ) {
     Column {
-        var currentNightMode by mutableStateOf(defaultNightMode)
+        var currentNightMode by remember { mutableStateOf(defaultNightMode) }
         NightMode.values().forEach {
             NightModeItem(
                 text = it.value,
