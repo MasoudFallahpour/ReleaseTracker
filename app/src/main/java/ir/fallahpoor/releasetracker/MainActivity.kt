@@ -22,7 +22,6 @@ import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.Screen
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import javax.inject.Inject
@@ -35,9 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var nightModeManager: NightModeManager
-
-    @Inject
-    lateinit var localStorage: Storage
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -61,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     LibrariesListScreen(
                         librariesViewModel = librariesViewModel,
                         nightModeManager = nightModeManager,
-                        currentSortOrder = localStorage.getSortOrder(),
+                        currentSortOrder = librariesViewModel.currentSortOrder,
                         onLibraryClick = { library: Library ->
                             val intent = Intent(Intent.ACTION_VIEW).apply {
                                 data = Uri.parse(library.url)

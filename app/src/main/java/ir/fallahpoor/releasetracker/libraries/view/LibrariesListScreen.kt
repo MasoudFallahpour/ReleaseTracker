@@ -74,6 +74,7 @@ fun LibrariesListScreen(
                     },
                     currentSortOrder = currentSortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
+                        librariesViewModel.currentSortOrder = sortOrder
                         librariesViewModel.getLibraries(sortOrder)
                     },
                     isNightModeSupported = nightModeManager.isNightModeSupported,

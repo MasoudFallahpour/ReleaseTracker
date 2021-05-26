@@ -1,5 +1,8 @@
 package ir.fallahpoor.releasetracker.libraries.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.common.SingleLiveData
@@ -27,15 +30,14 @@ class LibrariesViewModel
     private val triggerLiveData = MutableLiveData<Unit>()
 
     val librariesListState: LiveData<LibrariesListState> = triggerLiveData.switchMap {
-        storage.setSortOrder(sortOrder)
-        libraryRepository.getLibraries(sortOrder, searchTerm)
+        storage.setSortOrder(currentSortOrder)
+        libraryRepository.getLibraries(currentSortOrder, searchTerm)
             .map {
                 LibrariesListState.LibrariesLoaded(it)
             }
             .asLiveData()
     }
 
-    private var sortOrder: SortOrder = storage.getSortOrder()
     private var searchTerm = ""
 
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
@@ -45,11 +47,13 @@ class LibrariesViewModel
         libraryRepository.getLastUpdateCheck()
             .asLiveData()
 
+    var currentSortOrder by mutableStateOf(storage.getSortOrder())
+
     fun getLibraries(
         sortOrder: SortOrder = storage.getSortOrder(),
         searchTerm: String = this.searchTerm
     ) {
-        this.sortOrder = sortOrder
+        this.currentSortOrder = sortOrder
         this.searchTerm = searchTerm
         triggerLiveData.value = Unit
     }
