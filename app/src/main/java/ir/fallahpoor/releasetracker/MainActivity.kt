@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     )
                     AddLibraryScreen(
                         addLibraryViewModel = addLibraryViewModel,
-                        isDarkTheme = nightModeManager.isNightModeOn(),
+                        isDarkTheme = nightModeManager.isNightModeOn,
                         onBackClick = {
                             navController.navigateUp()
                         }

@@ -17,7 +17,7 @@ class NightModeManager
     private val storage: Storage
 ) {
 
-    val isNightModeOn: LiveData<Boolean> = storage.getNightModeAsFlow()
+    val isNightModeOnLiveData: LiveData<Boolean> = storage.getNightModeAsFlow()
         .asLiveData()
         .map { mode: NightMode ->
             when (mode) {
@@ -27,16 +27,25 @@ class NightModeManager
             }
         }
 
+    val isNightModeOn: Boolean
+        get() = when (currentNightMode) {
+            NightMode.OFF -> false
+            NightMode.ON -> true
+            NightMode.AUTO -> isSystemInDarkTheme()
+        }
+
+    val nightModeLiveData: LiveData<NightMode> = storage.getNightModeAsFlow().asLiveData()
+
+    val currentNightMode: NightMode
+        get() = storage.getNightMode()
+
     val isNightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-    fun setNightMode(newNightMode: NightMode) {
-        val currentNightMode = getNightMode()
-        if (newNightMode != currentNightMode) {
-            setMode(newNightMode)
+    fun setNightMode(nightMode: NightMode) {
+        if (nightMode != currentNightMode) {
+            setMode(nightMode)
         }
     }
-
-    fun getNightMode(): NightMode = storage.getNightMode()
 
     private fun setMode(nightMode: NightMode) {
         when (nightMode) {
@@ -45,14 +54,6 @@ class NightModeManager
             NightMode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
         storage.setNightMode(nightMode)
-    }
-
-    fun isNightModeOn(): Boolean {
-        return when (getNightMode()) {
-            NightMode.OFF -> false
-            NightMode.ON -> true
-            NightMode.AUTO -> isSystemInDarkTheme()
-        }
     }
 
     private fun isSystemInDarkTheme(): Boolean {

@@ -48,7 +48,7 @@ class NightModeManagerTest {
         fakeStorage.setNightMode(expectedNightMode)
 
         // When
-        val actualNightMode = nightModeManager.getNightMode()
+        val actualNightMode = nightModeManager.currentNightMode
 
         // Then
         Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
@@ -62,7 +62,7 @@ class NightModeManagerTest {
         fakeStorage.setNightMode(NightMode.OFF)
 
         // When
-        val actualIsNightModeOn = nightModeManager.isNightModeOn()
+        val actualIsNightModeOn = nightModeManager.isNightModeOn
 
         // Then
         Truth.assertThat(actualIsNightModeOn).isFalse()
@@ -76,7 +76,7 @@ class NightModeManagerTest {
         fakeStorage.setNightMode(NightMode.ON)
 
         // When
-        val actualIsNightModeOn = nightModeManager.isNightModeOn()
+        val actualIsNightModeOn = nightModeManager.isNightModeOn
 
         // Then
         Truth.assertThat(actualIsNightModeOn).isTrue()
@@ -90,7 +90,7 @@ class NightModeManagerTest {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         // When
-        val actualIsNightModeOn = nightModeManager.isNightModeOn()
+        val actualIsNightModeOn = nightModeManager.isNightModeOn
 
         // Then
         Truth.assertThat(actualIsNightModeOn).isFalse()

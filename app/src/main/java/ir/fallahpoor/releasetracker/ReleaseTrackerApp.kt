@@ -27,7 +27,7 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
         notificationManager.createNotificationChannel()
         setupTimber()
         startUpdateWorker()
-        nightModeManager.setNightMode(nightModeManager.getNightMode())
+        nightModeManager.setNightMode(nightModeManager.currentNightMode)
     }
 
     private fun setupTimber() {

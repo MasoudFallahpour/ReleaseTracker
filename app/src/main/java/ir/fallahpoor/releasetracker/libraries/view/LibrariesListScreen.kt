@@ -27,6 +27,7 @@ import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.Toolbar
 import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
@@ -49,8 +50,11 @@ fun LibrariesListScreen(
     val libraryDeleteState: LibraryDeleteState by librariesViewModel.deleteState.observeAsState(
         LibraryDeleteState.Fresh
     )
-    val isNightModeOn: Boolean by nightModeManager.isNightModeOn.observeAsState(
-        nightModeManager.isNightModeOn()
+    val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
+        nightModeManager.isNightModeOn
+    )
+    val nightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
+        nightModeManager.currentNightMode
     )
     val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
     val scaffoldState = rememberScaffoldState()
@@ -77,7 +81,7 @@ fun LibrariesListScreen(
                         librariesViewModel.getLibraries(sortOrder)
                     },
                     isNightModeSupported = nightModeManager.isNightModeSupported,
-                    currentNightMode = nightModeManager.getNightMode(),
+                    currentNightMode = nightMode,
                     onNightModeChange = nightModeManager::setNightMode,
                     onSearchQueryChange = { query: String ->
                         librariesViewModel.getLibraries(searchTerm = query)
