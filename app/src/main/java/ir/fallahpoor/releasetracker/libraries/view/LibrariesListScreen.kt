@@ -39,7 +39,6 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel,
     nightModeManager: NightModeManager,
-    currentSortOrder: SortOrder,
     onLibraryClick: (Library) -> Unit,
     onAddLibraryClick: () -> Unit
 ) {
@@ -72,7 +71,7 @@ fun LibrariesListScreen(
                             librariesViewModel.getLibraries(searchTerm = "")
                         }
                     },
-                    currentSortOrder = currentSortOrder,
+                    currentSortOrder = librariesViewModel.currentSortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
                         librariesViewModel.currentSortOrder = sortOrder
                         librariesViewModel.getLibraries(sortOrder)

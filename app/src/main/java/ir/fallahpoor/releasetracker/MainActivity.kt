@@ -27,7 +27,6 @@ import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import javax.inject.Inject
 
 // FIXME: when navigating back from AddLibraryScreen, LibrariesListScreen runs twice.
-// FIXME: app crashes when clicking on a library
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -57,7 +56,6 @@ class MainActivity : AppCompatActivity() {
                     LibrariesListScreen(
                         librariesViewModel = librariesViewModel,
                         nightModeManager = nightModeManager,
-                        currentSortOrder = librariesViewModel.currentSortOrder,
                         onLibraryClick = { library: Library ->
                             val intent = Intent(Intent.ACTION_VIEW).apply {
                                 data = Uri.parse(library.url)
