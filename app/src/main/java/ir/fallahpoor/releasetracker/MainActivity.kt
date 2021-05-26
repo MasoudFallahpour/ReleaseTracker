@@ -1,6 +1,5 @@
 package ir.fallahpoor.releasetracker
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -50,7 +49,6 @@ class MainActivity : AppCompatActivity() {
                     route = Screen.LibrariesList.route
                 ) { navBackStackEntry: NavBackStackEntry ->
                     val librariesViewModel = getViewModel<LibrariesViewModel>(
-                        context = LocalContext.current,
                         navBackStackEntry = navBackStackEntry
                     )
                     LibrariesListScreen(
@@ -71,7 +69,6 @@ class MainActivity : AppCompatActivity() {
                     route = Screen.AddLibrary.route
                 ) { navBackStackEntry: NavBackStackEntry ->
                     val addLibraryViewModel = getViewModel<AddLibraryViewModel>(
-                        context = LocalContext.current,
                         navBackStackEntry = navBackStackEntry
                     )
                     AddLibraryScreen(
@@ -90,10 +87,9 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private inline fun <reified T : ViewModel> getViewModel(
-        context: Context,
         navBackStackEntry: NavBackStackEntry
     ): T {
-        val factory = HiltViewModelFactory(context, navBackStackEntry)
+        val factory = HiltViewModelFactory(LocalContext.current, navBackStackEntry)
         return viewModel(T::class.simpleName, factory)
     }
 
