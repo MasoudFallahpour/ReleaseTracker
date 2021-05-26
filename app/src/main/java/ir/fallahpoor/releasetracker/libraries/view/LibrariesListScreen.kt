@@ -148,7 +148,7 @@ private fun LibrariesListContent(
     ) {
         LastUpdateCheckText(lastUpdateCheck)
         when (librariesListState) {
-            is LibrariesListState.Loading -> CircularProgressIndicator()
+            is LibrariesListState.Loading -> ProgressIndicator()
             is LibrariesListState.LibrariesLoaded -> {
                 val libraries: List<Library> = librariesListState.libraries
                 LibrariesList(
@@ -164,6 +164,16 @@ private fun LibrariesListContent(
             LibrariesListState.Fresh -> {
             }
         }
+    }
+}
+
+@Composable
+private fun ProgressIndicator() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
     }
 }
 
