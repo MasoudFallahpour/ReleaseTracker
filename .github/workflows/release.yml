@@ -2,11 +2,8 @@ name: Release APK on GitHub
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
 
