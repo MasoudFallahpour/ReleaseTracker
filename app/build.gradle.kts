@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("dagger.hilt.android.plugin")
@@ -7,8 +9,11 @@ plugins {
     kotlin("kapt")
 }
 
-android {
+val properties: java.util.Properties = gradleLocalProperties(rootDir)
+val sp: String = properties.getProperty("storePassword")
+val kp: String = properties.getProperty("keyPassword")
 
+android {
     compileSdk = Versions.compileSdkVersion
 
     defaultConfig {
@@ -17,6 +22,16 @@ android {
         targetSdk = Versions.targetSdkVersion
         versionCode = Versions.versionCode
         versionName = Versions.versionName
+        setProperty("archivesBaseName", "ReleaseTracker")
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("../SigningKey.jks")
+            storePassword = sp
+            keyAlias = "android app signing certificate"
+            keyPassword = kp
+        }
     }
 
     buildTypes {
@@ -29,6 +44,7 @@ android {
                 ),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
