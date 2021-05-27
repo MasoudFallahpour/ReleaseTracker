@@ -1,0 +1,56 @@
+name: Release APK on GitHub
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  release:
+
+    name: Release APK on GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Create local.properties file
+        env:
+          accessToken: ${{ secrets.ACCESS_TOKEN }}
+          storePassword: ${{ secrets.STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo accessToken=$accessToken > ./local.properties
+          echo storePassword=$storePassword >> ./local.properties
+          echo keyPassword=$keyPassword >> ./local.properties
+
+      - name: Generate APK
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: apk
+          path: app/build/outputs/apk/release/ReleaseTracker-release.apk
+
+      - name: Create GitHub release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
