@@ -43,14 +43,12 @@ jobs:
       - name: Generate APK
         run: ./gradlew assembleRelease
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v2
-        with:
-          name: apk
-          path: app/build/outputs/apk/release/ReleaseTracker-release.apk
-
       - name: Create GitHub release
         id: create_release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          artifact: "app/build/outputs/apk/release/ReleaseTracker-release.apk"
+          artifactContentType: "application/vnd.android.package-archive"
+          bodyFile: "CHANGELOG.md"
+          artifactErrorsFailBuild: true
