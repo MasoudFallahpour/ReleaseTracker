@@ -1,9 +1,15 @@
 # Release Tracker \[ 🚧 Work in progress 🚧 \]
-Release Tracker is an Android app that shows the latest version of Github-hosted libraries, tools, frameworks, or whatever!
 
-By default it's pre-populated with a list of some popular Android libraries, and you can add your own libraries too.
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoodfallahpoor/ReleaseTracker?label=Latest%20version&style=flat-square)
+
+Release Tracker is an Android app that shows the latest version of Github-hosted libraries, tools,
+frameworks, or whatever!
+
+By default it's pre-populated with a list of some popular Android libraries, and you can add your
+own libraries too.
 
 # Screenshots
+
 ![Screenshots](/screenshots/screenshots_1.png?raw=true "Screenshots")
 ![Screenshots](/screenshots/screenshots_2.png?raw=true "Screenshots")
 
@@ -36,7 +42,9 @@ the tech stack of Release Tracker:
 - Timber
 
 # Contributing
-Pull requests are welcome! If you have a feature request or bug report, please open a new issue so it could be tracked.
+
+Pull requests are welcome! Please make your pull requests against the `dev` branch. If you have a
+feature request or bug report, please open a new issue so it could be tracked.
 
 License
 =======
