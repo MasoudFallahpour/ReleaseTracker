@@ -1,10 +1,14 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -21,11 +25,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.NightModeManager
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.Toolbar
 import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
+import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
@@ -35,6 +39,7 @@ import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
+@ExperimentalAnimationApi
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrariesListScreen(
@@ -134,6 +139,7 @@ fun LibrariesListScreen(
 
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 private fun LibrariesListContent(
@@ -191,6 +197,7 @@ private fun LastUpdateCheckText(lastUpdateCheck: String) {
     )
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 private fun LibrariesList(
@@ -206,6 +213,7 @@ private fun LibrariesList(
         contentAlignment = Alignment.BottomStart,
         modifier = Modifier.fillMaxSize()
     ) {
+        val listState = rememberLazyListState()
         if (libraries.isEmpty()) {
             NoLibrariesText()
         } else {
@@ -215,9 +223,15 @@ private fun LibrariesList(
                 )
             }
             LazyColumn(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                state = listState
             ) {
-                itemsIndexed(libraries) { index: Int, library: Library ->
+                itemsIndexed(
+                    items = libraries,
+                    key = { _, library ->
+                        library.name
+                    }
+                ) { index: Int, library: Library ->
                     LibraryItem(
                         library = library,
                         onLibraryClick = onLibraryClick,
@@ -230,12 +244,21 @@ private fun LibrariesList(
                 }
             }
         }
+        val showAddLibraryButton by remember {
+            derivedStateOf {
+                !listState.isEndReached()
+            }
+        }
         AddLibraryButton(
+            show = showAddLibraryButton,
             clickListener = onAddLibraryClick
         )
         Snackbar(libraryDeleteState, scaffoldState)
     }
 }
+
+fun LazyListState.isEndReached() =
+    layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
 
 @Composable
 private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: ScaffoldState) {
@@ -367,19 +390,28 @@ private fun EllipsisText(text: String, style: TextStyle, modifier: Modifier = Mo
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
-private fun AddLibraryButton(clickListener: () -> Unit) {
-    FloatingActionButton(
-        onClick = clickListener,
-        modifier = Modifier.padding(SPACE_NORMAL.dp)
+private fun AddLibraryButton(
+    show: Boolean,
+    clickListener: () -> Unit
+) {
+    AnimatedVisibility(
+        visible = show
     ) {
-        Icon(
-            imageVector = Icons.Filled.Add,
-            contentDescription = stringResource(R.string.add_library)
-        )
+        FloatingActionButton(
+            onClick = clickListener,
+            modifier = Modifier.padding(SPACE_NORMAL.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = stringResource(R.string.add_library)
+            )
+        }
     }
 }
 
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Preview
 @Composable

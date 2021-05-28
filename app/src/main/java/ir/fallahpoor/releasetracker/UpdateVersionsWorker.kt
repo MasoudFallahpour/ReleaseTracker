@@ -1,12 +1,13 @@
 package ir.fallahpoor.releasetracker
 
 import android.content.Context
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import ir.fallahpoor.releasetracker.common.NotificationManager
+import ir.fallahpoor.releasetracker.common.managers.NotificationManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
@@ -14,6 +15,7 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
+@ExperimentalAnimationApi
 @HiltWorker
 class UpdateVersionsWorker
 @AssistedInject constructor(
