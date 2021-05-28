@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
 import dagger.hilt.android.HiltAndroidApp
-import ir.fallahpoor.releasetracker.common.NightModeManager
-import ir.fallahpoor.releasetracker.common.NotificationManager
+import ir.fallahpoor.releasetracker.common.managers.NightModeManager
+import ir.fallahpoor.releasetracker.common.managers.NotificationManager
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

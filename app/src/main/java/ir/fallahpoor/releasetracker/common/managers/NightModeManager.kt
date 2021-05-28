@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.common
+package ir.fallahpoor.releasetracker.common.managers
 
 import android.content.Context
 import android.content.res.Configuration
