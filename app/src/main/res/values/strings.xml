@@ -2,7 +2,7 @@
     <string name="app_name">Release Tracker</string>
     <string name="add_library">Add library</string>
     <string name="library_name">Library name</string>
-    <string name="library_url">Library URL</string>
+    <string name="library_url">Library URL (in form of [owner]/[repo])</string>
     <string name="library_added">Library added successfully</string>
     <string name="library_name_empty">Library name cannot be empty</string>
     <string name="library_url_empty">Library URL cannot be empty</string>
