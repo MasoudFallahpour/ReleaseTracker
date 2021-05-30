@@ -2,6 +2,8 @@ package ir.fallahpoor.releasetracker.libraries.view
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -397,7 +399,9 @@ private fun AddLibraryButton(
     clickListener: () -> Unit
 ) {
     AnimatedVisibility(
-        visible = show
+        visible = show,
+        enter = fadeIn(),
+        exit = fadeOut()
     ) {
         FloatingActionButton(
             onClick = clickListener,
