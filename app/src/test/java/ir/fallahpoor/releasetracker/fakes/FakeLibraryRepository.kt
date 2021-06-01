@@ -4,10 +4,13 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import java.io.IOException
 
 class FakeLibraryRepository : LibraryRepository {
 
     companion object {
+        const val LIBRARY_NAME_TO_CAUSE_ERROR = "someLibraryName"
         const val LIBRARY_VERSION = "0.2"
     }
 
@@ -18,11 +21,15 @@ class FakeLibraryRepository : LibraryRepository {
         libraryUrl: String,
         libraryVersion: String
     ) {
-        val library: Library? = libraries.find { it.name == libraryName }
-        if (library != null) {
-            throw RuntimeException()
+        if (libraryName == LIBRARY_NAME_TO_CAUSE_ERROR) {
+            throw IOException()
         } else {
-            libraries.add(Library(libraryName, libraryUrl, libraryVersion, 0))
+            val library: Library? = libraries.find { it.name == libraryName }
+            if (library != null) {
+                throw IOException()
+            } else {
+                libraries.add(Library(libraryName, libraryUrl, libraryVersion, 0))
+            }
         }
     }
 
@@ -43,7 +50,11 @@ class FakeLibraryRepository : LibraryRepository {
     override suspend fun getLibraries(): List<Library> = libraries
 
     override suspend fun deleteLibrary(library: Library) {
-        libraries.removeIf { it.name == library.name }
+        if (library.name == LIBRARY_NAME_TO_CAUSE_ERROR) {
+            throw IOException()
+        } else {
+            libraries.removeIf { it.name == library.name }
+        }
     }
 
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
@@ -55,9 +66,10 @@ class FakeLibraryRepository : LibraryRepository {
         updateLibrary(library.copy(pinned = if (pinned) 1 else 0))
     }
 
-    override fun getLastUpdateCheck(): Flow<String> {
-        TODO("Not yet implemented")
-    }
+    override fun getLastUpdateCheck(): Flow<String> =
+        flow {
+            emit("Jan 14 2021 14:20")
+        }
 
     override fun setLastUpdateCheck(date: String) {
         TODO("Not yet implemented")

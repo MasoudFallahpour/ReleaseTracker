@@ -138,4 +138,24 @@ class AddLibraryViewModelTest {
 
         }
 
+    @Test
+    fun `addLibrary() should set the state to Error when there is an unexpected error`() =
+        runBlockingTest {
+
+            // Given
+            val libraryName: String = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR
+
+            // When
+            addLibraryViewModel.addLibrary(
+                libraryName = libraryName,
+                libraryUrl = LIBRARY_URL
+            )
+
+            // Then
+            Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
+            Truth.assertThat(addLibraryViewModel.state.value)
+                .isInstanceOf(AddLibraryState.Error::class.java)
+
+        }
+
 }
