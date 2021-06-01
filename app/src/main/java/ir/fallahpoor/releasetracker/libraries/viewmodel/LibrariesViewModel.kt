@@ -75,14 +75,16 @@ class LibrariesViewModel
 
         _deleteLiveData.value = LibraryDeleteState.InProgress
 
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+
+            try {
                 libraryRepository.deleteLibrary(library)
                 _deleteLiveData.value = LibraryDeleteState.Deleted
+            } catch (t: Throwable) {
+                val message = exceptionParser.getMessage(t)
+                _deleteLiveData.value = LibraryDeleteState.Error(message)
             }
-        } catch (t: Throwable) {
-            val message = exceptionParser.getMessage(t)
-            _deleteLiveData.value = LibraryDeleteState.Error(message)
+
         }
 
     }
