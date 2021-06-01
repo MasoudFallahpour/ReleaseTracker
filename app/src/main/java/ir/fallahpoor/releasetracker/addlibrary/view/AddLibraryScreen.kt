@@ -30,9 +30,8 @@ import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
+import ir.fallahpoor.releasetracker.common.composables.OutlinedTextFieldWithPrefix
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
-
-// TODO: 'library name' TextField should have a prefix with text 'https://github.com/'.
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -90,9 +89,7 @@ fun AddLibraryScreen(
 
 @Composable
 private fun BackButton(onBackClick: () -> Unit) {
-    IconButton(
-        onClick = onBackClick
-    ) {
+    IconButton(onClick = onBackClick) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = null
@@ -111,9 +108,7 @@ private fun AddLibraryContent(
     onAddLibrary: (libraryName: String, libraryUrl: String) -> Unit,
 ) {
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         if (state is AddLibraryState.Loading) {
             ProgressIndicator()
         }
@@ -129,12 +124,8 @@ private fun AddLibraryContent(
                 },
                 isError = state is AddLibraryState.EmptyLibraryName
             )
-            LibraryNameErrorText(
-                show = state is AddLibraryState.EmptyLibraryName
-            )
-            Spacer(
-                modifier = Modifier.height(SPACE_SMALL.dp)
-            )
+            LibraryNameErrorText(show = state is AddLibraryState.EmptyLibraryName)
+            Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
             LibraryUrlTextField(
                 libraryUrl = libraryUrl,
                 onLibraryUrlChange = onLibraryUrlChange,
@@ -195,9 +186,7 @@ private fun LibraryNameTextField(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun LibraryNameErrorText(show: Boolean) {
-    AnimatedVisibility(
-        visible = show
-    ) {
+    AnimatedVisibility(visible = show) {
         ErrorText(R.string.library_name_empty)
     }
 }
@@ -210,9 +199,10 @@ private fun LibraryUrlTextField(
     onDoneClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    TextFieldWithHint(
-        text = libraryUrl,
+    OutlinedTextFieldWithPrefix(
+        prefix = stringResource(R.string.github_base_url),
         hint = stringResource(R.string.library_url),
+        text = libraryUrl,
         onTextChange = onLibraryUrlChange,
         imeAction = ImeAction.Done,
         keyboardActions = KeyboardActions(
@@ -229,14 +219,10 @@ private fun LibraryUrlTextField(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun LibraryUrlErrorText(state: AddLibraryState) {
-    AnimatedVisibility(
-        visible = state is AddLibraryState.EmptyLibraryUrl
-    ) {
+    AnimatedVisibility(visible = state is AddLibraryState.EmptyLibraryUrl) {
         ErrorText(R.string.library_url_empty)
     }
-    AnimatedVisibility(
-        visible = state is AddLibraryState.InvalidLibraryUrl
-    ) {
+    AnimatedVisibility(visible = state is AddLibraryState.InvalidLibraryUrl) {
         ErrorText(R.string.library_url_invalid)
     }
 }
@@ -281,28 +267,24 @@ private fun Snackbar(state: AddLibraryState, scaffoldState: ScaffoldState) {
         }
     }
 
-    DefaultSnackbar(
-        snackbarHostState = scaffoldState.snackbarHostState
-    )
+    DefaultSnackbar(snackbarHostState = scaffoldState.snackbarHostState)
 
 }
 
 @Composable
 private fun TextFieldWithHint(
-    text: String,
+    modifier: Modifier,
     hint: String,
+    text: String,
     onTextChange: (String) -> Unit,
     imeAction: ImeAction,
     keyboardActions: KeyboardActions = KeyboardActions(),
-    isError: Boolean,
-    modifier: Modifier
+    isError: Boolean
 ) {
     OutlinedTextField(
         value = text,
         label = {
-            Text(
-                text = hint
-            )
+            Text(text = hint)
         },
         onValueChange = onTextChange,
         keyboardOptions = KeyboardOptions(
