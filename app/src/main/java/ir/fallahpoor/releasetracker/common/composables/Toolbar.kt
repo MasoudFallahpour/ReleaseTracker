@@ -8,11 +8,11 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.releasetracker.R
@@ -106,7 +106,7 @@ private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (Sor
         }
     ) {
         Icon(
-            imageVector = Icons.Filled.Sort,
+            painter = painterResource(R.drawable.ic_sort),
             contentDescription = stringResource(R.string.sort)
         )
     }

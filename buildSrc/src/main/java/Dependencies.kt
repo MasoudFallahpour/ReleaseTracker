@@ -46,8 +46,6 @@ object Dependencies {
         const val composeUi = "androidx.compose.ui:ui:${Versions.composeVersion}"
         const val composeTooling = "androidx.compose.ui:ui-tooling:${Versions.composeVersion}"
         const val composeMaterial = "androidx.compose.material:material:${Versions.composeVersion}"
-        const val composeMaterialIcons =
-            "androidx.compose.material:material-icons-extended:${Versions.composeVersion}"
         const val composeRuntime = "androidx.compose.runtime:runtime:${Versions.composeVersion}"
         const val composeRuntimeLiveData =
             "androidx.compose.runtime:runtime-livedata:${Versions.composeVersion}"

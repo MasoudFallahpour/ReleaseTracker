@@ -97,7 +97,6 @@ dependencies {
     implementation(Dependencies.App.composeUi)
     implementation(Dependencies.App.composeTooling)
     implementation(Dependencies.App.composeMaterial)
-    implementation(Dependencies.App.composeMaterialIcons)
     implementation(Dependencies.App.composeRuntime)
     implementation(Dependencies.App.composeRuntimeLiveData)
 

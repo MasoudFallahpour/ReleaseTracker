@@ -9,13 +9,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -322,12 +321,12 @@ private fun PinToggleButton(library: Library, onPinCheckedChange: (Library, Bool
         }
     ) {
         val pinImage = if (library.isPinned()) {
-            Icons.Filled.PushPin
+            painterResource(R.drawable.ic_pin_filled)
         } else {
-            Icons.Outlined.PushPin
+            painterResource(R.drawable.ic_pin_outline)
         }
         Icon(
-            imageVector = pinImage,
+            painter = pinImage,
             tint = MaterialTheme.colors.secondary,
             contentDescription = stringResource(R.string.pin_library)
         )
