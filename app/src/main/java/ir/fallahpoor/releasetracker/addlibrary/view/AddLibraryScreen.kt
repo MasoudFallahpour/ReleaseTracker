@@ -105,7 +105,7 @@ private fun AddLibraryContent(
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
-        if (state is AddLibraryState.Loading) {
+        if (state is AddLibraryState.InProgress) {
             ProgressIndicator()
         }
         Column(
@@ -133,7 +133,7 @@ private fun AddLibraryContent(
             LibraryUrlErrorText(state = state)
         }
         AddLibraryButton(
-            isEnabled = state !is AddLibraryState.Loading,
+            isEnabled = state !is AddLibraryState.InProgress,
             clickListener = {
                 onAddLibrary(libraryName, libraryUrl)
             }

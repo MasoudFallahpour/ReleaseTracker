@@ -44,7 +44,7 @@ class AddLibraryViewModel
             return
         }
 
-        _state.value = AddLibraryState.Loading
+        _state.value = AddLibraryState.InProgress
 
         viewModelScope.launch {
 
