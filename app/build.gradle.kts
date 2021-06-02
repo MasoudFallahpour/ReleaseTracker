@@ -89,8 +89,8 @@ dependencies {
     implementation(Dependencies.App.crashlytics)
 
     implementation(Dependencies.App.hiltAndroid)
-    implementation(Dependencies.App.hiltNavigation)
     implementation(Dependencies.App.hiltWorkManager)
+    implementation(Dependencies.App.hiltNavigationCompose)
     kapt(Dependencies.App.hiltAndroidCompiler)
     kapt(Dependencies.App.hiltCompiler)
 

@@ -28,7 +28,7 @@ object Dependencies {
         const val workManager = "androidx.work:work-runtime-ktx:2.5.0"
         const val preference = "androidx.preference:preference-ktx:1.1.0"
         const val activityCompose = "androidx.activity:activity-compose:1.3.0-alpha03"
-        const val navigationCompose = "androidx.navigation:navigation-compose:1.0.0-alpha08"
+        const val navigationCompose = "androidx.navigation:navigation-compose:2.4.0-alpha01"
         const val material = "com.google.android.material:material:1.3.0-rc01"
         const val timber = "com.jakewharton.timber:timber:4.7.1"
         const val rxkprefs = Common.rxkprefs
@@ -38,8 +38,7 @@ object Dependencies {
             "com.google.dagger:hilt-android-compiler:${Versions.hiltVersion}"
         const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltJetpackVersion}"
         const val hiltWorkManager = "androidx.hilt:hilt-work:${Versions.hiltJetpackVersion}"
-        const val hiltNavigation =
-            "androidx.hilt:hilt-navigation-fragment:${Versions.hiltJetpackVersion}"
+        const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha02"
 
         const val firebase = "com.google.firebase:firebase-bom:25.12.0"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
