@@ -19,17 +19,11 @@ fun DeleteLibraryDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         text = {
-            Text(
-                text = stringResource(R.string.delete_selected_library, libraryName)
-            )
+            Text(text = stringResource(R.string.delete_selected_library, libraryName))
         },
         confirmButton = {
-            Button(
-                onClick = onDeleteClicked
-            ) {
-                Text(
-                    text = stringResource(R.string.delete)
-                )
+            Button(onClick = onDeleteClicked) {
+                Text(text = stringResource(R.string.delete))
             }
         }
     )

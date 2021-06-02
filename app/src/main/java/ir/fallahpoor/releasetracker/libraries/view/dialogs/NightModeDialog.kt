@@ -29,9 +29,7 @@ fun NightModeDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(
-                text = stringResource(R.string.select_night_mode)
-            )
+            Text(text = stringResource(R.string.select_night_mode))
         },
         text = {
             NightModeScreen(
@@ -90,9 +88,7 @@ private fun NightModeItem(
                 bottom = SPACE_SMALL.dp
             )
         )
-        Text(
-            text = text
-        )
+        Text(text = text)
     }
 }
 

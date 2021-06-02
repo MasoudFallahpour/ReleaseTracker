@@ -44,9 +44,7 @@ fun Toolbar(
 
         var searchQuery by rememberSaveable { mutableStateOf("") }
 
-        Box(
-            contentAlignment = Alignment.BottomCenter
-        ) {
+        Box(contentAlignment = Alignment.BottomCenter) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -72,9 +70,7 @@ fun Toolbar(
                     )
                 }
             }
-            androidx.compose.animation.AnimatedVisibility(
-                visible = toolbarMode == ToolbarMode.Search
-            ) {
+            androidx.compose.animation.AnimatedVisibility(visible = toolbarMode == ToolbarMode.Search) {
                 SearchBar(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -131,9 +127,7 @@ private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (Sor
 
 @Composable
 private fun SearchButton(onClick: () -> Unit) {
-    IconButton(
-        onClick = onClick
-    ) {
+    IconButton(onClick = onClick) {
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = stringResource(R.string.search)

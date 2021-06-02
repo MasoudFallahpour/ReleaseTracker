@@ -15,9 +15,7 @@ fun DefaultSnackbar(
     SnackbarHost(
         hostState = snackbarHostState,
         snackbar = { snackbarData: SnackbarData ->
-            Snackbar(
-                snackbarData = snackbarData
-            )
+            Snackbar(snackbarData = snackbarData)
         },
         modifier = modifier
     )

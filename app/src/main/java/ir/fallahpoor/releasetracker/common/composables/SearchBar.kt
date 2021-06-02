@@ -26,13 +26,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.small,
-    elevation: Dp = 8.dp,
+    elevation: Dp = SPACE_SMALL.dp,
     hint: String,
     query: String,
     onQueryChange: (String) -> Unit,
@@ -49,18 +50,14 @@ fun SearchBar(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CloseButton(
-                onCloseClick = onCloseClick
-            )
+            CloseButton(onCloseClick = onCloseClick)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
                 if (query.isBlank()) {
-                    HintText(
-                        hint = hint
-                    )
+                    HintText(hint = hint)
                 }
                 SearchTextField(
                     query = query,
@@ -75,9 +72,7 @@ fun SearchBar(
 
 @Composable
 private fun CloseButton(onCloseClick: () -> Unit) {
-    IconButton(
-        onClick = onCloseClick
-    ) {
+    IconButton(onClick = onCloseClick) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = stringResource(R.string.close_search_bar)
@@ -126,9 +121,7 @@ private fun HintText(hint: String) {
 
 @Composable
 private fun ClearButton(onClearClick: () -> Unit) {
-    IconButton(
-        onClick = onClearClick
-    ) {
+    IconButton(onClick = onClearClick) {
         Icon(
             imageVector = Icons.Filled.Clear,
             contentDescription = stringResource(R.string.clear_search_field)

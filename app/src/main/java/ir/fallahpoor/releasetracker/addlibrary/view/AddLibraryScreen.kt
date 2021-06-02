@@ -48,14 +48,10 @@ fun AddLibraryScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(
-                            text = stringResource(R.string.add_library)
-                        )
+                        Text(text = stringResource(R.string.add_library))
                     },
                     navigationIcon = {
-                        BackButton(
-                            onBackClick = onBackClick
-                        )
+                        BackButton(onBackClick = onBackClick)
                     }
                 )
             },
@@ -118,25 +114,23 @@ private fun AddLibraryContent(
                 .padding(SPACE_NORMAL.dp)
         ) {
             LibraryNameTextField(
-                libraryName = libraryName,
-                onLibraryNameChange = { libraryName: String ->
-                    onLibraryNameChange(libraryName)
+                text = libraryName,
+                onTextChange = { text: String ->
+                    onLibraryNameChange(text)
                 },
                 isError = state is AddLibraryState.EmptyLibraryName
             )
             LibraryNameErrorText(show = state is AddLibraryState.EmptyLibraryName)
             Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
             LibraryUrlTextField(
-                libraryUrl = libraryUrl,
-                onLibraryUrlChange = onLibraryUrlChange,
+                text = libraryUrl,
+                onTextChange = onLibraryUrlChange,
                 isError = state is AddLibraryState.EmptyLibraryUrl || state is AddLibraryState.InvalidLibraryUrl,
                 onDoneClick = {
                     onAddLibrary(libraryName, libraryUrl)
                 }
             )
-            LibraryUrlErrorText(
-                state = state
-            )
+            LibraryUrlErrorText(state = state)
         }
         AddLibraryButton(
             isEnabled = state !is AddLibraryState.Loading,
@@ -163,13 +157,13 @@ private fun ProgressIndicator() {
 
 @Composable
 private fun LibraryNameTextField(
-    libraryName: String,
-    onLibraryNameChange: (String) -> Unit,
+    text: String,
+    onTextChange: (String) -> Unit,
     isError: Boolean
 ) {
     val focusManager = LocalFocusManager.current
     TextFieldWithHint(
-        text = libraryName,
+        text = text,
         hint = stringResource(R.string.library_name),
         imeAction = ImeAction.Next,
         keyboardActions = KeyboardActions(
@@ -177,7 +171,7 @@ private fun LibraryNameTextField(
                 focusManager.moveFocus(focusDirection = FocusDirection.Down)
             }
         ),
-        onTextChange = onLibraryNameChange,
+        onTextChange = onTextChange,
         modifier = Modifier.fillMaxWidth(),
         isError = isError
     )
@@ -193,8 +187,8 @@ private fun LibraryNameErrorText(show: Boolean) {
 
 @Composable
 private fun LibraryUrlTextField(
-    libraryUrl: String,
-    onLibraryUrlChange: (String) -> Unit,
+    text: String,
+    onTextChange: (String) -> Unit,
     isError: Boolean,
     onDoneClick: () -> Unit
 ) {
@@ -202,8 +196,8 @@ private fun LibraryUrlTextField(
     OutlinedTextFieldWithPrefix(
         prefix = stringResource(R.string.github_base_url),
         hint = stringResource(R.string.library_url),
-        text = libraryUrl,
-        onTextChange = onLibraryUrlChange,
+        text = text,
+        onTextChange = onTextChange,
         imeAction = ImeAction.Done,
         keyboardActions = KeyboardActions(
             onDone = {
@@ -287,9 +281,7 @@ private fun TextFieldWithHint(
             Text(text = hint)
         },
         onValueChange = onTextChange,
-        keyboardOptions = KeyboardOptions(
-            imeAction = imeAction
-        ),
+        keyboardOptions = KeyboardOptions(imeAction = imeAction),
         keyboardActions = keyboardActions,
         singleLine = true,
         isError = isError,

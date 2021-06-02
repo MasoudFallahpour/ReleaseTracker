@@ -63,9 +63,7 @@ fun LibrariesListScreen(
 
     librariesViewModel.getLibraries()
 
-    ReleaseTrackerTheme(
-        darkTheme = isNightModeOn
-    ) {
+    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
         Scaffold(
             topBar = {
                 var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
@@ -248,24 +246,18 @@ private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: Scaf
     when (libraryDeleteState) {
         is LibraryDeleteState.Error -> {
             LaunchedEffect(scaffoldState.snackbarHostState) {
-                scaffoldState.snackbarHostState.showSnackbar(
-                    message = libraryDeleteState.message
-                )
+                scaffoldState.snackbarHostState.showSnackbar(message = libraryDeleteState.message)
             }
         }
         is LibraryDeleteState.Deleted -> {
             val message = stringResource(R.string.library_deleted)
             LaunchedEffect(scaffoldState.snackbarHostState) {
-                scaffoldState.snackbarHostState.showSnackbar(
-                    message = message
-                )
+                scaffoldState.snackbarHostState.showSnackbar(message = message)
             }
         }
     }
 
-    DefaultSnackbar(
-        snackbarHostState = scaffoldState.snackbarHostState
-    )
+    DefaultSnackbar(snackbarHostState = scaffoldState.snackbarHostState)
 
 }
 
@@ -317,9 +309,7 @@ private fun LibraryItem(
             LibraryNameText(library)
             LibraryUrlText(library)
         }
-        Text(
-            text = library.version
-        )
+        Text(text = library.version)
     }
 }
 

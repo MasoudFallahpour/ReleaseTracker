@@ -31,9 +31,7 @@ fun SortOrderDialog(
             onDismiss()
         },
         title = {
-            Text(
-                text = stringResource(R.string.select_sorting_order)
-            )
+            Text(text = stringResource(R.string.select_sorting_order))
         },
         text = {
             SortOrderScreen(currentSortOrder, onSortOrderClick)
@@ -87,7 +85,8 @@ private fun SortItem(
             .clickable(
                 onClick = {
                     onSortOrderClick(sortOrder)
-                })
+                }
+            )
             .padding(SPACE_NORMAL.dp)
     )
 }
