@@ -1,16 +1,11 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -215,19 +210,13 @@ private fun LibrariesList(
         contentAlignment = Alignment.BottomStart,
         modifier = Modifier.fillMaxSize()
     ) {
-        val listState = rememberLazyListState()
         if (libraries.isEmpty()) {
             NoLibrariesText()
         } else {
             if (libraryDeleteState is LibraryDeleteState.InProgress) {
-                LinearProgressIndicator(
-                    modifier = Modifier.fillMaxWidth()
-                )
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = listState
-            ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
                 itemsIndexed(
                     items = libraries,
                     key = { _, library ->
@@ -246,21 +235,12 @@ private fun LibrariesList(
                 }
             }
         }
-        val showAddLibraryButton by remember {
-            derivedStateOf {
-                !listState.isEndReached()
-            }
-        }
         AddLibraryButton(
-            show = showAddLibraryButton,
             clickListener = onAddLibraryClick
         )
         Snackbar(libraryDeleteState, scaffoldState)
     }
 }
-
-fun LazyListState.isEndReached() =
-    layoutInfo.visibleItemsInfo.lastOrNull()?.index == layoutInfo.totalItemsCount - 1
 
 @Composable
 private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: ScaffoldState) {
@@ -395,23 +375,16 @@ private fun EllipsisText(text: String, style: TextStyle, modifier: Modifier = Mo
 @ExperimentalAnimationApi
 @Composable
 private fun AddLibraryButton(
-    show: Boolean,
     clickListener: () -> Unit
 ) {
-    AnimatedVisibility(
-        visible = show,
-        enter = fadeIn(),
-        exit = fadeOut()
+    FloatingActionButton(
+        onClick = clickListener,
+        modifier = Modifier.padding(SPACE_NORMAL.dp)
     ) {
-        FloatingActionButton(
-            onClick = clickListener,
-            modifier = Modifier.padding(SPACE_NORMAL.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = stringResource(R.string.add_library)
-            )
-        }
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = stringResource(R.string.add_library)
+        )
     }
 }
 
