@@ -6,7 +6,7 @@ object Dependencies {
         const val core = "androidx.core:core-ktx:1.3.2"
         const val rxkprefs = "com.afollestad.rxkprefs:core:${Versions.kprefs}"
         const val liveData =
-            "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifeCycleVersion}"
+            "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycleVersion}"
     }
 
     private object CommonTest {
@@ -24,7 +24,7 @@ object Dependencies {
         const val core = Common.core
         const val room = Common.room
         const val liveData = Common.liveData
-        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:${Versions.lifeCycleVersion}"
+        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:${Versions.lifecycleVersion}"
         const val workManager = "androidx.work:work-runtime-ktx:2.5.0"
         const val preference = "androidx.preference:preference-ktx:1.1.0"
         const val activityCompose = "androidx.activity:activity-compose:1.3.0-alpha03"
