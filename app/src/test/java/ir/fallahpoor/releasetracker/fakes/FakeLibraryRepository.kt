@@ -44,7 +44,21 @@ class FakeLibraryRepository : LibraryRepository {
         libraries.firstOrNull { it.name == libraryName }
 
     override fun getLibraries(sortOrder: SortOrder, searchTerm: String): Flow<List<Library>> {
-        TODO("Not yet implemented")
+
+        val filteredLibraries = libraries.filter {
+            it.name.contains(searchTerm, ignoreCase = true)
+        }
+
+        val sortedLibraries: List<Library> = when (sortOrder) {
+            SortOrder.A_TO_Z -> filteredLibraries.sortedBy { it.name }
+            SortOrder.Z_TO_A -> filteredLibraries.sortedByDescending { it.name }
+            SortOrder.PINNED_FIRST -> filteredLibraries.sortedByDescending { it.pinned }
+        }
+
+        return flow {
+            emit(sortedLibraries)
+        }
+
     }
 
     override suspend fun getLibraries(): List<Library> = libraries
