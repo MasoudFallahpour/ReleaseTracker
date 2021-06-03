@@ -30,15 +30,15 @@ class LibrariesViewModel
     private val triggerLiveData = MutableLiveData<Unit>()
 
     val librariesListState: LiveData<LibrariesListState> = triggerLiveData.switchMap {
-        storage.setSortOrder(currentSortOrder)
-        libraryRepository.getLibraries(currentSortOrder, searchTerm)
-            .map {
-                LibrariesListState.LibrariesLoaded(it)
+        libraryRepository.getLibraries(sortOrder, searchTerm)
+            .map { libraries: List<Library> ->
+                LibrariesListState.LibrariesLoaded(libraries)
             }
             .asLiveData()
     }
 
-    private var searchTerm = ""
+    var searchTerm = ""
+    var sortOrder by mutableStateOf(storage.getSortOrder())
 
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
     val deleteState: LiveData<LibraryDeleteState> = _deleteLiveData
@@ -47,13 +47,15 @@ class LibrariesViewModel
         libraryRepository.getLastUpdateCheck()
             .asLiveData()
 
-    var currentSortOrder by mutableStateOf(storage.getSortOrder())
+    fun saveSortOrder(sortOrder: SortOrder) {
+        storage.setSortOrder(sortOrder)
+    }
 
     fun getLibraries(
-        sortOrder: SortOrder = storage.getSortOrder(),
-        searchTerm: String = this.searchTerm
+        sortOrder: SortOrder,
+        searchTerm: String = ""
     ) {
-        this.currentSortOrder = sortOrder
+        this.sortOrder = sortOrder
         this.searchTerm = searchTerm
         triggerLiveData.value = Unit
     }

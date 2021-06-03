@@ -60,7 +60,7 @@ fun LibrariesListScreen(
     val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
     val scaffoldState = rememberScaffoldState()
 
-    librariesViewModel.getLibraries()
+    librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
 
     ReleaseTrackerTheme(darkTheme = isNightModeOn) {
         Scaffold(
@@ -71,25 +71,34 @@ fun LibrariesListScreen(
                     onToolbarModeChange = {
                         toolbarMode = it
                         if (it == ToolbarMode.Normal) {
-                            librariesViewModel.getLibraries(searchTerm = "")
+                            librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
                         }
                     },
-                    currentSortOrder = librariesViewModel.currentSortOrder,
+                    currentSortOrder = librariesViewModel.sortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
-                        librariesViewModel.currentSortOrder = sortOrder
-                        librariesViewModel.getLibraries(sortOrder)
+                        librariesViewModel.saveSortOrder(sortOrder)
+                        librariesViewModel.getLibraries(
+                            sortOrder = sortOrder,
+                            searchTerm = librariesViewModel.searchTerm
+                        )
                     },
                     isNightModeSupported = nightModeManager.isNightModeSupported,
                     currentNightMode = nightMode,
                     onNightModeChange = nightModeManager::setNightMode,
                     onSearchQueryChange = { query: String ->
-                        librariesViewModel.getLibraries(searchTerm = query)
+                        librariesViewModel.getLibraries(
+                            sortOrder = librariesViewModel.sortOrder,
+                            searchTerm = query
+                        )
                     },
                     onSearchQuerySubmit = { query: String ->
-                        librariesViewModel.getLibraries(searchTerm = query)
+                        librariesViewModel.getLibraries(
+                            sortOrder = librariesViewModel.sortOrder,
+                            searchTerm = query
+                        )
                     },
                     onSearchQueryClear = {
-                        librariesViewModel.getLibraries(searchTerm = "")
+                        librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
                     }
                 )
             },
