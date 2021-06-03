@@ -72,8 +72,7 @@ fun Toolbar(
             }
             androidx.compose.animation.AnimatedVisibility(visible = toolbarMode == ToolbarMode.Search) {
                 SearchBar(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     hint = stringResource(R.string.search),
                     query = searchQuery,
                     onQueryChange = {
@@ -166,9 +165,7 @@ private fun NightModeButton(
                     showNightModeDialog = true
                 }
             ) {
-                Text(
-                    text = stringResource(R.string.night_mode)
-                )
+                Text(text = stringResource(R.string.night_mode))
             }
         }
     }
