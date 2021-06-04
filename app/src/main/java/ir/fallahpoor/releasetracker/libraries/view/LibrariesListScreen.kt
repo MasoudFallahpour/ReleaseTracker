@@ -5,7 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -223,21 +223,17 @@ private fun LibrariesList(
                 LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
             }
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                itemsIndexed(
+                items(
                     items = libraries,
-                    key = { _, library ->
-                        library.name
-                    }
-                ) { index: Int, library: Library ->
+                    key = { library: Library -> library.name }
+                ) { library: Library ->
                     LibraryItem(
                         library = library,
                         onLibraryClick = onLibraryClick,
                         onLibraryLongClick = onLibraryLongClick,
                         onPinLibraryClick = onPinLibraryClick
                     )
-                    if (index != libraries.lastIndex) {
-                        Divider()
-                    }
+                    Divider()
                 }
             }
         }
