@@ -23,6 +23,7 @@ android {
         versionCode = Versions.versionCode
         versionName = Versions.versionName
         setProperty("archivesBaseName", "ReleaseTracker")
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -118,6 +119,12 @@ dependencies {
     testImplementation(Dependencies.AppTest.coroutinesTest)
     testImplementation(Dependencies.AppTest.testCore)
     testImplementation(Dependencies.AppTest.robolectric)
+
+    androidTestImplementation(Dependencies.AppTest.runner)
+    androidTestImplementation(Dependencies.AppTest.rules)
+    androidTestImplementation(Dependencies.AppTest.truth)
+    androidTestImplementation(Dependencies.AppTest.uiTestJunit)
+    debugImplementation(Dependencies.AppTest.uiTestManifest)
 
     implementation(project(":data"))
 }

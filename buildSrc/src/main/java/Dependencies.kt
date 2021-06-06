@@ -58,6 +58,10 @@ object Dependencies {
         const val coroutinesTest = CommonTest.coroutinesTest
         const val testCore = CommonTest.testCore
         const val robolectric = CommonTest.robolectric
+        const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:${Versions.composeVersion}"
+        const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:${Versions.composeVersion}"
+        const val runner = "androidx.test:runner:1.1.0"
+        const val rules = "androidx.test:rules:1.1.0"
     }
 
     object Data {

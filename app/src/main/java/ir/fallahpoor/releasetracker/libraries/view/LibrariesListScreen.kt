@@ -229,17 +229,17 @@ private fun LibrariesList(
                 ) { library: Library ->
                     LibraryItem(
                         library = library,
-                        onLibraryClick = onLibraryClick,
-                        onLibraryLongClick = onLibraryLongClick,
-                        onPinLibraryClick = onPinLibraryClick
+                        onLibraryClick = { onLibraryClick(library) },
+                        onLibraryLongClick = { onLibraryLongClick(library) },
+                        onPinLibraryClick = { pin: Boolean ->
+                            onPinLibraryClick(library, pin)
+                        }
                     )
                     Divider()
                 }
             }
         }
-        AddLibraryButton(
-            clickListener = onAddLibraryClick
-        )
+        AddLibraryButton(clickListener = onAddLibraryClick)
         Snackbar(libraryDeleteState, scaffoldState)
     }
 }
@@ -282,20 +282,16 @@ private fun NoLibrariesText() {
 @Composable
 private fun LibraryItem(
     library: Library,
-    onLibraryClick: (Library) -> Unit,
-    onLibraryLongClick: (Library) -> Unit,
-    onPinLibraryClick: (Library, Boolean) -> Unit
+    onLibraryClick: () -> Unit,
+    onLibraryLongClick: () -> Unit,
+    onPinLibraryClick: (Boolean) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .combinedClickable(
-                onClick = {
-                    onLibraryClick(library)
-                },
-                onLongClick = {
-                    onLibraryLongClick(library)
-                }
+                onClick = onLibraryClick,
+                onLongClick = onLibraryLongClick
             )
             .padding(
                 end = SPACE_NORMAL.dp,
@@ -304,28 +300,26 @@ private fun LibraryItem(
             )
     ) {
         PinToggleButton(
-            library = library,
-            onPinCheckedChange = onPinLibraryClick
+            isPinned = library.isPinned(),
+            onCheckedChange = { isPinned: Boolean ->
+                onPinLibraryClick(isPinned)
+            }
         )
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            LibraryNameText(library)
-            LibraryUrlText(library)
+        Column(modifier = Modifier.weight(1f)) {
+            LibraryNameText(libraryName = library.name)
+            LibraryUrlText(libraryUrl = library.url)
         }
         Text(text = library.version)
     }
 }
 
 @Composable
-private fun PinToggleButton(library: Library, onPinCheckedChange: (Library, Boolean) -> Unit) {
+private fun PinToggleButton(isPinned: Boolean, onCheckedChange: (Boolean) -> Unit) {
     IconToggleButton(
-        checked = library.isPinned(),
-        onCheckedChange = {
-            onPinCheckedChange(library, it)
-        }
+        checked = isPinned,
+        onCheckedChange = onCheckedChange
     ) {
-        val pinImage = if (library.isPinned()) {
+        val pinImage = if (isPinned) {
             painterResource(R.drawable.ic_pin_filled)
         } else {
             painterResource(R.drawable.ic_pin_outline)
@@ -333,23 +327,23 @@ private fun PinToggleButton(library: Library, onPinCheckedChange: (Library, Bool
         Icon(
             painter = pinImage,
             tint = MaterialTheme.colors.secondary,
-            contentDescription = stringResource(R.string.pin_library)
+            contentDescription = stringResource(R.string.pin_unpin_library)
         )
     }
 }
 
 @Composable
-private fun LibraryNameText(library: Library) {
+private fun LibraryNameText(libraryName: String) {
     EllipsisText(
-        text = library.name,
+        text = libraryName,
         style = MaterialTheme.typography.body1
     )
 }
 
 @Composable
-private fun LibraryUrlText(library: Library) {
+private fun LibraryUrlText(libraryUrl: String) {
     EllipsisText(
-        text = library.url,
+        text = libraryUrl,
         style = MaterialTheme.typography.body2,
         modifier = Modifier.padding(end = SPACE_NORMAL.dp)
     )
