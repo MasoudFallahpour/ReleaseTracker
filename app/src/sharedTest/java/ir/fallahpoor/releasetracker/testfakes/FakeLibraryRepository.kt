@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.fakes
+package ir.fallahpoor.releasetracker.testfakes
 
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository

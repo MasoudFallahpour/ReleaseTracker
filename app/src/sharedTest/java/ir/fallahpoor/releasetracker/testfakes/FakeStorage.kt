@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.fakes
+package ir.fallahpoor.releasetracker.testfakes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow

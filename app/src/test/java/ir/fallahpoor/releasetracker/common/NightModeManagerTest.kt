@@ -6,7 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.fakes.FakeStorage
+import ir.fallahpoor.releasetracker.testfakes.FakeStorage
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

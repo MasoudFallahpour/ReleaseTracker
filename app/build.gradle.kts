@@ -64,6 +64,18 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    sourceSets.getByName("test").java {
+        this.srcDir("src/sharedTest/java")
+    }
+    sourceSets.getByName("androidTest").java {
+        this.srcDir("src/sharedTest/java")
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/AL2.0")
+        resources.excludes.add("META-INF/LGPL2.1")
+    }
 }
 
 kapt {
