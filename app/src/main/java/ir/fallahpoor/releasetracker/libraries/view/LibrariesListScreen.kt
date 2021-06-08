@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
+import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.common.composables.Toolbar
 import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
@@ -51,7 +52,7 @@ fun LibrariesListScreen(
     val libraryDeleteState: LibraryDeleteState by librariesViewModel.deleteState.observeAsState(
         LibraryDeleteState.Fresh
     )
-    val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
+    val isDarkTheme: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
         nightModeManager.isNightModeOn
     )
     val nightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
@@ -62,81 +63,77 @@ fun LibrariesListScreen(
 
     librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
 
-    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
-        Scaffold(
-            topBar = {
-                var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
-                Toolbar(
-                    toolbarMode = toolbarMode,
-                    onToolbarModeChange = {
-                        toolbarMode = it
-                        if (it == ToolbarMode.Normal) {
-                            librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
-                        }
-                    },
-                    currentSortOrder = librariesViewModel.sortOrder,
-                    onSortOrderChange = { sortOrder: SortOrder ->
-                        librariesViewModel.saveSortOrder(sortOrder)
-                        librariesViewModel.getLibraries(
-                            sortOrder = sortOrder,
-                            searchTerm = librariesViewModel.searchTerm
-                        )
-                    },
-                    isNightModeSupported = nightModeManager.isNightModeSupported,
-                    currentNightMode = nightMode,
-                    onNightModeChange = nightModeManager::setNightMode,
-                    onSearchQueryChange = { query: String ->
-                        librariesViewModel.getLibraries(
-                            sortOrder = librariesViewModel.sortOrder,
-                            searchTerm = query
-                        )
-                    },
-                    onSearchQuerySubmit = { query: String ->
-                        librariesViewModel.getLibraries(
-                            sortOrder = librariesViewModel.sortOrder,
-                            searchTerm = query
-                        )
-                    },
-                    onSearchQueryClear = {
+    Screen(
+        isDarkTheme = isDarkTheme,
+        scaffoldState = scaffoldState,
+        topBar = {
+            var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
+            Toolbar(
+                toolbarMode = toolbarMode,
+                onToolbarModeChange = {
+                    toolbarMode = it
+                    if (it == ToolbarMode.Normal) {
                         librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
                     }
-                )
-            },
-            scaffoldState = scaffoldState,
-            snackbarHost = {
-                scaffoldState.snackbarHostState
-            }
-        ) {
-            var showDeleteLibraryDialog by rememberSaveable { mutableStateOf(false) }
-            LibrariesListContent(
-                librariesListState = librariesListState,
-                libraryDeleteState = libraryDeleteState,
-                scaffoldState = scaffoldState,
-                lastUpdateCheck = lastUpdateCheck,
-                onLibraryClick = onLibraryClick,
-                onLibraryLongClick = { library: Library ->
-                    librariesViewModel.libraryToDelete = library
-                    showDeleteLibraryDialog = true
                 },
-                onPinLibraryClick = { library: Library, pinned: Boolean ->
-                    librariesViewModel.pinLibrary(library, pinned)
+                currentSortOrder = librariesViewModel.sortOrder,
+                onSortOrderChange = { sortOrder: SortOrder ->
+                    librariesViewModel.saveSortOrder(sortOrder)
+                    librariesViewModel.getLibraries(
+                        sortOrder = sortOrder,
+                        searchTerm = librariesViewModel.searchTerm
+                    )
                 },
-                onAddLibraryClick = onAddLibraryClick,
+                isNightModeSupported = nightModeManager.isNightModeSupported,
+                currentNightMode = nightMode,
+                onNightModeChange = nightModeManager::setNightMode,
+                onSearchQueryChange = { query: String ->
+                    librariesViewModel.getLibraries(
+                        sortOrder = librariesViewModel.sortOrder,
+                        searchTerm = query
+                    )
+                },
+                onSearchQuerySubmit = { query: String ->
+                    librariesViewModel.getLibraries(
+                        sortOrder = librariesViewModel.sortOrder,
+                        searchTerm = query
+                    )
+                },
+                onSearchQueryClear = {
+                    librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
+                }
             )
-            if (showDeleteLibraryDialog) {
-                DeleteLibraryDialog(
-                    libraryName = librariesViewModel.libraryToDelete?.name ?: "",
-                    onDeleteClicked = {
-                        showDeleteLibraryDialog = false
-                        librariesViewModel.libraryToDelete?.let {
-                            librariesViewModel.deleteLibrary(it)
-                        }
-                    },
-                    onDismiss = {
-                        showDeleteLibraryDialog = false
+        }
+    ) {
+        var showDeleteLibraryDialog by rememberSaveable { mutableStateOf(false) }
+        LibrariesListContent(
+            librariesListState = librariesListState,
+            libraryDeleteState = libraryDeleteState,
+            scaffoldState = scaffoldState,
+            lastUpdateCheck = lastUpdateCheck,
+            onLibraryClick = onLibraryClick,
+            onLibraryLongClick = { library: Library ->
+                librariesViewModel.libraryToDelete = library
+                showDeleteLibraryDialog = true
+            },
+            onPinLibraryClick = { library: Library, pinned: Boolean ->
+                librariesViewModel.pinLibrary(library, pinned)
+            },
+            onAddLibraryClick = onAddLibraryClick,
+        )
+        if (showDeleteLibraryDialog) {
+            DeleteLibraryDialog(
+                libraryName = librariesViewModel.libraryToDelete?.name ?: "",
+                onDeleteClicked = {
+                    showDeleteLibraryDialog = false
+                    librariesViewModel.libraryToDelete?.let {
+                        librariesViewModel.deleteLibrary(it)
                     }
-                )
-            }
+                },
+                onDismiss = {
+                    showDeleteLibraryDialog = false
+                }
+            )
         }
     }
 
@@ -362,9 +359,7 @@ private fun EllipsisText(text: String, style: TextStyle, modifier: Modifier = Mo
 
 @ExperimentalAnimationApi
 @Composable
-private fun AddLibraryButton(
-    clickListener: () -> Unit
-) {
+private fun AddLibraryButton(clickListener: () -> Unit) {
     FloatingActionButton(
         onClick = clickListener,
         modifier = Modifier.padding(SPACE_NORMAL.dp)

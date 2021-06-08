@@ -30,6 +30,7 @@ import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.OutlinedTextFieldWithPrefix
+import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -45,39 +46,34 @@ fun AddLibraryScreen(
     onAddLibrary: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    ReleaseTrackerTheme(darkTheme = isDarkTheme) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(R.string.add_library))
-                    },
-                    navigationIcon = {
-                        BackButton(onBackClick = onBackClick)
-                    }
-                )
-            },
-            scaffoldState = scaffoldState,
-            snackbarHost = {
-                scaffoldState.snackbarHostState
-            }
-        ) {
-
-            val keyboardController: SoftwareKeyboardController? =
-                LocalSoftwareKeyboardController.current
-            AddLibraryContent(
-                state = addLibraryState,
-                scaffoldState = scaffoldState,
-                libraryName = libraryName,
-                onLibraryNameChange = onLibraryNameChange,
-                libraryUrlPath = libraryUrlPath,
-                onLibraryUrlPathChange = onLibraryUrlPathChange,
-                onAddLibrary = {
-                    onAddLibrary()
-                    keyboardController?.hide()
+    Screen(
+        isDarkTheme = isDarkTheme,
+        scaffoldState = scaffoldState,
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(R.string.add_library))
+                },
+                navigationIcon = {
+                    BackButton(onBackClick = onBackClick)
                 }
             )
         }
+    ) {
+        val keyboardController: SoftwareKeyboardController? =
+            LocalSoftwareKeyboardController.current
+        AddLibraryContent(
+            state = addLibraryState,
+            scaffoldState = scaffoldState,
+            libraryName = libraryName,
+            onLibraryNameChange = onLibraryNameChange,
+            libraryUrlPath = libraryUrlPath,
+            onLibraryUrlPathChange = onLibraryUrlPathChange,
+            onAddLibrary = {
+                onAddLibrary()
+                keyboardController?.hide()
+            }
+        )
     }
 }
 
