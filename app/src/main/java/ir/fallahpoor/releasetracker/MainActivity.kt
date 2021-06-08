@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreen
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
-import ir.fallahpoor.releasetracker.common.NavigationDestination
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
@@ -101,4 +100,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+}
+
+private sealed class NavigationDestination(val route: String) {
+    object LibrariesList : NavigationDestination("librariesList")
+    object AddLibrary : NavigationDestination("addLibrary")
 }
