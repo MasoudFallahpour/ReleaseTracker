@@ -3,35 +3,36 @@ object Dependencies {
     private object Common {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
         const val room = "androidx.room:room-runtime:${Versions.room}"
-        const val core = "androidx.core:core-ktx:1.5.0"
+        const val core = "androidx.core:core-ktx:${Versions.core}"
         const val rxkprefs = "com.afollestad.rxkprefs:core:${Versions.kprefs}"
         const val liveData =
             "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
     }
 
     private object CommonTest {
-        const val junit = "junit:junit:4.13.2"
-        const val truth = "com.google.truth:truth:1.1.3"
-        const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
+        const val junit = "junit:junit:${Versions.junit}"
+        const val truth = "com.google.truth:truth:${Versions.truth}"
+        const val coreTesting = "androidx.arch.core:core-testing:${Versions.coreTesting}"
         const val coroutinesTest =
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
-        const val testCore = "androidx.test:core:1.0.0"
-        const val robolectric = "org.robolectric:robolectric:4.5.1"
+        const val testCore = "androidx.test:core:${Versions.testCore}"
+        const val robolectric = "org.robolectric:${Versions.robolectric}"
     }
 
     object App {
         const val kotlinStdLib = Common.kotlinStdLib
-        const val appCompat = "androidx.appcompat:appcompat:1.3.0"
+        const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
         const val core = Common.core
         const val room = Common.room
         const val liveData = Common.liveData
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:${Versions.lifecycle}"
-        const val workManager = "androidx.work:work-runtime-ktx:2.5.0"
-        const val preference = "androidx.preference:preference-ktx:1.1.1"
-        const val activityCompose = "androidx.activity:activity-compose:1.3.0-beta01"
-        const val navigationCompose = "androidx.navigation:navigation-compose:2.4.0-alpha02"
-        const val material = "com.google.android.material:material:1.3.0-rc01"
-        const val timber = "com.jakewharton.timber:timber:4.7.1"
+        const val workManager = "androidx.work:work-runtime-ktx:${Versions.workManager}"
+        const val preference = "androidx.preference:preference-ktx:${Versions.preference}"
+        const val activityCompose = "androidx.activity:activity-compose:${Versions.activityCompose}"
+        const val navigationCompose =
+            "androidx.navigation:navigation-compose:${Versions.navigationCompose}"
+        const val material = "com.google.android.material:material:${Versions.material}"
+        const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
         const val rxkprefs = Common.rxkprefs
 
         const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.hilt}"
@@ -39,9 +40,10 @@ object Dependencies {
             "com.google.dagger:hilt-android-compiler:${Versions.hilt}"
         const val hiltCompiler = "androidx.hilt:hilt-compiler:${Versions.hiltJetpack}"
         const val hiltWorkManager = "androidx.hilt:hilt-work:${Versions.hiltJetpack}"
-        const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha02"
+        const val hiltNavigationCompose =
+            "androidx.hilt:hilt-navigation-compose:${Versions.hiltNavigationCompose}"
 
-        const val firebase = "com.google.firebase:firebase-bom:28.1.0"
+        const val firebase = "com.google.firebase:firebase-bom:${Versions.firebase}"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
 
         const val composeUi = "androidx.compose.ui:ui:${Versions.compose}"
@@ -61,15 +63,15 @@ object Dependencies {
         const val robolectric = CommonTest.robolectric
         const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:${Versions.compose}"
         const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:${Versions.compose}"
-        const val runner = "androidx.test:runner:1.1.0"
-        const val rules = "androidx.test:rules:1.1.0"
+        const val runner = "androidx.test:runner:${Versions.testRunner}"
+        const val rules = "androidx.test:rules:${Versions.testRules}"
     }
 
     object Data {
         const val kotlinStdLib = Common.kotlinStdLib
         const val core = Common.core
         const val liveData = Common.liveData
-        const val inject = "javax.inject:javax.inject:1"
+        const val inject = "javax.inject:javax.inject:${Versions.inject}"
         const val coroutinesAndroid =
             "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
 
@@ -80,7 +82,8 @@ object Dependencies {
         const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
         const val retrofitConverterGson =
             "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
-        const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
+        const val okhttpLoggingInterceptor =
+            "com.squareup.okhttp3:logging-interceptor:${Versions.okhttpLoggingInterceptor}"
 
         const val rxkprefs = Common.rxkprefs
         const val rxkprefsCoroutines = "com.afollestad.rxkprefs:coroutines:${Versions.kprefs}"
