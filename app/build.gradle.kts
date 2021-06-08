@@ -14,12 +14,12 @@ val sp: String = properties.getProperty("storePassword")
 val kp: String = properties.getProperty("keyPassword")
 
 android {
-    compileSdk = Versions.compileSdkVersion
+    compileSdk = Versions.compileSdk
 
     defaultConfig {
         applicationId = "ir.fallahpoor.releasetracker"
-        minSdk = Versions.minSdkVersion
-        targetSdk = Versions.targetSdkVersion
+        minSdk = Versions.minSdk
+        targetSdk = Versions.targetSdk
         versionCode = Versions.versionCode
         versionName = Versions.versionName
         setProperty("archivesBaseName", "ReleaseTracker")
@@ -59,7 +59,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.composeVersion
+        kotlinCompilerExtensionVersion = Versions.compose
     }
 
     kotlinOptions {
