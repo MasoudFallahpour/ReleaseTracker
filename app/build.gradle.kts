@@ -64,6 +64,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
     }
 
     sourceSets.getByName("test").java {
