@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreen
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
-import ir.fallahpoor.releasetracker.common.Screen
+import ir.fallahpoor.releasetracker.common.NavigationDestination
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
@@ -43,10 +43,10 @@ class MainActivity : AppCompatActivity() {
 
             NavHost(
                 navController = navController,
-                startDestination = Screen.LibrariesList.route
+                startDestination = NavigationDestination.LibrariesList.route
             ) {
 
-                composable(route = Screen.LibrariesList.route) { navBackStackEntry: NavBackStackEntry ->
+                composable(route = NavigationDestination.LibrariesList.route) { navBackStackEntry: NavBackStackEntry ->
 
                     val librariesViewModel = hiltViewModel<LibrariesViewModel>(navBackStackEntry)
 
@@ -60,13 +60,13 @@ class MainActivity : AppCompatActivity() {
                             startActivity(intent)
                         },
                         onAddLibraryClick = {
-                            navController.navigate(Screen.AddLibrary.route)
+                            navController.navigate(NavigationDestination.AddLibrary.route)
                         }
                     )
 
                 }
 
-                composable(route = Screen.AddLibrary.route) { navBackStackEntry: NavBackStackEntry ->
+                composable(route = NavigationDestination.AddLibrary.route) { navBackStackEntry: NavBackStackEntry ->
 
                     val addLibraryViewModel = hiltViewModel<AddLibraryViewModel>(navBackStackEntry)
                     val addLibraryState: AddLibraryState by addLibraryViewModel.state.observeAsState(
