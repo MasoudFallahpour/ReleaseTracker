@@ -1,4 +1,4 @@
-# Release Tracker \[ 🚧 Work in progress 🚧 \]
+# Release Tracker
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoodfallahpoor/ReleaseTracker?label=Latest%20version&style=flat-square)
 
@@ -36,10 +36,14 @@ the tech stack of Release Tracker:
 - Room
 - Navigation
 - Dagger Hilt
-- Material Design Components
 - WorkManager
 - Retrofit
 - Timber
+
+# Unit Tests
+
+I've done my best to write unit tests for different parts of the app. I'll keep adding tests to
+reach a decent amount of code coverage.
 
 # Contributing
 
