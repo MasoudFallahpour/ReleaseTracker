@@ -3,7 +3,7 @@ object Dependencies {
     private object Common {
         const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlinVersion}"
         const val room = "androidx.room:room-runtime:${Versions.roomVersion}"
-        const val core = "androidx.core:core-ktx:1.3.2"
+        const val core = "androidx.core:core-ktx:1.5.0"
         const val rxkprefs = "com.afollestad.rxkprefs:core:${Versions.kprefs}"
         const val liveData =
             "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycleVersion}"
@@ -11,24 +11,25 @@ object Dependencies {
 
     private object CommonTest {
         const val junit = "junit:junit:4.13.2"
-        const val truth = "com.google.truth:truth:1.1.2"
+        const val truth = "com.google.truth:truth:1.1.3"
         const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
-        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3"
+        const val coroutinesTest =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
         const val testCore = "androidx.test:core:1.0.0"
         const val robolectric = "org.robolectric:robolectric:4.5.1"
     }
 
     object App {
         const val kotlinStdLib = Common.kotlinStdLib
-        const val appCompat = "androidx.appcompat:appcompat:1.3.0-rc01"
+        const val appCompat = "androidx.appcompat:appcompat:1.3.0"
         const val core = Common.core
         const val room = Common.room
         const val liveData = Common.liveData
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:${Versions.lifecycleVersion}"
         const val workManager = "androidx.work:work-runtime-ktx:2.5.0"
-        const val preference = "androidx.preference:preference-ktx:1.1.0"
-        const val activityCompose = "androidx.activity:activity-compose:1.3.0-alpha03"
-        const val navigationCompose = "androidx.navigation:navigation-compose:2.4.0-alpha01"
+        const val preference = "androidx.preference:preference-ktx:1.1.1"
+        const val activityCompose = "androidx.activity:activity-compose:1.3.0-beta01"
+        const val navigationCompose = "androidx.navigation:navigation-compose:2.4.0-alpha02"
         const val material = "com.google.android.material:material:1.3.0-rc01"
         const val timber = "com.jakewharton.timber:timber:4.7.1"
         const val rxkprefs = Common.rxkprefs
@@ -40,7 +41,7 @@ object Dependencies {
         const val hiltWorkManager = "androidx.hilt:hilt-work:${Versions.hiltJetpackVersion}"
         const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0-alpha02"
 
-        const val firebase = "com.google.firebase:firebase-bom:25.12.0"
+        const val firebase = "com.google.firebase:firebase-bom:28.1.0"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
 
         const val composeUi = "androidx.compose.ui:ui:${Versions.composeVersion}"
@@ -69,7 +70,8 @@ object Dependencies {
         const val core = Common.core
         const val liveData = Common.liveData
         const val inject = "javax.inject:javax.inject:1"
-        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
+        const val coroutinesAndroid =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
 
         const val room = Common.room
         const val roomCompiler = "androidx.room:room-compiler:${Versions.roomVersion}"

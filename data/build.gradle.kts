@@ -10,11 +10,11 @@ val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToke
 
 android {
 
-    compileSdk = Versions.compileSdkVersion
+    compileSdk = Versions.compileSdk
 
     defaultConfig {
-        minSdk = Versions.minSdkVersion
-        targetSdk = Versions.targetSdkVersion
+        minSdk = Versions.minSdk
+        targetSdk = Versions.targetSdk
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")

@@ -7,6 +7,7 @@ object Versions {
     const val versionName = "0.3"
 
     const val kotlinVersion = "1.5.10"
+    const val coroutines = "1.5.0"
     const val composeVersion = "1.0.0-beta08"
     const val hiltVersion = "2.35.1"
     const val hiltJetpackVersion = "1.0.0"
