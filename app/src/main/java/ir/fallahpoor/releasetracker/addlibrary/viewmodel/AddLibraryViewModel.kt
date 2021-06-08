@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
+import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
@@ -25,21 +26,21 @@ class AddLibraryViewModel
     private val _state: MutableLiveData<AddLibraryState> = MutableLiveData()
     val state: LiveData<AddLibraryState> = _state
     var libraryName by mutableStateOf("")
-    var libraryUrl by mutableStateOf("")
+    var libraryUrlPath by mutableStateOf("")
 
-    fun addLibrary(libraryName: String, libraryUrl: String) {
+    fun addLibrary(libraryName: String, libraryUrlPath: String) {
 
         if (libraryName.isEmpty()) {
             _state.value = AddLibraryState.EmptyLibraryName
             return
         }
 
-        if (libraryUrl.isEmpty()) {
+        if (libraryUrlPath.isEmpty()) {
             _state.value = AddLibraryState.EmptyLibraryUrl
             return
         }
 
-        if (!isGithubUrl(libraryUrl)) {
+        if (!isGithubUrlPath(libraryUrlPath)) {
             _state.value = AddLibraryState.InvalidLibraryUrl
             return
         }
@@ -56,14 +57,14 @@ class AddLibraryViewModel
                         AddLibraryState.Error("Library already exists")
                     } else {
                         val libraryVersion: String =
-                            libraryRepository.getLibraryVersion(libraryName, libraryUrl)
+                            libraryRepository.getLibraryVersion(libraryName, libraryUrlPath)
                         libraryRepository.addLibrary(
                             libraryName,
-                            libraryUrl,
+                            GITHUB_BASE_URL + libraryUrlPath,
                             libraryVersion
                         )
                         this@AddLibraryViewModel.libraryName = ""
-                        this@AddLibraryViewModel.libraryUrl = ""
+                        this@AddLibraryViewModel.libraryUrlPath = ""
                         AddLibraryState.LibraryAdded
                     }
                 } catch (t: Throwable) {
@@ -75,7 +76,7 @@ class AddLibraryViewModel
 
     }
 
-    private fun isGithubUrl(url: String): Boolean {
+    private fun isGithubUrlPath(url: String): Boolean {
         val githubRegex = Regex("([-.\\w]+)/([-.\\w]+)", RegexOption.IGNORE_CASE)
         return githubRegex.matches(url)
     }

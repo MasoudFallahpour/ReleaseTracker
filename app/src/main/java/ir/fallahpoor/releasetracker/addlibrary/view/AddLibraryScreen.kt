@@ -39,8 +39,8 @@ fun AddLibraryScreen(
     addLibraryState: AddLibraryState,
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,
-    libraryUrl: String,
-    onLibraryUrlChange: (String) -> Unit,
+    libraryUrlPath: String,
+    onLibraryUrlPathChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onAddLibrary: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -70,8 +70,8 @@ fun AddLibraryScreen(
                 scaffoldState = scaffoldState,
                 libraryName = libraryName,
                 onLibraryNameChange = onLibraryNameChange,
-                libraryUrl = libraryUrl,
-                onLibraryUrlChange = onLibraryUrlChange,
+                libraryUrlPath = libraryUrlPath,
+                onLibraryUrlPathChange = onLibraryUrlPathChange,
                 onAddLibrary = {
                     onAddLibrary()
                     keyboardController?.hide()
@@ -97,8 +97,8 @@ private fun AddLibraryContent(
     scaffoldState: ScaffoldState,
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,
-    libraryUrl: String,
-    onLibraryUrlChange: (String) -> Unit,
+    libraryUrlPath: String,
+    onLibraryUrlPathChange: (String) -> Unit,
     onAddLibrary: () -> Unit,
 ) {
 
@@ -120,9 +120,9 @@ private fun AddLibraryContent(
             )
             LibraryNameErrorText(show = state is AddLibraryState.EmptyLibraryName)
             Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
-            LibraryUrlTextField(
-                text = libraryUrl,
-                onTextChange = onLibraryUrlChange,
+            LibraryUrlPathTextField(
+                text = libraryUrlPath,
+                onTextChange = onLibraryUrlPathChange,
                 isError = state is AddLibraryState.EmptyLibraryUrl || state is AddLibraryState.InvalidLibraryUrl,
                 onDoneClick = onAddLibrary
             )
@@ -188,7 +188,7 @@ private fun LibraryNameErrorText(show: Boolean) {
 }
 
 @Composable
-private fun LibraryUrlTextField(
+private fun LibraryUrlPathTextField(
     text: String,
     onTextChange: (String) -> Unit,
     isError: Boolean,
@@ -283,8 +283,8 @@ private fun AddLibraryContentPreview() {
                 scaffoldState = rememberScaffoldState(),
                 libraryName = "",
                 onLibraryNameChange = {},
-                libraryUrl = "",
-                onLibraryUrlChange = {},
+                libraryUrlPath = "",
+                onLibraryUrlPathChange = {},
                 onAddLibrary = {}
             )
         }

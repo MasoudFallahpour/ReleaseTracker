@@ -80,15 +80,15 @@ class MainActivity : AppCompatActivity() {
                         onLibraryNameChange = { libraryName: String ->
                             addLibraryViewModel.libraryName = libraryName
                         },
-                        libraryUrl = addLibraryViewModel.libraryUrl,
-                        onLibraryUrlChange = { libraryUrl: String ->
-                            addLibraryViewModel.libraryUrl = libraryUrl
+                        libraryUrlPath = addLibraryViewModel.libraryUrlPath,
+                        onLibraryUrlPathChange = { libraryUrlPath: String ->
+                            addLibraryViewModel.libraryUrlPath = libraryUrlPath
                         },
                         onBackClick = { navController.navigateUp() },
                         onAddLibrary = {
                             addLibraryViewModel.addLibrary(
                                 addLibraryViewModel.libraryName,
-                                addLibraryViewModel.libraryUrl
+                                addLibraryViewModel.libraryUrlPath
                             )
                         }
                     )

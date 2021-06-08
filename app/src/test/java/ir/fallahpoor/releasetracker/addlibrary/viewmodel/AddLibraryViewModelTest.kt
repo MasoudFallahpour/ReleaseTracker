@@ -47,7 +47,7 @@ class AddLibraryViewModelTest {
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = "",
-                libraryUrl = LIBRARY_URL
+                libraryUrlPath = LIBRARY_URL
             )
 
             // Then
@@ -66,7 +66,7 @@ class AddLibraryViewModelTest {
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = LIBRARY_NAME,
-                libraryUrl = ""
+                libraryUrlPath = ""
             )
 
             // Then
@@ -85,7 +85,7 @@ class AddLibraryViewModelTest {
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = LIBRARY_NAME,
-                libraryUrl = "InvalidLibraryUrl"
+                libraryUrlPath = "InvalidLibraryUrl"
             )
 
             // Then
@@ -109,7 +109,7 @@ class AddLibraryViewModelTest {
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = LIBRARY_NAME,
-                libraryUrl = LIBRARY_URL
+                libraryUrlPath = LIBRARY_URL
             )
 
             // Then
@@ -128,7 +128,7 @@ class AddLibraryViewModelTest {
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = LIBRARY_NAME,
-                libraryUrl = LIBRARY_URL
+                libraryUrlPath = LIBRARY_URL
             )
 
             // Then
@@ -148,7 +148,7 @@ class AddLibraryViewModelTest {
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = libraryName,
-                libraryUrl = LIBRARY_URL
+                libraryUrlPath = LIBRARY_URL
             )
 
             // Then

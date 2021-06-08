@@ -219,8 +219,8 @@ class AddLibraryScreenTest {
                 addLibraryState = addLibraryState,
                 libraryName = "",
                 onLibraryNameChange = {},
-                libraryUrl = "",
-                onLibraryUrlChange = {},
+                libraryUrlPath = "",
+                onLibraryUrlPathChange = {},
                 onBackClick = {},
                 onAddLibrary = {},
                 scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
