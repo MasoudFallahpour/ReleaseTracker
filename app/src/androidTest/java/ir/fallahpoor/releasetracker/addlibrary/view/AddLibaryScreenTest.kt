@@ -1,13 +1,12 @@
 package ir.fallahpoor.releasetracker.addlibrary.view
 
 import android.content.Context
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.test.InstrumentationRegistry
+import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import kotlinx.coroutines.flow.filterNotNull
@@ -16,13 +15,12 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalAnimationApi::class)
 class AddLibraryScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
+    private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Test
     fun test_fresh_state() {
