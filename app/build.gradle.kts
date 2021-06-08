@@ -83,6 +83,10 @@ kapt {
     correctErrorTypes = true
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+}
+
 dependencies {
     implementation(Dependencies.App.kotlinStdLib)
     implementation(Dependencies.App.appCompat)
