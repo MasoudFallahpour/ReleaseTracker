@@ -20,13 +20,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ir.fallahpoor.releasetracker.NightModeState
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.common.composables.Toolbar
 import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
-import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
@@ -41,7 +41,8 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 @Composable
 fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel,
-    nightModeManager: NightModeManager,
+    nightModeState: NightModeState,
+    onNightModeChange: (NightMode) -> Unit,
     onLibraryClick: (Library) -> Unit,
     onAddLibraryClick: () -> Unit
 ) {
@@ -52,19 +53,13 @@ fun LibrariesListScreen(
     val libraryDeleteState: LibraryDeleteState by librariesViewModel.deleteState.observeAsState(
         LibraryDeleteState.Fresh
     )
-    val isDarkTheme: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
-        nightModeManager.isNightModeOn
-    )
-    val nightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
-        nightModeManager.currentNightMode
-    )
     val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
     val scaffoldState = rememberScaffoldState()
 
     librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
 
     Screen(
-        isDarkTheme = isDarkTheme,
+        isDarkTheme = nightModeState.isNightModeOn,
         scaffoldState = scaffoldState,
         topBar = {
             var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
@@ -84,9 +79,9 @@ fun LibrariesListScreen(
                         searchTerm = librariesViewModel.searchTerm
                     )
                 },
-                isNightModeSupported = nightModeManager.isNightModeSupported,
-                currentNightMode = nightMode,
-                onNightModeChange = nightModeManager::setNightMode,
+                isNightModeSupported = nightModeState.isNightModeSupported,
+                currentNightMode = nightModeState.currentNightMode,
+                onNightModeChange = onNightModeChange,
                 onSearchQueryChange = { query: String ->
                     librariesViewModel.getLibraries(
                         sortOrder = librariesViewModel.sortOrder,

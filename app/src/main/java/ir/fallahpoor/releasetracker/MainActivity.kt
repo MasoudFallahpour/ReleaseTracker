@@ -19,6 +19,7 @@ import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import javax.inject.Inject
@@ -48,14 +49,24 @@ class MainActivity : AppCompatActivity() {
                 composable(route = NavigationDestination.LibrariesList.route) { navBackStackEntry: NavBackStackEntry ->
 
                     val librariesViewModel = hiltViewModel<LibrariesViewModel>(navBackStackEntry)
+                    val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
+                        nightModeManager.isNightModeOn
+                    )
+                    val currentNightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
+                        nightModeManager.currentNightMode
+                    )
+                    val nightModeState = NightModeState(
+                        isNightModeSupported = nightModeManager.isNightModeSupported,
+                        isNightModeOn = isNightModeOn,
+                        currentNightMode = currentNightMode
+                    )
 
                     LibrariesListScreen(
                         librariesViewModel = librariesViewModel,
-                        nightModeManager = nightModeManager,
+                        nightModeState = nightModeState,
+                        onNightModeChange = nightModeManager::setNightMode,
                         onLibraryClick = { library: Library ->
-                            val intent = Intent(Intent.ACTION_VIEW).apply {
-                                data = Uri.parse(library.url)
-                            }
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(library.url))
                             startActivity(intent)
                         },
                         onAddLibraryClick = {
