@@ -216,9 +216,6 @@ class AddLibraryScreenTest {
     ) {
 
         composeTestRule.setContent {
-
-            val scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
-
             AddLibraryScreen(
                 isDarkTheme = false,
                 addLibraryState = addLibraryState,
@@ -228,9 +225,8 @@ class AddLibraryScreenTest {
                 onLibraryUrlChange = {},
                 onBackClick = {},
                 onAddLibrary = {},
-                scaffoldState = scaffoldState
+                scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
             )
-
         }
 
     }

@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -91,8 +90,7 @@ class MainActivity : AppCompatActivity() {
                                 addLibraryViewModel.libraryName,
                                 addLibraryViewModel.libraryUrl
                             )
-                        },
-                        scaffoldState = rememberScaffoldState()
+                        }
                     )
 
                 }

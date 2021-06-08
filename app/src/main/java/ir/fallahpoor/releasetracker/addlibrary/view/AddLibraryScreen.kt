@@ -43,7 +43,7 @@ fun AddLibraryScreen(
     onLibraryUrlChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onAddLibrary: () -> Unit,
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         Scaffold(
