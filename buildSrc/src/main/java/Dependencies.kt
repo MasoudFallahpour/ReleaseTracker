@@ -16,7 +16,7 @@ object Dependencies {
         const val coroutinesTest =
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
         const val testCore = "androidx.test:core:${Versions.testCore}"
-        const val robolectric = "org.robolectric:${Versions.robolectric}"
+        const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
     }
 
     object App {
