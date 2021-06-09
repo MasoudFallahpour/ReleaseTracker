@@ -12,7 +12,7 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout source code
@@ -35,6 +35,20 @@ jobs:
           echo accessToken=$accessToken > ./local.properties
           echo storePassword=$storePassword >> ./local.properties
           echo keyPassword=$keyPassword >> ./local.properties
+
+      - name: Run unit tests
+        run: ./gradlew test
+
+      - name: Run instrumentation tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86
+          profile: Nexus 6
+          avd-name: test
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedCheck
 
       - name: Build with Gradle
         run: ./gradlew build
