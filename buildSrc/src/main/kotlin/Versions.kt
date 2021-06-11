@@ -35,4 +35,5 @@ object Versions {
     const val testRunner = "1.1.0"
     const val testRules = "1.1.0"
     const val testCore = "1.0.0"
+    const val jacoco = "0.8.7"
 }

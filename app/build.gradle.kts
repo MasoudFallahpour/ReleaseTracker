@@ -7,6 +7,56 @@ plugins {
     id("com.google.firebase.crashlytics")
     kotlin("android")
     kotlin("kapt")
+    id("jacoco")
+}
+
+jacoco {
+    toolVersion = Versions.jacoco
+}
+
+tasks.withType<Test> {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
+tasks.register("jacocoTestReport", JacocoReport::class) {
+
+    dependsOn("testDebugUnitTest", "createDebugCoverageReport")
+
+    reports {
+        html.isEnabled = true
+        xml.isEnabled = false
+    }
+
+    val excludedFiles = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/*$[0-9].*"
+    )
+    val debugTree = fileTree(
+        "dir" to "$buildDir/tmp/kotlin-classes/debug",
+        "excludes" to excludedFiles
+    )
+    val mainSrc = "$projectDir/src/main/kotlin"
+
+    sourceDirectories.setFrom(files(listOf(mainSrc)))
+    classDirectories.setFrom(files(listOf(debugTree)))
+    executionData.from(
+        fileTree(
+            "dir" to buildDir,
+            "includes" to listOf(
+                "jacoco/testDebugUnitTest.exec",
+                "outputs/code_coverage/debugAndroidTest/connected/**/*.ec"
+            )
+        )
+    )
+
 }
 
 val properties: java.util.Properties = gradleLocalProperties(rootDir)
@@ -47,6 +97,9 @@ android {
             )
             signingConfig = signingConfigs.getByName("release")
         }
+        getByName("debug") {
+            isTestCoverageEnabled = true
+        }
     }
 
     compileOptions {
@@ -64,19 +117,26 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs = freeCompilerArgs + "-Xallow-jvm-ir-dependencies"
     }
 
-    sourceSets.getByName("test").java {
-        this.srcDir("src/sharedTest/java")
+    sourceSets.getByName("test").kotlin {
+        srcDir("src/sharedTest/kotlin")
     }
-    sourceSets.getByName("androidTest").java {
-        this.srcDir("src/sharedTest/java")
+    sourceSets.getByName("androidTest").kotlin {
+        srcDir("src/sharedTest/kotlin")
     }
 
     packagingOptions {
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
+    }
+
+    testOptions {
+        animationsDisabled = true
+
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 }
 
