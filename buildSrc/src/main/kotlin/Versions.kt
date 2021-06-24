@@ -6,7 +6,7 @@ object Versions {
     const val versionCode = 3
     const val versionName = "0.3"
 
-    const val kotlin = "1.5.10"
+    const val kotlin = "1.4.32"
     const val appCompat = "1.3.0"
     const val core = "1.5.0"
     const val room = "2.3.0"
@@ -15,9 +15,9 @@ object Versions {
     const val preference = "1.1.1"
     const val firebase = "28.1.0"
     const val material = "1.3.0-rc01"
-    const val compose = "1.0.0-beta08"
-    const val activityCompose = "1.3.0-beta01"
-    const val navigationCompose = "2.4.0-alpha02"
+    const val compose = "1.0.0-beta07"
+    const val activityCompose = "1.3.0-alpha03"
+    const val navigationCompose = "2.4.0-alpha01"
     const val hilt = "2.35.1"
     const val hiltJetpack = "1.0.0"
     const val hiltNavigationCompose = "1.0.0-alpha02"
