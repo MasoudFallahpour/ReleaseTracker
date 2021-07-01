@@ -30,14 +30,24 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
         xml.isEnabled = false
     }
 
+    val basePath = "ir/fallahpoor/releasetracker"
     val excludedFiles = listOf(
+        // App-specific
+        "$basePath/di/**",
+        "$basePath/libraries/view/states/**",
+        "$basePath/theme/**",
+        // Jetpack Compose
+        "**/ComposableSingletons*",
+        "**/LiveLiterals*",
+
+        "**/*lambda*",
         "**/R.class",
-        "**/R$*.class",
+        "**/R\$*.class",
         "**/BuildConfig.*",
         "**/Manifest*.*",
         "**/*Test*.*",
         "android/**/*.*",
-        "**/*$[0-9].*"
+        "**/*\$[0-9].*"
     )
     val debugTree = fileTree(
         "dir" to "$buildDir/tmp/kotlin-classes/debug",
@@ -86,7 +96,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -95,9 +105,9 @@ android {
                 ),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs["release"]
         }
-        getByName("debug") {
+        debug {
             isTestCoverageEnabled = true
         }
     }
