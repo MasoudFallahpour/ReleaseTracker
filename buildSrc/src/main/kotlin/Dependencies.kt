@@ -65,6 +65,8 @@ object Dependencies {
         const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:${Versions.compose}"
         const val runner = "androidx.test:runner:${Versions.testRunner}"
         const val rules = "androidx.test:rules:${Versions.testRules}"
+        const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}"
+        const val mockitoAndroid = "org.mockito:mockito-android:${Versions.mockitoKotlin}"
     }
 
     object Data {

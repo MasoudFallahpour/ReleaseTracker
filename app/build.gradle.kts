@@ -137,6 +137,8 @@ android {
     }
 
     packagingOptions {
+        resources.excludes.add("**/attach_hotspot_windows.dll")
+        resources.excludes.add("META-INF/licenses/ASM")
         resources.excludes.add("META-INF/AL2.0")
         resources.excludes.add("META-INF/LGPL2.1")
     }
@@ -199,6 +201,9 @@ dependencies {
     androidTestImplementation(Dependencies.AppTest.rules)
     androidTestImplementation(Dependencies.AppTest.truth)
     androidTestImplementation(Dependencies.AppTest.uiTestJunit)
+    androidTestImplementation(Dependencies.AppTest.mockitoAndroid)
+    androidTestImplementation(Dependencies.AppTest.mockitoKotlin)
+    androidTestImplementation(Dependencies.AppTest.coreTesting)
     debugImplementation(Dependencies.AppTest.uiTestManifest)
 
     implementation(project(":data"))
