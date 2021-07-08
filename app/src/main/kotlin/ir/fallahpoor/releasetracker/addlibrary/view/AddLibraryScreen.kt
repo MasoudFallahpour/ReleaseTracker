@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -26,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
@@ -36,14 +39,9 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddLibraryScreen(
+    addLibraryViewModel: AddLibraryViewModel,
     isDarkTheme: Boolean,
-    addLibraryState: AddLibraryState,
-    libraryName: String,
-    onLibraryNameChange: (String) -> Unit,
-    libraryUrlPath: String,
-    onLibraryUrlPathChange: (String) -> Unit,
     onBackClick: () -> Unit,
-    onAddLibrary: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     Screen(
@@ -60,17 +58,27 @@ fun AddLibraryScreen(
             )
         }
     ) {
+        val addLibraryState: AddLibraryState by addLibraryViewModel.state.observeAsState(
+            AddLibraryState.Fresh
+        )
         val keyboardController: SoftwareKeyboardController? =
             LocalSoftwareKeyboardController.current
         AddLibraryContent(
             state = addLibraryState,
             scaffoldState = scaffoldState,
-            libraryName = libraryName,
-            onLibraryNameChange = onLibraryNameChange,
-            libraryUrlPath = libraryUrlPath,
-            onLibraryUrlPathChange = onLibraryUrlPathChange,
+            libraryName = addLibraryViewModel.libraryName,
+            onLibraryNameChange = { libraryName: String ->
+                addLibraryViewModel.libraryName = libraryName
+            },
+            libraryUrlPath = addLibraryViewModel.libraryUrlPath,
+            onLibraryUrlPathChange = { libraryUrlPath: String ->
+                addLibraryViewModel.libraryUrlPath = libraryUrlPath
+            },
             onAddLibrary = {
-                onAddLibrary()
+                addLibraryViewModel.addLibrary(
+                    addLibraryViewModel.libraryName,
+                    addLibraryViewModel.libraryUrlPath
+                )
                 keyboardController?.hide()
             }
         )

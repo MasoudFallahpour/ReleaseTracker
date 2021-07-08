@@ -15,7 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreen
-import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
@@ -79,28 +78,11 @@ class MainActivity : AppCompatActivity() {
                 composable(route = NavigationDestination.AddLibrary.route) { navBackStackEntry: NavBackStackEntry ->
 
                     val addLibraryViewModel = hiltViewModel<AddLibraryViewModel>(navBackStackEntry)
-                    val addLibraryState: AddLibraryState by addLibraryViewModel.state.observeAsState(
-                        AddLibraryState.Fresh
-                    )
 
                     AddLibraryScreen(
+                        addLibraryViewModel = addLibraryViewModel,
                         isDarkTheme = nightModeManager.isNightModeOn,
-                        addLibraryState = addLibraryState,
-                        libraryName = addLibraryViewModel.libraryName,
-                        onLibraryNameChange = { libraryName: String ->
-                            addLibraryViewModel.libraryName = libraryName
-                        },
-                        libraryUrlPath = addLibraryViewModel.libraryUrlPath,
-                        onLibraryUrlPathChange = { libraryUrlPath: String ->
-                            addLibraryViewModel.libraryUrlPath = libraryUrlPath
-                        },
-                        onBackClick = { navController.navigateUp() },
-                        onAddLibrary = {
-                            addLibraryViewModel.addLibrary(
-                                addLibraryViewModel.libraryName,
-                                addLibraryViewModel.libraryUrlPath
-                            )
-                        }
+                        onBackClick = { navController.navigateUp() }
                     )
 
                 }
