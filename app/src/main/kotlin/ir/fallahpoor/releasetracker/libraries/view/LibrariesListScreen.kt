@@ -20,13 +20,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ir.fallahpoor.releasetracker.NightModeState
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.common.composables.Toolbar
 import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
+import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
@@ -41,12 +41,17 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 @Composable
 fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel,
-    nightModeState: NightModeState,
-    onNightModeChange: (NightMode) -> Unit,
+    nightModeManager: NightModeManager,
     onLibraryClick: (Library) -> Unit,
     onAddLibraryClick: () -> Unit
 ) {
 
+    val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
+        nightModeManager.isNightModeOn
+    )
+    val currentNightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
+        nightModeManager.currentNightMode
+    )
     val librariesListState: LibrariesListState by librariesViewModel.librariesListState.observeAsState(
         LibrariesListState.Loading
     )
@@ -59,7 +64,7 @@ fun LibrariesListScreen(
     librariesViewModel.getLibraries(sortOrder = librariesViewModel.sortOrder)
 
     Screen(
-        isDarkTheme = nightModeState.isNightModeOn,
+        isDarkTheme = isNightModeOn,
         scaffoldState = scaffoldState,
         topBar = {
             var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
@@ -79,9 +84,9 @@ fun LibrariesListScreen(
                         searchTerm = librariesViewModel.searchTerm
                     )
                 },
-                isNightModeSupported = nightModeState.isNightModeSupported,
-                currentNightMode = nightModeState.currentNightMode,
-                onNightModeChange = onNightModeChange,
+                isNightModeSupported = nightModeManager.isNightModeSupported,
+                currentNightMode = currentNightMode,
+                onNightModeChange = nightModeManager::setNightMode,
                 onSearchQueryChange = { query: String ->
                     librariesViewModel.getLibraries(
                         sortOrder = librariesViewModel.sortOrder,
