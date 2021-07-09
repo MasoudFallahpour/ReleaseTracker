@@ -1,6 +1,6 @@
 # Release Tracker
-
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoodfallahpoor/ReleaseTracker?label=Latest%20version&style=flat-square)
+![Build status](https://github.com/masoodfallahpoor/ReleaseTracker/actions/workflows/build.yml/badge.svg?branch=dev)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoodfallahpoor/ReleaseTracker?label=Latest%20version)
 
 Release Tracker is an Android app that shows the latest version of Github-hosted libraries, tools,
 frameworks, or whatever!
