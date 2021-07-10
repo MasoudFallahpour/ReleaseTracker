@@ -87,6 +87,7 @@ fun Toolbar(
                     onCloseClick = {
                         onToolbarModeChange(ToolbarMode.Normal)
                         searchQuery = ""
+                        onSearchQueryClear()
                     }
                 )
             }
