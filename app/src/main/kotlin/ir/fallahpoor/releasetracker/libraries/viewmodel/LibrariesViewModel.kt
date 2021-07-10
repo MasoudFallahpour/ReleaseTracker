@@ -25,19 +25,33 @@ class LibrariesViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    var libraryToDelete: Library? = null
+    private class Params(
+        val sortOrder: SortOrder,
+        val searchTerm: String
+    )
 
-    private val triggerLiveData = MutableLiveData<Unit>()
-
-    val librariesListState: LiveData<LibrariesListState> = triggerLiveData.switchMap {
-        libraryRepository.getLibraries(sortOrder, searchTerm)
-            .map { libraries: List<Library> ->
-                LibrariesListState.LibrariesLoaded(libraries)
-            }
-            .asLiveData()
+    private val sortOrderLiveData = MutableLiveData(storage.getSortOrder())
+    private val searchQueryLiveData = MutableLiveData("")
+    private val getLibrariesTriggerLiveData = MediatorLiveData<Params>().apply {
+        addSource(sortOrderLiveData) { sortOrder: SortOrder ->
+            value = Params(sortOrder, searchQueryLiveData.value!!)
+        }
+        addSource(searchQueryLiveData) { searchQuery: String ->
+            value = Params(sortOrderLiveData.value!!, searchQuery)
+        }
     }
 
-    var searchTerm = ""
+    val librariesListState: LiveData<LibrariesListState> =
+        getLibrariesTriggerLiveData.switchMap { params: Params ->
+            libraryRepository.getLibraries(params.sortOrder, params.searchTerm)
+                .map { libraries: List<Library> ->
+                    LibrariesListState.LibrariesLoaded(libraries)
+                }
+                .asLiveData()
+        }
+
+    var libraryToDelete: Library? = null
+    var searchQuery = ""
     var sortOrder by mutableStateOf(storage.getSortOrder())
 
     private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
@@ -47,28 +61,19 @@ class LibrariesViewModel
         libraryRepository.getLastUpdateCheck()
             .asLiveData()
 
-    fun saveSortOrder(sortOrder: SortOrder) {
+    fun getLibraries(sortOrder: SortOrder, searchQuery: String) {
         storage.setSortOrder(sortOrder)
-    }
-
-    fun getLibraries(
-        sortOrder: SortOrder,
-        searchTerm: String = ""
-    ) {
-        this.sortOrder = sortOrder
-        this.searchTerm = searchTerm
-        triggerLiveData.value = Unit
+        sortOrderLiveData.value = sortOrder
+        searchQueryLiveData.value = searchQuery
     }
 
     fun pinLibrary(library: Library, pin: Boolean) {
 
         viewModelScope.launch {
-
             try {
                 libraryRepository.pinLibrary(library, pin)
             } catch (t: Throwable) {
             }
-
         }
 
     }

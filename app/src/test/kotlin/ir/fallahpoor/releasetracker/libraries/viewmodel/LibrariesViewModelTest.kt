@@ -60,7 +60,7 @@ class LibrariesViewModelTest {
             librariesViewModel.librariesListState.observeForever { }
 
             // When
-            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A)
+            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = "")
 
             // Then
             val librariesListState: LibrariesListState? =
@@ -97,7 +97,7 @@ class LibrariesViewModelTest {
             librariesViewModel.librariesListState.observeForever { }
 
             // When
-            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchTerm = searchTerm)
+            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = searchTerm)
 
             // Then
             val librariesListState: LibrariesListState? =
@@ -217,22 +217,5 @@ class LibrariesViewModelTest {
                 .isInstanceOf(LibraryDeleteState.Error::class.java)
 
         }
-
-    @Test
-    fun test_saveSortOrder() {
-
-        // Given
-        val expectedSortOrder = SortOrder.PINNED_FIRST
-
-        // When
-        librariesViewModel.saveSortOrder(expectedSortOrder)
-
-        // Then
-        val actualSortOrder = fakeStorage.getSortOrder()
-        Truth.assertThat(actualSortOrder).isEqualTo(expectedSortOrder)
-
-    }
-
-    // lastUpdateCheckState
 
 }
