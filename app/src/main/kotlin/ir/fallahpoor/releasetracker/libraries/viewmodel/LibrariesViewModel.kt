@@ -25,7 +25,7 @@ class LibrariesViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    private class Params(
+    private data class Params(
         val sortOrder: SortOrder,
         val searchTerm: String
     )
@@ -42,13 +42,14 @@ class LibrariesViewModel
     }
 
     val librariesListState: LiveData<LibrariesListState> =
-        getLibrariesTriggerLiveData.switchMap { params: Params ->
-            libraryRepository.getLibraries(params.sortOrder, params.searchTerm)
-                .map { libraries: List<Library> ->
-                    LibrariesListState.LibrariesLoaded(libraries)
-                }
-                .asLiveData()
-        }
+        getLibrariesTriggerLiveData.distinctUntilChanged()
+            .switchMap { params: Params ->
+                libraryRepository.getLibraries(params.sortOrder, params.searchTerm)
+                    .map { libraries: List<Library> ->
+                        LibrariesListState.LibrariesLoaded(libraries)
+                    }
+                    .asLiveData()
+            }
 
     var libraryToDelete: Library? = null
     var searchQuery = ""
