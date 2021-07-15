@@ -45,7 +45,7 @@ class LibraryRepositoryImpl
         SortOrder.PINNED_FIRST -> libraryDao.getAllSortedByPinnedFirst(searchTerm)
     }
 
-    override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
+    override suspend fun getAllLibraries(): List<Library> = libraryDao.getAll()
 
     override suspend fun deleteLibrary(library: Library) {
         libraryDao.delete(library.name)

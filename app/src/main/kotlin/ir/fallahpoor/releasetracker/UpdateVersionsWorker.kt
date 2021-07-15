@@ -33,7 +33,7 @@ class UpdateVersionsWorker
             if (!networkUtils.isNetworkReachable()) {
                 Result.retry()
             } else {
-                val libraries: List<Library> = libraryRepository.getLibraries()
+                val libraries: List<Library> = libraryRepository.getAllLibraries()
                 libraries.forEach { library: Library ->
                     val latestVersion: String? = getLatestVersion(library)
                     if (latestVersion != null) {

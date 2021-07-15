@@ -182,7 +182,7 @@ class LibrariesViewModelTest {
             librariesViewModel.deleteLibrary(libraryToDelete)
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
+            Truth.assertThat(fakeLibraryRepository.getAllLibraries().size).isEqualTo(1)
             Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
             Truth.assertThat(librariesViewModel.deleteState.value)
                 .isInstanceOf(LibraryDeleteState.Deleted::class.java)
@@ -211,7 +211,7 @@ class LibrariesViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
+            Truth.assertThat(fakeLibraryRepository.getAllLibraries().size).isEqualTo(1)
             Truth.assertThat(fakeLibraryRepository.getLibrary("name")).isNotNull()
             Truth.assertThat(librariesViewModel.deleteState.value)
                 .isInstanceOf(LibraryDeleteState.Error::class.java)

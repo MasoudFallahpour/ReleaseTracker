@@ -84,7 +84,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.deleteLibrary(TEST_LIBRARY_1)
 
         // Then
-        Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(emptyList<Library>())
+        Truth.assertThat(libraryRepository.getAllLibraries()).isEqualTo(emptyList<Library>())
 
     }
 
@@ -143,7 +143,7 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(TEST_LIBRARY_2)
 
         // When
-        val libraries = libraryRepository.getLibraries()
+        val libraries = libraryRepository.getAllLibraries()
 
         // Then
         Truth.assertThat(libraries).isEqualTo(listOf(TEST_LIBRARY_2, TEST_LIBRARY_1))

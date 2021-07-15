@@ -14,7 +14,7 @@ interface LibraryRepository {
 
     fun getLibraries(sortOrder: SortOrder, searchTerm: String): Flow<List<Library>>
 
-    suspend fun getLibraries(): List<Library>
+    suspend fun getAllLibraries(): List<Library>
 
     suspend fun deleteLibrary(library: Library)
 

@@ -61,7 +61,7 @@ class FakeLibraryRepository : LibraryRepository {
 
     }
 
-    override suspend fun getLibraries(): List<Library> = libraries
+    override suspend fun getAllLibraries(): List<Library> = libraries
 
     override suspend fun deleteLibrary(library: Library) {
         if (library.name == LIBRARY_NAME_TO_CAUSE_ERROR) {
