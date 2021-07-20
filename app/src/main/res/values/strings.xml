@@ -29,7 +29,7 @@
     <string name="hint_search">Search libraries</string>
     <string name="pin_unpin_library">Pin or unpin library</string>
     <string name="more_options">More options</string>
-    <string name="clear_search_field">Clear search field</string>
+    <string name="clear_search_bar">Clear search bar</string>
     <string name="close_search_bar">Clear search bar</string>
     <string name="notification_channel_name">General</string>
     <string name="notification_channel_description">All notifications of the app</string>
@@ -40,4 +40,8 @@
     <string name="test_tag_add_library_library_name_text_field">addLibraryLibraryNameTextField</string>
     <string name="test_tag_add_library_library_url_text_field">addLibraryLibraryUrlTextField</string>
     <string name="test_tag_add_library_add_library_button">addLibraryAddLibraryButton</string>
+    <string name="test_tag_libraries_list_add_library_button">librariesListAddLibraryButton</string>
+    <string name="test_tag_search_bar_close_button">searchBarCloseButton</string>
+    <string name="test_tag_search_bar_clear_button">searchBarClearButton</string>
+    <string name="test_tag_search_bar_query_text_field">searchBarQueryTextField</string>
 </resources>

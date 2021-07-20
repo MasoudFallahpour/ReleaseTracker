@@ -21,6 +21,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -65,14 +67,18 @@ fun SearchBar(
                     onQuerySubmit = onQuerySubmit
                 )
             }
-            ClearButton(onClearClick)
+            ClearButton(onClearClick = onClearClick)
         }
     }
 }
 
 @Composable
 private fun CloseButton(onCloseClick: () -> Unit) {
-    IconButton(onClick = onCloseClick) {
+    val tag = stringResource(R.string.test_tag_search_bar_close_button)
+    IconButton(
+        modifier = Modifier.semantics { testTag = tag },
+        onClick = onCloseClick
+    ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = stringResource(R.string.close_search_bar)
@@ -86,11 +92,13 @@ private fun SearchTextField(
     onQueryChange: (String) -> Unit,
     onQuerySubmit: (String) -> Unit
 ) {
+    val tag = stringResource(R.string.test_tag_search_bar_query_text_field)
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .focusRequester(focusRequester),
+            .focusRequester(focusRequester)
+            .semantics { testTag = tag },
         value = query,
         onValueChange = onQueryChange,
         singleLine = true,
@@ -121,10 +129,14 @@ private fun HintText(hint: String) {
 
 @Composable
 private fun ClearButton(onClearClick: () -> Unit) {
-    IconButton(onClick = onClearClick) {
+    val tag = stringResource(R.string.test_tag_search_bar_clear_button)
+    IconButton(
+        modifier = Modifier.semantics { testTag = tag },
+        onClick = onClearClick
+    ) {
         Icon(
             imageVector = Icons.Filled.Clear,
-            contentDescription = stringResource(R.string.clear_search_field)
+            contentDescription = stringResource(R.string.clear_search_bar)
         )
     }
 }
