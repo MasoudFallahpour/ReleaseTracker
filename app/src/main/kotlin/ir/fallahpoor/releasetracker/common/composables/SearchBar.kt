@@ -43,8 +43,9 @@ fun SearchBar(
     onClearClick: () -> Unit,
     onCloseClick: () -> Unit
 ) {
+    val tag = stringResource(R.string.test_tag_search_bar)
     Surface(
-        modifier = modifier,
+        modifier = modifier.semantics { testTag = tag },
         shape = shape,
         elevation = elevation
     ) {

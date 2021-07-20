@@ -59,7 +59,6 @@ fun LibrariesListScreen(
         LibraryDeleteState.Fresh
     )
     val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
-    val scaffoldState = rememberScaffoldState()
     val getLibraries = {
         librariesViewModel.getLibraries(
             sortOrder = librariesViewModel.sortOrder,
@@ -79,6 +78,7 @@ fun LibrariesListScreen(
                 onToolbarModeChange = {
                     toolbarMode = it
                     if (it == ToolbarMode.Normal) {
+                        librariesViewModel.searchQuery = ""
                         getLibraries()
                     }
                 },
@@ -96,10 +96,6 @@ fun LibrariesListScreen(
                 },
                 onSearchQuerySubmit = { query: String ->
                     librariesViewModel.searchQuery = query
-                    getLibraries()
-                },
-                onSearchQueryClear = {
-                    librariesViewModel.searchQuery = ""
                     getLibraries()
                 }
             )
@@ -360,9 +356,12 @@ private fun EllipsisText(text: String, style: TextStyle, modifier: Modifier = Mo
 @ExperimentalAnimationApi
 @Composable
 private fun AddLibraryButton(clickListener: () -> Unit) {
+    val tag = stringResource(R.string.test_tag_libraries_list_add_library_button)
     FloatingActionButton(
         onClick = clickListener,
-        modifier = Modifier.padding(SPACE_NORMAL.dp)
+        modifier = Modifier
+            .padding(SPACE_NORMAL.dp)
+            .semantics { testTag = tag },
     ) {
         Icon(
             imageVector = Icons.Filled.Add,

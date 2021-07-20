@@ -37,12 +37,9 @@ fun Toolbar(
     currentNightMode: NightMode,
     onNightModeChange: (NightMode) -> Unit,
     onSearchQueryChange: (String) -> Unit,
-    onSearchQuerySubmit: (String) -> Unit,
-    onSearchQueryClear: () -> Unit
+    onSearchQuerySubmit: (String) -> Unit
 ) {
     TopAppBar {
-
-        var searchQuery by rememberSaveable { mutableStateOf("") }
 
         Box(contentAlignment = Alignment.BottomCenter) {
             Row(
@@ -71,6 +68,7 @@ fun Toolbar(
                 }
             }
             androidx.compose.animation.AnimatedVisibility(visible = toolbarMode == ToolbarMode.Search) {
+                var searchQuery by rememberSaveable { mutableStateOf("") }
                 SearchBar(
                     modifier = Modifier.fillMaxWidth(),
                     hint = stringResource(R.string.search),
@@ -80,14 +78,10 @@ fun Toolbar(
                         onSearchQueryChange(it)
                     },
                     onQuerySubmit = onSearchQuerySubmit,
-                    onClearClick = {
-                        searchQuery = ""
-                        onSearchQueryClear()
-                    },
+                    onClearClick = { searchQuery = "" },
                     onCloseClick = {
                         onToolbarModeChange(ToolbarMode.Normal)
                         searchQuery = ""
-                        onSearchQueryClear()
                     }
                 )
             }
@@ -100,11 +94,7 @@ private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (Sor
 
     var showSortOrderDialog by rememberSaveable { mutableStateOf(false) }
 
-    IconButton(
-        onClick = {
-            showSortOrderDialog = true
-        }
-    ) {
+    IconButton(onClick = { showSortOrderDialog = true }) {
         Icon(
             painter = painterResource(R.drawable.ic_sort),
             contentDescription = stringResource(R.string.sort)
@@ -117,9 +107,7 @@ private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (Sor
                 showSortOrderDialog = false
                 onSortOrderChange(sortOrder)
             },
-            onDismiss = {
-                showSortOrderDialog = false
-            }
+            onDismiss = { showSortOrderDialog = false }
         )
     }
 
@@ -145,11 +133,7 @@ private fun NightModeButton(
     var showNightModeDialog by rememberSaveable { mutableStateOf(false) }
 
     Box {
-        IconButton(
-            onClick = {
-                showDropdownMenu = !showDropdownMenu
-            }
-        ) {
+        IconButton(onClick = { showDropdownMenu = !showDropdownMenu }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = stringResource(R.string.more_options)
@@ -178,9 +162,7 @@ private fun NightModeButton(
                 onNightModeChange(nightMode)
                 showNightModeDialog = false
             },
-            onDismiss = {
-                showNightModeDialog = false
-            }
+            onDismiss = { showNightModeDialog = false }
         )
     }
 
@@ -199,7 +181,6 @@ private fun ToolbarPreview() {
         currentNightMode = NightMode.AUTO,
         onNightModeChange = {},
         onSearchQueryChange = {},
-        onSearchQuerySubmit = {},
-        onSearchQueryClear = {}
+        onSearchQuerySubmit = {}
     )
 }
