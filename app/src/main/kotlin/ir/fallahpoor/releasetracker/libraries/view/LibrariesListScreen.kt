@@ -45,7 +45,8 @@ fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel,
     nightModeManager: NightModeManager,
     onLibraryClick: (Library) -> Unit,
-    onAddLibraryClick: () -> Unit
+    onAddLibraryClick: () -> Unit,
+    scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
 
     val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
