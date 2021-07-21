@@ -266,7 +266,7 @@ class ToolbarTest {
     fun when_search_bar_is_closed_toolbar_is_set_to_normal_mode() {
 
         // Given
-        var toolbarMode = ToolbarMode.Search
+        var toolbarMode by mutableStateOf(ToolbarMode.Search)
         composeTestRule.setContent {
             Toolbar(
                 toolbarMode = toolbarMode,
