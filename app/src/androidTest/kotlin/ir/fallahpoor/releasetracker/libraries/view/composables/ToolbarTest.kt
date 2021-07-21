@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.common.composables
+package ir.fallahpoor.releasetracker.libraries.view.composables
 
 import android.content.Context
 import androidx.compose.runtime.getValue

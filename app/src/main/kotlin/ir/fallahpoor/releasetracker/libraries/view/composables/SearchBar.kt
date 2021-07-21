@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.common.composables
+package ir.fallahpoor.releasetracker.libraries.view.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row

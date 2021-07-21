@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,12 +26,12 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
 import ir.fallahpoor.releasetracker.common.composables.Screen
-import ir.fallahpoor.releasetracker.common.composables.Toolbar
-import ir.fallahpoor.releasetracker.common.composables.ToolbarMode
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.libraries.view.composables.Toolbar
+import ir.fallahpoor.releasetracker.libraries.view.composables.ToolbarMode
 import ir.fallahpoor.releasetracker.libraries.view.composables.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
@@ -154,7 +156,9 @@ private fun LibrariesListContent(
     ) {
         LastUpdateCheckText(lastUpdateCheck)
         when (librariesListState) {
-            is LibrariesListState.Loading -> ProgressIndicator()
+            is LibrariesListState.Loading -> {
+                ProgressIndicator()
+            }
             is LibrariesListState.LibrariesLoaded -> {
                 val libraries: List<Library> = librariesListState.libraries
                 LibrariesList(
