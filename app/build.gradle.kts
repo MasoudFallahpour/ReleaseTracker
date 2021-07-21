@@ -132,9 +132,6 @@ android {
     sourceSets.getByName("test").kotlin {
         srcDir("src/sharedTest/kotlin")
     }
-    sourceSets.getByName("androidTest").kotlin {
-        srcDir("src/sharedTest/kotlin")
-    }
 
     packagingOptions {
         resources.excludes.add("**/attach_hotspot_windows.dll")

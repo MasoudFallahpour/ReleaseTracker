@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.view.dialogs
+package ir.fallahpoor.releasetracker.libraries.view.composables.dialogs
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

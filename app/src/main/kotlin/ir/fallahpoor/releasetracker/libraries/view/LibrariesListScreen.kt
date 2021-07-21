@@ -30,7 +30,7 @@ import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.libraries.view.dialogs.DeleteLibraryDialog
+import ir.fallahpoor.releasetracker.libraries.view.composables.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
