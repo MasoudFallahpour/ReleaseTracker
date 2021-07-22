@@ -171,7 +171,24 @@ private fun NightModeButton(
 @Preview
 @Composable
 @ExperimentalAnimationApi
-private fun ToolbarPreview() {
+private fun ToolbarNormalPreview() {
+    Toolbar(
+        toolbarMode = ToolbarMode.Normal,
+        onToolbarModeChange = {},
+        currentSortOrder = SortOrder.A_TO_Z,
+        onSortOrderChange = {},
+        isNightModeSupported = true,
+        currentNightMode = NightMode.AUTO,
+        onNightModeChange = {},
+        onSearchQueryChange = {},
+        onSearchQuerySubmit = {}
+    )
+}
+
+@Preview
+@Composable
+@ExperimentalAnimationApi
+private fun ToolbarSearchPreview() {
     Toolbar(
         toolbarMode = ToolbarMode.Search,
         onToolbarModeChange = {},
