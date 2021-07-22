@@ -159,8 +159,8 @@ private fun NightModeButton(
         NightModeDialog(
             defaultNightMode = currentNightMode,
             onNightModeClick = { nightMode: NightMode ->
-                onNightModeChange(nightMode)
                 showNightModeDialog = false
+                onNightModeChange(nightMode)
             },
             onDismiss = { showNightModeDialog = false }
         )
