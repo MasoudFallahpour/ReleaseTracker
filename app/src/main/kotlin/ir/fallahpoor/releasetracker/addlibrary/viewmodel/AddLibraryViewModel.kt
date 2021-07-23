@@ -4,12 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
+import ir.fallahpoor.releasetracker.common.SingleLiveData
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
@@ -23,7 +23,7 @@ class AddLibraryViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    private val _state: MutableLiveData<AddLibraryState> = MutableLiveData()
+    private val _state: SingleLiveData<AddLibraryState> = SingleLiveData()
     val state: LiveData<AddLibraryState> = _state
     var libraryName by mutableStateOf("")
     var libraryUrlPath by mutableStateOf("")
