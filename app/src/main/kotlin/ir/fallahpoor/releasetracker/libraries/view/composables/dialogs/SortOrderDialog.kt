@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
@@ -82,11 +84,13 @@ private fun SortItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
-            modifier = Modifier.padding(
-                top = SPACE_SMALL.dp,
-                end = SPACE_SMALL.dp,
-                bottom = SPACE_SMALL.dp
-            ),
+            modifier = Modifier
+                .padding(
+                    top = SPACE_SMALL.dp,
+                    end = SPACE_SMALL.dp,
+                    bottom = SPACE_SMALL.dp
+                )
+                .semantics { testTag = text },
             selected = isSelected,
             onClick = { onSortOrderClick(sortOrder) }
         )

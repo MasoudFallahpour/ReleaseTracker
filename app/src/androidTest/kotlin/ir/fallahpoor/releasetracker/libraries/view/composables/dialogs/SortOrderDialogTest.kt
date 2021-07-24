@@ -1,11 +1,10 @@
 package ir.fallahpoor.releasetracker.libraries.view.composables.dialogs
 
 import android.content.Context
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
@@ -39,7 +38,8 @@ class SortOrderDialogTest {
                 .assertIsDisplayed()
             onNodeWithText(context.getString(R.string.pinned_first), useUnmergedTree = true)
                 .assertIsDisplayed()
-            // TODO assert that the current sort order is highlighted
+            onNodeWithTag(context.getString(R.string.z_to_a))
+                .assertIsSelected()
         }
 
     }
@@ -61,8 +61,7 @@ class SortOrderDialogTest {
         composeTestRule.onNodeWithText(
             context.getString(R.string.pinned_first),
             useUnmergedTree = true
-        )
-            .performClick()
+        ).performClick()
 
         // Then
         Truth.assertThat(sortOrder).isEqualTo(SortOrder.PINNED_FIRST)
@@ -83,10 +82,10 @@ class SortOrderDialogTest {
         }
 
         // When
-        // TODO Find a way to dismiss the dialog
+        Espresso.pressBack()
 
         // Then
-//        Truth.assertThat(dismissed).isTrue()
+        Truth.assertThat(dismissed).isTrue()
 
     }
 

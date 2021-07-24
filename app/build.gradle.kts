@@ -201,6 +201,7 @@ dependencies {
     androidTestImplementation(Dependencies.AppTest.mockitoAndroid)
     androidTestImplementation(Dependencies.AppTest.mockitoKotlin)
     androidTestImplementation(Dependencies.AppTest.coreTesting)
+    androidTestImplementation(Dependencies.AppTest.espresso)
     debugImplementation(Dependencies.AppTest.uiTestManifest)
 
     implementation(project(":data"))

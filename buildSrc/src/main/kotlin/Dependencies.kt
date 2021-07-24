@@ -67,6 +67,7 @@ object Dependencies {
         const val rules = "androidx.test:rules:${Versions.testRules}"
         const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}"
         const val mockitoAndroid = "org.mockito:mockito-android:${Versions.mockitoKotlin}"
+        const val espresso = "androidx.test.espresso:espresso-core:${Versions.espresso}"
     }
 
     object Data {
