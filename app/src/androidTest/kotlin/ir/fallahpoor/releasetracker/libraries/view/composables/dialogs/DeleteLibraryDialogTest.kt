@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import org.junit.Rule
@@ -78,10 +79,10 @@ class DeleteLibraryDialogTest {
         }
 
         // When
-        // TODO Find a way to dismiss the dialog
+        Espresso.pressBack()
 
         // Then
-//        Truth.assertThat(dismissed).isTrue()
+        Truth.assertThat(dismissed).isTrue()
 
     }
 
