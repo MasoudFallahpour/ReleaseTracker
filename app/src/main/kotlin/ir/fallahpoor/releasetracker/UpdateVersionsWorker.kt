@@ -26,38 +26,38 @@ class UpdateVersionsWorker
     private val notificationManager: NotificationManager
 ) : CoroutineWorker(context, workerParams) {
 
-    override suspend fun doWork(): Result {
-
-        val updatedLibraries = mutableListOf<String>()
-        val result: Result =
-            if (!networkUtils.isNetworkReachable()) {
-                Result.retry()
-            } else {
-                val libraries: List<Library> = libraryRepository.getAllLibraries()
-                libraries.forEach { library: Library ->
-                    val latestVersion: String? = getLatestVersion(library)
-                    if (latestVersion != null) {
-                        val libraryCopy = library.copy(version = latestVersion)
-                        libraryRepository.updateLibrary(libraryCopy)
-                        if (newVersionAvailable(latestVersion, library.version)) {
-                            updatedLibraries.add("${library.name}: ${library.version} -> $latestVersion")
-                        }
-                    }
-                }
-                saveUpdateDate(libraries)
-                Result.success()
-            }
-
-        if (result is Result.Success && updatedLibraries.isNotEmpty()) {
+    override suspend fun doWork(): Result =
+        if (!networkUtils.isNetworkReachable()) {
+            Result.retry()
+        } else {
+            val updatedLibraries: List<String> = updateLibraries()
+            saveUpdateDate()
             showNotification(updatedLibraries)
+            Result.success()
         }
 
-        return result
+    private suspend fun updateLibraries(): List<String> {
+
+        val updatedLibraries = mutableListOf<String>()
+        val libraries: List<Library> = libraryRepository.getAllLibraries()
+
+        libraries.forEach { library: Library ->
+            val latestVersion: String? = getLatestVersion(library)
+            latestVersion?.let {
+                val libraryCopy = library.copy(version = it)
+                libraryRepository.updateLibrary(libraryCopy)
+                if (newVersionAvailable(it, library.version)) {
+                    updatedLibraries.add("${library.name}: ${library.version} -> $it")
+                }
+            }
+        }
+
+        return updatedLibraries
 
     }
 
-    private suspend fun getLatestVersion(library: Library): String? {
-        return try {
+    private suspend fun getLatestVersion(library: Library): String? =
+        try {
             val libraryVersion: String =
                 libraryRepository.getLibraryVersion(library.name, library.url)
             Timber.d("Update SUCCESS (%s): %s", library.name, libraryVersion)
@@ -66,7 +66,6 @@ class UpdateVersionsWorker
             Timber.d("Update FAILURE (%s): %s", library.name, t.message)
             null
         }
-    }
 
     private fun newVersionAvailable(latestVersion: String?, currentVersion: String): Boolean {
         return latestVersion != null &&
@@ -74,24 +73,22 @@ class UpdateVersionsWorker
                 latestVersion != currentVersion
     }
 
-    private fun saveUpdateDate(libraries: List<Library>) {
-        if (libraries.isNotEmpty()) {
-            val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
-            libraryRepository.setLastUpdateCheck(simpleDateFormat.format(Date()))
-        } else {
-            libraryRepository.setLastUpdateCheck("N/A")
-        }
+    private fun saveUpdateDate() {
+        val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
+        libraryRepository.setLastUpdateCheck(simpleDateFormat.format(Date()))
     }
 
     private fun showNotification(updatedLibraries: List<String>) {
-        val notificationBody = context.getString(
-            R.string.notification_body,
-            updatedLibraries.joinToString(separator = "\n")
-        )
-        notificationManager.showNotification(
-            title = context.getString(R.string.notification_title),
-            body = notificationBody
-        )
+        if (updatedLibraries.isNotEmpty()) {
+            val notificationBody = context.getString(
+                R.string.notification_body,
+                updatedLibraries.joinToString(separator = "\n")
+            )
+            notificationManager.showNotification(
+                title = context.getString(R.string.notification_title),
+                body = notificationBody
+            )
+        }
     }
 
 }
