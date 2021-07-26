@@ -83,7 +83,7 @@ android {
         versionCode = Versions.versionCode
         versionName = Versions.versionName
         setProperty("archivesBaseName", "ReleaseTracker")
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "ir.fallahpoor.releasetracker.CustomTestRunner"
     }
 
     signingConfigs {
@@ -108,7 +108,7 @@ android {
             signingConfig = signingConfigs["release"]
         }
         debug {
-            isTestCoverageEnabled = true
+//            isTestCoverageEnabled = true
         }
     }
 
@@ -130,6 +130,9 @@ android {
     }
 
     sourceSets.getByName("test").kotlin {
+        srcDir("src/sharedTest/kotlin")
+    }
+    sourceSets.getByName("androidTest").kotlin {
         srcDir("src/sharedTest/kotlin")
     }
 
@@ -202,6 +205,8 @@ dependencies {
     androidTestImplementation(Dependencies.AppTest.mockitoKotlin)
     androidTestImplementation(Dependencies.AppTest.coreTesting)
     androidTestImplementation(Dependencies.AppTest.espresso)
+    androidTestImplementation(Dependencies.AppTest.hiltAndroidTesting)
+    kaptAndroidTest(Dependencies.App.hiltAndroidCompiler)
     debugImplementation(Dependencies.AppTest.uiTestManifest)
 
     implementation(project(":data"))

@@ -15,11 +15,6 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddLibraryViewModelTest {
 
-    private companion object {
-        const val LIBRARY_NAME = "ReleaseTracker"
-        const val LIBRARY_URL = "masoodfallahpoor/ReleaseTracker"
-    }
-
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -43,11 +38,12 @@ class AddLibraryViewModelTest {
         runBlockingTest {
 
             // Given
+            fakeLibraryRepository.deleteLibraries()
 
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = "",
-                libraryUrlPath = LIBRARY_URL
+                libraryUrlPath = "does not matter"
             )
 
             // Then
@@ -62,10 +58,11 @@ class AddLibraryViewModelTest {
         runBlockingTest {
 
             // Given
+            fakeLibraryRepository.deleteLibraries()
 
             // When
             addLibraryViewModel.addLibrary(
-                libraryName = LIBRARY_NAME,
+                libraryName = "does not matter",
                 libraryUrlPath = ""
             )
 
@@ -81,11 +78,12 @@ class AddLibraryViewModelTest {
         runBlockingTest {
 
             // Given
+            fakeLibraryRepository.deleteLibraries()
 
             // When
             addLibraryViewModel.addLibrary(
-                libraryName = LIBRARY_NAME,
-                libraryUrlPath = "InvalidLibraryUrl"
+                libraryName = "does not matter",
+                libraryUrlPath = "This is an invalid library URL path"
             )
 
             // Then
@@ -100,16 +98,17 @@ class AddLibraryViewModelTest {
         runBlockingTest {
 
             // Given
+            fakeLibraryRepository.deleteLibraries()
             fakeLibraryRepository.addLibrary(
-                libraryName = LIBRARY_NAME,
-                libraryUrl = LIBRARY_URL,
-                libraryVersion = "version1"
+                libraryName = FakeLibraryRepository.Coil.name,
+                libraryUrl = FakeLibraryRepository.Coil.url,
+                libraryVersion = FakeLibraryRepository.Coil.version
             )
 
             // When
             addLibraryViewModel.addLibrary(
-                libraryName = LIBRARY_NAME,
-                libraryUrlPath = LIBRARY_URL
+                libraryName = FakeLibraryRepository.Coil.name,
+                libraryUrlPath = FakeLibraryRepository.Coil.url
             )
 
             // Then
@@ -124,15 +123,16 @@ class AddLibraryViewModelTest {
         runBlockingTest {
 
             // Given
+            val libraryName = "abc"
 
             // When
             addLibraryViewModel.addLibrary(
-                libraryName = LIBRARY_NAME,
-                libraryUrlPath = LIBRARY_URL
+                libraryName = libraryName,
+                libraryUrlPath = "abc/def"
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibrary(LIBRARY_NAME)).isNotNull()
+            Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNotNull()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isInstanceOf(AddLibraryState.LibraryAdded::class.java)
 
@@ -143,12 +143,12 @@ class AddLibraryViewModelTest {
         runBlockingTest {
 
             // Given
-            val libraryName: String = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR
+            val libraryName: String = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING
 
             // When
             addLibraryViewModel.addLibrary(
                 libraryName = libraryName,
-                libraryUrlPath = LIBRARY_URL
+                libraryUrlPath = "abc/def"
             )
 
             // Then

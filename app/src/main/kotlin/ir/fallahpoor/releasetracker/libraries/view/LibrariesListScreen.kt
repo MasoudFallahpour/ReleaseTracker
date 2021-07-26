@@ -14,6 +14,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
@@ -180,8 +181,11 @@ private fun LibrariesListContent(
 
 @Composable
 private fun ProgressIndicator() {
+    val tag = stringResource(R.string.test_tag_libraries_list_progress_indicator)
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics { testTag = tag },
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
@@ -191,10 +195,10 @@ private fun ProgressIndicator() {
 @Composable
 private fun LastUpdateCheckText(lastUpdateCheck: String) {
     Text(
-        text = stringResource(R.string.last_check_for_updates, lastUpdateCheck),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(SPACE_NORMAL.dp)
+            .padding(SPACE_NORMAL.dp),
+        text = stringResource(R.string.last_check_for_updates, lastUpdateCheck)
     )
 }
 
@@ -211,8 +215,8 @@ private fun LibrariesList(
     onAddLibraryClick: () -> Unit
 ) {
     Box(
-        contentAlignment = Alignment.BottomStart,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomStart
     ) {
         if (libraries.isEmpty()) {
             NoLibrariesText()
@@ -266,12 +270,12 @@ private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: Scaf
 @Composable
 private fun NoLibrariesText() {
     Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(R.string.no_libraries),
-            modifier = Modifier.padding(SPACE_NORMAL.dp)
+            modifier = Modifier.padding(SPACE_NORMAL.dp),
+            text = stringResource(R.string.no_libraries)
         )
     }
 }
@@ -284,6 +288,7 @@ private fun LibraryItem(
     onLibraryLongClick: () -> Unit,
     onPinLibraryClick: (Boolean) -> Unit
 ) {
+    val tag = stringResource(R.string.test_tag_libraries_list_library_item)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -296,10 +301,11 @@ private fun LibraryItem(
                 top = SPACE_NORMAL.dp,
                 bottom = SPACE_NORMAL.dp
             )
+            .semantics { testTag = tag }
     ) {
         PinToggleButton(
             isPinned = library.isPinned(),
-            onCheckedChange = { isPinned: Boolean ->
+            onPinnedChange = { isPinned: Boolean ->
                 onPinLibraryClick(isPinned)
             }
         )
@@ -312,20 +318,24 @@ private fun LibraryItem(
 }
 
 @Composable
-private fun PinToggleButton(isPinned: Boolean, onCheckedChange: (Boolean) -> Unit) {
+private fun PinToggleButton(isPinned: Boolean, onPinnedChange: (Boolean) -> Unit) {
     IconToggleButton(
         checked = isPinned,
-        onCheckedChange = onCheckedChange
+        onCheckedChange = onPinnedChange
     ) {
-        val pinImage = if (isPinned) {
-            painterResource(R.drawable.ic_pin_filled)
+        val pinImage: Painter
+        val contentDescription: String
+        if (isPinned) {
+            pinImage = painterResource(R.drawable.ic_pin_filled)
+            contentDescription = stringResource(R.string.unpin_library)
         } else {
-            painterResource(R.drawable.ic_pin_outline)
+            pinImage = painterResource(R.drawable.ic_pin_outline)
+            contentDescription = stringResource(R.string.pin_library)
         }
         Icon(
             painter = pinImage,
             tint = MaterialTheme.colors.secondary,
-            contentDescription = stringResource(R.string.pin_unpin_library)
+            contentDescription = contentDescription
         )
     }
 }
@@ -341,20 +351,20 @@ private fun LibraryNameText(libraryName: String) {
 @Composable
 private fun LibraryUrlText(libraryUrl: String) {
     EllipsisText(
+        modifier = Modifier.padding(end = SPACE_NORMAL.dp),
         text = libraryUrl,
-        style = MaterialTheme.typography.body2,
-        modifier = Modifier.padding(end = SPACE_NORMAL.dp)
+        style = MaterialTheme.typography.body2
     )
 }
 
 @Composable
-private fun EllipsisText(text: String, style: TextStyle, modifier: Modifier = Modifier) {
+private fun EllipsisText(modifier: Modifier = Modifier, text: String, style: TextStyle) {
     Text(
+        modifier = modifier,
         text = text,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        style = style,
-        modifier = modifier
+        style = style
     )
 }
 
@@ -363,10 +373,10 @@ private fun EllipsisText(text: String, style: TextStyle, modifier: Modifier = Mo
 private fun AddLibraryButton(clickListener: () -> Unit) {
     val tag = stringResource(R.string.test_tag_libraries_list_add_library_button)
     FloatingActionButton(
-        onClick = clickListener,
         modifier = Modifier
             .padding(SPACE_NORMAL.dp)
             .semantics { testTag = tag },
+        onClick = clickListener
     ) {
         Icon(
             imageVector = Icons.Filled.Add,

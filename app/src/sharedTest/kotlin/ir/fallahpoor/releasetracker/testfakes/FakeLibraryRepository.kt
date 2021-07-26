@@ -1,47 +1,83 @@
 package ir.fallahpoor.releasetracker.testfakes
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
+import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
+import javax.inject.Inject
 
-class FakeLibraryRepository : LibraryRepository {
+class FakeLibraryRepository @Inject constructor() : LibraryRepository {
+
+    object Coil {
+        const val name = "Coil"
+        const val url = "coil-kt/coil"
+        const val version = "1.3.1"
+    }
+
+    object Kotlin {
+        const val name = "Kotlin"
+        const val url = "JetBrains/kotlin"
+        const val version = "1.5.21"
+    }
+
+    object Koin {
+        const val name = "Koin"
+        const val url = "InsertKoinIO/koin"
+        const val version = "3.1.2"
+    }
 
     companion object {
-        const val LIBRARY_NAME_TO_CAUSE_ERROR = "someLibraryName"
+        const val LAST_UPDATE_CHECK = "N/A"
+        const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING = "Coroutines"
+        const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING = Kotlin.name
+        const val ERROR_MESSAGE = ExceptionParser.SOMETHING_WENT_WRONG
         const val LIBRARY_VERSION = "0.2"
     }
 
-    private val libraries = mutableListOf<Library>()
+    private val libraries = mutableListOf(
+        Library(Coil.name, Coil.url, Coil.version),
+        Library(Kotlin.name, Kotlin.url, Kotlin.version),
+        Library(Koin.name, Koin.url, Koin.version, pinned = 1)
+    )
+    private val librariesLiveData = MutableLiveData<List<Library>>(libraries)
 
     override suspend fun addLibrary(
         libraryName: String,
         libraryUrl: String,
         libraryVersion: String
     ) {
-        if (libraryName == LIBRARY_NAME_TO_CAUSE_ERROR) {
-            throw IOException()
+        if (libraryName == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING) {
+            throw IOException(ERROR_MESSAGE)
         } else {
-            val library: Library? = libraries.find { it.name == libraryName }
+            val library: Library? = libraries.find {
+                it.name.equals(libraryName, ignoreCase = true)
+            }
             if (library != null) {
-                throw IOException()
+                throw RuntimeException(ExceptionParser.SOMETHING_WENT_WRONG)
             } else {
                 libraries.add(Library(libraryName, libraryUrl, libraryVersion, 0))
+                updateLibrariesLiveData(libraries)
             }
         }
     }
 
     override suspend fun updateLibrary(library: Library) {
-        val removed: Boolean = libraries.removeIf { it.name == library.name }
+        val removed: Boolean = libraries.removeIf {
+            it.name.equals(library.name, ignoreCase = true)
+        }
         if (removed) {
             libraries.add(library)
+            updateLibrariesLiveData(libraries)
         }
     }
 
     override suspend fun getLibrary(libraryName: String): Library? =
-        libraries.firstOrNull { it.name == libraryName }
+        libraries.firstOrNull { it.name.equals(libraryName, ignoreCase = true) }
 
     override fun getLibraries(sortOrder: SortOrder, searchTerm: String): Flow<List<Library>> {
 
@@ -55,19 +91,22 @@ class FakeLibraryRepository : LibraryRepository {
             SortOrder.PINNED_FIRST -> filteredLibraries.sortedByDescending { it.pinned }
         }
 
-        return flow {
-            emit(sortedLibraries)
-        }
+        updateLibrariesLiveData(sortedLibraries)
+
+        return librariesLiveData.asFlow()
 
     }
 
     override suspend fun getAllLibraries(): List<Library> = libraries
 
     override suspend fun deleteLibrary(library: Library) {
-        if (library.name == LIBRARY_NAME_TO_CAUSE_ERROR) {
-            throw IOException()
+        if (library.name == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING) {
+            throw RuntimeException(ERROR_MESSAGE)
         } else {
-            libraries.removeIf { it.name == library.name }
+            val removed = libraries.removeIf { it.name.equals(library.name, ignoreCase = true) }
+            if (removed) {
+                updateLibrariesLiveData(libraries)
+            }
         }
     }
 
@@ -82,11 +121,20 @@ class FakeLibraryRepository : LibraryRepository {
 
     override fun getLastUpdateCheck(): Flow<String> =
         flow {
-            emit("Jan 14 2021 14:20")
+            emit(LAST_UPDATE_CHECK)
         }
 
     override fun setLastUpdateCheck(date: String) {
         TODO("Not yet implemented")
+    }
+
+    fun deleteLibraries() {
+        libraries.clear()
+        updateLibrariesLiveData(libraries)
+    }
+
+    private fun updateLibrariesLiveData(libraries: List<Library>) {
+        librariesLiveData.value = libraries
     }
 
 }

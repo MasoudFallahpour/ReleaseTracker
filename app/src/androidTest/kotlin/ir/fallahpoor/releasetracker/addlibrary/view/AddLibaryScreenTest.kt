@@ -70,9 +70,9 @@ class AddLibraryScreenTest {
         with(composeTestRule) {
             onNodeWithTag(progressIndicatorTag)
                 .assertDoesNotExist()
-            onNodeWithTag(libraryNameTextFieldTag)
+            onNodeWithTag(libraryNameTextFieldTag, useUnmergedTree = true)
                 .assertTextEquals("")
-            onNodeWithTag(libraryUrlTextFieldTag)
+            onNodeWithTag(libraryUrlTextFieldTag, useUnmergedTree = true)
                 .assertTextEquals("")
             onNodeWithTag(addLibraryButtonTag)
                 .assertIsEnabled()
@@ -243,9 +243,9 @@ class AddLibraryScreenTest {
         with(composeTestRule) {
             onNodeWithTag(progressIndicatorTag)
                 .assertDoesNotExist()
-            onNodeWithTag(libraryNameTextFieldTag)
+            onNodeWithTag(libraryNameTextFieldTag, useUnmergedTree = true)
                 .assertTextEquals("")
-            onNodeWithTag(libraryUrlTextFieldTag)
+            onNodeWithTag(libraryUrlTextFieldTag, useUnmergedTree = true)
                 .assertTextEquals("")
             onNodeWithTag(addLibraryButtonTag)
                 .assertIsEnabled()

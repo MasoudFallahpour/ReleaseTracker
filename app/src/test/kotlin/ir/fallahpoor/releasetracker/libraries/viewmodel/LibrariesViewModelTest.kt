@@ -6,10 +6,10 @@ import ir.fallahpoor.releasetracker.MainCoroutineScopeRule
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
-import ir.fallahpoor.releasetracker.testfakes.FakeStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -45,19 +45,7 @@ class LibrariesViewModelTest {
         runBlockingTest {
 
             // Given
-            val expectedLibraries = listOf(
-                Library(name = "A", url = "url1", version = "version1", pinned = 0),
-                Library(name = "C", url = "url2", version = "version2", pinned = 0),
-                Library(name = "B", url = "url3", version = "version3", pinned = 0)
-            )
-            expectedLibraries.forEach {
-                fakeLibraryRepository.addLibrary(
-                    libraryName = it.name,
-                    libraryUrl = it.url,
-                    libraryVersion = it.version
-                )
-            }
-            librariesViewModel.librariesListState.observeForever { }
+            librariesViewModel.librariesListState.observeForever {}
 
             // When
             librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = "")
@@ -67,7 +55,7 @@ class LibrariesViewModelTest {
                 librariesViewModel.librariesListState.value
             val librariesLoadedState = librariesListState as LibrariesListState.LibrariesLoaded
             Truth.assertThat(librariesLoadedState.libraries)
-                .isEqualTo(expectedLibraries.sortedByDescending { it.name })
+                .isEqualTo(fakeLibraryRepository.getAllLibraries().sortedByDescending { it.name })
 
         }
 
@@ -76,28 +64,16 @@ class LibrariesViewModelTest {
         runBlockingTest {
 
             // Given
-            val libraries = listOf(
-                Library(name = "GreenDao", url = "url1", version = "version1", pinned = 0),
-                Library(name = "ReleaseTracker", url = "url2", version = "version2", pinned = 0),
-                Library(name = "Koin", url = "url3", version = "version3", pinned = 0)
-            )
-            libraries.forEach {
-                fakeLibraryRepository.addLibrary(
-                    libraryName = it.name,
-                    libraryUrl = it.url,
-                    libraryVersion = it.version
-                )
-            }
-            val searchTerm = "re"
-            val expectedLibraries = libraries.filter {
-                it.name.contains(searchTerm, ignoreCase = true)
+            val searchQuery = "ko"
+            val expectedLibraries = fakeLibraryRepository.getAllLibraries().filter {
+                it.name.contains(searchQuery, ignoreCase = true)
             }.sortedByDescending {
                 it.name
             }
-            librariesViewModel.librariesListState.observeForever { }
+            librariesViewModel.librariesListState.observeForever {}
 
             // When
-            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = searchTerm)
+            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = searchQuery)
 
             // Then
             val librariesListState: LibrariesListState? =
@@ -165,16 +141,12 @@ class LibrariesViewModelTest {
         runBlockingTest {
 
             // Given
-            val libraryName = "name1"
+            fakeLibraryRepository.deleteLibraries()
+            val libraryName = "name"
             fakeLibraryRepository.addLibrary(
                 libraryName = libraryName,
-                libraryUrl = "url1",
-                libraryVersion = "version1"
-            )
-            fakeLibraryRepository.addLibrary(
-                libraryName = "name2",
-                libraryUrl = "url2",
-                libraryVersion = "version2"
+                libraryUrl = "url",
+                libraryVersion = "version"
             )
             val libraryToDelete: Library = fakeLibraryRepository.getLibrary(libraryName)!!
 
@@ -182,7 +154,7 @@ class LibrariesViewModelTest {
             librariesViewModel.deleteLibrary(libraryToDelete)
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getAllLibraries().size).isEqualTo(1)
+            Truth.assertThat(fakeLibraryRepository.getAllLibraries().size).isEqualTo(0)
             Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
             Truth.assertThat(librariesViewModel.deleteState.value)
                 .isInstanceOf(LibraryDeleteState.Deleted::class.java)
@@ -194,6 +166,7 @@ class LibrariesViewModelTest {
         runBlockingTest {
 
             // Given
+            fakeLibraryRepository.deleteLibraries()
             fakeLibraryRepository.addLibrary(
                 libraryName = "name",
                 libraryUrl = "url",
@@ -203,7 +176,7 @@ class LibrariesViewModelTest {
             // When
             librariesViewModel.deleteLibrary(
                 Library(
-                    name = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR,
+                    name = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING,
                     url = "url",
                     version = "version",
                     pinned = 0

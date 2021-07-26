@@ -27,10 +27,11 @@
     <string name="content_description_search">Search for libraries</string>
     <string name="search">Search</string>
     <string name="hint_search">Search libraries</string>
-    <string name="pin_unpin_library">Pin or unpin library</string>
+    <string name="pin_library">Pin library</string>
+    <string name="unpin_library">Unpin library</string>
     <string name="more_options">More options</string>
     <string name="clear_search_bar">Clear search bar</string>
-    <string name="close_search_bar">Clear search bar</string>
+    <string name="close_search_bar">Close search bar</string>
     <string name="notification_channel_name">General</string>
     <string name="notification_channel_description">All notifications of the app</string>
     <string name="notification_title">Updates Available</string>
@@ -41,6 +42,8 @@
     <string name="test_tag_add_library_library_url_text_field">addLibraryLibraryUrlTextField</string>
     <string name="test_tag_add_library_add_library_button">addLibraryAddLibraryButton</string>
     <string name="test_tag_libraries_list_add_library_button">librariesListAddLibraryButton</string>
+    <string name="test_tag_libraries_list_progress_indicator">librariesListProgressIndicator</string>
+    <string name="test_tag_libraries_list_library_item">librariesListLibraryItem</string>
     <string name="test_tag_search_bar_close_button">searchBarCloseButton</string>
     <string name="test_tag_search_bar_clear_button">searchBarClearButton</string>
     <string name="test_tag_search_bar_query_text_field">searchBarQueryTextField</string>

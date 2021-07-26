@@ -13,7 +13,6 @@ import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -45,10 +44,9 @@ class LibrariesViewModel
         getLibrariesTriggerLiveData.distinctUntilChanged()
             .switchMap { params: Params ->
                 libraryRepository.getLibraries(params.sortOrder, params.searchTerm)
-                    .map { libraries: List<Library> ->
-                        LibrariesListState.LibrariesLoaded(libraries)
-                    }
                     .asLiveData()
+            }.map { libraries: List<Library> ->
+                LibrariesListState.LibrariesLoaded(libraries)
             }
 
     var libraryToDelete: Library? = null
@@ -85,13 +83,14 @@ class LibrariesViewModel
 
         viewModelScope.launch {
 
-            try {
-                libraryRepository.deleteLibrary(library)
-                _deleteLiveData.value = LibraryDeleteState.Deleted
-            } catch (t: Throwable) {
-                val message = exceptionParser.getMessage(t)
-                _deleteLiveData.value = LibraryDeleteState.Error(message)
-            }
+            _deleteLiveData.value =
+                try {
+                    libraryRepository.deleteLibrary(library)
+                    LibraryDeleteState.Deleted
+                } catch (t: Throwable) {
+                    val message = exceptionParser.getMessage(t)
+                    LibraryDeleteState.Error(message)
+                }
 
         }
 
