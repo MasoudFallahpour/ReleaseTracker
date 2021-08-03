@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
+import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
@@ -204,7 +205,7 @@ private fun LibraryUrlPathTextField(
         modifier = Modifier
             .semantics { testTag = tag }
             .fillMaxWidth(),
-        prefix = stringResource(R.string.github_base_url),
+        prefix = GITHUB_BASE_URL,
         hint = stringResource(R.string.library_url),
         text = text,
         onTextChange = onTextChange,

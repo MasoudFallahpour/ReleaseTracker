@@ -7,7 +7,6 @@
     <string name="library_name_empty">Library name cannot be empty</string>
     <string name="library_url_empty">Library URL cannot be empty</string>
     <string name="library_url_invalid">Library URL is invalid</string>
-    <string name="github_base_url">https://github.com/</string>
     <string name="worker_tag">UPDATE_VERSION_WORKER</string>
     <string name="sort">Sort</string>
     <string name="select_sorting_order">Select Sorting Order</string>
