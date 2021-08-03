@@ -57,6 +57,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
     implementation(Dependencies.Data.kotlinStdLib)
     implementation(Dependencies.Data.core)
+    implementation(Dependencies.Data.preference)
     implementation(Dependencies.Data.liveData)
     implementation(Dependencies.Data.coroutinesAndroid)
 

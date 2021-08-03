@@ -7,6 +7,7 @@ object Dependencies {
         const val rxkprefs = "com.afollestad.rxkprefs:core:${Versions.kprefs}"
         const val liveData =
             "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+        const val preference = "androidx.preference:preference-ktx:${Versions.preference}"
     }
 
     private object CommonTest {
@@ -27,7 +28,7 @@ object Dependencies {
         const val liveData = Common.liveData
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel:${Versions.lifecycle}"
         const val workManager = "androidx.work:work-runtime-ktx:${Versions.workManager}"
-        const val preference = "androidx.preference:preference-ktx:${Versions.preference}"
+        const val preference = Common.preference
         const val activityCompose = "androidx.activity:activity-compose:${Versions.activityCompose}"
         const val navigationCompose =
             "androidx.navigation:navigation-compose:${Versions.navigationCompose}"
@@ -74,6 +75,7 @@ object Dependencies {
     object Data {
         const val kotlinStdLib = Common.kotlinStdLib
         const val core = Common.core
+        const val preference = Common.preference
         const val liveData = Common.liveData
         const val inject = "javax.inject:javax.inject:${Versions.inject}"
         const val coroutinesAndroid =

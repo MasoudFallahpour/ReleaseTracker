@@ -2,7 +2,7 @@ package ir.fallahpoor.releasetracker.data.utils.storage
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.test.core.app.ApplicationProvider
 import com.afollestad.rxkprefs.rxkPrefs
 import com.google.common.truth.Truth
@@ -15,7 +15,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
 class LocalStorageTest {
 
