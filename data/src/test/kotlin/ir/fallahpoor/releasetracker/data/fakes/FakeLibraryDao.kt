@@ -16,7 +16,7 @@ class FakeLibraryDao : LibraryDao {
             emit(
                 libraries
                     .filter {
-                        it.name.toLowerCase().contains(searchTerm.toLowerCase())
+                        it.name.contains(searchTerm, ignoreCase = true)
                     }.sortedBy {
                         it.name
                     }
@@ -28,7 +28,7 @@ class FakeLibraryDao : LibraryDao {
             emit(
                 libraries
                     .filter {
-                        it.name.toLowerCase().contains(searchTerm.toLowerCase())
+                        it.name.contains(searchTerm, ignoreCase = true)
                     }.sortedByDescending {
                         it.name
                     }
@@ -40,7 +40,7 @@ class FakeLibraryDao : LibraryDao {
             emit(
                 libraries
                     .filter {
-                        it.name.toLowerCase().contains(searchTerm.toLowerCase())
+                        it.name.contains(searchTerm, ignoreCase = true)
                     }.sortedBy {
                         it.pinned
                     }.sortedBy {
@@ -67,10 +67,12 @@ class FakeLibraryDao : LibraryDao {
     }
 
     override suspend fun delete(libraryName: String) {
-        libraries.removeIf {
+        val removed = libraries.removeIf {
             it.name == libraryName
         }
-        _librariesLiveData.value = libraries
+        if (removed) {
+            _librariesLiveData.value = libraries
+        }
     }
 
     override suspend fun get(libraryName: String): Library? =
