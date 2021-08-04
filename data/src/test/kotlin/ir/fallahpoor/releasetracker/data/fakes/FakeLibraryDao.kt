@@ -11,41 +11,10 @@ class FakeLibraryDao : LibraryDao {
     private val _librariesLiveData = MutableLiveData<List<Library>>()
     private val libraries = mutableListOf<Library>()
 
-    override fun getAllSortedByNameAscending(searchTerm: String): Flow<List<Library>> =
+    override fun getAllAsFlow(): Flow<List<Library>> =
         flow {
             emit(
-                libraries
-                    .filter {
-                        it.name.contains(searchTerm, ignoreCase = true)
-                    }.sortedBy {
-                        it.name
-                    }
-            )
-        }
-
-    override fun getAllSortedByNameDescending(searchTerm: String): Flow<List<Library>> =
-        flow {
-            emit(
-                libraries
-                    .filter {
-                        it.name.contains(searchTerm, ignoreCase = true)
-                    }.sortedByDescending {
-                        it.name
-                    }
-            )
-        }
-
-    override fun getAllSortedByPinnedFirst(searchTerm: String): Flow<List<Library>> =
-        flow {
-            emit(
-                libraries
-                    .filter {
-                        it.name.contains(searchTerm, ignoreCase = true)
-                    }.sortedBy {
-                        it.pinned
-                    }.sortedBy {
-                        it.name
-                    }
+                libraries.sortedBy { it.name }
             )
         }
 

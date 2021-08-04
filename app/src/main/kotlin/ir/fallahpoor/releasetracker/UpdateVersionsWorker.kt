@@ -39,7 +39,7 @@ class UpdateVersionsWorker
     private suspend fun updateLibraries(): List<String> {
 
         val updatedLibraries = mutableListOf<String>()
-        val libraries: List<Library> = libraryRepository.getAllLibraries()
+        val libraries: List<Library> = libraryRepository.getLibraries()
 
         libraries.forEach { library: Library ->
             val latestVersion: String? = getLatestVersion(library)

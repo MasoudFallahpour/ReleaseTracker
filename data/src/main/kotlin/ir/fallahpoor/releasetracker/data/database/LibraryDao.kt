@@ -7,16 +7,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LibraryDao {
 
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchTerm || '%' ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
-    fun getAllSortedByNameAscending(searchTerm: String): Flow<List<Library>>
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
+    fun getAllAsFlow(): Flow<List<Library>>
 
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchTerm || '%' ORDER BY ${DatabaseContract.FIELD_NAME} DESC")
-    fun getAllSortedByNameDescending(searchTerm: String): Flow<List<Library>>
-
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} LIKE '%' || :searchTerm || '%' ORDER BY ${DatabaseContract.FIELD_PINNED} DESC, ${DatabaseContract.FIELD_NAME} ASC")
-    fun getAllSortedByPinnedFirst(searchTerm: String): Flow<List<Library>>
-
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME}")
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
     suspend fun getAll(): List<Library>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)

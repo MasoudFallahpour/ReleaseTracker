@@ -17,7 +17,6 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.fakes.FakeGithubWebService
 import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
 import ir.fallahpoor.releasetracker.data.fakes.FakeStorage
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runBlockingTest
@@ -33,6 +32,7 @@ class LibraryRepositoryImplTest {
 
     @get:Rule
     val mainCoroutineScopeRule = MainCoroutineScopeRule()
+
     private lateinit var libraryRepository: LibraryRepositoryImpl
     private val fakeLibraryDao = FakeLibraryDao()
     private val fakeStorage = FakeStorage()
@@ -84,7 +84,7 @@ class LibraryRepositoryImplTest {
         libraryRepository.deleteLibrary(TEST_LIBRARY_1)
 
         // Then
-        Truth.assertThat(libraryRepository.getAllLibraries()).isEqualTo(emptyList<Library>())
+        Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(emptyList<Library>())
 
     }
 
@@ -143,7 +143,7 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(TEST_LIBRARY_2)
 
         // When
-        val libraries = libraryRepository.getAllLibraries()
+        val libraries = libraryRepository.getLibraries()
 
         // Then
         Truth.assertThat(libraries).isEqualTo(listOf(TEST_LIBRARY_2, TEST_LIBRARY_1))
@@ -178,7 +178,7 @@ class LibraryRepositoryImplTest {
         }
 
     @Test
-    fun `getLibraries() should return matched libraries sorted by name in ascending order`() =
+    fun `getLibraries() should return all libraries sorted by name in ascending order`() =
         runBlockingTest {
 
             // Given
@@ -187,121 +187,11 @@ class LibraryRepositoryImplTest {
             fakeLibraryDao.insert(TEST_LIBRARY_3)
 
             // When
-            val libraries: List<Library> = libraryRepository.getLibraries(
-                sortOrder = SortOrder.A_TO_Z,
-                searchTerm = "er"
-            ).first()
-
-            // Then
-            Truth.assertThat(libraries).isEqualTo(listOf(TEST_LIBRARY_1, TEST_LIBRARY_3))
-
-        }
-
-    @Test
-    fun `getLibraries() should return matched libraries sorted by name in descending order`() =
-        runBlockingTest {
-
-            // Given
-            fakeLibraryDao.insert(TEST_LIBRARY_1)
-            fakeLibraryDao.insert(TEST_LIBRARY_2)
-            fakeLibraryDao.insert(TEST_LIBRARY_3)
-
-            // When
-            val libraries: List<Library> = libraryRepository.getLibraries(
-                sortOrder = SortOrder.Z_TO_A,
-                searchTerm = "er"
-            ).first()
-
-            // Then
-            Truth.assertThat(libraries).isEqualTo(listOf(TEST_LIBRARY_3, TEST_LIBRARY_1))
-
-        }
-
-    @Test
-    fun `getLibraries() should return matched libraries sorted by pinned libraries first`() =
-        runBlockingTest {
-
-            // Given
-            val testLibrary1 = TEST_LIBRARY_1.copy(pinned = 1)
-            val testLibrary2 = TEST_LIBRARY_2
-            val testLibrary3 = TEST_LIBRARY_3.copy(pinned = 1)
-            fakeLibraryDao.insert(testLibrary1)
-            fakeLibraryDao.insert(testLibrary2)
-            fakeLibraryDao.insert(testLibrary3)
-
-            // When
-            val libraries: List<Library> = libraryRepository.getLibraries(
-                sortOrder = SortOrder.PINNED_FIRST,
-                searchTerm = "er"
-            ).first()
-
-            // Then
-            Truth.assertThat(libraries).isEqualTo(listOf(testLibrary1, testLibrary3))
-
-        }
-
-    @Test
-    fun `getLibraries() should return no library when there is no match`() =
-        runBlockingTest {
-
-            // Given
-            fakeLibraryDao.insert(TEST_LIBRARY_1)
-            fakeLibraryDao.insert(TEST_LIBRARY_2)
-            fakeLibraryDao.insert(TEST_LIBRARY_3)
-
-            // When
-            val libraries: List<Library> = libraryRepository.getLibraries(
-                sortOrder = SortOrder.PINNED_FIRST,
-                searchTerm = "ffefefe"
-            ).first()
-
-            // Then
-            Truth.assertThat(libraries).isEqualTo(emptyList<Library>())
-
-        }
-
-    @Test
-    fun `getLibraries() should return all libraries sorted by name in ascending order, when search term is empty`() =
-        runBlockingTest {
-
-            // Given
-            fakeLibraryDao.insert(TEST_LIBRARY_1)
-            fakeLibraryDao.insert(TEST_LIBRARY_2)
-            fakeLibraryDao.insert(TEST_LIBRARY_3)
-
-            // When
-            val libraries: List<Library> = libraryRepository.getLibraries(
-                sortOrder = SortOrder.PINNED_FIRST,
-                searchTerm = ""
-            ).first()
+            val libraries: List<Library> = libraryRepository.getLibrariesAsFlow().first()
 
             // Then
             Truth.assertThat(libraries)
                 .isEqualTo(listOf(TEST_LIBRARY_2, TEST_LIBRARY_1, TEST_LIBRARY_3))
-
-        }
-
-    @Test
-    fun `getLibraries() should be case insensitive regarding the search term`() =
-        runBlockingTest {
-
-            // Given
-            fakeLibraryDao.insert(TEST_LIBRARY_1)
-            fakeLibraryDao.insert(TEST_LIBRARY_2)
-            fakeLibraryDao.insert(TEST_LIBRARY_3)
-
-            // When
-            val libraries1: List<Library> = libraryRepository.getLibraries(
-                sortOrder = SortOrder.PINNED_FIRST,
-                searchTerm = "er"
-            ).first()
-            val libraries2: List<Library> = libraryRepository.getLibraries(
-                sortOrder = SortOrder.PINNED_FIRST,
-                searchTerm = "Er"
-            ).first()
-
-            // Then
-            Truth.assertThat(libraries1).isEqualTo(libraries2)
 
         }
 

@@ -47,7 +47,7 @@ class AddLibraryViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getAllLibraries().isEmpty()).isTrue()
+            Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isInstanceOf(AddLibraryState.EmptyLibraryName::class.java)
 
@@ -67,7 +67,7 @@ class AddLibraryViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getAllLibraries().isEmpty()).isTrue()
+            Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isInstanceOf(AddLibraryState.EmptyLibraryUrl::class.java)
 
@@ -87,7 +87,7 @@ class AddLibraryViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getAllLibraries().isEmpty()).isTrue()
+            Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isInstanceOf(AddLibraryState.InvalidLibraryUrl::class.java)
 
@@ -112,7 +112,7 @@ class AddLibraryViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getAllLibraries().size).isEqualTo(1)
+            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isInstanceOf(AddLibraryState.Error::class.java)
 

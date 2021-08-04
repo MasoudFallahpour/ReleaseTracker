@@ -1,7 +1,6 @@
 package ir.fallahpoor.releasetracker.data.repository
 
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
@@ -12,9 +11,9 @@ interface LibraryRepository {
 
     suspend fun getLibrary(libraryName: String): Library?
 
-    fun getLibraries(sortOrder: SortOrder, searchTerm: String): Flow<List<Library>>
+    fun getLibrariesAsFlow(): Flow<List<Library>>
 
-    suspend fun getAllLibraries(): List<Library>
+    suspend fun getLibraries(): List<Library>
 
     suspend fun deleteLibrary(library: Library)
 

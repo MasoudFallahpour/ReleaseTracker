@@ -2,10 +2,10 @@ package ir.fallahpoor.releasetracker.testfakes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
+import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -79,25 +79,12 @@ class FakeLibraryRepository @Inject constructor() : LibraryRepository {
     override suspend fun getLibrary(libraryName: String): Library? =
         libraries.firstOrNull { it.name.equals(libraryName, ignoreCase = true) }
 
-    override fun getLibraries(sortOrder: SortOrder, searchTerm: String): Flow<List<Library>> {
+    override fun getLibrariesAsFlow(): Flow<List<Library>> =
+        librariesLiveData.map { libraries: List<Library> ->
+            libraries.sortedBy { it.name }
+        }.asFlow()
 
-        val filteredLibraries = libraries.filter {
-            it.name.contains(searchTerm, ignoreCase = true)
-        }
-
-        val sortedLibraries: List<Library> = when (sortOrder) {
-            SortOrder.A_TO_Z -> filteredLibraries.sortedBy { it.name }
-            SortOrder.Z_TO_A -> filteredLibraries.sortedByDescending { it.name }
-            SortOrder.PINNED_FIRST -> filteredLibraries.sortedByDescending { it.pinned }
-        }
-
-        updateLibrariesLiveData(sortedLibraries)
-
-        return librariesLiveData.asFlow()
-
-    }
-
-    override suspend fun getAllLibraries(): List<Library> = libraries
+    override suspend fun getLibraries(): List<Library> = libraries
 
     override suspend fun deleteLibrary(library: Library) {
         if (library.name == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING) {

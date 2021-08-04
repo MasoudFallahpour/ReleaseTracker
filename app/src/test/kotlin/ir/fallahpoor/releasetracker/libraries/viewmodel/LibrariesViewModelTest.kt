@@ -45,37 +45,39 @@ class LibrariesViewModelTest {
         runBlockingTest {
 
             // Given
-            librariesViewModel.librariesListState.observeForever {}
+            val expectedLibraries = fakeLibraryRepository.getLibraries()
+                .sortedByDescending { it.name }
 
             // When
             librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = "")
 
             // Then
+            librariesViewModel.librariesListState.observeForever {}
             val librariesListState: LibrariesListState? =
                 librariesViewModel.librariesListState.value
             val librariesLoadedState = librariesListState as LibrariesListState.LibrariesLoaded
             Truth.assertThat(librariesLoadedState.libraries)
-                .isEqualTo(fakeLibraryRepository.getAllLibraries().sortedByDescending { it.name })
+                .isEqualTo(expectedLibraries)
 
         }
 
     @Test
-    fun `getLibraries() should return all libraries whose names contain the search term sorted by given order`() =
+    fun `getLibraries() should return all matched libraries sorted by given order`() =
         runBlockingTest {
 
             // Given
             val searchQuery = "ko"
-            val expectedLibraries = fakeLibraryRepository.getAllLibraries().filter {
+            val expectedLibraries = fakeLibraryRepository.getLibraries().filter {
                 it.name.contains(searchQuery, ignoreCase = true)
             }.sortedByDescending {
                 it.name
             }
-            librariesViewModel.librariesListState.observeForever {}
 
             // When
             librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = searchQuery)
 
             // Then
+            librariesViewModel.librariesListState.observeForever {}
             val librariesListState: LibrariesListState? =
                 librariesViewModel.librariesListState.value
             val librariesLoadedState = librariesListState as LibrariesListState.LibrariesLoaded
@@ -154,7 +156,7 @@ class LibrariesViewModelTest {
             librariesViewModel.deleteLibrary(libraryToDelete)
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getAllLibraries().size).isEqualTo(0)
+            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(0)
             Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
             Truth.assertThat(librariesViewModel.deleteState.value)
                 .isInstanceOf(LibraryDeleteState.Deleted::class.java)
@@ -184,7 +186,7 @@ class LibrariesViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getAllLibraries().size).isEqualTo(1)
+            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
             Truth.assertThat(fakeLibraryRepository.getLibrary("name")).isNotNull()
             Truth.assertThat(librariesViewModel.deleteState.value)
                 .isInstanceOf(LibraryDeleteState.Error::class.java)

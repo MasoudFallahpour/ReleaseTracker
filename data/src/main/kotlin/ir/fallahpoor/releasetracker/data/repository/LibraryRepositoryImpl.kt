@@ -3,7 +3,6 @@ package ir.fallahpoor.releasetracker.data.repository
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 import kotlinx.coroutines.flow.Flow
@@ -36,16 +35,10 @@ class LibraryRepositoryImpl
         return libraryDao.get(libraryName)
     }
 
-    override fun getLibraries(
-        sortOrder: SortOrder,
-        searchTerm: String
-    ): Flow<List<Library>> = when (sortOrder) {
-        SortOrder.A_TO_Z -> libraryDao.getAllSortedByNameAscending(searchTerm)
-        SortOrder.Z_TO_A -> libraryDao.getAllSortedByNameDescending(searchTerm)
-        SortOrder.PINNED_FIRST -> libraryDao.getAllSortedByPinnedFirst(searchTerm)
-    }
+    override fun getLibrariesAsFlow(): Flow<List<Library>> =
+        libraryDao.getAllAsFlow()
 
-    override suspend fun getAllLibraries(): List<Library> = libraryDao.getAll()
+    override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
 
     override suspend fun deleteLibrary(library: Library) {
         libraryDao.delete(library.name)

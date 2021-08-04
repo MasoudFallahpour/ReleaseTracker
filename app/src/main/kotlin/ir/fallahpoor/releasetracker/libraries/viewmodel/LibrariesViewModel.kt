@@ -43,8 +43,20 @@ class LibrariesViewModel
     val librariesListState: LiveData<LibrariesListState> =
         getLibrariesTriggerLiveData.distinctUntilChanged()
             .switchMap { params: Params ->
-                libraryRepository.getLibraries(params.sortOrder, params.searchTerm)
+                libraryRepository.getLibrariesAsFlow()
                     .asLiveData()
+                    .map { libraries: List<Library> ->
+                        libraries.filter {
+                            it.name.contains(params.searchTerm, ignoreCase = true)
+                        }
+                    }
+                    .map { libraries: List<Library> ->
+                        when (params.sortOrder) {
+                            SortOrder.A_TO_Z -> libraries.sortedBy { it.name }
+                            SortOrder.Z_TO_A -> libraries.sortedByDescending { it.name }
+                            SortOrder.PINNED_FIRST -> libraries.sortedByDescending { it.pinned }
+                        }
+                    }
             }.map { libraries: List<Library> ->
                 LibrariesListState.LibrariesLoaded(libraries)
             }
