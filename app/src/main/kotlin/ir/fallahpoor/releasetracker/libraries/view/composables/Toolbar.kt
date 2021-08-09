@@ -78,7 +78,10 @@ fun Toolbar(
                         onSearchQueryChange(it)
                     },
                     onQuerySubmit = onSearchQuerySubmit,
-                    onClearClick = { searchQuery = "" },
+                    onClearClick = {
+                        searchQuery = ""
+                        onSearchQueryChange("")
+                    },
                     onCloseClick = {
                         onToolbarModeChange(ToolbarMode.Normal)
                         searchQuery = ""

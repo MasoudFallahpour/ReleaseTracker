@@ -263,6 +263,34 @@ class ToolbarTest {
     }
 
     @Test
+    fun when_search_query_is_cleared_correct_callback_is_called() {
+
+        // Given
+        var searchQuery = "abc"
+        composeTestRule.setContent {
+            Toolbar(
+                toolbarMode = ToolbarMode.Search,
+                onToolbarModeChange = {},
+                currentSortOrder = SortOrder.A_TO_Z,
+                onSortOrderChange = {},
+                isNightModeSupported = true,
+                currentNightMode = NightMode.ON,
+                onNightModeChange = {},
+                onSearchQueryChange = { searchQuery = it },
+                onSearchQuerySubmit = {}
+            )
+        }
+
+        // When
+        composeTestRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_clear_button))
+            .performClick()
+
+        // Then
+        Truth.assertThat(searchQuery).isEqualTo("")
+
+    }
+
+    @Test
     fun when_search_bar_is_closed_toolbar_is_set_to_normal_mode() {
 
         // Given
