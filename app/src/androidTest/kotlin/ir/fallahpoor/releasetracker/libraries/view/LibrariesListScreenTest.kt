@@ -342,6 +342,38 @@ class LibrariesListScreenTest {
     }
 
     @Test
+    fun clearing_the_search_bar_displays_all_libraries() {
+
+        // Given
+        initializeLibrariesListScreen()
+        with(composeRule) {
+            onNodeWithContentDescription(searchText, useUnmergedTree = true)
+                .performClick()
+            onNodeWithTag(searchBarQueryTextFieldTestTag)
+                .performTextInput("ko")
+        }
+
+        // When
+        composeRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_clear_button))
+            .performClick()
+
+        // Then
+        with(composeRule) {
+            onNodeWithText(FakeLibraryRepository.Coil.name, useUnmergedTree = true)
+                .assertIsDisplayed()
+            onNodeWithText(FakeLibraryRepository.Kotlin.name, useUnmergedTree = true)
+                .assertIsDisplayed()
+            onNodeWithText(FakeLibraryRepository.Koin.name, useUnmergedTree = true)
+                .assertIsDisplayed()
+            onNodeWithText(noLibrariesText)
+                .assertDoesNotExist()
+            onNodeWithTag(progressIndicatorTestTag)
+                .assertDoesNotExist()
+        }
+
+    }
+
+    @Test
     fun pin_library() {
 
         // Given
