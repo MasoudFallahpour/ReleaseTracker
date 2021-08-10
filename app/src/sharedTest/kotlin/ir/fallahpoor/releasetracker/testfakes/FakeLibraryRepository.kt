@@ -3,6 +3,7 @@ package ir.fallahpoor.releasetracker.testfakes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.map
+import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
@@ -15,19 +16,19 @@ class FakeLibraryRepository @Inject constructor() : LibraryRepository {
 
     object Coil {
         const val name = "Coil"
-        const val url = "coil-kt/coil"
+        const val url = GITHUB_BASE_URL + "coil-kt/coil"
         const val version = "1.3.1"
     }
 
     object Kotlin {
         const val name = "Kotlin"
-        const val url = "JetBrains/kotlin"
+        const val url = GITHUB_BASE_URL + "JetBrains/kotlin"
         const val version = "1.5.21"
     }
 
     object Koin {
         const val name = "Koin"
-        const val url = "InsertKoinIO/koin"
+        const val url = GITHUB_BASE_URL + "InsertKoinIO/koin"
         const val version = "3.1.2"
     }
 

@@ -45,7 +45,11 @@ fun AddLibraryScreen(
     onBackClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
+    val tag = stringResource(R.string.test_tag_add_library_screen)
     Screen(
+        modifier = Modifier.semantics {
+            testTag = tag
+        },
         isDarkTheme = isDarkTheme,
         scaffoldState = scaffoldState,
         topBar = {

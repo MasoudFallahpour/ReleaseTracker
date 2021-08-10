@@ -100,15 +100,15 @@ class AddLibraryViewModelTest {
             // Given
             fakeLibraryRepository.deleteLibraries()
             fakeLibraryRepository.addLibrary(
-                libraryName = FakeLibraryRepository.Coil.name,
-                libraryUrl = FakeLibraryRepository.Coil.url,
-                libraryVersion = FakeLibraryRepository.Coil.version
+                libraryName = "coil",
+                libraryUrl = "https://github.com/coil-kt/coil",
+                libraryVersion = "1.0.0"
             )
 
             // When
             addLibraryViewModel.addLibrary(
-                libraryName = FakeLibraryRepository.Coil.name,
-                libraryUrlPath = FakeLibraryRepository.Coil.url
+                libraryName = "coil",
+                libraryUrlPath = "coil-kt/coil"
             )
 
             // Then

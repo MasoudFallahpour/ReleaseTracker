@@ -205,6 +205,7 @@ dependencies {
     androidTestImplementation(Dependencies.AppTest.mockitoKotlin)
     androidTestImplementation(Dependencies.AppTest.coreTesting)
     androidTestImplementation(Dependencies.AppTest.espresso)
+    androidTestImplementation(Dependencies.AppTest.espressoIntents)
     androidTestImplementation(Dependencies.AppTest.hiltAndroidTesting)
     kaptAndroidTest(Dependencies.App.hiltAndroidCompiler)
     debugImplementation(Dependencies.AppTest.uiTestManifest)

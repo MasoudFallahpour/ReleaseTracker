@@ -164,10 +164,6 @@ class LibrariesListScreenTest {
 
     }
 
-//    @Test
-//    fun clicking_a_library_opens_its_url_in_a_browser() {
-//    }
-
     @Test
     fun delete_library_when_successful() {
 

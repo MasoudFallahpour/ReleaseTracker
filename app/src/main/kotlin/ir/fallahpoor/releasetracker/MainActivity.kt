@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
                         nightModeManager = nightModeManager,
                         onLibraryClick = { library: Library ->
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(library.url))
+                            // TODO handle the ActivityNotFoundException
                             startActivity(intent)
                         },
                         onAddLibraryClick = {
