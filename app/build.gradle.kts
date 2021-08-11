@@ -11,7 +11,7 @@ plugins {
 }
 
 jacoco {
-    toolVersion = Versions.jacoco
+    toolVersion = jacocoVersion
 }
 
 tasks.withType<Test> {
@@ -74,14 +74,14 @@ val sp: String = properties.getProperty("storePassword")
 val kp: String = properties.getProperty("keyPassword")
 
 android {
-    compileSdk = Versions.compileSdk
+    compileSdk = SdkVersions.compileSdk
 
     defaultConfig {
         applicationId = "ir.fallahpoor.releasetracker"
-        minSdk = Versions.minSdk
-        targetSdk = Versions.targetSdk
-        versionCode = Versions.versionCode
-        versionName = Versions.versionName
+        minSdk = SdkVersions.minSdk
+        targetSdk = SdkVersions.targetSdk
+        versionCode = AppVersion.versionCode
+        versionName = AppVersion.versionName
         setProperty("archivesBaseName", "ReleaseTracker")
         testInstrumentationRunner = "ir.fallahpoor.releasetracker.CustomTestRunner"
     }
@@ -122,7 +122,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.compose
+        kotlinCompilerExtensionVersion = Compose.version
     }
 
     kotlinOptions {
@@ -161,56 +161,56 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-    implementation(Dependencies.App.kotlinStdLib)
-    implementation(Dependencies.App.appCompat)
-    implementation(Dependencies.App.core)
-    implementation(Dependencies.App.preference)
-    implementation(Dependencies.App.activityCompose)
-    implementation(Dependencies.App.navigationCompose)
-    implementation(Dependencies.App.material)
-    implementation(Dependencies.App.viewModel)
-    implementation(Dependencies.App.liveData)
-    implementation(Dependencies.App.room)
-    implementation(Dependencies.App.workManager)
-    implementation(Dependencies.App.timber)
-    implementation(Dependencies.App.rxkprefs)
+    implementation(kotlinStdLib)
+    implementation(appCompat)
+    implementation(core)
+    implementation(preference)
+    implementation(activityCompose)
+    implementation(navigationCompose)
+    implementation(material)
+    implementation(Lifecycle.viewModel)
+    implementation(Lifecycle.liveData)
+    implementation(Room.runtime)
+    implementation(workManager)
+    implementation(timber)
+    implementation(RxkPrefs.core)
 
-    implementation(platform(Dependencies.App.firebase))
-    implementation(Dependencies.App.crashlytics)
+    implementation(platform(Firebase.bom))
+    implementation(Firebase.crashlytics)
 
-    implementation(Dependencies.App.hiltAndroid)
-    implementation(Dependencies.App.hiltWorkManager)
-    implementation(Dependencies.App.hiltNavigationCompose)
-    kapt(Dependencies.App.hiltAndroidCompiler)
-    kapt(Dependencies.App.hiltCompiler)
+    implementation(Hilt.android)
+    implementation(Hilt.workManager)
+    implementation(Hilt.navigationCompose)
+    kapt(Hilt.androidCompiler)
+    kapt(Hilt.compiler)
 
-    implementation(Dependencies.App.composeUi)
-    implementation(Dependencies.App.composeTooling)
-    implementation(Dependencies.App.composeMaterial)
-    implementation(Dependencies.App.composeRuntime)
-    implementation(Dependencies.App.composeRuntimeLiveData)
+    implementation(Compose.ui)
+    implementation(Compose.tooling)
+    implementation(Compose.material)
+    implementation(Compose.runtime)
+    implementation(Compose.runtimeLiveData)
 
-    implementation(Dependencies.App.accompanistNavigationAnimation)
+    implementation(accompanistNavigationAnimation)
 
-    testImplementation(Dependencies.AppTest.junit)
-    testImplementation(Dependencies.AppTest.truth)
-    testImplementation(Dependencies.AppTest.coreTesting)
-    testImplementation(Dependencies.AppTest.coroutinesTest)
-    testImplementation(Dependencies.AppTest.testCore)
-    testImplementation(Dependencies.AppTest.robolectric)
+    testImplementation(junit)
+    testImplementation(truth)
+    testImplementation(coreTesting)
+    testImplementation(Coroutines.test)
+    testImplementation(AndroidXTest.core)
+    testImplementation(robolectric)
 
-    androidTestImplementation(Dependencies.AppTest.runner)
-    androidTestImplementation(Dependencies.AppTest.rules)
-    androidTestImplementation(Dependencies.AppTest.truth)
-    androidTestImplementation(Dependencies.AppTest.uiTestJunit)
-    androidTestImplementation(Dependencies.AppTest.mockitoAndroid)
-    androidTestImplementation(Dependencies.AppTest.mockitoKotlin)
-    androidTestImplementation(Dependencies.AppTest.coreTesting)
-    androidTestImplementation(Dependencies.AppTest.espresso)
-    androidTestImplementation(Dependencies.AppTest.espressoIntents)
-    androidTestImplementation(Dependencies.AppTest.hiltAndroidTesting)
-    kaptAndroidTest(Dependencies.App.hiltAndroidCompiler)
-    debugImplementation(Dependencies.AppTest.uiTestManifest)
+    androidTestImplementation(AndroidXTest.runner)
+    androidTestImplementation(AndroidXTest.rules)
+    androidTestImplementation(truth)
+    androidTestImplementation(Compose.uiTestJunit)
+    debugImplementation(Compose.uiTestManifest)
+    androidTestImplementation(Mockito.kotlin)
+    androidTestImplementation(Mockito.android)
+    androidTestImplementation(coreTesting)
+    androidTestImplementation(Espresso.core)
+    androidTestImplementation(Espresso.intents)
+    androidTestImplementation(Hilt.androidTesting)
+    kaptAndroidTest(Hilt.androidCompiler)
 
     implementation(project(":data"))
 }

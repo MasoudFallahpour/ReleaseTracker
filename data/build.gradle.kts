@@ -10,11 +10,11 @@ val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToke
 
 android {
 
-    compileSdk = Versions.compileSdk
+    compileSdk = SdkVersions.compileSdk
 
     defaultConfig {
-        minSdk = Versions.minSdk
-        targetSdk = Versions.targetSdk
+        minSdk = SdkVersions.minSdk
+        targetSdk = SdkVersions.targetSdk
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
@@ -55,29 +55,29 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-    implementation(Dependencies.Data.kotlinStdLib)
-    implementation(Dependencies.Data.core)
-    implementation(Dependencies.Data.preference)
-    implementation(Dependencies.Data.liveData)
-    implementation(Dependencies.Data.coroutinesAndroid)
+    implementation(kotlinStdLib)
+    implementation(core)
+    implementation(preference)
+    implementation(Lifecycle.liveData)
+    implementation(Coroutines.android)
 
-    implementation(Dependencies.Data.room)
-    kapt(Dependencies.Data.roomCompiler)
-    implementation(Dependencies.Data.roomKtx)
+    implementation(Room.runtime)
+    kapt(Room.compiler)
+    implementation(Room.ktx)
 
-    implementation(Dependencies.Data.inject)
+    implementation(inject)
 
-    implementation(Dependencies.Data.retrofit)
-    implementation(Dependencies.Data.retrofitConverterGson)
-    implementation(Dependencies.Data.okhttpLoggingInterceptor)
+    implementation(Retrofit.retrofit)
+    implementation(Retrofit.converterGson)
+    implementation(okhttpLoggingInterceptor)
 
-    implementation(Dependencies.Data.rxkprefs)
-    implementation(Dependencies.Data.rxkprefsCoroutines)
+    implementation(RxkPrefs.core)
+    implementation(RxkPrefs.coroutines)
 
-    testImplementation(Dependencies.DataTest.junit)
-    testImplementation(Dependencies.DataTest.truth)
-    testImplementation(Dependencies.DataTest.coroutinesTest)
-    testImplementation(Dependencies.DataTest.coreTesting)
-    testImplementation(Dependencies.DataTest.testCore)
-    testImplementation(Dependencies.DataTest.robolectric)
+    testImplementation(junit)
+    testImplementation(truth)
+    testImplementation(Coroutines.test)
+    testImplementation(coreTesting)
+    testImplementation(AndroidXTest.core)
+    testImplementation(robolectric)
 }
