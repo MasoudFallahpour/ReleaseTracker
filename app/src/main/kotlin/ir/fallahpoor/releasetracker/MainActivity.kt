@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreen
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
@@ -35,9 +35,9 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
 
-            val navController = rememberNavController()
+            val navController = rememberAnimatedNavController()
 
-            NavHost(
+            AnimatedNavHost(
                 navController = navController,
                 startDestination = NavigationDestination.LibrariesList.route
             ) {

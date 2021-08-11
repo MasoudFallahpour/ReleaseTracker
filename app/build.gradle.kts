@@ -190,6 +190,8 @@ dependencies {
     implementation(Dependencies.App.composeRuntime)
     implementation(Dependencies.App.composeRuntimeLiveData)
 
+    implementation(Dependencies.App.accompanistNavigationAnimation)
+
     testImplementation(Dependencies.AppTest.junit)
     testImplementation(Dependencies.AppTest.truth)
     testImplementation(Dependencies.AppTest.coreTesting)

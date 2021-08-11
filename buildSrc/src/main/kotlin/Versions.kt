@@ -27,6 +27,7 @@ object Versions {
     const val timber = "4.7.1"
     const val coroutines = "1.5.1"
     const val inject = "1"
+    const val accompanist = "0.16.1"
 
     const val coreTesting = "2.1.0"
     const val robolectric = "4.5.1"

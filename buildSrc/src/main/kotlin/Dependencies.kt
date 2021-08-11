@@ -53,6 +53,9 @@ object Dependencies {
         const val composeRuntime = "androidx.compose.runtime:runtime:${Versions.compose}"
         const val composeRuntimeLiveData =
             "androidx.compose.runtime:runtime-livedata:${Versions.compose}"
+
+        const val accompanistNavigationAnimation =
+            "com.google.accompanist:accompanist-navigation-animation:${Versions.accompanist}"
     }
 
     object AppTest {
