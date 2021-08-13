@@ -21,7 +21,7 @@ import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.composables.dialogs.NightModeDialog
 import ir.fallahpoor.releasetracker.libraries.view.composables.dialogs.SortOrderDialog
 
-enum class ToolbarMode {
+private enum class ToolbarMode {
     Normal,
     Search
 }
@@ -29,8 +29,6 @@ enum class ToolbarMode {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Toolbar(
-    toolbarMode: ToolbarMode,
-    onToolbarModeChange: (ToolbarMode) -> Unit,
     currentSortOrder: SortOrder,
     onSortOrderChange: (SortOrder) -> Unit,
     isNightModeSupported: Boolean,
@@ -40,6 +38,8 @@ fun Toolbar(
     onSearchQuerySubmit: (String) -> Unit
 ) {
     TopAppBar {
+
+        var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
 
         Box(contentAlignment = Alignment.BottomCenter) {
             Row(
@@ -57,7 +57,7 @@ fun Toolbar(
                 )
                 SearchButton(
                     onClick = {
-                        onToolbarModeChange(ToolbarMode.Search)
+                        toolbarMode = ToolbarMode.Search
                     }
                 )
                 if (isNightModeSupported) {
@@ -83,8 +83,9 @@ fun Toolbar(
                         onSearchQueryChange("")
                     },
                     onCloseClick = {
-                        onToolbarModeChange(ToolbarMode.Normal)
+                        toolbarMode = ToolbarMode.Normal
                         searchQuery = ""
+                        onSearchQueryChange("")
                     }
                 )
             }
@@ -174,27 +175,8 @@ private fun NightModeButton(
 @Preview
 @Composable
 @ExperimentalAnimationApi
-private fun ToolbarNormalPreview() {
+private fun ToolbarPreview() {
     Toolbar(
-        toolbarMode = ToolbarMode.Normal,
-        onToolbarModeChange = {},
-        currentSortOrder = SortOrder.A_TO_Z,
-        onSortOrderChange = {},
-        isNightModeSupported = true,
-        currentNightMode = NightMode.AUTO,
-        onNightModeChange = {},
-        onSearchQueryChange = {},
-        onSearchQuerySubmit = {}
-    )
-}
-
-@Preview
-@Composable
-@ExperimentalAnimationApi
-private fun ToolbarSearchPreview() {
-    Toolbar(
-        toolbarMode = ToolbarMode.Search,
-        onToolbarModeChange = {},
         currentSortOrder = SortOrder.A_TO_Z,
         onSortOrderChange = {},
         isNightModeSupported = true,

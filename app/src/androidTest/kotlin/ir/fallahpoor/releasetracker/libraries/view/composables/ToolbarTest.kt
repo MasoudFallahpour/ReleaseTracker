@@ -1,9 +1,6 @@
 package ir.fallahpoor.releasetracker.libraries.view.composables
 
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
@@ -130,11 +127,8 @@ class ToolbarTest {
     fun when_search_button_is_clicked_search_bar_is_displayed() {
 
         // Given
-        var toolbarMode by mutableStateOf(ToolbarMode.Normal)
         composeTestRule.setContent {
             Toolbar(
-                toolbarMode = toolbarMode,
-                onToolbarModeChange = { toolbarMode = it },
                 currentSortOrder = SortOrder.A_TO_Z,
                 onSortOrderChange = {},
                 isNightModeSupported = true,
@@ -164,8 +158,6 @@ class ToolbarTest {
         var sortOrder = SortOrder.Z_TO_A
         composeTestRule.setContent {
             Toolbar(
-                toolbarMode = ToolbarMode.Normal,
-                onToolbarModeChange = {},
                 currentSortOrder = sortOrder,
                 onSortOrderChange = { sortOrder = it },
                 isNightModeSupported = true,
@@ -202,8 +194,6 @@ class ToolbarTest {
         var nightMode = NightMode.OFF
         composeTestRule.setContent {
             Toolbar(
-                toolbarMode = ToolbarMode.Normal,
-                onToolbarModeChange = {},
                 currentSortOrder = SortOrder.A_TO_Z,
                 onSortOrderChange = {},
                 isNightModeSupported = true,
@@ -240,8 +230,6 @@ class ToolbarTest {
         var searchQuery = ""
         composeTestRule.setContent {
             Toolbar(
-                toolbarMode = ToolbarMode.Search,
-                onToolbarModeChange = {},
                 currentSortOrder = SortOrder.A_TO_Z,
                 onSortOrderChange = {},
                 isNightModeSupported = true,
@@ -253,6 +241,10 @@ class ToolbarTest {
         }
 
         // When
+        composeTestRule.onNodeWithContentDescription(
+            searchText,
+            useUnmergedTree = true
+        ).performClick()
         val expectedSearchQuery = "coil"
         composeTestRule.onNodeWithTag(searchBarTextFieldTag)
             .performTextInput(expectedSearchQuery)
@@ -269,8 +261,6 @@ class ToolbarTest {
         var searchQuery = "abc"
         composeTestRule.setContent {
             Toolbar(
-                toolbarMode = ToolbarMode.Search,
-                onToolbarModeChange = {},
                 currentSortOrder = SortOrder.A_TO_Z,
                 onSortOrderChange = {},
                 isNightModeSupported = true,
@@ -282,6 +272,10 @@ class ToolbarTest {
         }
 
         // When
+        composeTestRule.onNodeWithContentDescription(
+            searchText,
+            useUnmergedTree = true
+        ).performClick()
         composeTestRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_clear_button))
             .performClick()
 
@@ -294,11 +288,8 @@ class ToolbarTest {
     fun when_search_bar_is_closed_toolbar_is_set_to_normal_mode() {
 
         // Given
-        var toolbarMode by mutableStateOf(ToolbarMode.Search)
         composeTestRule.setContent {
             Toolbar(
-                toolbarMode = toolbarMode,
-                onToolbarModeChange = { toolbarMode = it },
                 currentSortOrder = SortOrder.A_TO_Z,
                 onSortOrderChange = {},
                 isNightModeSupported = true,
@@ -310,21 +301,22 @@ class ToolbarTest {
         }
 
         // When
+        composeTestRule.onNodeWithContentDescription(
+            searchText,
+            useUnmergedTree = true
+        ).performClick()
         composeTestRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_close_button))
             .performClick()
 
         // Then
         composeTestRule.onNodeWithTag(searchBarTag)
             .assertDoesNotExist()
-        Truth.assertThat(toolbarMode).isEqualTo(ToolbarMode.Normal)
 
     }
 
     private fun initializeToolbar(nightModeSupported: Boolean = true) {
         composeTestRule.setContent {
             Toolbar(
-                toolbarMode = ToolbarMode.Normal,
-                onToolbarModeChange = {},
                 currentSortOrder = SortOrder.A_TO_Z,
                 onSortOrderChange = {},
                 isNightModeSupported = nightModeSupported,
