@@ -11,6 +11,8 @@ import ir.fallahpoor.releasetracker.common.managers.NotificationManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,15 +43,26 @@ class UpdateVersionsWorker
         val updatedLibraries = mutableListOf<String>()
         val libraries: List<Library> = libraryRepository.getLibraries()
 
-        libraries.forEach { library: Library ->
-            val latestVersion: String? = getLatestVersion(library)
-            latestVersion?.let {
-                val libraryCopy = library.copy(version = it)
-                libraryRepository.updateLibrary(libraryCopy)
-                if (newVersionAvailable(it, library.version)) {
-                    updatedLibraries.add("${library.name}: ${library.version} -> $it")
+        coroutineScope {
+
+            libraries.forEach { library: Library ->
+
+                launch {
+
+                    val latestVersion: String? = getLatestVersion(library)
+
+                    latestVersion?.let {
+                        val libraryCopy = library.copy(version = it)
+                        libraryRepository.updateLibrary(libraryCopy)
+                        if (newVersionAvailable(it, library.version)) {
+                            updatedLibraries.add("${library.name}: ${library.version} -> $it")
+                        }
+                    }
+
                 }
+
             }
+
         }
 
         return updatedLibraries
