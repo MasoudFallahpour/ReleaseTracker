@@ -42,18 +42,18 @@ class NightModeManager
     val isNightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     fun setNightMode(nightMode: NightMode) {
-        if (nightMode != currentNightMode) {
-            setMode(nightMode)
-        }
-    }
 
-    private fun setMode(nightMode: NightMode) {
+        if (nightMode == currentNightMode) {
+            return
+        }
+
         when (nightMode) {
             NightMode.ON -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             NightMode.OFF -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             NightMode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
         storage.setNightMode(nightMode)
+
     }
 
     private fun isSystemInDarkTheme(): Boolean {

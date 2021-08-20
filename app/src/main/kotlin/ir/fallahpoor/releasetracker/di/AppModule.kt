@@ -1,12 +1,11 @@
 package ir.fallahpoor.releasetracker.di
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
-
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import com.afollestad.rxkprefs.RxkPrefs
-import com.afollestad.rxkprefs.rxkPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,12 +33,13 @@ object AppModule {
     }
 
     @Provides
-    fun provideSharedPreferences(context: Context): SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
-
-    @Provides
-    fun provideRxkPrefs(sharedPreferences: SharedPreferences): RxkPrefs =
-        rxkPrefs(sharedPreferences)
+    @Singleton
+    fun provideDataStore(context: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            produceFile = {
+                context.preferencesDataStoreFile("settings")
+            }
+        )
 
     @Provides
     @Singleton

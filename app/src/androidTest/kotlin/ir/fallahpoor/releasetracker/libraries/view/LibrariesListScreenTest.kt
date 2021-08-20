@@ -15,6 +15,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
@@ -228,32 +229,30 @@ class LibrariesListScreenTest {
 
     }
 
-    // FIXME Find out why the following test fails with exception
-    //  JobCancellationException: StandaloneCoroutine was cancelled
-//    @Test
-//    fun correct_night_mode_is_set_when_selecting_a_night_mode_from_night_mode_dialog() =
-//        runBlockingTest {
-//
-//            // Given
-//            initializeLibrariesListScreen()
-//            nightModeManager.setNightMode(NightMode.OFF)
-//
-//            // When
-//            with(composeTestRule) {
-//                onNodeWithContentDescription(
-//                    context.getString(R.string.more_options),
-//                    useUnmergedTree = true
-//                ).performClick()
-//                onNodeWithText(context.getString(R.string.night_mode))
-//                    .performClick()
-//                onNodeWithText(context.getString(R.string.on))
-//                    .performClick()
-//            }
-//
-//            // Then
-//            Truth.assertThat(nightModeManager.currentNightMode).isEqualTo(NightMode.ON)
-//
-//        }
+    @Test
+    fun correct_night_mode_is_set_when_selecting_a_night_mode_from_night_mode_dialog() =
+        runBlockingTest {
+
+            // Given
+            initializeLibrariesListScreen()
+            nightModeManager.setNightMode(NightMode.OFF)
+
+            // When
+            with(composeRule) {
+                onNodeWithContentDescription(
+                    context.getString(R.string.more_options),
+                    useUnmergedTree = true
+                ).performClick()
+                onNodeWithText(context.getString(R.string.night_mode))
+                    .performClick()
+                onNodeWithText(context.getString(R.string.on))
+                    .performClick()
+            }
+
+            // Then
+            Truth.assertThat(nightModeManager.currentNightMode).isEqualTo(NightMode.ON)
+
+        }
 
     @Test
     fun search() {

@@ -3,7 +3,7 @@ const val jacocoVersion = "0.8.7"
 
 const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 const val core = "androidx.core:core-ktx:1.5.0"
-const val preference = "androidx.preference:preference-ktx:1.1.1"
+const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
 const val appCompat = "androidx.appcompat:appcompat:1.3.0"
 const val workManager = "androidx.work:work-runtime-ktx:2.5.0"
 const val activityCompose = "androidx.activity:activity-compose:1.3.1"
@@ -75,12 +75,6 @@ object Retrofit {
     private const val version = "2.9.0"
     const val retrofit = "com.squareup.retrofit2:retrofit:$version"
     const val converterGson = "com.squareup.retrofit2:converter-gson:$version"
-}
-
-object RxkPrefs {
-    private const val version = "2.0.3"
-    const val core = "com.afollestad.rxkprefs:core:$version"
-    const val coroutines = "com.afollestad.rxkprefs:coroutines:$version"
 }
 
 object AndroidXTest {

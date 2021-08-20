@@ -164,7 +164,7 @@ dependencies {
     implementation(kotlinStdLib)
     implementation(appCompat)
     implementation(core)
-    implementation(preference)
+    implementation(dataStore)
     implementation(activityCompose)
     implementation(navigationCompose)
     implementation(material)
@@ -173,7 +173,6 @@ dependencies {
     implementation(Room.runtime)
     implementation(workManager)
     implementation(timber)
-    implementation(RxkPrefs.core)
 
     implementation(platform(Firebase.bom))
     implementation(Firebase.crashlytics)

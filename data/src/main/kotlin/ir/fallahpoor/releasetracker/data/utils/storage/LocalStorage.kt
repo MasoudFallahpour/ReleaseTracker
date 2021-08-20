@@ -1,22 +1,25 @@
 package ir.fallahpoor.releasetracker.data.utils.storage
 
-import android.annotation.SuppressLint
-import android.content.SharedPreferences
-import com.afollestad.rxkprefs.RxkPrefs
-import com.afollestad.rxkprefs.coroutines.asFlow
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
+// TODO: Remove the runBlocking calls.
+
 class LocalStorage @Inject constructor(
-    private val sharedPreferences: SharedPreferences,
-    private val rxkPrefs: RxkPrefs
+    private val dataStore: DataStore<Preferences>
 ) : Storage {
 
     companion object {
-        const val KEY_ORDER = "order"
+        const val KEY_SORT_ORDER = "sort_order"
         const val KEY_LAST_UPDATE_CHECK = "last_update_check"
         const val KEY_NIGHT_MODE = "night_mode"
     }
@@ -24,48 +27,69 @@ class LocalStorage @Inject constructor(
     private val defaultNightMode = NightMode.AUTO
 
     override fun setSortOrder(sortOrder: SortOrder) {
-        putString(KEY_ORDER, sortOrder.name)
+        runBlocking {
+            putString(KEY_SORT_ORDER, sortOrder.name)
+        }
     }
 
     override fun getSortOrder(): SortOrder {
-        return SortOrder.valueOf(getString(KEY_ORDER) ?: SortOrder.A_TO_Z.name)
+        var sortOrderStr: String?
+        runBlocking {
+            sortOrderStr = getString(KEY_SORT_ORDER)
+        }
+        return SortOrder.valueOf(sortOrderStr ?: SortOrder.A_TO_Z.name)
     }
 
     override fun setLastUpdateCheck(date: String) {
-        rxkPrefs.string(KEY_LAST_UPDATE_CHECK)
-            .set(date)
+        runBlocking {
+            putString(KEY_LAST_UPDATE_CHECK, date)
+        }
     }
 
-    override fun getLastUpdateCheck(): Flow<String> =
-        rxkPrefs.string(KEY_LAST_UPDATE_CHECK, defaultValue = "N/A")
-            .asFlow()
-
-    override fun getNightModeAsFlow(): Flow<NightMode> =
-        rxkPrefs.string(KEY_NIGHT_MODE)
-            .asFlow()
-            .map { mode: String ->
-                NightMode.valueOf(if (mode.isNotBlank()) mode else defaultNightMode.name)
+    override fun getLastUpdateCheck(): Flow<String> {
+        val prefKey = stringPreferencesKey(KEY_LAST_UPDATE_CHECK)
+        return dataStore.data
+            .map { preferences ->
+                preferences[prefKey] ?: "N/A"
             }
+    }
+
+    override fun getNightModeAsFlow(): Flow<NightMode> {
+        val prefKey = stringPreferencesKey(KEY_NIGHT_MODE)
+        return dataStore.data
+            .map { preferences ->
+                NightMode.valueOf(preferences[prefKey] ?: defaultNightMode.name)
+            }
+    }
 
     override fun getNightMode(): NightMode {
-        val nightModeStr = getString(KEY_NIGHT_MODE)
+        var nightModeStr: String?
+        runBlocking {
+            nightModeStr = getString(KEY_NIGHT_MODE)
+        }
         return NightMode.valueOf(nightModeStr ?: defaultNightMode.name)
     }
 
     override fun setNightMode(nightMode: NightMode) {
-        rxkPrefs.string(KEY_NIGHT_MODE)
-            .set(nightMode.name)
+        runBlocking {
+            putString(KEY_NIGHT_MODE, nightMode.name)
+        }
     }
 
-    @SuppressLint("ApplySharedPref")
-    private fun putString(key: String, value: String) {
-        sharedPreferences.edit()
-            .putString(key, value)
-            .commit()
+    private suspend fun putString(key: String, value: String) {
+        val prefKey = stringPreferencesKey(key)
+        dataStore.edit { settings ->
+            settings[prefKey] = value
+        }
     }
 
-    private fun getString(key: String): String? {
-        return sharedPreferences.getString(key, null)
+    private suspend fun getString(key: String): String? {
+        val prefKey = stringPreferencesKey(key)
+        val flow: Flow<String?> = dataStore.data
+            .map { preferences ->
+                preferences[prefKey]
+            }
+        return flow.first()
     }
 
 }

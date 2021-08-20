@@ -1,10 +1,10 @@
 package ir.fallahpoor.releasetracker.di
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
-import com.afollestad.rxkprefs.RxkPrefs
-import com.afollestad.rxkprefs.rxkPrefs
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,6 +14,7 @@ import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
+import javax.inject.Singleton
 
 @Module
 @TestInstallIn(
@@ -28,12 +29,13 @@ object TestAppModule {
     }
 
     @Provides
-    fun provideSharedPreferences(context: Context): SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
-
-    @Provides
-    fun provideRxkPrefs(sharedPreferences: SharedPreferences): RxkPrefs =
-        rxkPrefs(sharedPreferences)
+    @Singleton
+    fun provideDataStore(context: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create(
+            produceFile = {
+                context.preferencesDataStoreFile("test-settings")
+            }
+        )
 
     @Provides
     fun provideLibraryRepository(fakeLibraryRepository: FakeLibraryRepository): LibraryRepository {

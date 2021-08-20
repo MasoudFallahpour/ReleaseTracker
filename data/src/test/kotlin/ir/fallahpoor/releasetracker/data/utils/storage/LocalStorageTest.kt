@@ -1,45 +1,76 @@
 package ir.fallahpoor.releasetracker.data.utils.storage
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
-import com.afollestad.rxkprefs.rxkPrefs
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.data.MainCoroutineScopeRule
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_LAST_UPDATE_CHECK
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_NIGHT_MODE
-import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_ORDER
+import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_SORT_ORDER
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.test.runBlockingTest
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.io.File
 
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class LocalStorageTest {
 
+    @get:Rule
+    val mainCoroutineScopeRule = MainCoroutineScopeRule()
+
     private lateinit var localStorage: LocalStorage
-    private lateinit var sharedPreferences: SharedPreferences
-    private val context = ApplicationProvider.getApplicationContext<Context>()
+    private lateinit var preferencesScope: CoroutineScope
+    private lateinit var dataStore: DataStore<Preferences>
+    private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Before
     fun runBeforeEachTest() {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val rxkPrefs = rxkPrefs(sharedPreferences)
-        localStorage = LocalStorage(sharedPreferences, rxkPrefs)
+        preferencesScope = CoroutineScope(mainCoroutineScopeRule.dispatcher + Job())
+        dataStore = PreferenceDataStoreFactory.create(scope = preferencesScope) {
+            context.preferencesDataStoreFile(
+                "test-preferences-file"
+            )
+        }
+        localStorage = LocalStorage(dataStore)
+    }
+
+    @After
+    fun runAfterEachTest() {
+        File(
+            context.filesDir,
+            "datastore"
+        ).deleteRecursively()
+        preferencesScope.cancel()
     }
 
     @Test
-    fun `getNightMode() should return the saved night mode`() {
+    fun `getNightMode() should return the saved night mode`() = runBlockingTest {
 
         // Given
         val expectedNightMode = NightMode.OFF
-        sharedPreferences.edit()
-            .putString(KEY_NIGHT_MODE, expectedNightMode.name)
-            .commit()
+        putString(KEY_NIGHT_MODE, expectedNightMode.name)
 
         // When
         val actualNightMode: NightMode = localStorage.getNightMode()
@@ -63,7 +94,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_setNightMode() {
+    fun test_setNightMode() = runBlockingTest {
 
         // Given
         val expectedNightMode = NightMode.ON
@@ -73,13 +104,13 @@ class LocalStorageTest {
 
         // Then
         val actualNightMode =
-            NightMode.valueOf(sharedPreferences.getString(KEY_NIGHT_MODE, null) ?: "")
+            NightMode.valueOf(getString(KEY_NIGHT_MODE) ?: "")
         Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
 
     }
 
     @Test
-    fun test_setSortOrder() {
+    fun test_setSortOrder() = runBlockingTest {
 
         // Given
         val expectedSortOrder = SortOrder.Z_TO_A
@@ -88,19 +119,18 @@ class LocalStorageTest {
         localStorage.setSortOrder(expectedSortOrder)
 
         // Then
-        val actualSortOrder = SortOrder.valueOf(sharedPreferences.getString(KEY_ORDER, null) ?: "")
+        val actualSortOrder =
+            SortOrder.valueOf(getString(KEY_SORT_ORDER) ?: "")
         Truth.assertThat(actualSortOrder).isEqualTo(expectedSortOrder)
 
     }
 
     @Test
-    fun test_getSortOrder() {
+    fun test_getSortOrder() = runBlockingTest {
 
         // Given
         val expectedSortOrder = SortOrder.PINNED_FIRST
-        sharedPreferences.edit()
-            .putString(KEY_ORDER, expectedSortOrder.name)
-            .commit()
+        putString(KEY_SORT_ORDER, expectedSortOrder.name)
 
         // When
         val actualSortOrder = localStorage.getSortOrder()
@@ -111,7 +141,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_setLastUpdateCheck() {
+    fun test_setLastUpdateCheck() = runBlockingTest {
 
         // Given
         val expectedLastUpdateCheckDate = "15:30, March"
@@ -120,9 +150,25 @@ class LocalStorageTest {
         localStorage.setLastUpdateCheck(expectedLastUpdateCheckDate)
 
         // Then
-        val actualLastUpdateCheckDate = sharedPreferences.getString(KEY_LAST_UPDATE_CHECK, null)
+        val actualLastUpdateCheckDate = getString(KEY_LAST_UPDATE_CHECK)
         Truth.assertThat(actualLastUpdateCheckDate).isEqualTo(expectedLastUpdateCheckDate)
 
+    }
+
+    private suspend fun putString(key: String, value: String) {
+        val prefKey = stringPreferencesKey(key)
+        dataStore.edit { settings ->
+            settings[prefKey] = value
+        }
+    }
+
+    private suspend fun getString(key: String): String? {
+        val prefKey = stringPreferencesKey(key)
+        val flow: Flow<String?> = dataStore.data
+            .map { preferences ->
+                preferences[prefKey]
+            }
+        return flow.first()
     }
 
 }

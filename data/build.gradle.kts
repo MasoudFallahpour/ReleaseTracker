@@ -57,7 +57,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 dependencies {
     implementation(kotlinStdLib)
     implementation(core)
-    implementation(preference)
+    implementation(dataStore)
     implementation(Lifecycle.liveData)
     implementation(Coroutines.android)
 
@@ -70,9 +70,6 @@ dependencies {
     implementation(Retrofit.retrofit)
     implementation(Retrofit.converterGson)
     implementation(okhttpLoggingInterceptor)
-
-    implementation(RxkPrefs.core)
-    implementation(RxkPrefs.coroutines)
 
     testImplementation(junit)
     testImplementation(truth)
