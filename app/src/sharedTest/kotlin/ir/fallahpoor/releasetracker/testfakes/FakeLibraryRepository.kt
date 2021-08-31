@@ -10,9 +10,8 @@ import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
-import javax.inject.Inject
 
-class FakeLibraryRepository @Inject constructor() : LibraryRepository {
+class FakeLibraryRepository : LibraryRepository {
 
     object Coil {
         const val name = "Coil"
