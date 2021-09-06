@@ -8,47 +8,50 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
+import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import javax.inject.Inject
+import java.io.File
+
+// FIXME: Re-enable Hilt. I've disabled it because except the first test all other tests throw an exception
+//  with the following message:
+//  There are multiple DataStores active for the same file: /data/user/0/ir.fallahpoor.releasetracker/files/datastore/settings.preferences_pb. You should either maintain your DataStore as a singleton or confirm that there is no two DataStore's active on the same file (by confirming that the scope is cancelled).
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltAndroidTest
 class LibrariesListScreenTest {
 
-    @get:Rule(order = 0)
-    var hiltAndroidRule = HiltAndroidRule(this)
-
-    @get:Rule(order = 1)
+    @get:Rule
     val composeRule = createComposeRule()
 
-    @get:Rule(order = 2)
+    @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @Inject
-    lateinit var nightModeManager: NightModeManager
-
-    @Inject
-    lateinit var storage: Storage
+    private lateinit var nightModeManager: NightModeManager
+    private lateinit var libraryRepository: FakeLibraryRepository
+    private lateinit var librariesViewModel: LibrariesViewModel
+    private lateinit var preferencesCoroutineScope: CoroutineScope
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-
     private val deleteText = context.getString(R.string.delete)
     private val noLibrariesText = context.getString(R.string.no_libraries)
     private val searchText = context.getString(R.string.search)
@@ -59,11 +62,30 @@ class LibrariesListScreenTest {
     private val libraryItemTestTag =
         context.getString(R.string.test_tag_libraries_list_library_item)
 
-    private lateinit var libraryRepository: FakeLibraryRepository
-
     @Before
     fun runBeforeEachTest() {
-        hiltAndroidRule.inject()
+        val storage = createLocalStorage()
+        nightModeManager = NightModeManager(context, storage)
+        libraryRepository = FakeLibraryRepository()
+        librariesViewModel = LibrariesViewModel(
+            libraryRepository = libraryRepository,
+            storage = storage,
+            exceptionParser = ExceptionParser()
+        )
+    }
+
+    private fun createLocalStorage(): LocalStorage {
+        preferencesCoroutineScope = CoroutineScope(TestCoroutineDispatcher() + Job())
+        val dataStore = PreferenceDataStoreFactory.create(scope = preferencesCoroutineScope) {
+            context.preferencesDataStoreFile("settings")
+        }
+        return LocalStorage(dataStore)
+    }
+
+    @After
+    fun runAfterEachTest() {
+        File(context.filesDir, "datastore").deleteRecursively()
+        preferencesCoroutineScope.cancel()
     }
 
     @Test
@@ -412,15 +434,6 @@ class LibrariesListScreenTest {
 
     @OptIn(ExperimentalAnimationApi::class)
     private fun initializeLibrariesListScreen(snackbarHostState: SnackbarHostState = SnackbarHostState()) {
-
-        libraryRepository = FakeLibraryRepository()
-
-        val librariesViewModel = LibrariesViewModel(
-            libraryRepository = libraryRepository,
-            storage = storage,
-            exceptionParser = ExceptionParser()
-        )
-
         composeRule.setContent {
             LibrariesListScreen(
                 librariesViewModel = librariesViewModel,
