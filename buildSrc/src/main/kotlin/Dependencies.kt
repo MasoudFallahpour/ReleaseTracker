@@ -2,10 +2,10 @@ const val kotlinVersion = "1.5.21"
 const val jacocoVersion = "0.8.7"
 
 const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-const val core = "androidx.core:core-ktx:1.5.0"
+const val core = "androidx.core:core-ktx:1.6.0"
 const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
-const val appCompat = "androidx.appcompat:appcompat:1.3.0"
-const val workManager = "androidx.work:work-runtime-ktx:2.5.0"
+const val appCompat = "androidx.appcompat:appcompat:1.3.1"
+const val workManager = "androidx.work:work-runtime-ktx:2.6.0"
 const val activityCompose = "androidx.activity:activity-compose:1.3.1"
 const val navigationCompose =
     "androidx.navigation:navigation-compose:2.4.0-alpha06"
@@ -18,7 +18,7 @@ const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4
 const val junit = "junit:junit:4.13.2"
 const val truth = "com.google.truth:truth:1.1.3"
 const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
-const val robolectric = "org.robolectric:robolectric:4.5.1"
+const val robolectric = "org.robolectric:robolectric:4.6.1"
 
 object Lifecycle {
     private const val lifecycleVersion = "2.3.1"
@@ -35,7 +35,7 @@ object Room {
 }
 
 object Compose {
-    const val version = "1.0.1"
+    const val version = "1.0.2"
     const val ui = "androidx.compose.ui:ui:$version"
     const val tooling = "androidx.compose.ui:ui-tooling:$version"
     const val material = "androidx.compose.material:material:$version"
@@ -46,13 +46,13 @@ object Compose {
 }
 
 object Coroutines {
-    private const val version = "1.5.1"
+    private const val version = "1.5.2"
     const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
     const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
 }
 
 object Firebase {
-    private const val version = "28.3.0"
+    private const val version = "28.4.1"
     const val bom = "com.google.firebase:firebase-bom:$version"
     const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
 }
@@ -92,6 +92,6 @@ object Espresso {
 object Mockito {
     private const val version = "3.2.0"
     const val kotlin = "org.mockito.kotlin:mockito-kotlin:$version"
-    const val android = "org.mockito:mockito-android:$version"
+    const val android = "org.mockito:mockito-android:3.12.4"
 }
 
