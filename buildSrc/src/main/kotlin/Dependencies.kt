@@ -1,4 +1,4 @@
-const val kotlinVersion = "1.5.21"
+const val kotlinVersion = "1.5.31"
 const val jacocoVersion = "0.8.7"
 
 const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -35,7 +35,7 @@ object Room {
 }
 
 object Compose {
-    const val version = "1.0.2"
+    const val version = "1.0.5"
     const val ui = "androidx.compose.ui:ui:$version"
     const val tooling = "androidx.compose.ui:ui-tooling:$version"
     const val material = "androidx.compose.material:material:$version"
