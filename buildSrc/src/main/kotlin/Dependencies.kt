@@ -2,23 +2,23 @@ const val kotlinVersion = "1.5.31"
 const val jacocoVersion = "0.8.7"
 
 const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-const val core = "androidx.core:core-ktx:1.6.0"
+const val core = "androidx.core:core-ktx:1.7.0"
 const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
 const val appCompat = "androidx.appcompat:appcompat:1.3.1"
-const val workManager = "androidx.work:work-runtime-ktx:2.6.0"
+const val workManager = "androidx.work:work-runtime-ktx:2.7.1"
 const val activityCompose = "androidx.activity:activity-compose:1.3.1"
 const val navigationCompose =
-    "androidx.navigation:navigation-compose:2.4.0-alpha06"
+    "androidx.navigation:navigation-compose:2.4.0-beta02"
 const val material = "com.google.android.material:material:1.4.0"
-const val timber = "com.jakewharton.timber:timber:4.7.1"
+const val timber = "com.jakewharton.timber:timber:5.0.1"
 const val accompanistNavigationAnimation =
-    "com.google.accompanist:accompanist-navigation-animation:0.16.1"
+    "com.google.accompanist:accompanist-navigation-animation:0.20.2"
 const val inject = "javax.inject:javax.inject:1"
 const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
 const val junit = "junit:junit:4.13.2"
 const val truth = "com.google.truth:truth:1.1.3"
 const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
-const val robolectric = "org.robolectric:robolectric:4.6.1"
+const val robolectric = "org.robolectric:robolectric:4.7.3"
 
 object Lifecycle {
     private const val lifecycleVersion = "2.3.1"
@@ -52,14 +52,14 @@ object Coroutines {
 }
 
 object Firebase {
-    private const val version = "28.4.1"
+    private const val version = "29.0.1"
     const val bom = "com.google.firebase:firebase-bom:$version"
     const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
 }
 
 object Hilt {
     private const val jetpackVersion = "1.0.0"
-    private const val navigationComposeVersion = "1.0.0-alpha03"
+    private const val navigationComposeVersion = "1.0.0-beta01"
     const val version = "2.38.1"
     const val android = "com.google.dagger:hilt-android:$version"
     const val androidCompiler =
