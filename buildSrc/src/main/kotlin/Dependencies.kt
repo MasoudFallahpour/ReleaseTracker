@@ -1,5 +1,4 @@
 const val kotlinVersion = "1.5.31"
-const val jacocoVersion = "0.8.7"
 
 const val kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 const val core = "androidx.core:core-ktx:1.7.0"

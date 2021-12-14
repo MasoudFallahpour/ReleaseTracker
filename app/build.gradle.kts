@@ -7,66 +7,6 @@ plugins {
     id("com.google.firebase.crashlytics")
     kotlin("android")
     kotlin("kapt")
-    id("jacoco")
-}
-
-jacoco {
-    toolVersion = jacocoVersion
-}
-
-tasks.withType<Test> {
-    configure<JacocoTaskExtension> {
-        isIncludeNoLocationClasses = true
-        excludes = listOf("jdk.internal.*")
-    }
-}
-
-tasks.register("jacocoTestReport", JacocoReport::class) {
-
-    dependsOn("testDebugUnitTest", "createDebugCoverageReport")
-
-    reports {
-        html.isEnabled = true
-        xml.isEnabled = false
-    }
-
-    val basePath = "ir/fallahpoor/releasetracker"
-    val excludedFiles = listOf(
-        // App-specific
-        "$basePath/di/**",
-        "$basePath/libraries/view/states/**",
-        "$basePath/theme/**",
-        // Jetpack Compose
-        "**/ComposableSingletons*",
-        "**/LiveLiterals*",
-
-        "**/*lambda*",
-        "**/R.class",
-        "**/R\$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-        "**/*Test*.*",
-        "android/**/*.*",
-        "**/*\$[0-9].*"
-    )
-    val debugTree = fileTree(
-        "dir" to "$buildDir/tmp/kotlin-classes/debug",
-        "excludes" to excludedFiles
-    )
-    val mainSrc = "$projectDir/src/main/kotlin"
-
-    sourceDirectories.setFrom(files(listOf(mainSrc)))
-    classDirectories.setFrom(files(listOf(debugTree)))
-    executionData.from(
-        fileTree(
-            "dir" to buildDir,
-            "includes" to listOf(
-                "jacoco/testDebugUnitTest.exec",
-                "outputs/code_coverage/debugAndroidTest/connected/**/*.ec"
-            )
-        )
-    )
-
 }
 
 val properties: java.util.Properties = gradleLocalProperties(rootDir)
@@ -106,9 +46,6 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs["release"]
-        }
-        debug {
-//            isTestCoverageEnabled = true
         }
     }
 
