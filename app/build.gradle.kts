@@ -127,6 +127,9 @@ dependencies {
     testImplementation(Coroutines.test)
     testImplementation(AndroidXTest.core)
     testImplementation(robolectric)
+    testImplementation(Hilt.androidTesting)
+    kaptTest(Hilt.androidCompiler)
+    testImplementation(Mockito.kotlin)
 
     androidTestImplementation(AndroidXTest.runner)
     androidTestImplementation(AndroidXTest.rules)
