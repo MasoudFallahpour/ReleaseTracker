@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
-import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 
 @Module
 @TestInstallIn(
@@ -15,8 +15,6 @@ import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
 object FakeRepositoryModule {
 
     @Provides
-    fun provideLibraryRepository(): LibraryRepository {
-        return FakeLibraryRepository()
-    }
+    fun provideLibraryRepository(): LibraryRepository = FakeLibraryRepository()
 
 }

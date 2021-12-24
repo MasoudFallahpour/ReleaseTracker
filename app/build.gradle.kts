@@ -66,13 +66,6 @@ android {
         jvmTarget = "1.8"
     }
 
-    sourceSets.getByName("test").kotlin {
-        srcDir("src/sharedTest/kotlin")
-    }
-    sourceSets.getByName("androidTest").kotlin {
-        srcDir("src/sharedTest/kotlin")
-    }
-
     packagingOptions {
         resources.excludes.add("**/attach_hotspot_windows.dll")
         resources.excludes.add("META-INF/licenses/ASM")

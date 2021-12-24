@@ -17,8 +17,8 @@ import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
+import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
-import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job

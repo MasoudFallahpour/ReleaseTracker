@@ -6,10 +6,10 @@ import ir.fallahpoor.releasetracker.MainCoroutineScopeRule
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
-import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before

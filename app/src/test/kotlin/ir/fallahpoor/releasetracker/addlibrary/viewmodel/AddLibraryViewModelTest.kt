@@ -5,7 +5,7 @@ import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.MainCoroutineScopeRule
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
-import ir.fallahpoor.releasetracker.testfakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
