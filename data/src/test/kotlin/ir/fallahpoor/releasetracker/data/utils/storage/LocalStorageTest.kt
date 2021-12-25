@@ -15,14 +15,14 @@ import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_LAST_UPDATE_CHECK
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_NIGHT_MODE
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_SORT_ORDER
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -32,23 +32,23 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import java.io.File
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
-@OptIn(ExperimentalCoroutinesApi::class)
 class LocalStorageTest {
 
     @get:Rule
     val mainCoroutineScopeRule = MainCoroutineScopeRule()
 
     private lateinit var localStorage: LocalStorage
-    private lateinit var preferencesScope: CoroutineScope
+    private lateinit var dataStoreTestScope: TestScope
     private lateinit var dataStore: DataStore<Preferences>
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Before
     fun runBeforeEachTest() {
-        preferencesScope = CoroutineScope(mainCoroutineScopeRule.dispatcher + Job())
-        dataStore = PreferenceDataStoreFactory.create(scope = preferencesScope) {
+        dataStoreTestScope = TestScope(mainCoroutineScopeRule.dispatcher + Job())
+        dataStore = PreferenceDataStoreFactory.create(scope = dataStoreTestScope) {
             context.preferencesDataStoreFile(
                 "test-preferences-file"
             )
@@ -62,11 +62,11 @@ class LocalStorageTest {
             context.filesDir,
             "datastore"
         ).deleteRecursively()
-        preferencesScope.cancel()
+        dataStoreTestScope.cancel()
     }
 
     @Test
-    fun `getNightMode() should return the saved night mode`() = runBlockingTest {
+    fun `getNightMode() should return the saved night mode`() = runTest {
 
         // Given
         val expectedNightMode = NightMode.OFF
@@ -94,7 +94,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_setNightMode() = runBlockingTest {
+    fun test_setNightMode() = runTest {
 
         // Given
         val expectedNightMode = NightMode.ON
@@ -110,7 +110,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_setSortOrder() = runBlockingTest {
+    fun test_setSortOrder() = runTest {
 
         // Given
         val expectedSortOrder = SortOrder.Z_TO_A
@@ -126,7 +126,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_getSortOrder() = runBlockingTest {
+    fun test_getSortOrder() = runTest {
 
         // Given
         val expectedSortOrder = SortOrder.PINNED_FIRST
@@ -141,7 +141,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_setLastUpdateCheck() = runBlockingTest {
+    fun test_setLastUpdateCheck() = runTest {
 
         // Given
         val expectedLastUpdateCheckDate = "15:30, March"

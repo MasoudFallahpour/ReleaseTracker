@@ -7,7 +7,7 @@ import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,7 +35,7 @@ class AddLibraryViewModelTest {
 
     @Test
     fun `addLibrary() should set the state to EmptyLibraryName when library name is empty`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
@@ -55,7 +55,7 @@ class AddLibraryViewModelTest {
 
     @Test
     fun `addLibrary() should set the state to EmptyLibraryUrl when library URL is empty`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
@@ -75,7 +75,7 @@ class AddLibraryViewModelTest {
 
     @Test
     fun `addLibrary() should set the state to InvalidLibraryUrl when library URL is invalid`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
@@ -95,7 +95,7 @@ class AddLibraryViewModelTest {
 
     @Test
     fun `addLibrary() should set the state to Error when library name already exists`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
@@ -120,7 +120,7 @@ class AddLibraryViewModelTest {
 
     @Test
     fun `addLibrary() should set the state to LibraryAdded when library is added successfully`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             val libraryName = "abc"
@@ -140,7 +140,7 @@ class AddLibraryViewModelTest {
 
     @Test
     fun `addLibrary() should set the state to Error when there is an unexpected error`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             val libraryName: String = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING

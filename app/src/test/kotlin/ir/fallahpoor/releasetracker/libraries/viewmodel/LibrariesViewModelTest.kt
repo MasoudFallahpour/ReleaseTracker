@@ -11,7 +11,7 @@ import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,7 +42,7 @@ class LibrariesViewModelTest {
 
     @Test
     fun `getLibraries() should return all libraries sorted by given order`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             val expectedLibraries = fakeLibraryRepository.getLibraries()
@@ -63,7 +63,7 @@ class LibrariesViewModelTest {
 
     @Test
     fun `getLibraries() should return all matched libraries sorted by given order`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             val searchQuery = "ko"
@@ -88,7 +88,7 @@ class LibrariesViewModelTest {
 
     @Test
     fun `pinLibrary() should pin the library`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             val libraryName = "name"
@@ -113,7 +113,7 @@ class LibrariesViewModelTest {
 
     @Test
     fun `pinLibrary() should unpin the library`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             val libraryName = "name"
@@ -140,7 +140,7 @@ class LibrariesViewModelTest {
 
     @Test
     fun `deleteLibrary() should set the state to Deleted when library is deleted successfully`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
@@ -165,7 +165,7 @@ class LibrariesViewModelTest {
 
     @Test
     fun `deleteLibrary() should set the state to Error when there is an unexpected error`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()

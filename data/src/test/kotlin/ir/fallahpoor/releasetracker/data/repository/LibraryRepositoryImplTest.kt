@@ -19,7 +19,7 @@ import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
 import ir.fallahpoor.releasetracker.data.fakes.FakeStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -47,7 +47,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun test_addLibrary() = runBlockingTest {
+    fun test_addLibrary() = runTest {
 
         // Given
 
@@ -61,7 +61,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun test_getLibrary() = runBlockingTest {
+    fun test_getLibrary() = runTest {
 
         // Given
         fakeLibraryDao.insert(TEST_LIBRARY_1)
@@ -75,7 +75,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun test_deleteLibrary() = runBlockingTest {
+    fun test_deleteLibrary() = runTest {
 
         // Given
         fakeLibraryDao.insert(TEST_LIBRARY_1)
@@ -89,7 +89,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun test_updateLibrary() = runBlockingTest {
+    fun test_updateLibrary() = runTest {
 
         // Given
         fakeLibraryDao.insert(TEST_LIBRARY_1)
@@ -105,7 +105,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `pinLibrary() should pin the library`() = runBlockingTest {
+    fun `pinLibrary() should pin the library`() = runTest {
 
         // Given
         fakeLibraryDao.insert(TEST_LIBRARY_1)
@@ -120,7 +120,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `pinLibrary() should unpin the library`() = runBlockingTest {
+    fun `pinLibrary() should unpin the library`() = runTest {
 
         // Given
         fakeLibraryDao.insert(TEST_LIBRARY_1.copy(pinned = 1))
@@ -136,7 +136,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun test_getLibraries() = runBlockingTest {
+    fun test_getLibraries() = runTest {
 
         // Given
         fakeLibraryDao.insert(TEST_LIBRARY_1)
@@ -151,7 +151,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `getLibraryVersion() should return version name`() = runBlockingTest {
+    fun `getLibraryVersion() should return version name`() = runTest {
 
         // Given
 
@@ -165,7 +165,7 @@ class LibraryRepositoryImplTest {
 
     @Test
     fun `getLibraryVersion() should return tag name when version name is empty`() =
-        runBlockingTest {
+        runTest {
 
             // Given
 
@@ -179,7 +179,7 @@ class LibraryRepositoryImplTest {
 
     @Test
     fun `getLibraries() should return all libraries sorted by name in ascending order`() =
-        runBlockingTest {
+        runTest {
 
             // Given
             fakeLibraryDao.insert(TEST_LIBRARY_1)
@@ -196,7 +196,7 @@ class LibraryRepositoryImplTest {
         }
 
     @Test
-    fun test_setLastUpdateCheck() = runBlockingTest {
+    fun test_setLastUpdateCheck() = runTest {
 
         // Given
         val lastUpdateCheckDate = "15:30, March"
@@ -210,7 +210,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun test_getLastUpdateCheck() = runBlockingTest {
+    fun test_getLastUpdateCheck() = runTest {
 
         // Given
         val expectedLastUpdateCheckDate = "15:30, March"

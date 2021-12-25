@@ -17,7 +17,7 @@ import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -179,7 +179,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun test_error_library_already_exists() = runBlockingTest {
+    fun test_error_library_already_exists() = runTest {
 
         // Given
         val snackbarHostState = SnackbarHostState()
@@ -219,7 +219,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun test_LibraryAdded_state() = runBlockingTest {
+    fun test_LibraryAdded_state() = runTest {
 
         // Given
         val snackbarHostState = SnackbarHostState()
