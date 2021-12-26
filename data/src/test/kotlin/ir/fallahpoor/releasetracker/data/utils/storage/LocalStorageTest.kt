@@ -9,36 +9,29 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.data.MainCoroutineScopeRule
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_LAST_UPDATE_CHECK
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_NIGHT_MODE
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage.Companion.KEY_SORT_ORDER
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.io.File
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
 class LocalStorageTest {
-
-    @get:Rule
-    val mainCoroutineScopeRule = MainCoroutineScopeRule()
 
     private lateinit var localStorage: LocalStorage
     private lateinit var dataStoreTestScope: TestScope
@@ -47,7 +40,9 @@ class LocalStorageTest {
 
     @Before
     fun runBeforeEachTest() {
-        dataStoreTestScope = TestScope(mainCoroutineScopeRule.dispatcher + Job())
+        val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+        Dispatchers.setMain(testDispatcher)
+        dataStoreTestScope = TestScope(testDispatcher + Job())
         dataStore = PreferenceDataStoreFactory.create(scope = dataStoreTestScope) {
             context.preferencesDataStoreFile(
                 "test-preferences-file"
@@ -58,11 +53,7 @@ class LocalStorageTest {
 
     @After
     fun runAfterEachTest() {
-        File(
-            context.filesDir,
-            "datastore"
-        ).deleteRecursively()
-        dataStoreTestScope.cancel()
+        Dispatchers.resetMain()
     }
 
     @Test
