@@ -2,7 +2,6 @@ package ir.fallahpoor.releasetracker.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.data.MainCoroutineScopeRule
 import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_NAME_1
 import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_NAME_2
 import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_URL_1
@@ -17,9 +16,13 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.fakes.FakeGithubWebService
 import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
 import ir.fallahpoor.releasetracker.data.fakes.FakeStorage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,20 +33,23 @@ class LibraryRepositoryImplTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    @get:Rule
-    val mainCoroutineScopeRule = MainCoroutineScopeRule()
-
     private lateinit var libraryRepository: LibraryRepositoryImpl
     private val fakeLibraryDao = FakeLibraryDao()
     private val fakeStorage = FakeStorage()
 
     @Before
     fun runBeforeEachTest() {
+        Dispatchers.setMain(StandardTestDispatcher())
         libraryRepository = LibraryRepositoryImpl(
             storage = fakeStorage,
             libraryDao = fakeLibraryDao,
             githubWebservice = FakeGithubWebService()
         )
+    }
+
+    @Before
+    fun runAfterEachTest() {
+        Dispatchers.resetMain()
     }
 
     @Test
