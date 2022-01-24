@@ -4,12 +4,13 @@ import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
-import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.kotlin.mock
 
 class ToolbarTest {
 
@@ -52,7 +53,7 @@ class ToolbarTest {
     }
 
     @Test
-    fun toolbar_initialized_correctly_when_night_is_not_mode_supported() {
+    fun toolbar_initialized_correctly_when_night_is_not_supported() {
 
         // Given
         initializeToolbar(nightModeSupported = false)
@@ -151,11 +152,11 @@ class ToolbarTest {
     fun when_sort_order_is_selected_sort_order_dialog_is_closed_and_correct_callback_is_called() {
 
         // Given
-        var sortOrder = SortOrder.Z_TO_A
+        val onSortOrderChange: (SortOrder) -> Unit = mock()
         composeTestRule.setContent {
             Toolbar(
-                currentSortOrder = sortOrder,
-                onSortOrderChange = { sortOrder = it },
+                currentSortOrder = SortOrder.Z_TO_A,
+                onSortOrderChange = onSortOrderChange,
                 isNightModeSupported = true,
                 currentNightMode = NightMode.ON,
                 onNightModeChange = {},
@@ -179,7 +180,7 @@ class ToolbarTest {
         // Then
         composeTestRule.onNodeWithText(selectSortOrderText)
             .assertDoesNotExist()
-        Truth.assertThat(sortOrder).isEqualTo(SortOrder.A_TO_Z)
+        Mockito.verify(onSortOrderChange).invoke(SortOrder.A_TO_Z)
 
     }
 
@@ -187,14 +188,14 @@ class ToolbarTest {
     fun when_night_mode_is_selected_night_mode_dialog_is_closed_and_correct_callback_is_called() {
 
         // Given
-        var nightMode = NightMode.OFF
+        val onNightModeChange: (NightMode) -> Unit = mock()
         composeTestRule.setContent {
             Toolbar(
                 currentSortOrder = SortOrder.A_TO_Z,
                 onSortOrderChange = {},
                 isNightModeSupported = true,
-                currentNightMode = nightMode,
-                onNightModeChange = { nightMode = it },
+                currentNightMode = NightMode.OFF,
+                onNightModeChange = onNightModeChange,
                 onSearchQueryChange = {},
                 onSearchQuerySubmit = {}
             )
@@ -215,7 +216,7 @@ class ToolbarTest {
         // Then
         composeTestRule.onNodeWithText(selectNightMode)
             .assertDoesNotExist()
-        Truth.assertThat(nightMode).isEqualTo(NightMode.AUTO)
+        Mockito.verify(onNightModeChange).invoke(NightMode.AUTO)
 
     }
 
@@ -223,7 +224,7 @@ class ToolbarTest {
     fun when_search_query_is_changed_correct_callback_is_called() {
 
         // Given
-        var searchQuery = ""
+        val onSearchQueryChange: (String) -> Unit = mock()
         composeTestRule.setContent {
             Toolbar(
                 currentSortOrder = SortOrder.A_TO_Z,
@@ -231,7 +232,7 @@ class ToolbarTest {
                 isNightModeSupported = true,
                 currentNightMode = NightMode.ON,
                 onNightModeChange = {},
-                onSearchQueryChange = { searchQuery = it },
+                onSearchQueryChange = onSearchQueryChange,
                 onSearchQuerySubmit = {}
             )
         }
@@ -241,12 +242,11 @@ class ToolbarTest {
             searchText,
             useUnmergedTree = true
         ).performClick()
-        val expectedSearchQuery = "coil"
         composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-            .performTextInput(expectedSearchQuery)
+            .performTextInput("Coil")
 
         // Then
-        Truth.assertThat(searchQuery).isEqualTo(expectedSearchQuery)
+        Mockito.verify(onSearchQueryChange).invoke("Coil")
 
     }
 
@@ -254,7 +254,7 @@ class ToolbarTest {
     fun when_search_query_is_cleared_correct_callback_is_called() {
 
         // Given
-        var searchQuery = "abc"
+        val onSearchQueryChange: (String) -> Unit = mock()
         composeTestRule.setContent {
             Toolbar(
                 currentSortOrder = SortOrder.A_TO_Z,
@@ -262,7 +262,7 @@ class ToolbarTest {
                 isNightModeSupported = true,
                 currentNightMode = NightMode.ON,
                 onNightModeChange = {},
-                onSearchQueryChange = { searchQuery = it },
+                onSearchQueryChange = onSearchQueryChange,
                 onSearchQuerySubmit = {}
             )
         }
@@ -276,7 +276,7 @@ class ToolbarTest {
             .performClick()
 
         // Then
-        Truth.assertThat(searchQuery).isEqualTo("")
+        Mockito.verify(onSearchQueryChange).invoke("")
 
     }
 

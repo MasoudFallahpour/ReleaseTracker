@@ -7,10 +7,11 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.kotlin.mock
 
 class DeleteLibraryDialogTest {
 
@@ -39,6 +40,7 @@ class DeleteLibraryDialogTest {
                 useUnmergedTree = true
             ).assertIsDisplayed()
             onNodeWithText(context.getString(R.string.delete))
+                .assertIsDisplayed()
         }
 
     }
@@ -47,11 +49,11 @@ class DeleteLibraryDialogTest {
     fun when_delete_button_is_clicked_correct_callback_is_called() {
 
         // Given
-        var delete = false
+        val onDeleteClicked: () -> Unit = mock()
         composeTestRule.setContent {
             DeleteLibraryDialog(
                 libraryName = "",
-                onDeleteClicked = { delete = true },
+                onDeleteClicked = onDeleteClicked,
                 onDismiss = {}
             )
         }
@@ -61,7 +63,7 @@ class DeleteLibraryDialogTest {
             .performClick()
 
         // Then
-        Truth.assertThat(delete).isTrue()
+        Mockito.verify(onDeleteClicked).invoke()
 
     }
 
@@ -69,12 +71,12 @@ class DeleteLibraryDialogTest {
     fun when_DeleteLibraryDialog_is_dismissed_correct_callback_is_called() {
 
         // Given
-        var dismissed = false
+        val onDismiss: () -> Unit = mock()
         composeTestRule.setContent {
             DeleteLibraryDialog(
                 libraryName = "",
                 onDeleteClicked = {},
-                onDismiss = { dismissed = true }
+                onDismiss = onDismiss
             )
         }
 
@@ -82,7 +84,7 @@ class DeleteLibraryDialogTest {
         Espresso.pressBack()
 
         // Then
-        Truth.assertThat(dismissed).isTrue()
+        Mockito.verify(onDismiss).invoke()
 
     }
 

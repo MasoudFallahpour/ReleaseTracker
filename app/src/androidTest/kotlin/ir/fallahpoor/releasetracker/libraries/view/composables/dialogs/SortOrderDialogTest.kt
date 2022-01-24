@@ -5,11 +5,12 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.kotlin.mock
 
 class SortOrderDialogTest {
 
@@ -48,11 +49,11 @@ class SortOrderDialogTest {
     fun when_sort_order_is_selected_correct_callback_is_called() {
 
         // Given
-        var sortOrder = SortOrder.A_TO_Z
+        val onSortOrderClick: (SortOrder) -> Unit = mock()
         composeTestRule.setContent {
             SortOrderDialog(
                 currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderClick = { sortOrder = it },
+                onSortOrderClick = onSortOrderClick,
                 onDismiss = {}
             )
         }
@@ -64,7 +65,7 @@ class SortOrderDialogTest {
         ).performClick()
 
         // Then
-        Truth.assertThat(sortOrder).isEqualTo(SortOrder.PINNED_FIRST)
+        Mockito.verify(onSortOrderClick).invoke(SortOrder.PINNED_FIRST)
 
     }
 
@@ -72,12 +73,12 @@ class SortOrderDialogTest {
     fun when_SortOrderDialog_is_dismissed_correct_callback_is_called() {
 
         // Given
-        var dismissed = false
+        val onDismiss: () -> Unit = mock()
         composeTestRule.setContent {
             SortOrderDialog(
                 currentSortOrder = SortOrder.Z_TO_A,
                 onSortOrderClick = {},
-                onDismiss = { dismissed = true }
+                onDismiss = onDismiss
             )
         }
 
@@ -85,7 +86,7 @@ class SortOrderDialogTest {
         Espresso.pressBack()
 
         // Then
-        Truth.assertThat(dismissed).isTrue()
+        Mockito.verify(onDismiss).invoke()
 
     }
 

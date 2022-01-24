@@ -5,11 +5,12 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.kotlin.mock
 
 class NightModeDialogTest {
 
@@ -48,11 +49,11 @@ class NightModeDialogTest {
     fun when_night_mode_is_selected_correct_callback_is_called() {
 
         // Given
-        var nightMode = NightMode.OFF
+        val onNightModeClick: (NightMode) -> Unit = mock()
         composeTestRule.setContent {
             NightModeDialog(
-                currentNightMode = nightMode,
-                onNightModeClick = { nightMode = it },
+                currentNightMode = NightMode.OFF,
+                onNightModeClick = onNightModeClick,
                 onDismiss = {}
             )
         }
@@ -64,7 +65,7 @@ class NightModeDialogTest {
         ).performClick()
 
         // Then
-        Truth.assertThat(nightMode).isEqualTo(NightMode.AUTO)
+        Mockito.verify(onNightModeClick).invoke(NightMode.AUTO)
 
     }
 
@@ -72,12 +73,12 @@ class NightModeDialogTest {
     fun when_SortOrderDialog_is_dismissed_correct_callback_is_called() {
 
         // Given
-        var dismissed = false
+        val onDismiss: () -> Unit = mock()
         composeTestRule.setContent {
             NightModeDialog(
                 currentNightMode = NightMode.OFF,
                 onNightModeClick = {},
-                onDismiss = { dismissed = true }
+                onDismiss = onDismiss
             )
         }
 
@@ -85,7 +86,7 @@ class NightModeDialogTest {
         Espresso.pressBack()
 
         // Then
-        Truth.assertThat(dismissed).isTrue()
+        Mockito.verify(onDismiss).invoke()
 
     }
 
