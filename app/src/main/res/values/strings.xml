@@ -36,16 +36,4 @@
     <string name="notification_title">Updates Available</string>
     <string name="notification_body">There are updates for the following libraries:\n%s</string>
     <string name="back">Back</string>
-    <string name="test_tag_add_library_screen">addLibraryScreen</string>
-    <string name="test_tag_add_library_progress_indicator">addLibraryProgressIndicator</string>
-    <string name="test_tag_add_library_library_name_text_field">addLibraryLibraryNameTextField</string>
-    <string name="test_tag_add_library_library_url_text_field">addLibraryLibraryUrlTextField</string>
-    <string name="test_tag_add_library_add_library_button">addLibraryAddLibraryButton</string>
-    <string name="test_tag_libraries_list_add_library_button">librariesListAddLibraryButton</string>
-    <string name="test_tag_libraries_list_progress_indicator">librariesListProgressIndicator</string>
-    <string name="test_tag_libraries_list_library_item">librariesListLibraryItem</string>
-    <string name="test_tag_search_bar_close_button">searchBarCloseButton</string>
-    <string name="test_tag_search_bar_clear_button">searchBarClearButton</string>
-    <string name="test_tag_search_bar_query_text_field">searchBarQueryTextField</string>
-    <string name="test_tag_search_bar">searchBar</string>
 </resources>

@@ -20,9 +20,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -30,6 +29,13 @@ import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+
+object SearchBarTags {
+    const val CLOSE_BUTTON = "searchBarCloseButton"
+    const val CLEAR_BUTTON = "searchBarClearButton"
+    const val QUERY_TEXT_FIELD = "searchBarQueryTextField"
+    const val SEARCH_BAR = "searchBar"
+}
 
 @Composable
 fun SearchBar(
@@ -43,9 +49,8 @@ fun SearchBar(
     onClearClick: () -> Unit,
     onCloseClick: () -> Unit
 ) {
-    val tag = stringResource(R.string.test_tag_search_bar)
     Surface(
-        modifier = modifier.semantics { testTag = tag },
+        modifier = modifier.testTag(SearchBarTags.SEARCH_BAR),
         shape = shape,
         elevation = elevation
     ) {
@@ -75,9 +80,8 @@ fun SearchBar(
 
 @Composable
 private fun CloseButton(onCloseClick: () -> Unit) {
-    val tag = stringResource(R.string.test_tag_search_bar_close_button)
     IconButton(
-        modifier = Modifier.semantics { testTag = tag },
+        modifier = Modifier.testTag(SearchBarTags.CLOSE_BUTTON),
         onClick = onCloseClick
     ) {
         Icon(
@@ -93,13 +97,12 @@ private fun SearchTextField(
     onQueryChange: (String) -> Unit,
     onQuerySubmit: (String) -> Unit
 ) {
-    val tag = stringResource(R.string.test_tag_search_bar_query_text_field)
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(focusRequester)
-            .semantics { testTag = tag },
+            .testTag(SearchBarTags.QUERY_TEXT_FIELD),
         value = query,
         onValueChange = onQueryChange,
         singleLine = true,
@@ -130,9 +133,8 @@ private fun HintText(hint: String) {
 
 @Composable
 private fun ClearButton(onClearClick: () -> Unit) {
-    val tag = stringResource(R.string.test_tag_search_bar_clear_button)
     IconButton(
-        modifier = Modifier.semantics { testTag = tag },
+        modifier = Modifier.testTag(SearchBarTags.CLEAR_BUTTON),
         onClick = onClearClick
     ) {
         Icon(

@@ -18,6 +18,7 @@ import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.libraries.view.composables.SearchBarTags
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +27,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -55,12 +56,6 @@ class LibrariesListScreenTest {
     private val deleteText = context.getString(R.string.delete)
     private val noLibrariesText = context.getString(R.string.no_libraries)
     private val searchText = context.getString(R.string.search)
-    private val progressIndicatorTestTag =
-        context.getString(R.string.test_tag_add_library_progress_indicator)
-    private val searchBarQueryTextFieldTestTag =
-        context.getString(R.string.test_tag_search_bar_query_text_field)
-    private val libraryItemTestTag =
-        context.getString(R.string.test_tag_libraries_list_library_item)
 
     @Before
     fun runBeforeEachTest() {
@@ -139,7 +134,7 @@ class LibrariesListScreenTest {
 
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
-            onNodeWithTag(progressIndicatorTestTag)
+            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
         }
 
@@ -157,11 +152,11 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            onAllNodesWithTag(libraryItemTestTag)
+            onAllNodesWithTag(LibrariesListTags.LIBRARY_ITEM)
                 .assertCountEquals(0)
             onNodeWithText(noLibrariesText)
                 .assertIsDisplayed()
-            onNodeWithTag(progressIndicatorTestTag)
+            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
         }
 
@@ -217,12 +212,10 @@ class LibrariesListScreenTest {
     private fun assertSnackbarIsDisplayedWithMessage(
         snackbarHostState: SnackbarHostState,
         message: String
-    ) {
-        runBlockingTest {
-            val actualSnackbarText = snapshotFlow { snackbarHostState.currentSnackbarData }
-                .filterNotNull().first().message
-            Truth.assertThat(actualSnackbarText).isEqualTo(message)
-        }
+    ) = runTest {
+        val actualSnackbarText = snapshotFlow { snackbarHostState.currentSnackbarData }
+            .filterNotNull().first().message
+        Truth.assertThat(actualSnackbarText).isEqualTo(message)
     }
 
     @Test
@@ -253,7 +246,7 @@ class LibrariesListScreenTest {
 
     @Test
     fun correct_night_mode_is_set_when_selecting_a_night_mode_from_night_mode_dialog() =
-        runBlockingTest {
+        runTest {
 
             // Given
             initializeLibrariesListScreen()
@@ -286,7 +279,7 @@ class LibrariesListScreenTest {
         with(composeRule) {
             onNodeWithContentDescription(searchText, useUnmergedTree = true)
                 .performClick()
-            onNodeWithTag(searchBarQueryTextFieldTestTag)
+            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .performTextInput("ko")
         }
 
@@ -312,13 +305,13 @@ class LibrariesListScreenTest {
         with(composeRule) {
             onNodeWithContentDescription(searchText, useUnmergedTree = true)
                 .performClick()
-            onNodeWithTag(context.getString(R.string.test_tag_search_bar_query_text_field))
+            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .performTextInput("this will not match any library!")
         }
 
         // Then
         with(composeRule) {
-            onAllNodesWithTag(libraryItemTestTag)
+            onAllNodesWithTag(LibrariesListTags.LIBRARY_ITEM)
                 .assertCountEquals(0)
             onNodeWithText(noLibrariesText)
                 .assertIsDisplayed()
@@ -334,12 +327,12 @@ class LibrariesListScreenTest {
         with(composeRule) {
             onNodeWithContentDescription(searchText, useUnmergedTree = true)
                 .performClick()
-            onNodeWithTag(searchBarQueryTextFieldTestTag)
+            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .performTextInput("ko")
         }
 
         // When
-        composeRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_close_button))
+        composeRule.onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
             .performClick()
 
         // Then
@@ -352,7 +345,7 @@ class LibrariesListScreenTest {
                 .assertIsDisplayed()
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
-            onNodeWithTag(progressIndicatorTestTag)
+            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
         }
 
@@ -366,12 +359,12 @@ class LibrariesListScreenTest {
         with(composeRule) {
             onNodeWithContentDescription(searchText, useUnmergedTree = true)
                 .performClick()
-            onNodeWithTag(searchBarQueryTextFieldTestTag)
+            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
                 .performTextInput("ko")
         }
 
         // When
-        composeRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_clear_button))
+        composeRule.onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
             .performClick()
 
         // Then
@@ -384,7 +377,7 @@ class LibrariesListScreenTest {
                 .assertIsDisplayed()
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
-            onNodeWithTag(progressIndicatorTestTag)
+            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
         }
 

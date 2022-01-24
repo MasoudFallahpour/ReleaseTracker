@@ -143,6 +143,7 @@ dependencies {
     androidTestImplementation(Espresso.intents)
     androidTestImplementation(Hilt.androidTesting)
     kaptAndroidTest(Hilt.androidCompiler)
+    androidTestImplementation(Coroutines.test)
 
     implementation(project(":data"))
 }

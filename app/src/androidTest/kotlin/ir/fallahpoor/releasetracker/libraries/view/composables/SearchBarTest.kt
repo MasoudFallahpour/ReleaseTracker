@@ -1,14 +1,11 @@
 package ir.fallahpoor.releasetracker.libraries.view.composables
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.R
 import org.junit.Rule
 import org.junit.Test
 
@@ -16,11 +13,6 @@ class SearchBarTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    private val context: Context = ApplicationProvider.getApplicationContext()
-    private val clearSearchBarTag = context.getString(R.string.test_tag_search_bar_clear_button)
-    private val closeSearchBarTag = context.getString(R.string.test_tag_search_bar_close_button)
-    private val queryTextFieldTag = context.getString(R.string.test_tag_search_bar_query_text_field)
 
     @Test
     fun searchBar_is_initialized_correctly() {
@@ -40,9 +32,9 @@ class SearchBarTest {
 
         with(composeTestRule) {
             onNodeWithText(hint).assertIsDisplayed()
-            onNodeWithTag(closeSearchBarTag)
+            onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
                 .assertIsDisplayed()
-            onNodeWithTag(clearSearchBarTag)
+            onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
                 .assertIsDisplayed()
         }
 
@@ -68,7 +60,7 @@ class SearchBarTest {
         }
 
         // When
-        composeTestRule.onNodeWithTag(queryTextFieldTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
             .performTextInput(newQuery)
 
         // Then
@@ -96,7 +88,7 @@ class SearchBarTest {
         }
 
         // When
-        composeTestRule.onNodeWithTag(clearSearchBarTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
             .performClick()
 
         // Then
@@ -121,7 +113,7 @@ class SearchBarTest {
         }
 
         // When
-        composeTestRule.onNodeWithTag(closeSearchBarTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
             .performClick()
 
         // Then
@@ -148,7 +140,7 @@ class SearchBarTest {
         }
 
         // When
-        composeTestRule.onNodeWithTag(queryTextFieldTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
             .performTextInput(newQuery)
 
         // Then

@@ -15,10 +15,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +36,12 @@ import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+
+object LibrariesListTags {
+    const val ADD_LIBRARY_BUTTON = "librariesListAddLibraryButton"
+    const val PROGRESS_INDICATOR = "librariesListProgressIndicator"
+    const val LIBRARY_ITEM = "librariesListLibraryItem"
+}
 
 @ExperimentalAnimationApi
 @OptIn(ExperimentalFoundationApi::class)
@@ -171,11 +176,10 @@ private fun LibrariesListContent(
 
 @Composable
 private fun ProgressIndicator() {
-    val tag = stringResource(R.string.test_tag_libraries_list_progress_indicator)
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .semantics { testTag = tag },
+            .testTag(LibrariesListTags.PROGRESS_INDICATOR),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
@@ -278,7 +282,6 @@ private fun LibraryItem(
     onLibraryLongClick: () -> Unit,
     onPinLibraryClick: (Boolean) -> Unit
 ) {
-    val tag = stringResource(R.string.test_tag_libraries_list_library_item)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -291,7 +294,7 @@ private fun LibraryItem(
                 top = SPACE_NORMAL.dp,
                 bottom = SPACE_NORMAL.dp
             )
-            .semantics { testTag = tag }
+            .testTag(LibrariesListTags.LIBRARY_ITEM)
     ) {
         PinToggleButton(
             isPinned = library.isPinned(),
@@ -361,11 +364,10 @@ private fun EllipsisText(modifier: Modifier = Modifier, text: String, style: Tex
 @ExperimentalAnimationApi
 @Composable
 private fun AddLibraryButton(clickListener: () -> Unit) {
-    val tag = stringResource(R.string.test_tag_libraries_list_add_library_button)
     FloatingActionButton(
         modifier = Modifier
             .padding(SPACE_NORMAL.dp)
-            .semantics { testTag = tag },
+            .testTag(LibrariesListTags.ADD_LIBRARY_BUTTON),
         onClick = clickListener
     ) {
         Icon(

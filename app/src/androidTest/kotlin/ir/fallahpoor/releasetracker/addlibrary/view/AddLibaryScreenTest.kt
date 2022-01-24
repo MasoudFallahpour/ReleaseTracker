@@ -45,15 +45,6 @@ class AddLibraryScreenTest {
     private lateinit var libraryRepository: LibraryRepository
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-
-    private val addLibraryButtonTag =
-        context.getString(R.string.test_tag_add_library_add_library_button)
-    private val libraryNameTextFieldTag =
-        context.getString(R.string.test_tag_add_library_library_name_text_field)
-    private val libraryUrlTextFieldTag =
-        context.getString(R.string.test_tag_add_library_library_url_text_field)
-    private val progressIndicatorTag =
-        context.getString(R.string.test_tag_add_library_progress_indicator)
     private val libraryNameEmptyText = context.getString(R.string.library_name_empty)
     private val libraryUrlEmptyText = context.getString(R.string.library_url_empty)
     private val libraryUrlInvalidText = context.getString(R.string.library_url_invalid)
@@ -68,13 +59,13 @@ class AddLibraryScreenTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(progressIndicatorTag)
+            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
-            onNodeWithTag(libraryNameTextFieldTag, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD, useUnmergedTree = true)
                 .assertTextEquals("")
-            onNodeWithTag(libraryUrlTextFieldTag, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD, useUnmergedTree = true)
                 .assertTextEquals("")
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
             onNodeWithText(libraryNameEmptyText)
                 .assertDoesNotExist()
@@ -94,14 +85,14 @@ class AddLibraryScreenTest {
         initializeAddLibraryScreen()
 
         // When
-        composeTestRule.onNodeWithTag(addLibraryButtonTag)
+        composeTestRule.onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
             .performClick()
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(progressIndicatorTag)
+            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
             onNodeWithText(libraryNameEmptyText)
                 .assertIsDisplayed()
@@ -122,17 +113,17 @@ class AddLibraryScreenTest {
 
         // When
         with(composeTestRule) {
-            onNodeWithTag(libraryNameTextFieldTag)
+            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
                 .performTextInput(LIBRARY_NAME)
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .performClick()
         }
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(progressIndicatorTag)
+            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
             onNodeWithText(libraryNameEmptyText)
                 .assertDoesNotExist()
@@ -153,19 +144,19 @@ class AddLibraryScreenTest {
 
         // When
         with(composeTestRule) {
-            onNodeWithTag(libraryNameTextFieldTag)
+            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
                 .performTextInput(LIBRARY_NAME)
-            onNodeWithTag(libraryUrlTextFieldTag)
+            onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
                 .performTextInput(LIBRARY_URL_INVALID)
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .performClick()
         }
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(progressIndicatorTag)
+            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
             onNodeWithText(libraryNameEmptyText)
                 .assertDoesNotExist()
@@ -188,19 +179,19 @@ class AddLibraryScreenTest {
 
         // When
         with(composeTestRule) {
-            onNodeWithTag(libraryNameTextFieldTag)
+            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
                 .performTextInput(LIBRARY_NAME)
-            onNodeWithTag(libraryUrlTextFieldTag)
+            onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
                 .performTextInput(LIBRARY_URL_PATH)
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .performClick()
         }
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(progressIndicatorTag)
+            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
             onNodeWithText(libraryNameEmptyText)
                 .assertDoesNotExist()
@@ -231,23 +222,23 @@ class AddLibraryScreenTest {
 
         // When
         with(composeTestRule) {
-            onNodeWithTag(libraryNameTextFieldTag)
+            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
                 .performTextInput(LIBRARY_NAME)
-            onNodeWithTag(libraryUrlTextFieldTag)
+            onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
                 .performTextInput(LIBRARY_URL_PATH)
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .performClick()
         }
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(progressIndicatorTag)
+            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
-            onNodeWithTag(libraryNameTextFieldTag, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD, useUnmergedTree = true)
                 .assertTextEquals("")
-            onNodeWithTag(libraryUrlTextFieldTag, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD, useUnmergedTree = true)
                 .assertTextEquals("")
-            onNodeWithTag(addLibraryButtonTag)
+            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
             onNodeWithText(libraryNameEmptyText)
                 .assertDoesNotExist()

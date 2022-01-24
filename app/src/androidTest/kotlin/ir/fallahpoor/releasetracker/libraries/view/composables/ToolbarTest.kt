@@ -17,10 +17,6 @@ class ToolbarTest {
     val composeTestRule = createComposeRule()
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-    private val searchBarTextFieldTag =
-        context.getString(R.string.test_tag_search_bar_query_text_field)
-    private val searchBarTag =
-        context.getString(R.string.test_tag_search_bar)
     private val appNameText = context.getString(R.string.app_name)
     private val sortText = context.getString(R.string.sort)
     private val searchText = context.getString(R.string.search)
@@ -50,7 +46,7 @@ class ToolbarTest {
             moreOptionsText,
             useUnmergedTree = true
         ).assertIsDisplayed()
-        composeTestRule.onNodeWithTag(searchBarTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
             .assertDoesNotExist()
 
     }
@@ -76,7 +72,7 @@ class ToolbarTest {
             moreOptionsText,
             useUnmergedTree = true
         ).assertDoesNotExist()
-        composeTestRule.onNodeWithTag(searchBarTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
             .assertDoesNotExist()
 
     }
@@ -146,7 +142,7 @@ class ToolbarTest {
         ).performClick()
 
         // Then
-        composeTestRule.onNodeWithTag(searchBarTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
             .assertIsDisplayed()
 
     }
@@ -246,7 +242,7 @@ class ToolbarTest {
             useUnmergedTree = true
         ).performClick()
         val expectedSearchQuery = "coil"
-        composeTestRule.onNodeWithTag(searchBarTextFieldTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
             .performTextInput(expectedSearchQuery)
 
         // Then
@@ -276,7 +272,7 @@ class ToolbarTest {
             searchText,
             useUnmergedTree = true
         ).performClick()
-        composeTestRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_clear_button))
+        composeTestRule.onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
             .performClick()
 
         // Then
@@ -305,11 +301,11 @@ class ToolbarTest {
             searchText,
             useUnmergedTree = true
         ).performClick()
-        composeTestRule.onNodeWithTag(context.getString(R.string.test_tag_search_bar_close_button))
+        composeTestRule.onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
             .performClick()
 
         // Then
-        composeTestRule.onNodeWithTag(searchBarTag)
+        composeTestRule.onNodeWithTag(SearchBarTags.SEARCH_BAR)
             .assertDoesNotExist()
 
     }

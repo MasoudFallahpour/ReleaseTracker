@@ -19,9 +19,8 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -37,6 +36,14 @@ import ir.fallahpoor.releasetracker.common.composables.OutlinedTextFieldWithPref
 import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
+object AddLibraryTags {
+    const val ADD_LIBRARY_SCREEN = "addLibraryScreen"
+    const val PROGRESS_INDICATOR = "addLibraryProgressIndicator"
+    const val LIBRARY_NAME_TEXT_FIELD = "addLibraryLibraryNameTextField"
+    const val LIBRARY_URL_TEXT_FIELD = "addLibraryLibraryUrlTextField"
+    const val ADD_LIBRARY_BUTTON = "addLibraryAddLibraryButton"
+}
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddLibraryScreen(
@@ -45,11 +52,8 @@ fun AddLibraryScreen(
     onBackClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    val tag = stringResource(R.string.test_tag_add_library_screen)
     Screen(
-        modifier = Modifier.semantics {
-            testTag = tag
-        },
+        modifier = Modifier.testTag(AddLibraryTags.ADD_LIBRARY_SCREEN),
         isDarkTheme = isDarkTheme,
         scaffoldState = scaffoldState,
         topBar = {
@@ -151,10 +155,9 @@ private fun AddLibraryContent(
 
 @Composable
 private fun ProgressIndicator() {
-    val tag = stringResource(R.string.test_tag_add_library_progress_indicator)
     LinearProgressIndicator(
         modifier = Modifier
-            .semantics { testTag = tag }
+            .testTag(AddLibraryTags.PROGRESS_INDICATOR)
             .fillMaxWidth()
             .height(2.dp)
     )
@@ -167,10 +170,9 @@ private fun LibraryNameTextField(
     isError: Boolean
 ) {
     val focusManager = LocalFocusManager.current
-    val tag = stringResource(R.string.test_tag_add_library_library_name_text_field)
     OutlinedTextField(
         modifier = Modifier
-            .semantics { testTag = tag }
+            .testTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
             .fillMaxWidth(),
         value = text,
         label = {
@@ -204,10 +206,9 @@ private fun LibraryUrlPathTextField(
     onDoneClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    val tag = stringResource(R.string.test_tag_add_library_library_url_text_field)
     OutlinedTextFieldWithPrefix(
         modifier = Modifier
-            .semantics { testTag = tag }
+            .testTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
             .fillMaxWidth(),
         prefix = GITHUB_BASE_URL,
         hint = stringResource(R.string.library_url),
@@ -245,10 +246,9 @@ private fun ErrorText(@StringRes textRes: Int) {
 
 @Composable
 private fun AddLibraryButton(isEnabled: Boolean, clickListener: () -> Unit) {
-    val tag = stringResource(R.string.test_tag_add_library_add_library_button)
     Button(
         modifier = Modifier
-            .semantics { testTag = tag }
+            .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
             .padding(SPACE_NORMAL.dp),
         onClick = clickListener,
         enabled = isEnabled

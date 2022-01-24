@@ -7,6 +7,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryTags
+import ir.fallahpoor.releasetracker.libraries.view.LibrariesListTags
 import org.junit.Rule
 import org.junit.Test
 
@@ -49,16 +51,11 @@ class MainActivityTest {
     fun when_add_library_button_is_clicked_add_library_screen_is_displayed() {
 
         // When
-        val addLibraryButtonTag = composeRule.activity.getString(
-            R.string.test_tag_libraries_list_add_library_button
-        )
-        composeRule.onNodeWithTag(addLibraryButtonTag)
+        composeRule.onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
             .performClick()
 
         // Then
-        val addLibraryScreenTag =
-            composeRule.activity.getString(R.string.test_tag_add_library_screen)
-        composeRule.onNodeWithTag(addLibraryScreenTag)
+        composeRule.onNodeWithTag(AddLibraryTags.ADD_LIBRARY_SCREEN)
             .assertIsDisplayed()
 
     }
