@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
@@ -47,7 +48,7 @@ object AddLibraryTags {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddLibraryScreen(
-    addLibraryViewModel: AddLibraryViewModel,
+    addLibraryViewModel: AddLibraryViewModel = hiltViewModel(),
     isDarkTheme: Boolean,
     onBackClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
@@ -47,7 +48,7 @@ object LibrariesListTags {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrariesListScreen(
-    librariesViewModel: LibrariesViewModel,
+    librariesViewModel: LibrariesViewModel = hiltViewModel(),
     nightModeManager: NightModeManager,
     onLibraryClick: (Library) -> Unit,
     onAddLibraryClick: () -> Unit,
@@ -74,7 +75,9 @@ fun LibrariesListScreen(
         )
     }
 
-    getLibraries()
+    LaunchedEffect(true) {
+        getLibraries()
+    }
 
     Screen(
         isDarkTheme = isNightModeOn,
