@@ -12,9 +12,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
@@ -31,7 +30,7 @@ fun SortOrderDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.select_sorting_order))
+            Text(text = stringResource(R.string.select_sort_order))
         },
         text = {
             SortOrderScreen(
@@ -49,24 +48,14 @@ private fun SortOrderScreen(
     onSortOrderClick: (SortOrder) -> Unit
 ) {
     Column {
-        SortItem(
-            text = stringResource(R.string.a_to_z),
-            sortOrder = SortOrder.A_TO_Z,
-            onSortOrderClick = onSortOrderClick,
-            isSelected = currentSortOrder == SortOrder.A_TO_Z
-        )
-        SortItem(
-            text = stringResource(R.string.z_to_a),
-            sortOrder = SortOrder.Z_TO_A,
-            onSortOrderClick = onSortOrderClick,
-            isSelected = currentSortOrder == SortOrder.Z_TO_A
-        )
-        SortItem(
-            text = stringResource(R.string.pinned_first),
-            sortOrder = SortOrder.PINNED_FIRST,
-            onSortOrderClick = onSortOrderClick,
-            isSelected = currentSortOrder == SortOrder.PINNED_FIRST
-        )
+        SortOrder.values().forEach { sortOrder: SortOrder ->
+            SortItem(
+                text = stringResource(sortOrder.label),
+                sortOrder = sortOrder,
+                onSortOrderClick = onSortOrderClick,
+                isSelected = currentSortOrder == sortOrder
+            )
+        }
     }
 }
 
@@ -90,7 +79,7 @@ private fun SortItem(
                     end = SPACE_SMALL.dp,
                     bottom = SPACE_SMALL.dp
                 )
-                .semantics { testTag = text },
+                .testTag(text),
             selected = isSelected,
             onClick = { onSortOrderClick(sortOrder) }
         )

@@ -260,7 +260,7 @@ class LibrariesListScreenTest {
                 ).performClick()
                 onNodeWithText(context.getString(R.string.night_mode))
                     .performClick()
-                onNodeWithText(context.getString(R.string.on))
+                onNodeWithText(context.getString(NightMode.ON.label))
                     .performClick()
             }
 

@@ -48,12 +48,12 @@ private fun NightModeScreen(
     onNightModeClick: (NightMode) -> Unit
 ) {
     Column {
-        NightMode.values().forEach {
+        NightMode.values().forEach { nightMode: NightMode ->
             NightModeItem(
-                text = it.value,
-                nightMode = it,
+                text = stringResource(nightMode.label),
+                nightMode = nightMode,
                 onNightModeChange = onNightModeClick,
-                isSelected = currentNightMode == it
+                isSelected = currentNightMode == nightMode
             )
         }
     }

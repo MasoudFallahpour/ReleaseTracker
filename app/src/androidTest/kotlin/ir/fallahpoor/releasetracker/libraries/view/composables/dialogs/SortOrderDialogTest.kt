@@ -5,7 +5,6 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import org.junit.Rule
 import org.junit.Test
@@ -33,13 +32,13 @@ class SortOrderDialogTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithText(context.getString(R.string.a_to_z), useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(context.getString(R.string.z_to_a), useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(context.getString(R.string.pinned_first), useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithTag(context.getString(R.string.z_to_a))
+            SortOrder.values().forEach {
+                onNodeWithText(
+                    context.getString(it.label),
+                    useUnmergedTree = true
+                ).assertIsDisplayed()
+            }
+            onNodeWithTag(context.getString(SortOrder.Z_TO_A.label))
                 .assertIsSelected()
         }
 
@@ -60,7 +59,7 @@ class SortOrderDialogTest {
 
         // When
         composeTestRule.onNodeWithText(
-            context.getString(R.string.pinned_first),
+            context.getString(SortOrder.PINNED_FIRST.label),
             useUnmergedTree = true
         ).performClick()
 

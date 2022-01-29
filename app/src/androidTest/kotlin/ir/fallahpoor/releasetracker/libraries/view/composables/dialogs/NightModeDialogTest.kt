@@ -5,7 +5,6 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import org.junit.Rule
 import org.junit.Test
@@ -33,13 +32,13 @@ class NightModeDialogTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithText(context.getString(R.string.off), useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(context.getString(R.string.on), useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(context.getString(R.string.auto), useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithTag(context.getString(R.string.on))
+            NightMode.values().forEach { nightMode: NightMode ->
+                onNodeWithText(
+                    context.getString(nightMode.label),
+                    useUnmergedTree = true
+                ).assertIsDisplayed()
+            }
+            onNodeWithTag(context.getString(NightMode.ON.label))
                 .assertIsSelected()
         }
 
@@ -60,7 +59,7 @@ class NightModeDialogTest {
 
         // When
         composeTestRule.onNodeWithText(
-            context.getString(R.string.auto),
+            context.getString(NightMode.AUTO.label),
             useUnmergedTree = true
         ).performClick()
 

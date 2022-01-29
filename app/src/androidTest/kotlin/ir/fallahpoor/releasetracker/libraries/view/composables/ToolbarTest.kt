@@ -23,7 +23,7 @@ class ToolbarTest {
     private val searchText = context.getString(R.string.search)
     private val moreOptionsText = context.getString(R.string.more_options)
     private val nightModeText = context.getString(R.string.night_mode)
-    private val selectSortOrderText = context.getString(R.string.select_sorting_order)
+    private val selectSortOrderText = context.getString(R.string.select_sort_order)
     private val selectNightMode = context.getString(R.string.select_night_mode)
 
     @Test
@@ -172,7 +172,7 @@ class ToolbarTest {
                 useUnmergedTree = true
             ).performClick()
             onNodeWithText(
-                context.getString(R.string.a_to_z),
+                context.getString(SortOrder.A_TO_Z.label),
                 useUnmergedTree = true
             ).performClick()
         }
@@ -209,7 +209,7 @@ class ToolbarTest {
             ).performClick()
             onNodeWithText(nightModeText)
                 .performClick()
-            onNodeWithText(context.getString(R.string.auto))
+            onNodeWithText(context.getString(NightMode.AUTO.label))
                 .performClick()
         }
 

@@ -9,10 +9,7 @@
     <string name="library_url_invalid">Library URL is invalid</string>
     <string name="worker_tag">UPDATE_VERSION_WORKER</string>
     <string name="sort">Sort</string>
-    <string name="select_sorting_order">Select Sorting Order</string>
-    <string name="a_to_z">A to Z</string>
-    <string name="z_to_a">Z to A</string>
-    <string name="pinned_first">Pinned first</string>
+    <string name="select_sort_order">Select Sort Order</string>
     <string name="delete">Delete</string>
     <string name="delete_selected_library">Delete \"%s\"?</string>
     <string name="library_deleted">Library deleted successfully</string>
@@ -20,9 +17,6 @@
     <string name="no_libraries">There are no libraries</string>
     <string name="night_mode">Night mode…</string>
     <string name="select_night_mode">Select night mode</string>
-    <string name="off">Off</string>
-    <string name="on">On</string>
-    <string name="auto">Auto</string>
     <string name="content_description_search">Search for libraries</string>
     <string name="search">Search</string>
     <string name="hint_search">Search libraries</string>
