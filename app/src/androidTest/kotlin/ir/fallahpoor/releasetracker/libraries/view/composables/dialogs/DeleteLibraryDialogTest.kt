@@ -41,6 +41,8 @@ class DeleteLibraryDialogTest {
             ).assertIsDisplayed()
             onNodeWithText(context.getString(R.string.delete))
                 .assertIsDisplayed()
+            onNodeWithText(context.getString(R.string.cancel))
+                .assertIsDisplayed()
         }
 
     }
@@ -64,6 +66,28 @@ class DeleteLibraryDialogTest {
 
         // Then
         Mockito.verify(onDeleteClicked).invoke()
+
+    }
+
+    @Test
+    fun when_cancel_button_is_clicked_correct_callback_is_called() {
+
+        // Given
+        val onDismiss: () -> Unit = mock()
+        composeTestRule.setContent {
+            DeleteLibraryDialog(
+                libraryName = "",
+                onDeleteClicked = {},
+                onDismiss = onDismiss
+            )
+        }
+
+        // When
+        composeTestRule.onNodeWithText(context.getString(R.string.cancel), useUnmergedTree = true)
+            .performClick()
+
+        // Then
+        Mockito.verify(onDismiss).invoke()
 
     }
 

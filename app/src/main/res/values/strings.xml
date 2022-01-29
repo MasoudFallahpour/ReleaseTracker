@@ -36,4 +36,5 @@
     <string name="notification_title">Updates Available</string>
     <string name="notification_body">There are updates for the following libraries:\n%s</string>
     <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
 </resources>

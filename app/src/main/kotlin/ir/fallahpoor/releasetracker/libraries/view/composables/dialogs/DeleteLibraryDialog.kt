@@ -25,6 +25,11 @@ fun DeleteLibraryDialog(
             TextButton(onClick = onDeleteClicked) {
                 Text(text = stringResource(R.string.delete))
             }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.cancel))
+            }
         }
     )
 }
