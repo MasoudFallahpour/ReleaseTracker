@@ -122,13 +122,13 @@ fun LibrariesListScreen(
         if (showDeleteLibraryDialog) {
             DeleteLibraryDialog(
                 libraryName = librariesViewModel.libraryToDelete?.name ?: "",
-                onDeleteClicked = {
+                onDeleteClick = {
                     showDeleteLibraryDialog = false
                     librariesViewModel.libraryToDelete?.let {
                         librariesViewModel.deleteLibrary(it)
                     }
                 },
-                onDismiss = {
+                onCancelClick = {
                     showDeleteLibraryDialog = false
                 }
             )

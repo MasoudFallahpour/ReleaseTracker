@@ -10,11 +10,11 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 @Composable
 fun DeleteLibraryDialog(
     libraryName: String,
-    onDeleteClicked: () -> Unit,
-    onDismiss: () -> Unit
+    onDeleteClick: () -> Unit,
+    onCancelClick: () -> Unit
 ) {
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = onCancelClick,
         text = {
             Text(
                 text = stringResource(R.string.delete_selected_library, libraryName),
@@ -22,12 +22,12 @@ fun DeleteLibraryDialog(
             )
         },
         confirmButton = {
-            TextButton(onClick = onDeleteClicked) {
+            TextButton(onClick = onDeleteClick) {
                 Text(text = stringResource(R.string.delete))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onCancelClick) {
                 Text(text = stringResource(R.string.cancel))
             }
         }
@@ -41,8 +41,8 @@ private fun DeleteLibraryDialogPreview() {
         Surface {
             DeleteLibraryDialog(
                 libraryName = "Glide",
-                onDeleteClicked = {},
-                onDismiss = {}
+                onDeleteClick = {},
+                onCancelClick = {}
             )
         }
     }

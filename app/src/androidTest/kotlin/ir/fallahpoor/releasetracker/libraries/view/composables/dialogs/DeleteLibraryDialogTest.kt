@@ -28,8 +28,8 @@ class DeleteLibraryDialogTest {
         composeTestRule.setContent {
             DeleteLibraryDialog(
                 libraryName = libraryName,
-                onDeleteClicked = {},
-                onDismiss = {}
+                onDeleteClick = {},
+                onCancelClick = {}
             )
         }
 
@@ -55,8 +55,8 @@ class DeleteLibraryDialogTest {
         composeTestRule.setContent {
             DeleteLibraryDialog(
                 libraryName = "",
-                onDeleteClicked = onDeleteClicked,
-                onDismiss = {}
+                onDeleteClick = onDeleteClicked,
+                onCancelClick = {}
             )
         }
 
@@ -77,8 +77,8 @@ class DeleteLibraryDialogTest {
         composeTestRule.setContent {
             DeleteLibraryDialog(
                 libraryName = "",
-                onDeleteClicked = {},
-                onDismiss = onDismiss
+                onDeleteClick = {},
+                onCancelClick = onDismiss
             )
         }
 
@@ -99,8 +99,8 @@ class DeleteLibraryDialogTest {
         composeTestRule.setContent {
             DeleteLibraryDialog(
                 libraryName = "",
-                onDeleteClicked = {},
-                onDismiss = onDismiss
+                onDeleteClick = {},
+                onCancelClick = onDismiss
             )
         }
 
