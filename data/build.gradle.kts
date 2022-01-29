@@ -78,3 +78,9 @@ dependencies {
     testImplementation(AndroidXTest.core)
     testImplementation(robolectric)
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+    }
+}
