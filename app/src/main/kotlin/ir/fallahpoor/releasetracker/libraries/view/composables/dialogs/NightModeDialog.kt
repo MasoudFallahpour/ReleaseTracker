@@ -12,9 +12,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
@@ -53,9 +52,7 @@ private fun NightModeScreen(
             NightModeItem(
                 text = it.value,
                 nightMode = it,
-                onNightModeChange = { nightMode: NightMode ->
-                    onNightModeClick(nightMode)
-                },
+                onNightModeChange = onNightModeClick,
                 isSelected = currentNightMode == it
             )
         }
@@ -82,7 +79,7 @@ private fun NightModeItem(
                     end = SPACE_SMALL.dp,
                     bottom = SPACE_SMALL.dp
                 )
-                .semantics { testTag = text },
+                .testTag(text),
             selected = isSelected,
             onClick = { onNightModeChange(nightMode) }
         )

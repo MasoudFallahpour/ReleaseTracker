@@ -70,7 +70,7 @@ class NightModeDialogTest {
     }
 
     @Test
-    fun when_SortOrderDialog_is_dismissed_correct_callback_is_called() {
+    fun when_dialog_is_dismissed_correct_callback_is_called() {
 
         // Given
         val onDismiss: () -> Unit = mock()
