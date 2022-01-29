@@ -33,7 +33,6 @@ import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
-import ir.fallahpoor.releasetracker.common.composables.OutlinedTextFieldWithPrefix
 import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
