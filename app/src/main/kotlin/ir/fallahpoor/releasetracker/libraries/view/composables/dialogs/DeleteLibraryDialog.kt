@@ -1,9 +1,6 @@
 package ir.fallahpoor.releasetracker.libraries.view.composables.dialogs
 
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,10 +16,13 @@ fun DeleteLibraryDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         text = {
-            Text(text = stringResource(R.string.delete_selected_library, libraryName))
+            Text(
+                text = stringResource(R.string.delete_selected_library, libraryName),
+                style = MaterialTheme.typography.body1
+            )
         },
         confirmButton = {
-            Button(onClick = onDeleteClicked) {
+            TextButton(onClick = onDeleteClicked) {
                 Text(text = stringResource(R.string.delete))
             }
         }
