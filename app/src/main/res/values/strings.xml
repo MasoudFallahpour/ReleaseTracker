@@ -3,7 +3,7 @@
     <string name="add_library">Add library</string>
     <string name="library_name">Library name</string>
     <string name="library_url">Library URL</string>
-    <string name="library_added">Library added successfully</string>
+    <string name="library_added">Library added</string>
     <string name="library_name_empty">Library name cannot be empty</string>
     <string name="library_url_empty">Library URL cannot be empty</string>
     <string name="library_url_invalid">Library URL is invalid</string>
@@ -12,7 +12,7 @@
     <string name="select_sort_order">Select Sort Order</string>
     <string name="delete">Delete</string>
     <string name="delete_selected_library">Delete \"%s\"?</string>
-    <string name="library_deleted">Library deleted successfully</string>
+    <string name="library_deleted">Library deleted</string>
     <string name="last_check_for_updates">Last check: %s</string>
     <string name="no_libraries">There are no libraries</string>
     <string name="night_mode">Night mode…</string>
