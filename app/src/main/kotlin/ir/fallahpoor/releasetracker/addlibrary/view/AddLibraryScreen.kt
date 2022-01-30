@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -56,42 +55,63 @@ fun AddLibraryScreen(
         modifier = Modifier.testTag(AddLibraryTags.ADD_LIBRARY_SCREEN),
         isDarkTheme = isDarkTheme,
         scaffoldState = scaffoldState,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(R.string.add_library))
-                },
-                navigationIcon = {
-                    BackButton(onBackClick = onBackClick)
-                }
-            )
-        }
+        topBar = { AppBar(onBackClick) }
     ) {
-        val addLibraryState: AddLibraryState by addLibraryViewModel.state.observeAsState(
+        val state: AddLibraryState by addLibraryViewModel.state.observeAsState(
             AddLibraryState.Fresh
         )
-        val keyboardController: SoftwareKeyboardController? =
-            LocalSoftwareKeyboardController.current
-        AddLibraryContent(
-            state = addLibraryState,
-            scaffoldState = scaffoldState,
-            libraryName = addLibraryViewModel.libraryName,
-            onLibraryNameChange = { libraryName: String ->
-                addLibraryViewModel.libraryName = libraryName
-            },
-            libraryUrlPath = addLibraryViewModel.libraryUrlPath,
-            onLibraryUrlPathChange = { libraryUrlPath: String ->
-                addLibraryViewModel.libraryUrlPath = libraryUrlPath
-            },
-            onAddLibrary = {
-                addLibraryViewModel.addLibrary(
-                    addLibraryViewModel.libraryName,
-                    addLibraryViewModel.libraryUrlPath
-                )
-                keyboardController?.hide()
+        val keyboard = LocalSoftwareKeyboardController.current
+        val addLibrary = {
+            addLibraryViewModel.addLibrary(
+                addLibraryViewModel.libraryName,
+                addLibraryViewModel.libraryUrlPath
+            )
+            keyboard?.hide()
+        }
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (state is AddLibraryState.InProgress) {
+                ProgressIndicator()
             }
-        )
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(SPACE_NORMAL.dp)
+            ) {
+                LibraryNameSection(
+                    libraryName = addLibraryViewModel.libraryName,
+                    onLibraryNameChange = { addLibraryViewModel.libraryName = it },
+                    showError = state is AddLibraryState.EmptyLibraryName
+                )
+                Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
+                LibraryUrlSection(
+                    libraryUrlPath = addLibraryViewModel.libraryUrlPath,
+                    onLibraryUrlPathChange = { addLibraryViewModel.libraryUrlPath = it },
+                    state = state,
+                    onDoneClick = { addLibrary() }
+                )
+            }
+            AddLibraryButton(
+                isEnabled = state !is AddLibraryState.InProgress,
+                onAddLibraryClick = { addLibrary() }
+            )
+            Snackbar(
+                state = state,
+                scaffoldState = scaffoldState
+            )
+        }
     }
+}
+
+@Composable
+private fun AppBar(onBackClick: () -> Unit) {
+    TopAppBar(
+        title = {
+            Text(text = stringResource(R.string.add_library))
+        },
+        navigationIcon = {
+            BackButton { onBackClick() }
+        }
+    )
 }
 
 @Composable
@@ -105,55 +125,6 @@ private fun BackButton(onBackClick: () -> Unit) {
 }
 
 @Composable
-private fun AddLibraryContent(
-    state: AddLibraryState,
-    scaffoldState: ScaffoldState,
-    libraryName: String,
-    onLibraryNameChange: (String) -> Unit,
-    libraryUrlPath: String,
-    onLibraryUrlPathChange: (String) -> Unit,
-    onAddLibrary: () -> Unit,
-) {
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        if (state is AddLibraryState.InProgress) {
-            ProgressIndicator()
-        }
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(SPACE_NORMAL.dp)
-        ) {
-            LibraryNameTextField(
-                text = libraryName,
-                onTextChange = { text: String ->
-                    onLibraryNameChange(text)
-                },
-                isError = state is AddLibraryState.EmptyLibraryName
-            )
-            LibraryNameErrorText(show = state is AddLibraryState.EmptyLibraryName)
-            Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
-            LibraryUrlPathTextField(
-                text = libraryUrlPath,
-                onTextChange = onLibraryUrlPathChange,
-                isError = state is AddLibraryState.EmptyLibraryUrl || state is AddLibraryState.InvalidLibraryUrl,
-                onDoneClick = onAddLibrary
-            )
-            LibraryUrlErrorText(state = state)
-        }
-        AddLibraryButton(
-            isEnabled = state !is AddLibraryState.InProgress,
-            clickListener = onAddLibrary
-        )
-        Snackbar(
-            state = state,
-            scaffoldState = scaffoldState
-        )
-    }
-
-}
-
-@Composable
 private fun ProgressIndicator() {
     LinearProgressIndicator(
         modifier = Modifier
@@ -164,9 +135,39 @@ private fun ProgressIndicator() {
 }
 
 @Composable
+private fun LibraryNameSection(
+    libraryName: String,
+    onLibraryNameChange: (String) -> Unit,
+    showError: Boolean
+) {
+    LibraryNameTextField(
+        libraryName = libraryName,
+        onLibraryNameChange = onLibraryNameChange,
+        isError = showError
+    )
+    LibraryNameErrorText(show = showError)
+}
+
+@Composable
+private fun LibraryUrlSection(
+    libraryUrlPath: String,
+    onLibraryUrlPathChange: (String) -> Unit,
+    state: AddLibraryState,
+    onDoneClick: () -> Unit
+) {
+    LibraryUrlPathTextField(
+        libraryUrlPath = libraryUrlPath,
+        onLibraryUrlPathChange = onLibraryUrlPathChange,
+        isError = state is AddLibraryState.EmptyLibraryUrl || state is AddLibraryState.InvalidLibraryUrl,
+        onDoneClick = onDoneClick
+    )
+    LibraryUrlErrorText(state = state)
+}
+
+@Composable
 private fun LibraryNameTextField(
-    text: String,
-    onTextChange: (String) -> Unit,
+    libraryName: String,
+    onLibraryNameChange: (String) -> Unit,
     isError: Boolean
 ) {
     val focusManager = LocalFocusManager.current
@@ -174,11 +175,11 @@ private fun LibraryNameTextField(
         modifier = Modifier
             .testTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
             .fillMaxWidth(),
-        value = text,
+        value = libraryName,
         label = {
             Text(text = stringResource(R.string.library_name))
         },
-        onValueChange = onTextChange,
+        onValueChange = onLibraryNameChange,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         keyboardActions = KeyboardActions(
             onDone = {
@@ -200,8 +201,8 @@ private fun LibraryNameErrorText(show: Boolean) {
 
 @Composable
 private fun LibraryUrlPathTextField(
-    text: String,
-    onTextChange: (String) -> Unit,
+    libraryUrlPath: String,
+    onLibraryUrlPathChange: (String) -> Unit,
     isError: Boolean,
     onDoneClick: () -> Unit
 ) {
@@ -212,8 +213,8 @@ private fun LibraryUrlPathTextField(
             .fillMaxWidth(),
         prefix = GITHUB_BASE_URL,
         hint = stringResource(R.string.library_url),
-        text = text,
-        onTextChange = onTextChange,
+        text = libraryUrlPath,
+        onTextChange = onLibraryUrlPathChange,
         imeAction = ImeAction.Done,
         keyboardActions = KeyboardActions(
             onDone = {
@@ -245,12 +246,12 @@ private fun ErrorText(@StringRes textRes: Int) {
 }
 
 @Composable
-private fun AddLibraryButton(isEnabled: Boolean, clickListener: () -> Unit) {
+private fun AddLibraryButton(isEnabled: Boolean, onAddLibraryClick: () -> Unit) {
     Button(
         modifier = Modifier
             .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
             .padding(SPACE_NORMAL.dp),
-        onClick = clickListener,
+        onClick = onAddLibraryClick,
         enabled = isEnabled
     ) {
         Text(
@@ -263,38 +264,30 @@ private fun AddLibraryButton(isEnabled: Boolean, clickListener: () -> Unit) {
 
 @Composable
 private fun Snackbar(state: AddLibraryState, scaffoldState: ScaffoldState) {
-
     if (state is AddLibraryState.Error) {
         val message = state.message
         LaunchedEffect(scaffoldState.snackbarHostState) {
             scaffoldState.snackbarHostState.showSnackbar(message = message)
         }
     }
-
     if (state is AddLibraryState.LibraryAdded) {
         val message = stringResource(R.string.library_added)
         LaunchedEffect(scaffoldState.snackbarHostState) {
             scaffoldState.snackbarHostState.showSnackbar(message = message)
         }
     }
-
     DefaultSnackbar(snackbarHostState = scaffoldState.snackbarHostState)
-
 }
 
 @Composable
 @Preview
-private fun AddLibraryContentPreview() {
+private fun AddLibraryScreenPreview() {
     ReleaseTrackerTheme {
         Surface {
-            AddLibraryContent(
-                state = AddLibraryState.Fresh,
-                scaffoldState = rememberScaffoldState(),
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibrary = {}
+            AddLibraryScreen(
+                isDarkTheme = false,
+                onBackClick = {},
+                scaffoldState = rememberScaffoldState()
             )
         }
     }
