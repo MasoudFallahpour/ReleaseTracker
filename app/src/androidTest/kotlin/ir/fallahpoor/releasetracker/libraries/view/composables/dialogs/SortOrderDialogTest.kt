@@ -5,6 +5,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
+import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import org.junit.Rule
 import org.junit.Test
@@ -32,6 +33,8 @@ class SortOrderDialogTest {
 
         // Then
         with(composeTestRule) {
+            onNodeWithText(context.getString(R.string.select_sort_order))
+                .assertIsDisplayed()
             SortOrder.values().forEach {
                 onNodeWithText(
                     context.getString(it.label),
