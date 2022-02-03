@@ -26,17 +26,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.io.File
 
-// FIXME: Re-enable Hilt. I've disabled it because except the first test all other tests throw an exception
-//  with the following message:
-//  There are multiple DataStores active for the same file: /data/user/0/ir.fallahpoor.releasetracker/files/datastore/settings.preferences_pb. You should either maintain your DataStore as a singleton or confirm that there is no two DataStore's active on the same file (by confirming that the scope is cancelled).
+// TODO: Use Hilt to inject the dependencies instead of creating them manually.
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LibrariesListScreenTest {
@@ -57,29 +53,8 @@ class LibrariesListScreenTest {
     private val noLibrariesText = context.getString(R.string.no_libraries)
     private val searchText = context.getString(R.string.search)
 
-    @Before
-    fun runBeforeEachTest() {
-        val storage = createLocalStorage()
-        nightModeManager = NightModeManager(context, storage)
-        libraryRepository = FakeLibraryRepository()
-        librariesViewModel = LibrariesViewModel(
-            libraryRepository = libraryRepository,
-            storage = storage,
-            exceptionParser = ExceptionParser()
-        )
-    }
-
-    private fun createLocalStorage(): LocalStorage {
-        preferencesCoroutineScope = CoroutineScope(TestCoroutineDispatcher() + Job())
-        val dataStore = PreferenceDataStoreFactory.create(scope = preferencesCoroutineScope) {
-            context.preferencesDataStoreFile("settings")
-        }
-        return LocalStorage(dataStore)
-    }
-
     @After
     fun runAfterEachTest() {
-        File(context.filesDir, "datastore").deleteRecursively()
         preferencesCoroutineScope.cancel()
     }
 
@@ -198,7 +173,6 @@ class LibrariesListScreenTest {
             onNodeWithText(deleteText).performClick()
         }
 
-
         // Then
         composeRule.onNodeWithText(libraryName, useUnmergedTree = true)
             .assertDoesNotExist()
@@ -245,29 +219,28 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun correct_night_mode_is_set_when_selecting_a_night_mode_from_night_mode_dialog() =
-        runTest {
+    fun correct_night_mode_is_set_when_selecting_a_night_mode_from_night_mode_dialog() = runTest {
 
-            // Given
-            initializeLibrariesListScreen()
-            nightModeManager.setNightMode(NightMode.OFF)
+        // Given
+        initializeLibrariesListScreen()
+        nightModeManager.setNightMode(NightMode.OFF)
 
-            // When
-            with(composeRule) {
-                onNodeWithContentDescription(
-                    context.getString(R.string.more_options),
-                    useUnmergedTree = true
-                ).performClick()
-                onNodeWithText(context.getString(R.string.night_mode))
-                    .performClick()
-                onNodeWithText(context.getString(NightMode.ON.label))
-                    .performClick()
-            }
-
-            // Then
-            Truth.assertThat(nightModeManager.currentNightMode).isEqualTo(NightMode.ON)
-
+        // When
+        with(composeRule) {
+            onNodeWithContentDescription(
+                context.getString(R.string.more_options),
+                useUnmergedTree = true
+            ).performClick()
+            onNodeWithText(context.getString(R.string.night_mode))
+                .performClick()
+            onNodeWithText(context.getString(NightMode.ON.label))
+                .performClick()
         }
+
+        // Then
+        Truth.assertThat(nightModeManager.currentNightMode).isEqualTo(NightMode.ON)
+
+    }
 
     @Test
     fun search() {
@@ -395,7 +368,6 @@ class LibrariesListScreenTest {
             useUnmergedTree = true
         ).performClick()
 
-
         // Then
         composeRule.onNode(
             isToggleableWithSiblingText(FakeLibraryRepository.Coil.name),
@@ -416,7 +388,6 @@ class LibrariesListScreenTest {
             useUnmergedTree = true
         ).performClick()
 
-
         // Then
         composeRule.onNode(
             isToggleableWithSiblingText(FakeLibraryRepository.Koin.name),
@@ -427,6 +398,20 @@ class LibrariesListScreenTest {
 
     @OptIn(ExperimentalAnimationApi::class)
     private fun initializeLibrariesListScreen(snackbarHostState: SnackbarHostState = SnackbarHostState()) {
+
+        preferencesCoroutineScope = CoroutineScope(UnconfinedTestDispatcher() + Job())
+        val dataStore = PreferenceDataStoreFactory.create(scope = preferencesCoroutineScope) {
+            context.preferencesDataStoreFile("settings_test")
+        }
+        val storage = LocalStorage(dataStore)
+        nightModeManager = NightModeManager(context, storage)
+        libraryRepository = FakeLibraryRepository()
+        librariesViewModel = LibrariesViewModel(
+            libraryRepository = libraryRepository,
+            storage = storage,
+            exceptionParser = ExceptionParser()
+        )
+
         composeRule.setContent {
             LibrariesListScreen(
                 librariesViewModel = librariesViewModel,
@@ -436,7 +421,6 @@ class LibrariesListScreenTest {
                 scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
             )
         }
-
     }
 
 }
