@@ -33,7 +33,7 @@ fun NightModeDialog(
             Text(text = stringResource(R.string.select_night_mode))
         },
         text = {
-            NightModeScreen(
+            NightModeContent(
                 currentNightMode = currentNightMode,
                 onNightModeClick = onNightModeClick
             )
@@ -43,7 +43,7 @@ fun NightModeDialog(
 }
 
 @Composable
-private fun NightModeScreen(
+private fun NightModeContent(
     currentNightMode: NightMode,
     onNightModeClick: (NightMode) -> Unit
 ) {
