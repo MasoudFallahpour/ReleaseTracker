@@ -12,8 +12,6 @@ object Dependencies {
         "androidx.navigation:navigation-compose:2.4.0-beta02"
     const val material = "com.google.android.material:material:1.4.0"
     const val timber = "com.jakewharton.timber:timber:5.0.1"
-    const val accompanistNavigationAnimation =
-        "com.google.accompanist:accompanist-navigation-animation:0.20.2"
     const val inject = "javax.inject:javax.inject:1"
     const val okhttpLoggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.0"
     const val junit = "junit:junit:4.13.2"

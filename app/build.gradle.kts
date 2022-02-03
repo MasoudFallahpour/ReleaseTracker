@@ -119,8 +119,6 @@ dependencies {
     implementation(Dependencies.Compose.runtime)
     implementation(Dependencies.Compose.runtimeLiveData)
 
-    implementation(Dependencies.accompanistNavigationAnimation)
-
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.truth)
     testImplementation(Dependencies.coreTesting)

@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreen
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberAnimatedNavController()
-            AnimatedNavHost(
+            val navController = rememberNavController()
+            NavHost(
                 navController = navController,
                 startDestination = Screen.LibrariesList
             ) {
