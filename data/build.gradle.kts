@@ -55,28 +55,28 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-    implementation(kotlinStdLib)
-    implementation(core)
-    implementation(dataStore)
-    implementation(Lifecycle.liveData)
-    implementation(Coroutines.android)
+    implementation(Dependencies.kotlinStdLib)
+    implementation(Dependencies.core)
+    implementation(Dependencies.dataStore)
+    implementation(Dependencies.Lifecycle.liveData)
+    implementation(Dependencies.Coroutines.android)
 
-    implementation(Room.runtime)
-    kapt(Room.compiler)
-    implementation(Room.ktx)
+    implementation(Dependencies.Room.runtime)
+    kapt(Dependencies.Room.compiler)
+    implementation(Dependencies.Room.ktx)
 
-    implementation(inject)
+    implementation(Dependencies.inject)
 
-    implementation(Retrofit.retrofit)
-    implementation(Retrofit.converterGson)
-    implementation(okhttpLoggingInterceptor)
+    implementation(Dependencies.Retrofit.retrofit)
+    implementation(Dependencies.Retrofit.converterGson)
+    implementation(Dependencies.okhttpLoggingInterceptor)
 
-    testImplementation(junit)
-    testImplementation(truth)
-    testImplementation(Coroutines.test)
-    testImplementation(coreTesting)
-    testImplementation(AndroidXTest.core)
-    testImplementation(robolectric)
+    testImplementation(Dependencies.junit)
+    testImplementation(Dependencies.truth)
+    testImplementation(Dependencies.Coroutines.test)
+    testImplementation(Dependencies.coreTesting)
+    testImplementation(Dependencies.AndroidXTest.core)
+    testImplementation(Dependencies.robolectric)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
