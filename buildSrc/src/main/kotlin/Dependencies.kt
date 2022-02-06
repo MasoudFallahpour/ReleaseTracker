@@ -6,7 +6,6 @@ object Dependencies {
     const val core = "androidx.core:core-ktx:1.7.0"
     const val dataStore = "androidx.datastore:datastore-preferences:1.0.0"
     const val appCompat = "androidx.appcompat:appcompat:1.3.1"
-    const val workManager = "androidx.work:work-runtime-ktx:2.7.1"
     const val activityCompose = "androidx.activity:activity-compose:1.3.1"
     const val navigationCompose =
         "androidx.navigation:navigation-compose:2.4.0-beta02"
@@ -18,6 +17,12 @@ object Dependencies {
     const val truth = "com.google.truth:truth:1.1.3"
     const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
     const val robolectric = "org.robolectric:robolectric:4.7.3"
+
+    object WorkManager {
+        private const val version = "2.7.1"
+        const val runtime = "androidx.work:work-runtime-ktx:$version"
+        const val test = "androidx.work:work-testing:$version"
+    }
 
     object Lifecycle {
         private const val lifecycleVersion = "2.3.1"

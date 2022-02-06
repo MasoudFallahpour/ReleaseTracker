@@ -94,11 +94,21 @@ fun AddLibraryScreen(
                 isEnabled = state !is AddLibraryState.InProgress,
                 onAddLibraryClick = { addLibrary() }
             )
-            Snackbar(
-                state = state,
-                scaffoldState = scaffoldState,
-                addLibraryViewModel = addLibraryViewModel
-            )
+            if (state is AddLibraryState.Error) {
+                val error = state as AddLibraryState.Error
+                Snackbar(
+                    snackbarHostState = scaffoldState.snackbarHostState,
+                    message = error.message
+                ) {
+                    addLibraryViewModel.resetState()
+                }
+            }
+            if (state is AddLibraryState.LibraryAdded) {
+                Snackbar(
+                    snackbarHostState = scaffoldState.snackbarHostState,
+                    message = stringResource(R.string.library_added)
+                )
+            }
         }
     }
 }
@@ -265,27 +275,17 @@ private fun AddLibraryButton(isEnabled: Boolean, onAddLibraryClick: () -> Unit) 
 
 @Composable
 private fun Snackbar(
-    state: AddLibraryState,
-    scaffoldState: ScaffoldState,
-    addLibraryViewModel: AddLibraryViewModel
+    snackbarHostState: SnackbarHostState,
+    message: String,
+    onDismiss: () -> Unit = {}
 ) {
-    if (state is AddLibraryState.Error) {
-        val message = state.message
-        LaunchedEffect(scaffoldState.snackbarHostState) {
-            val snackbarResult: SnackbarResult =
-                scaffoldState.snackbarHostState.showSnackbar(message = message)
-            if (snackbarResult == SnackbarResult.Dismissed) {
-                addLibraryViewModel.resetState()
-            }
+    LaunchedEffect(snackbarHostState) {
+        val snackbarResult: SnackbarResult = snackbarHostState.showSnackbar(message = message)
+        if (snackbarResult == SnackbarResult.Dismissed) {
+            onDismiss()
         }
     }
-    if (state is AddLibraryState.LibraryAdded) {
-        val message = stringResource(R.string.library_added)
-        LaunchedEffect(scaffoldState.snackbarHostState) {
-            scaffoldState.snackbarHostState.showSnackbar(message = message)
-        }
-    }
-    DefaultSnackbar(snackbarHostState = scaffoldState.snackbarHostState)
+    DefaultSnackbar(snackbarHostState = snackbarHostState)
 }
 
 @Composable
