@@ -101,7 +101,7 @@ dependencies {
     implementation(Dependencies.Lifecycle.viewModel)
     implementation(Dependencies.Lifecycle.liveData)
     implementation(Dependencies.Room.runtime)
-    implementation(Dependencies.workManager)
+    implementation(Dependencies.WorkManager.runtime)
     implementation(Dependencies.timber)
 
     implementation(platform(Dependencies.Firebase.bom))
