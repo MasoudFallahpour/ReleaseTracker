@@ -165,4 +165,22 @@ class AddLibraryViewModelTest {
 
         }
 
+    @Test
+    fun `resetState() should set the state to Initial`() {
+
+        // Given the current state is Error
+        addLibraryViewModel.addLibrary(
+            libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
+            libraryUrlPath = "abc/def"
+        )
+
+        // When
+        addLibraryViewModel.resetState()
+
+        // Then
+        Truth.assertThat(addLibraryViewModel.state.value)
+            .isInstanceOf(AddLibraryState.Initial::class.java)
+
+    }
+
 }

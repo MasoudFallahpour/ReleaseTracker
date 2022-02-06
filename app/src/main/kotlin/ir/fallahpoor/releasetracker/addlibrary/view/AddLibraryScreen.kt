@@ -58,7 +58,7 @@ fun AddLibraryScreen(
         topBar = { AppBar(onBackClick) }
     ) {
         val state: AddLibraryState by addLibraryViewModel.state.observeAsState(
-            AddLibraryState.Fresh
+            AddLibraryState.Initial
         )
         val keyboard = LocalSoftwareKeyboardController.current
         val addLibrary = {
@@ -96,7 +96,8 @@ fun AddLibraryScreen(
             )
             Snackbar(
                 state = state,
-                scaffoldState = scaffoldState
+                scaffoldState = scaffoldState,
+                addLibraryViewModel = addLibraryViewModel
             )
         }
     }
@@ -263,11 +264,19 @@ private fun AddLibraryButton(isEnabled: Boolean, onAddLibraryClick: () -> Unit) 
 }
 
 @Composable
-private fun Snackbar(state: AddLibraryState, scaffoldState: ScaffoldState) {
+private fun Snackbar(
+    state: AddLibraryState,
+    scaffoldState: ScaffoldState,
+    addLibraryViewModel: AddLibraryViewModel
+) {
     if (state is AddLibraryState.Error) {
         val message = state.message
         LaunchedEffect(scaffoldState.snackbarHostState) {
-            scaffoldState.snackbarHostState.showSnackbar(message = message)
+            val snackbarResult: SnackbarResult =
+                scaffoldState.snackbarHostState.showSnackbar(message = message)
+            if (snackbarResult == SnackbarResult.Dismissed) {
+                addLibraryViewModel.resetState()
+            }
         }
     }
     if (state is AddLibraryState.LibraryAdded) {

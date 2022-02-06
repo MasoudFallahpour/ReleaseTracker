@@ -4,12 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
-import ir.fallahpoor.releasetracker.common.SingleLiveData
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
@@ -23,7 +23,7 @@ class AddLibraryViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    private val _state: SingleLiveData<AddLibraryState> = SingleLiveData()
+    private val _state = MutableLiveData<AddLibraryState>()
     val state: LiveData<AddLibraryState> = _state
     var libraryName by mutableStateOf("")
     var libraryUrlPath by mutableStateOf("")
@@ -31,25 +31,25 @@ class AddLibraryViewModel
     fun addLibrary(libraryName: String, libraryUrlPath: String) {
 
         if (libraryName.isEmpty()) {
-            _state.value = AddLibraryState.EmptyLibraryName
+            setState(AddLibraryState.EmptyLibraryName)
             return
         }
 
         if (libraryUrlPath.isEmpty()) {
-            _state.value = AddLibraryState.EmptyLibraryUrl
+            setState(AddLibraryState.EmptyLibraryUrl)
             return
         }
 
         if (!isGithubUrlPath(libraryUrlPath)) {
-            _state.value = AddLibraryState.InvalidLibraryUrl
+            setState(AddLibraryState.InvalidLibraryUrl)
             return
         }
 
-        _state.value = AddLibraryState.InProgress
+        setState(AddLibraryState.InProgress)
 
         viewModelScope.launch {
 
-            _state.value =
+            val state: AddLibraryState =
                 try {
                     val library: Library? = libraryRepository.getLibrary(libraryName)
                     val libraryAlreadyExists = library != null
@@ -71,9 +71,17 @@ class AddLibraryViewModel
                     val message = exceptionParser.getMessage(t)
                     AddLibraryState.Error(message)
                 }
-
+            setState(state)
         }
 
+    }
+
+    fun resetState() {
+        setState(AddLibraryState.Initial)
+    }
+
+    private fun setState(state: AddLibraryState) {
+        _state.value = state
     }
 
     private fun isGithubUrlPath(url: String): Boolean {

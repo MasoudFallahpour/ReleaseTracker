@@ -6,7 +6,7 @@ sealed class AddLibraryState {
     object EmptyLibraryUrl : AddLibraryState()
     object InvalidLibraryUrl : AddLibraryState()
     object InProgress : AddLibraryState()
-    object Fresh : AddLibraryState()
+    object Initial : AddLibraryState()
     object LibraryAdded : AddLibraryState()
     class Error(val message: String) : AddLibraryState()
 
