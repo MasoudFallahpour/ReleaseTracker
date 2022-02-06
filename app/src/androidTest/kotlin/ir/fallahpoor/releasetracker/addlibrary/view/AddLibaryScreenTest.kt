@@ -50,7 +50,7 @@ class AddLibraryScreenTest {
     private val libraryUrlInvalidText = context.getString(R.string.library_url_invalid)
 
     @Test
-    fun test_fresh_state() {
+    fun screen_is_initialized_correctly() {
 
         // Given
         initializeAddLibraryScreen()
@@ -79,7 +79,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun test_EmptyLibraryName_state() {
+    fun an_error_message_is_displayed_when_libary_name_is_empty() {
 
         // Given
         initializeAddLibraryScreen()
@@ -106,7 +106,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun test_EmptyLibraryUrl_state() {
+    fun an_error_message_is_displayed_when_library_URL_is_empty() {
 
         // Given
         initializeAddLibraryScreen()
@@ -137,7 +137,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun test_InvalidLibraryUrl_state() {
+    fun an_error_message_is_displayed_when_library_URL_is_invalid() {
 
         // Given
         initializeAddLibraryScreen()
@@ -170,7 +170,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun test_error_library_already_exists() = runTest {
+    fun an_error_message_is_displayed_when_library_already_exists() = runTest {
 
         // Given
         val snackbarHostState = SnackbarHostState()
@@ -210,7 +210,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun test_LibraryAdded_state() = runTest {
+    fun a_message_is_displayed_when_library_is_added_successfully() = runTest {
 
         // Given
         val snackbarHostState = SnackbarHostState()
@@ -263,10 +263,9 @@ class AddLibraryScreenTest {
     }
 
     private fun initializeAddLibraryScreen(snackbarHostState: SnackbarHostState = SnackbarHostState()) {
-        val addLibraryViewModel = AddLibraryViewModel(libraryRepository, ExceptionParser())
         composeTestRule.setContent {
             AddLibraryScreen(
-                addLibraryViewModel = addLibraryViewModel,
+                addLibraryViewModel = AddLibraryViewModel(libraryRepository, ExceptionParser()),
                 isDarkTheme = false,
                 onBackClick = {},
                 scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
