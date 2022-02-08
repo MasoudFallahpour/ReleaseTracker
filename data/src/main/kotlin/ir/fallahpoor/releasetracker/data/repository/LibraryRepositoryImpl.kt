@@ -24,7 +24,7 @@ class LibraryRepositoryImpl
         libraryUrl: String,
         libraryVersion: String
     ) {
-        libraryDao.insert(Library(libraryName, libraryUrl, libraryVersion))
+        libraryDao.insert(Library(libraryName.trim(), libraryUrl, libraryVersion))
     }
 
     override suspend fun updateLibrary(library: Library) {
@@ -32,7 +32,7 @@ class LibraryRepositoryImpl
     }
 
     override suspend fun getLibrary(libraryName: String): Library? {
-        return libraryDao.get(libraryName)
+        return libraryDao.get(libraryName.trim())
     }
 
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
@@ -53,7 +53,7 @@ class LibraryRepositoryImpl
         val libraryVersion: LibraryVersion =
             githubWebservice.getLatestVersion(libraryOwner, libraryRepo)
 
-        return getRefinedLibraryVersion(libraryName, libraryVersion)
+        return getRefinedLibraryVersion(libraryName.trim(), libraryVersion)
 
     }
 
@@ -87,8 +87,7 @@ class LibraryRepositoryImpl
         libraryDao.update(newLibrary)
     }
 
-    override fun getLastUpdateCheck(): Flow<String> =
-        storage.getLastUpdateCheck()
+    override fun getLastUpdateCheck(): Flow<String> = storage.getLastUpdateCheck()
 
     override fun setLastUpdateCheck(date: String) {
         storage.setLastUpdateCheck(date)
