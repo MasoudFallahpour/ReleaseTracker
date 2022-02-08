@@ -55,7 +55,7 @@ class MainActivityTest {
             .performClick()
 
         // Then
-        composeRule.onNodeWithTag(AddLibraryTags.ADD_LIBRARY_SCREEN)
+        composeRule.onNodeWithTag(AddLibraryTags.WHOLE_SCREEN)
             .assertIsDisplayed()
 
     }

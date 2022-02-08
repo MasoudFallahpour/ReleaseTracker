@@ -56,10 +56,14 @@ class AddLibraryScreenTest {
         // Given
         initializeAddLibraryScreen()
 
-        // When the screen is freshly displayed
+        // When the screen is initially displayed
 
         // Then
         with(composeTestRule) {
+            onNodeWithTag(AddLibraryTags.TITLE)
+                .assertIsDisplayed()
+            onNodeWithTag(AddLibraryTags.BACK_BUTTON)
+                .assertIsDisplayed()
             onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
             onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD, useUnmergedTree = true)
@@ -75,7 +79,6 @@ class AddLibraryScreenTest {
             onNodeWithText(libraryUrlInvalidText)
                 .assertDoesNotExist()
         }
-        verifyZeroInteractions(libraryRepository)
 
     }
 

@@ -37,11 +37,13 @@ import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object AddLibraryTags {
-    const val ADD_LIBRARY_SCREEN = "addLibraryScreen"
-    const val PROGRESS_INDICATOR = "addLibraryProgressIndicator"
-    const val LIBRARY_NAME_TEXT_FIELD = "addLibraryLibraryNameTextField"
-    const val LIBRARY_URL_TEXT_FIELD = "addLibraryLibraryUrlTextField"
-    const val ADD_LIBRARY_BUTTON = "addLibraryAddLibraryButton"
+    const val WHOLE_SCREEN = "wholeScreen"
+    const val TITLE = "title"
+    const val BACK_BUTTON = "backButton"
+    const val PROGRESS_INDICATOR = "progressIndicator"
+    const val LIBRARY_NAME_TEXT_FIELD = "libraryNameTextField"
+    const val LIBRARY_URL_TEXT_FIELD = "libraryUrlTextField"
+    const val ADD_LIBRARY_BUTTON = "addLibraryButton"
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -53,7 +55,7 @@ fun AddLibraryScreen(
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     Screen(
-        modifier = Modifier.testTag(AddLibraryTags.ADD_LIBRARY_SCREEN),
+        modifier = Modifier.testTag(AddLibraryTags.WHOLE_SCREEN),
         isDarkTheme = isDarkTheme,
         scaffoldState = scaffoldState,
         topBar = { AppBar(onBackClick) }
@@ -121,7 +123,10 @@ fun AddLibraryScreen(
 private fun AppBar(onBackClick: () -> Unit) {
     TopAppBar(
         title = {
-            Text(text = stringResource(R.string.add_library))
+            Text(
+                modifier = Modifier.testTag(AddLibraryTags.TITLE),
+                text = stringResource(R.string.add_library)
+            )
         },
         navigationIcon = {
             BackButton { onBackClick() }
@@ -131,7 +136,10 @@ private fun AppBar(onBackClick: () -> Unit) {
 
 @Composable
 private fun BackButton(onBackClick: () -> Unit) {
-    IconButton(onClick = onBackClick) {
+    IconButton(
+        modifier = Modifier.testTag(AddLibraryTags.BACK_BUTTON),
+        onClick = onBackClick
+    ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = stringResource(R.string.back)
