@@ -22,6 +22,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.*
 
@@ -79,7 +80,7 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun an_error_message_is_displayed_when_libary_name_is_empty() {
+    fun an_error_message_is_displayed_when_library_name_is_empty() {
 
         // Given
         initializeAddLibraryScreen()
@@ -262,12 +263,31 @@ class AddLibraryScreenTest {
 
     }
 
-    private fun initializeAddLibraryScreen(snackbarHostState: SnackbarHostState = SnackbarHostState()) {
+    @Test
+    fun correct_callback_is_called_when_pressing_the_back_button() {
+
+        // Given
+        val onBackClick: () -> Unit = mock()
+        initializeAddLibraryScreen(onBackClick = onBackClick)
+
+        // When
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.back))
+            .performClick()
+
+        // Then
+        Mockito.verify(onBackClick).invoke()
+
+    }
+
+    private fun initializeAddLibraryScreen(
+        snackbarHostState: SnackbarHostState = SnackbarHostState(),
+        onBackClick: () -> Unit = {}
+    ) {
         composeTestRule.setContent {
             AddLibraryScreen(
                 addLibraryViewModel = AddLibraryViewModel(libraryRepository, ExceptionParser()),
                 isDarkTheme = false,
-                onBackClick = {},
+                onBackClick = onBackClick,
                 scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
             )
         }
