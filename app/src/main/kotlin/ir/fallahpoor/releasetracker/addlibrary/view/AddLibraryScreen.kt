@@ -63,59 +63,23 @@ fun AddLibraryScreen(
         val state: AddLibraryState by addLibraryViewModel.state.observeAsState(
             AddLibraryState.Initial
         )
-        val keyboard = LocalSoftwareKeyboardController.current
-        val addLibrary = {
-            addLibraryViewModel.addLibrary(
-                addLibraryViewModel.libraryName,
-                addLibraryViewModel.libraryUrlPath
-            )
-            keyboard?.hide()
-        }
-        Column(modifier = Modifier.fillMaxSize()) {
-            if (state is AddLibraryState.InProgress) {
-                ProgressIndicator()
-            }
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(SPACE_NORMAL.dp)
-            ) {
-                val focusRequester = remember { FocusRequester() }
-                LibraryNameInput(
-                    libraryName = addLibraryViewModel.libraryName,
-                    onLibraryNameChange = { addLibraryViewModel.libraryName = it },
-                    showError = state is AddLibraryState.EmptyLibraryName,
-                    onNextClick = { focusRequester.requestFocus() }
+        val keyboardController = LocalSoftwareKeyboardController.current
+        AddLibraryContent(
+            snackbarHostState = scaffoldState.snackbarHostState,
+            state = state,
+            libraryName = addLibraryViewModel.libraryName,
+            onLibraryNameChange = { addLibraryViewModel.libraryName = it },
+            libraryUrlPath = addLibraryViewModel.libraryUrlPath,
+            onLibraryUrlPathChange = { addLibraryViewModel.libraryUrlPath = it },
+            onAddLibraryClick = {
+                addLibraryViewModel.addLibrary(
+                    addLibraryViewModel.libraryName,
+                    addLibraryViewModel.libraryUrlPath
                 )
-                Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
-                LibraryUrlInput(
-                    libraryUrlPath = addLibraryViewModel.libraryUrlPath,
-                    onLibraryUrlPathChange = { addLibraryViewModel.libraryUrlPath = it },
-                    state = state,
-                    onDoneClick = { addLibrary() },
-                    focusRequester = focusRequester
-                )
-            }
-            AddLibraryButton(
-                isEnabled = state !is AddLibraryState.InProgress,
-                onAddLibraryClick = { addLibrary() }
-            )
-            if (state is AddLibraryState.Error) {
-                val error = state as AddLibraryState.Error
-                Snackbar(
-                    snackbarHostState = scaffoldState.snackbarHostState,
-                    message = error.message
-                ) {
-                    addLibraryViewModel.resetState()
-                }
-            }
-            if (state is AddLibraryState.LibraryAdded) {
-                Snackbar(
-                    snackbarHostState = scaffoldState.snackbarHostState,
-                    message = stringResource(R.string.library_added)
-                )
-            }
-        }
+                keyboardController?.hide()
+            },
+            onErrorDismissed = { addLibraryViewModel.resetState() }
+        )
     }
 }
 
@@ -144,6 +108,63 @@ private fun BackButton(onBackClick: () -> Unit) {
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = stringResource(R.string.back)
         )
+    }
+}
+
+@Composable
+private fun AddLibraryContent(
+    snackbarHostState: SnackbarHostState,
+    state: AddLibraryState,
+    libraryName: String,
+    onLibraryNameChange: (String) -> Unit,
+    libraryUrlPath: String,
+    onLibraryUrlPathChange: (String) -> Unit,
+    onAddLibraryClick: () -> Unit,
+    onErrorDismissed: () -> Unit
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        if (state is AddLibraryState.InProgress) {
+            ProgressIndicator()
+        }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(SPACE_NORMAL.dp)
+        ) {
+            val focusRequester = remember { FocusRequester() }
+            LibraryNameInput(
+                libraryName = libraryName,
+                onLibraryNameChange = onLibraryNameChange,
+                showError = state is AddLibraryState.EmptyLibraryName,
+                onNextClick = { focusRequester.requestFocus() }
+            )
+            Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
+            LibraryUrlInput(
+                libraryUrlPath = libraryUrlPath,
+                onLibraryUrlPathChange = onLibraryUrlPathChange,
+                state = state,
+                onDoneClick = onAddLibraryClick,
+                focusRequester = focusRequester
+            )
+        }
+        AddLibraryButton(
+            isEnabled = state !is AddLibraryState.InProgress,
+            onAddLibraryClick = onAddLibraryClick
+        )
+        if (state is AddLibraryState.Error) {
+            Snackbar(
+                snackbarHostState = snackbarHostState,
+                message = state.message
+            ) {
+                onErrorDismissed()
+            }
+        }
+        if (state is AddLibraryState.LibraryAdded) {
+            Snackbar(
+                snackbarHostState = snackbarHostState,
+                message = stringResource(R.string.library_added)
+            )
+        }
     }
 }
 
