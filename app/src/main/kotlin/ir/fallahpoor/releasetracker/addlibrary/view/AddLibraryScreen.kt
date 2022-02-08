@@ -13,10 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -77,17 +78,20 @@ fun AddLibraryScreen(
                     .weight(1f)
                     .padding(SPACE_NORMAL.dp)
             ) {
-                LibraryNameSection(
+                val focusRequester = remember { FocusRequester() }
+                LibraryNameInput(
                     libraryName = addLibraryViewModel.libraryName,
                     onLibraryNameChange = { addLibraryViewModel.libraryName = it },
-                    showError = state is AddLibraryState.EmptyLibraryName
+                    showError = state is AddLibraryState.EmptyLibraryName,
+                    onNextClick = { focusRequester.requestFocus() }
                 )
                 Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
-                LibraryUrlSection(
+                LibraryUrlInput(
                     libraryUrlPath = addLibraryViewModel.libraryUrlPath,
                     onLibraryUrlPathChange = { addLibraryViewModel.libraryUrlPath = it },
                     state = state,
-                    onDoneClick = { addLibrary() }
+                    onDoneClick = { addLibrary() },
+                    focusRequester = focusRequester
                 )
             }
             AddLibraryButton(
@@ -146,31 +150,35 @@ private fun ProgressIndicator() {
 }
 
 @Composable
-private fun LibraryNameSection(
+private fun LibraryNameInput(
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,
+    onNextClick: () -> Unit,
     showError: Boolean
 ) {
     LibraryNameTextField(
         libraryName = libraryName,
         onLibraryNameChange = onLibraryNameChange,
-        isError = showError
+        isError = showError,
+        onNextClick = onNextClick
     )
     LibraryNameErrorText(show = showError)
 }
 
 @Composable
-private fun LibraryUrlSection(
+private fun LibraryUrlInput(
     libraryUrlPath: String,
     onLibraryUrlPathChange: (String) -> Unit,
     state: AddLibraryState,
-    onDoneClick: () -> Unit
+    onDoneClick: () -> Unit,
+    focusRequester: FocusRequester
 ) {
     LibraryUrlPathTextField(
         libraryUrlPath = libraryUrlPath,
         onLibraryUrlPathChange = onLibraryUrlPathChange,
         isError = state is AddLibraryState.EmptyLibraryUrl || state is AddLibraryState.InvalidLibraryUrl,
-        onDoneClick = onDoneClick
+        onDoneClick = onDoneClick,
+        focusRequester = focusRequester
     )
     LibraryUrlErrorText(state = state)
 }
@@ -179,9 +187,9 @@ private fun LibraryUrlSection(
 private fun LibraryNameTextField(
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,
-    isError: Boolean
+    isError: Boolean,
+    onNextClick: () -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
     OutlinedTextField(
         modifier = Modifier
             .testTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
@@ -193,9 +201,7 @@ private fun LibraryNameTextField(
         onValueChange = onLibraryNameChange,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         keyboardActions = KeyboardActions(
-            onDone = {
-                focusManager.moveFocus(focusDirection = FocusDirection.Down)
-            }
+            onNext = { onNextClick() }
         ),
         singleLine = true,
         isError = isError
@@ -215,23 +221,21 @@ private fun LibraryUrlPathTextField(
     libraryUrlPath: String,
     onLibraryUrlPathChange: (String) -> Unit,
     isError: Boolean,
-    onDoneClick: () -> Unit
+    onDoneClick: () -> Unit,
+    focusRequester: FocusRequester
 ) {
-    val focusManager = LocalFocusManager.current
     OutlinedTextFieldWithPrefix(
         modifier = Modifier
             .testTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
         prefix = GITHUB_BASE_URL,
         hint = stringResource(R.string.library_url),
         text = libraryUrlPath,
         onTextChange = onLibraryUrlPathChange,
         imeAction = ImeAction.Done,
         keyboardActions = KeyboardActions(
-            onDone = {
-                onDoneClick()
-                focusManager.clearFocus()
-            }
+            onDone = { onDoneClick() }
         ),
         isError = isError
     )
