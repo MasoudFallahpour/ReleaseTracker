@@ -10,9 +10,6 @@
     <string name="worker_tag">UPDATE_VERSION_WORKER</string>
     <string name="sort">Sort</string>
     <string name="select_sort_order">Select Sort Order</string>
-    <string name="delete">Delete</string>
-    <string name="delete_selected_library">Delete \"%s\"?</string>
-    <string name="library_deleted">Library deleted</string>
     <string name="last_check_for_updates">Last check: %s</string>
     <string name="no_libraries">There are no libraries</string>
     <string name="night_mode">Night mode…</string>
@@ -29,7 +26,7 @@
     <string name="notification_channel_description">All notifications of the app</string>
     <string name="notification_title">Updates Available</string>
     <string name="notification_body">There are updates for the following libraries:\n%s</string>
-    <string name="back">Back</string>
-    <string name="cancel">Cancel</string>
+    <string name="back">Go back</string>
     <string name="no_browser_found_message">No browser found to open %s</string>
+    <string name="delete_library">Delete library</string>
 </resources>
