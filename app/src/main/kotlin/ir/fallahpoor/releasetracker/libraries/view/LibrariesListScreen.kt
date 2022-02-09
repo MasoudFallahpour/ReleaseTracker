@@ -47,9 +47,9 @@ import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object LibrariesListTags {
-    const val ADD_LIBRARY_BUTTON = "librariesListAddLibraryButton"
-    const val PROGRESS_INDICATOR = "librariesListProgressIndicator"
-    const val LIBRARY_ITEM = "librariesListLibraryItem"
+    const val ADD_LIBRARY_BUTTON = "addLibraryButton"
+    const val PROGRESS_INDICATOR = "progressIndicator"
+    const val LIBRARY_ITEM = "libraryItem"
 }
 
 @ExperimentalAnimationApi
