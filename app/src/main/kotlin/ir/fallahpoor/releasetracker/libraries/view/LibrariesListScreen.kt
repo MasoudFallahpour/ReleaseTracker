@@ -3,10 +3,13 @@
 package ir.fallahpoor.releasetracker.libraries.view
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -236,12 +240,14 @@ private fun LibraryItem(
     SwipeToDismiss(
         modifier = Modifier.testTag(LibrariesListTags.LIBRARY_ITEM),
         state = dismissState,
+        dismissThresholds = { FractionalThreshold(0.3f) },
         directions = setOf(DismissDirection.StartToEnd),
         dismissContent = {
             LibraryItemForeground(
                 modifier = Modifier
                     .height(libraryItemHeight)
                     .fillMaxWidth(),
+                dismissState = dismissState,
                 library = library,
                 onLibraryClick = { onLibraryClick(library) },
                 onPinLibraryClick = { pin: Boolean ->
@@ -250,7 +256,12 @@ private fun LibraryItem(
             )
         },
         background = {
-            LibraryItemBackground(modifier = Modifier.height(libraryItemHeight))
+            LibraryItemBackground(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(libraryItemHeight),
+                dismissState = dismissState
+            )
         }
     )
 }
@@ -272,12 +283,17 @@ private fun NoLibrariesText() {
 @Composable
 private fun LibraryItemForeground(
     modifier: Modifier = Modifier,
+    dismissState: DismissState,
     library: Library,
     onLibraryClick: () -> Unit,
     onPinLibraryClick: (Boolean) -> Unit
 ) {
-    Surface(
-        modifier = modifier.clickable(onClick = onLibraryClick)
+    val cardElevation = animateDpAsState(
+        if (dismissState.dismissDirection != null) 4.dp else 0.dp
+    ).value
+    Card(
+        modifier = modifier.clickable(onClick = onLibraryClick),
+        elevation = cardElevation
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -356,16 +372,39 @@ private fun EllipsisText(modifier: Modifier = Modifier, text: String, style: Tex
 }
 
 @Composable
-private fun LibraryItemBackground(modifier: Modifier = Modifier) {
+private fun LibraryItemBackground(
+    modifier: Modifier = Modifier,
+    dismissState: DismissState
+) {
+    val backgroundColor by animateColorAsState(
+        targetValue = when (dismissState.targetValue) {
+            DismissValue.DismissedToEnd -> MaterialTheme.colors.error
+            else -> MaterialTheme.colors.background
+        },
+        animationSpec = tween()
+    )
     Box(
-        modifier = modifier.padding(horizontal = SPACE_NORMAL.dp)
+        modifier = modifier
+            .background(backgroundColor)
+            .padding(horizontal = SPACE_NORMAL.dp)
     ) {
-        Icon(
-            modifier = Modifier.align(Alignment.CenterStart),
-            imageVector = Icons.Default.Delete,
-            contentDescription = stringResource(R.string.delete_library),
-            tint = MaterialTheme.colors.secondary
+        val iconColor by animateColorAsState(
+            targetValue = if (dismissState.targetValue == DismissValue.DismissedToEnd) MaterialTheme.colors.onError else MaterialTheme.colors.onSurface,
+            animationSpec = tween(),
         )
+        val iconScale by animateFloatAsState(
+            targetValue = if (dismissState.targetValue == DismissValue.DismissedToEnd) 1f else 0.75f
+        )
+        if (dismissState.currentValue == DismissValue.Default) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .scale(iconScale),
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(R.string.delete_library),
+                tint = iconColor
+            )
+        }
     }
 }
 
@@ -385,7 +424,6 @@ private fun AddLibraryButton(clickListener: () -> Unit) {
     }
 }
 
-@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Preview
 @Composable
@@ -400,7 +438,8 @@ private fun LibraryItemForegroundPreview() {
                     pinned = 0
                 ),
                 onLibraryClick = {},
-                onPinLibraryClick = {}
+                onPinLibraryClick = {},
+                dismissState = rememberDismissState()
             )
         }
     }
