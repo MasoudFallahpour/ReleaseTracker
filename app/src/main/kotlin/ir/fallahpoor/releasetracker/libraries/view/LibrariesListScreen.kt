@@ -1,17 +1,22 @@
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package ir.fallahpoor.releasetracker.libraries.view
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -19,22 +24,21 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
-import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
+import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.libraries.view.composables.Toolbar
-import ir.fallahpoor.releasetracker.libraries.view.composables.dialogs.DeleteLibraryDialog
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
-import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
@@ -63,9 +67,6 @@ fun LibrariesListScreen(
     )
     val librariesListState: LibrariesListState by librariesViewModel.librariesListState.observeAsState(
         LibrariesListState.Loading
-    )
-    val libraryDeleteState: LibraryDeleteState by librariesViewModel.deleteState.observeAsState(
-        LibraryDeleteState.Fresh
     )
     val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
     val getLibraries = {
@@ -103,38 +104,19 @@ fun LibrariesListScreen(
             )
         }
     ) {
-        var showDeleteLibraryDialog by rememberSaveable { mutableStateOf(false) }
         LibrariesListContent(
             librariesListState = librariesListState,
-            libraryDeleteState = libraryDeleteState,
-            scaffoldState = scaffoldState,
             lastUpdateCheck = lastUpdateCheck,
             onLibraryClick = onLibraryClick,
-            onLibraryLongClick = { library: Library ->
-                librariesViewModel.libraryToDelete = library
-                showDeleteLibraryDialog = true
+            onLibraryDismissed = { library: Library ->
+                librariesViewModel.deleteLibrary(library)
             },
             onPinLibraryClick = { library: Library, pinned: Boolean ->
                 librariesViewModel.pinLibrary(library, pinned)
             },
             onAddLibraryClick = onAddLibraryClick,
         )
-        if (showDeleteLibraryDialog) {
-            DeleteLibraryDialog(
-                libraryName = librariesViewModel.libraryToDelete?.name ?: "",
-                onDeleteClick = {
-                    showDeleteLibraryDialog = false
-                    librariesViewModel.libraryToDelete?.let {
-                        librariesViewModel.deleteLibrary(it)
-                    }
-                },
-                onCancelClick = {
-                    showDeleteLibraryDialog = false
-                }
-            )
-        }
     }
-
 }
 
 @ExperimentalAnimationApi
@@ -142,37 +124,32 @@ fun LibrariesListScreen(
 @Composable
 private fun LibrariesListContent(
     librariesListState: LibrariesListState,
-    libraryDeleteState: LibraryDeleteState,
-    scaffoldState: ScaffoldState,
     lastUpdateCheck: String,
     onLibraryClick: (Library) -> Unit,
-    onLibraryLongClick: (Library) -> Unit,
+    onLibraryDismissed: (Library) -> Unit,
     onPinLibraryClick: (Library, Boolean) -> Unit,
     onAddLibraryClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .animateContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LastUpdateCheckText(lastUpdateCheck)
         when (librariesListState) {
-            is LibrariesListState.Loading -> {
-                ProgressIndicator()
-            }
+            is LibrariesListState.Loading -> ProgressIndicator()
             is LibrariesListState.LibrariesLoaded -> {
                 val libraries: List<Library> = librariesListState.libraries
                 LibrariesList(
                     libraries = libraries,
-                    scaffoldState = scaffoldState,
-                    libraryDeleteState = libraryDeleteState,
                     onLibraryClick = onLibraryClick,
-                    onLibraryLongClick = onLibraryLongClick,
+                    onLibraryDismissed = onLibraryDismissed,
                     onPinLibraryClick = onPinLibraryClick,
                     onAddLibraryClick = onAddLibraryClick
                 )
             }
-            LibrariesListState.Fresh -> {
-            }
+            LibrariesListState.Fresh -> {}
         }
     }
 }
@@ -200,14 +177,11 @@ private fun LastUpdateCheckText(lastUpdateCheck: String) {
 }
 
 @ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Composable
 private fun LibrariesList(
     libraries: List<Library>,
-    scaffoldState: ScaffoldState,
-    libraryDeleteState: LibraryDeleteState,
     onLibraryClick: (Library) -> Unit,
-    onLibraryLongClick: (Library) -> Unit,
+    onLibraryDismissed: (Library) -> Unit,
     onPinLibraryClick: (Library, Boolean) -> Unit,
     onAddLibraryClick: () -> Unit
 ) {
@@ -218,9 +192,6 @@ private fun LibrariesList(
         if (libraries.isEmpty()) {
             NoLibrariesText()
         } else {
-            if (libraryDeleteState is LibraryDeleteState.InProgress) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-            }
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(
                     items = libraries,
@@ -228,40 +199,60 @@ private fun LibrariesList(
                 ) { library: Library ->
                     LibraryItem(
                         library = library,
-                        onLibraryClick = { onLibraryClick(library) },
-                        onLibraryLongClick = { onLibraryLongClick(library) },
-                        onPinLibraryClick = { pin: Boolean ->
-                            onPinLibraryClick(library, pin)
-                        }
+                        onLibraryClick = onLibraryClick,
+                        onPinLibraryClick = onPinLibraryClick,
+                        onLibraryDismissed = onLibraryDismissed
                     )
                     Divider()
                 }
             }
         }
         AddLibraryButton(clickListener = onAddLibraryClick)
-        Snackbar(libraryDeleteState, scaffoldState)
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun Snackbar(libraryDeleteState: LibraryDeleteState, scaffoldState: ScaffoldState) {
-
-    when (libraryDeleteState) {
-        is LibraryDeleteState.Error -> {
-            LaunchedEffect(scaffoldState.snackbarHostState) {
-                scaffoldState.snackbarHostState.showSnackbar(message = libraryDeleteState.message)
+private fun LibraryItem(
+    library: Library,
+    onLibraryClick: (Library) -> Unit,
+    onPinLibraryClick: (Library, Boolean) -> Unit,
+    onLibraryDismissed: (Library) -> Unit,
+) {
+    var libraryIsDismissed by remember { mutableStateOf(false) }
+    val dismissState = rememberDismissState(
+        confirmStateChange = {
+            if (it == DismissValue.DismissedToEnd) {
+                libraryIsDismissed = true
             }
+            true
         }
-        is LibraryDeleteState.Deleted -> {
-            val message = stringResource(R.string.library_deleted)
-            LaunchedEffect(scaffoldState.snackbarHostState) {
-                scaffoldState.snackbarHostState.showSnackbar(message = message)
-            }
+    )
+    val libraryItemHeight by animateDpAsState(
+        targetValue = if (libraryIsDismissed) 0.dp else 70.dp,
+        animationSpec = tween(delayMillis = 200),
+        finishedListener = { onLibraryDismissed(library) }
+    )
+    SwipeToDismiss(
+        modifier = Modifier.testTag(LibrariesListTags.LIBRARY_ITEM),
+        state = dismissState,
+        directions = setOf(DismissDirection.StartToEnd),
+        dismissContent = {
+            LibraryItemForeground(
+                modifier = Modifier
+                    .height(libraryItemHeight)
+                    .fillMaxWidth(),
+                library = library,
+                onLibraryClick = { onLibraryClick(library) },
+                onPinLibraryClick = { pin: Boolean ->
+                    onPinLibraryClick(library, pin)
+                }
+            )
+        },
+        background = {
+            LibraryItemBackground(modifier = Modifier.height(libraryItemHeight))
         }
-    }
-
-    DefaultSnackbar(snackbarHostState = scaffoldState.snackbarHostState)
-
+    )
 }
 
 @Composable
@@ -279,37 +270,34 @@ private fun NoLibrariesText() {
 
 @ExperimentalFoundationApi
 @Composable
-private fun LibraryItem(
+private fun LibraryItemForeground(
+    modifier: Modifier = Modifier,
     library: Library,
     onLibraryClick: () -> Unit,
-    onLibraryLongClick: () -> Unit,
     onPinLibraryClick: (Boolean) -> Unit
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .combinedClickable(
-                onClick = onLibraryClick,
-                onLongClick = onLibraryLongClick
-            )
-            .padding(
-                end = SPACE_NORMAL.dp,
-                top = SPACE_NORMAL.dp,
-                bottom = SPACE_NORMAL.dp
-            )
-            .testTag(LibrariesListTags.LIBRARY_ITEM)
+    Surface(
+        modifier = modifier.clickable(onClick = onLibraryClick)
     ) {
-        PinToggleButton(
-            isPinned = library.isPinned(),
-            onPinnedChange = { isPinned: Boolean ->
-                onPinLibraryClick(isPinned)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PinToggleButton(
+                isPinned = library.isPinned(),
+                onPinnedChange = { isPinned: Boolean ->
+                    onPinLibraryClick(isPinned)
+                }
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                LibraryNameText(libraryName = library.name)
+                LibraryUrlText(libraryUrl = library.url)
             }
-        )
-        Column(modifier = Modifier.weight(1f)) {
-            LibraryNameText(libraryName = library.name)
-            LibraryUrlText(libraryUrl = library.url)
+            Text(
+                modifier = Modifier.padding(horizontal = SPACE_NORMAL.dp),
+                text = library.version
+            )
         }
-        Text(text = library.version)
     }
 }
 
@@ -339,15 +327,18 @@ private fun PinToggleButton(isPinned: Boolean, onPinnedChange: (Boolean) -> Unit
 @Composable
 private fun LibraryNameText(libraryName: String) {
     EllipsisText(
+        modifier = Modifier.fillMaxWidth(),
         text = libraryName,
-        style = MaterialTheme.typography.body1
+        style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Black)
     )
 }
 
 @Composable
 private fun LibraryUrlText(libraryUrl: String) {
     EllipsisText(
-        modifier = Modifier.padding(end = SPACE_NORMAL.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = SPACE_SMALL.dp),
         text = libraryUrl,
         style = MaterialTheme.typography.body2
     )
@@ -362,6 +353,20 @@ private fun EllipsisText(modifier: Modifier = Modifier, text: String, style: Tex
         overflow = TextOverflow.Ellipsis,
         style = style
     )
+}
+
+@Composable
+private fun LibraryItemBackground(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.padding(horizontal = SPACE_NORMAL.dp)
+    ) {
+        Icon(
+            modifier = Modifier.align(Alignment.CenterStart),
+            imageVector = Icons.Default.Delete,
+            contentDescription = stringResource(R.string.delete_library),
+            tint = MaterialTheme.colors.secondary
+        )
+    }
 }
 
 @ExperimentalAnimationApi
@@ -384,16 +389,35 @@ private fun AddLibraryButton(clickListener: () -> Unit) {
 @ExperimentalFoundationApi
 @Preview
 @Composable
+private fun LibraryItemForegroundPreview() {
+    ReleaseTrackerTheme {
+        Surface {
+            LibraryItemForeground(
+                library = Library(
+                    name = "Release Tracker",
+                    url = "https://github.com/masoodfallahpoor/ReleaseTracker",
+                    version = "1.0",
+                    pinned = 0
+                ),
+                onLibraryClick = {},
+                onPinLibraryClick = {}
+            )
+        }
+    }
+}
+
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
+@Preview
+@Composable
 private fun LibrariesListContentPreview() {
     ReleaseTrackerTheme {
         Surface {
             LibrariesListContent(
                 librariesListState = LibrariesListState.Loading,
-                libraryDeleteState = LibraryDeleteState.Fresh,
-                scaffoldState = rememberScaffoldState(),
                 lastUpdateCheck = "N/A",
                 onLibraryClick = {},
-                onLibraryLongClick = {},
+                onLibraryDismissed = {},
                 onPinLibraryClick = { _, _ -> },
                 onAddLibraryClick = {}
             )

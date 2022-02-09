@@ -3,9 +3,6 @@ package ir.fallahpoor.releasetracker.libraries.view
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -14,7 +11,6 @@ import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
-import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
@@ -24,8 +20,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -49,7 +43,6 @@ class LibrariesListScreenTest {
     private lateinit var preferencesCoroutineScope: CoroutineScope
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-    private val deleteText = context.getString(R.string.delete)
     private val noLibrariesText = context.getString(R.string.no_libraries)
     private val searchText = context.getString(R.string.search)
 
@@ -119,7 +112,7 @@ class LibrariesListScreenTest {
         hasAnySibling(hasText(text)) and isToggleable()
 
     @Test
-    fun when_list_of_libraries_is_empty_a_proper_text_is_displayed() {
+    fun when_list_of_libraries_is_empty_a_proper_message_is_displayed() {
 
         // Given
         initializeLibrariesListScreen()
@@ -138,83 +131,22 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun long_clicking_a_library_displays_the_delete_library_dialog() {
-
-        // Given
-        initializeLibrariesListScreen()
-
-        // When
-        composeRule.onNodeWithText(
-            FakeLibraryRepository.Coil.name,
-            useUnmergedTree = true
-        ).performGesture {
-            longClick()
-        }
-
-        // Then
-        composeRule.onNodeWithText(deleteText)
-            .assertIsDisplayed()
-
-    }
-
-    @Test
-    fun delete_library_when_successful() {
+    fun delete_library() {
 
         // Given
         val libraryName = FakeLibraryRepository.Coil.name
-        val snackbarHostState = SnackbarHostState()
-        initializeLibrariesListScreen(snackbarHostState)
+        initializeLibrariesListScreen()
 
         // When
         with(composeRule) {
             onNodeWithText(libraryName, useUnmergedTree = true).performGesture {
-                longClick()
+                swipeRight()
             }
-            onNodeWithText(deleteText).performClick()
         }
 
         // Then
         composeRule.onNodeWithText(libraryName, useUnmergedTree = true)
             .assertDoesNotExist()
-        assertSnackbarIsDisplayedWithMessage(
-            snackbarHostState,
-            context.getString(R.string.library_deleted)
-        )
-
-    }
-
-    private fun assertSnackbarIsDisplayedWithMessage(
-        snackbarHostState: SnackbarHostState,
-        message: String
-    ) = runTest {
-        val actualSnackbarText = snapshotFlow { snackbarHostState.currentSnackbarData }
-            .filterNotNull().first().message
-        Truth.assertThat(actualSnackbarText).isEqualTo(message)
-    }
-
-    @Test
-    fun delete_library_when_failed() {
-
-        // Given
-        val libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING
-        val snackbarHostState = SnackbarHostState()
-        initializeLibrariesListScreen(snackbarHostState)
-
-        // When
-        with(composeRule) {
-            onNodeWithText(libraryName, useUnmergedTree = true).performGesture {
-                longClick()
-            }
-            onNodeWithText(deleteText).performClick()
-        }
-
-        // Then
-        composeRule.onNodeWithText(libraryName, useUnmergedTree = true)
-            .assertIsDisplayed()
-        assertSnackbarIsDisplayedWithMessage(
-            snackbarHostState,
-            FakeLibraryRepository.ERROR_MESSAGE
-        )
 
     }
 
@@ -397,7 +329,7 @@ class LibrariesListScreenTest {
     }
 
     @OptIn(ExperimentalAnimationApi::class)
-    private fun initializeLibrariesListScreen(snackbarHostState: SnackbarHostState = SnackbarHostState()) {
+    private fun initializeLibrariesListScreen() {
 
         preferencesCoroutineScope = CoroutineScope(UnconfinedTestDispatcher() + Job())
         val dataStore = PreferenceDataStoreFactory.create(scope = preferencesCoroutineScope) {
@@ -408,8 +340,7 @@ class LibrariesListScreenTest {
         libraryRepository = FakeLibraryRepository()
         librariesViewModel = LibrariesViewModel(
             libraryRepository = libraryRepository,
-            storage = storage,
-            exceptionParser = ExceptionParser()
+            storage = storage
         )
 
         composeRule.setContent {
@@ -417,8 +348,7 @@ class LibrariesListScreenTest {
                 librariesViewModel = librariesViewModel,
                 nightModeManager = nightModeManager,
                 onLibraryClick = {},
-                onAddLibraryClick = {},
-                scaffoldState = rememberScaffoldState(snackbarHostState = snackbarHostState)
+                onAddLibraryClick = {}
             )
         }
     }

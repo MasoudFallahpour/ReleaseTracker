@@ -3,12 +3,10 @@ package ir.fallahpoor.releasetracker.libraries.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
-import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -37,8 +35,7 @@ class LibrariesViewModelTest {
         fakeStorage = FakeStorage()
         librariesViewModel = LibrariesViewModel(
             libraryRepository = fakeLibraryRepository,
-            storage = fakeStorage,
-            exceptionParser = ExceptionParser()
+            storage = fakeStorage
         )
     }
 
@@ -146,7 +143,7 @@ class LibrariesViewModelTest {
         }
 
     @Test
-    fun `deleteLibrary() should set the state to Deleted when library is deleted successfully`() =
+    fun `deleteLibrary() should delete the library`() =
         runTest {
 
             // Given
@@ -165,38 +162,6 @@ class LibrariesViewModelTest {
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(0)
             Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
-            Truth.assertThat(librariesViewModel.deleteState.value)
-                .isInstanceOf(LibraryDeleteState.Deleted::class.java)
-
-        }
-
-    @Test
-    fun `deleteLibrary() should set the state to Error when there is an unexpected error`() =
-        runTest {
-
-            // Given
-            fakeLibraryRepository.deleteLibraries()
-            fakeLibraryRepository.addLibrary(
-                libraryName = "name",
-                libraryUrl = "url",
-                libraryVersion = "version"
-            )
-
-            // When
-            librariesViewModel.deleteLibrary(
-                Library(
-                    name = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING,
-                    url = "url",
-                    version = "version",
-                    pinned = 0
-                )
-            )
-
-            // Then
-            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
-            Truth.assertThat(fakeLibraryRepository.getLibrary("name")).isNotNull()
-            Truth.assertThat(librariesViewModel.deleteState.value)
-                .isInstanceOf(LibraryDeleteState.Error::class.java)
 
         }
 

@@ -5,14 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.fallahpoor.releasetracker.common.SingleLiveData
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
-import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
-import ir.fallahpoor.releasetracker.libraries.view.states.LibraryDeleteState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,8 +17,7 @@ import javax.inject.Inject
 class LibrariesViewModel
 @Inject constructor(
     private val libraryRepository: LibraryRepository,
-    private val storage: Storage,
-    private val exceptionParser: ExceptionParser
+    private val storage: Storage
 ) : ViewModel() {
 
     private data class Params(
@@ -61,12 +57,8 @@ class LibrariesViewModel
                 LibrariesListState.LibrariesLoaded(libraries)
             }
 
-    var libraryToDelete: Library? = null
     var searchQuery = ""
     var sortOrder by mutableStateOf(storage.getSortOrder())
-
-    private val _deleteLiveData = SingleLiveData<LibraryDeleteState>()
-    val deleteState: LiveData<LibraryDeleteState> = _deleteLiveData
 
     val lastUpdateCheckState: LiveData<String> =
         libraryRepository.getLastUpdateCheck()
@@ -79,33 +71,21 @@ class LibrariesViewModel
     }
 
     fun pinLibrary(library: Library, pin: Boolean) {
-
         viewModelScope.launch {
             try {
                 libraryRepository.pinLibrary(library, pin)
             } catch (t: Throwable) {
             }
         }
-
     }
 
     fun deleteLibrary(library: Library) {
-
-        _deleteLiveData.value = LibraryDeleteState.InProgress
-
         viewModelScope.launch {
-
-            _deleteLiveData.value =
-                try {
-                    libraryRepository.deleteLibrary(library)
-                    LibraryDeleteState.Deleted
-                } catch (t: Throwable) {
-                    val message = exceptionParser.getMessage(t)
-                    LibraryDeleteState.Error(message)
-                }
-
+            try {
+                libraryRepository.deleteLibrary(library)
+            } catch (t: Throwable) {
+            }
         }
-
     }
 
 }
