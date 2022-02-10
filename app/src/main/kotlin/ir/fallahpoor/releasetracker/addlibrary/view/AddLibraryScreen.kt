@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalAnimationApi::class)
+
 package ir.fallahpoor.releasetracker.addlibrary.view
 
 import androidx.annotation.StringRes
@@ -14,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -33,7 +36,6 @@ import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.common.composables.DefaultSnackbar
-import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object AddLibraryTags {
@@ -46,7 +48,6 @@ object AddLibraryTags {
     const val ADD_LIBRARY_BUTTON = "addLibraryButton"
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddLibraryScreen(
     addLibraryViewModel: AddLibraryViewModel = hiltViewModel(),
@@ -54,32 +55,36 @@ fun AddLibraryScreen(
     onBackClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    Screen(
-        modifier = Modifier.testTag(AddLibraryTags.WHOLE_SCREEN),
-        isDarkTheme = isDarkTheme,
-        scaffoldState = scaffoldState,
-        topBar = { AppBar(onBackClick) }
-    ) {
-        val state: AddLibraryState by addLibraryViewModel.state.observeAsState(
-            AddLibraryState.Initial
-        )
-        val keyboardController = LocalSoftwareKeyboardController.current
-        AddLibraryContent(
-            snackbarHostState = scaffoldState.snackbarHostState,
-            state = state,
-            libraryName = addLibraryViewModel.libraryName,
-            onLibraryNameChange = { addLibraryViewModel.libraryName = it },
-            libraryUrlPath = addLibraryViewModel.libraryUrlPath,
-            onLibraryUrlPathChange = { addLibraryViewModel.libraryUrlPath = it },
-            onAddLibraryClick = {
-                addLibraryViewModel.addLibrary(
-                    addLibraryViewModel.libraryName,
-                    addLibraryViewModel.libraryUrlPath
-                )
-                keyboardController?.hide()
-            },
-            onErrorDismissed = { addLibraryViewModel.resetState() }
-        )
+    ReleaseTrackerTheme(darkTheme = isDarkTheme) {
+        Scaffold(
+            modifier = Modifier.testTag(AddLibraryTags.WHOLE_SCREEN),
+            topBar = { AppBar(onBackClick) },
+            scaffoldState = scaffoldState,
+            snackbarHost = {
+                scaffoldState.snackbarHostState
+            }
+        ) {
+            val state: AddLibraryState by addLibraryViewModel.state.observeAsState(
+                AddLibraryState.Initial
+            )
+            val keyboardController = LocalSoftwareKeyboardController.current
+            AddLibraryContent(
+                snackbarHostState = scaffoldState.snackbarHostState,
+                state = state,
+                libraryName = addLibraryViewModel.libraryName,
+                onLibraryNameChange = { addLibraryViewModel.libraryName = it },
+                libraryUrlPath = addLibraryViewModel.libraryUrlPath,
+                onLibraryUrlPathChange = { addLibraryViewModel.libraryUrlPath = it },
+                onAddLibraryClick = {
+                    addLibraryViewModel.addLibrary(
+                        addLibraryViewModel.libraryName,
+                        addLibraryViewModel.libraryUrlPath
+                    )
+                    keyboardController?.hide()
+                },
+                onErrorDismissed = { addLibraryViewModel.resetState() }
+            )
+        }
     }
 }
 
@@ -122,37 +127,37 @@ private fun AddLibraryContent(
     onAddLibraryClick: () -> Unit,
     onErrorDismissed: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        if (state is AddLibraryState.InProgress) {
-            ProgressIndicator()
-        }
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(SPACE_NORMAL.dp)
-        ) {
-            val focusRequester = remember { FocusRequester() }
-            LibraryNameInput(
-                libraryName = libraryName,
-                onLibraryNameChange = onLibraryNameChange,
-                showError = state is AddLibraryState.EmptyLibraryName,
-                onNextClick = { focusRequester.requestFocus() }
-            )
-            Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
-            LibraryUrlInput(
-                libraryUrlPath = libraryUrlPath,
-                onLibraryUrlPathChange = onLibraryUrlPathChange,
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(SPACE_NORMAL.dp)
+            ) {
+                val focusRequester = remember { FocusRequester() }
+                LibraryNameInput(
+                    libraryName = libraryName,
+                    onLibraryNameChange = onLibraryNameChange,
+                    showError = state is AddLibraryState.EmptyLibraryName,
+                    onNextClick = { focusRequester.requestFocus() }
+                )
+                Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
+                LibraryUrlInput(
+                    libraryUrlPath = libraryUrlPath,
+                    onLibraryUrlPathChange = onLibraryUrlPathChange,
+                    state = state,
+                    onDoneClick = onAddLibraryClick,
+                    focusRequester = focusRequester
+                )
+            }
+            AddLibraryButton(
                 state = state,
-                onDoneClick = onAddLibraryClick,
-                focusRequester = focusRequester
+                onAddLibraryClick = onAddLibraryClick
             )
         }
-        AddLibraryButton(
-            isEnabled = state !is AddLibraryState.InProgress,
-            onAddLibraryClick = onAddLibraryClick
-        )
         if (state is AddLibraryState.Error) {
             Snackbar(
+                modifier = Modifier.align(Alignment.BottomCenter),
                 snackbarHostState = snackbarHostState,
                 message = state.message
             ) {
@@ -161,21 +166,12 @@ private fun AddLibraryContent(
         }
         if (state is AddLibraryState.LibraryAdded) {
             Snackbar(
+                modifier = Modifier.align(Alignment.BottomCenter),
                 snackbarHostState = snackbarHostState,
                 message = stringResource(R.string.library_added)
             )
         }
     }
-}
-
-@Composable
-private fun ProgressIndicator() {
-    LinearProgressIndicator(
-        modifier = Modifier
-            .testTag(AddLibraryTags.PROGRESS_INDICATOR)
-            .fillMaxWidth()
-            .height(2.dp)
-    )
 }
 
 @Composable
@@ -237,7 +233,6 @@ private fun LibraryNameTextField(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun LibraryNameErrorText(show: Boolean) {
     AnimatedVisibility(visible = show) {
@@ -270,7 +265,6 @@ private fun LibraryUrlPathTextField(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun LibraryUrlErrorText(state: AddLibraryState) {
     AnimatedVisibility(visible = state is AddLibraryState.EmptyLibraryUrl) {
@@ -290,24 +284,39 @@ private fun ErrorText(@StringRes textRes: Int) {
 }
 
 @Composable
-private fun AddLibraryButton(isEnabled: Boolean, onAddLibraryClick: () -> Unit) {
-    Button(
-        modifier = Modifier
-            .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
-            .padding(SPACE_NORMAL.dp),
-        onClick = onAddLibraryClick,
-        enabled = isEnabled
+private fun AddLibraryButton(state: AddLibraryState, onAddLibraryClick: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = stringResource(R.string.add_library),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Button(
+            modifier = Modifier
+                .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+                .padding(SPACE_NORMAL.dp),
+            onClick = onAddLibraryClick,
+            enabled = state !is AddLibraryState.InProgress
+        ) {
+            if (state is AddLibraryState.InProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .testTag(AddLibraryTags.PROGRESS_INDICATOR),
+                    strokeWidth = 3.dp
+                )
+            } else {
+                Text(
+                    text = stringResource(R.string.add_library),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
     }
 }
 
 @Composable
 private fun Snackbar(
+    modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
     message: String,
     onDismiss: () -> Unit = {}
@@ -318,7 +327,7 @@ private fun Snackbar(
             onDismiss()
         }
     }
-    DefaultSnackbar(snackbarHostState = snackbarHostState)
+    DefaultSnackbar(modifier = modifier, snackbarHostState = snackbarHostState)
 }
 
 @Composable
