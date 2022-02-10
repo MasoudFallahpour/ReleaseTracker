@@ -1,14 +1,13 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 
 package ir.fallahpoor.releasetracker.libraries.view
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -52,8 +51,6 @@ object LibrariesListTags {
     const val LIBRARY_ITEM = "libraryItem"
 }
 
-@ExperimentalAnimationApi
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel = hiltViewModel(),
@@ -123,8 +120,6 @@ fun LibrariesListScreen(
     }
 }
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Composable
 private fun LibrariesListContent(
     librariesListState: LibrariesListState,
@@ -135,9 +130,7 @@ private fun LibrariesListContent(
     onAddLibraryClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .animateContentSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LastUpdateCheckText(lastUpdateCheck)
@@ -172,15 +165,16 @@ private fun ProgressIndicator() {
 
 @Composable
 private fun LastUpdateCheckText(lastUpdateCheck: String) {
-    Text(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(SPACE_NORMAL.dp),
-        text = stringResource(R.string.last_check_for_updates, lastUpdateCheck)
-    )
+    AnimatedContent(targetState = lastUpdateCheck) { lastUpdateCheck: String ->
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(SPACE_NORMAL.dp),
+            text = stringResource(R.string.last_check_for_updates, lastUpdateCheck)
+        )
+    }
 }
 
-@ExperimentalAnimationApi
 @Composable
 private fun LibrariesList(
     libraries: List<Library>,
@@ -215,7 +209,6 @@ private fun LibrariesList(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun LibraryItem(
     library: Library,
@@ -279,7 +272,6 @@ private fun NoLibrariesText() {
     }
 }
 
-@ExperimentalFoundationApi
 @Composable
 private fun LibraryItemForeground(
     modifier: Modifier = Modifier,
@@ -309,10 +301,12 @@ private fun LibraryItemForeground(
                 LibraryNameText(libraryName = library.name)
                 LibraryUrlText(libraryUrl = library.url)
             }
-            Text(
-                modifier = Modifier.padding(horizontal = SPACE_NORMAL.dp),
-                text = library.version
-            )
+            AnimatedContent(targetState = library.version) { version: String ->
+                Text(
+                    modifier = Modifier.padding(horizontal = SPACE_NORMAL.dp),
+                    text = version
+                )
+            }
         }
     }
 }
@@ -408,7 +402,6 @@ private fun LibraryItemBackground(
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 private fun AddLibraryButton(clickListener: () -> Unit) {
     FloatingActionButton(
@@ -424,7 +417,6 @@ private fun AddLibraryButton(clickListener: () -> Unit) {
     }
 }
 
-@ExperimentalFoundationApi
 @Preview
 @Composable
 private fun LibraryItemForegroundPreview() {
@@ -445,8 +437,6 @@ private fun LibraryItemForegroundPreview() {
     }
 }
 
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Preview
 @Composable
 private fun LibrariesListContentPreview() {
