@@ -35,7 +35,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
-import ir.fallahpoor.releasetracker.common.composables.Screen
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
@@ -81,42 +80,44 @@ fun LibrariesListScreen(
         getLibraries()
     }
 
-    Screen(
-        isDarkTheme = isNightModeOn,
-        scaffoldState = scaffoldState,
-        topBar = {
-            Toolbar(
-                currentSortOrder = librariesViewModel.sortOrder,
-                onSortOrderChange = { sortOrder: SortOrder ->
-                    librariesViewModel.sortOrder = sortOrder
-                    getLibraries()
+    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
+        Scaffold(
+            scaffoldState = scaffoldState,
+            snackbarHost = { scaffoldState.snackbarHostState },
+            topBar = {
+                Toolbar(
+                    currentSortOrder = librariesViewModel.sortOrder,
+                    onSortOrderChange = { sortOrder: SortOrder ->
+                        librariesViewModel.sortOrder = sortOrder
+                        getLibraries()
+                    },
+                    isNightModeSupported = nightModeManager.isNightModeSupported,
+                    currentNightMode = currentNightMode,
+                    onNightModeChange = nightModeManager::setNightMode,
+                    onSearchQueryChange = { query: String ->
+                        librariesViewModel.searchQuery = query
+                        getLibraries()
+                    },
+                    onSearchQuerySubmit = { query: String ->
+                        librariesViewModel.searchQuery = query
+                        getLibraries()
+                    }
+                )
+            }
+        ) {
+            LibrariesListContent(
+                librariesListState = librariesListState,
+                lastUpdateCheck = lastUpdateCheck,
+                onLibraryClick = onLibraryClick,
+                onLibraryDismissed = { library: Library ->
+                    librariesViewModel.deleteLibrary(library)
                 },
-                isNightModeSupported = nightModeManager.isNightModeSupported,
-                currentNightMode = currentNightMode,
-                onNightModeChange = nightModeManager::setNightMode,
-                onSearchQueryChange = { query: String ->
-                    librariesViewModel.searchQuery = query
-                    getLibraries()
+                onPinLibraryClick = { library: Library, pinned: Boolean ->
+                    librariesViewModel.pinLibrary(library, pinned)
                 },
-                onSearchQuerySubmit = { query: String ->
-                    librariesViewModel.searchQuery = query
-                    getLibraries()
-                }
+                onAddLibraryClick = onAddLibraryClick,
             )
         }
-    ) {
-        LibrariesListContent(
-            librariesListState = librariesListState,
-            lastUpdateCheck = lastUpdateCheck,
-            onLibraryClick = onLibraryClick,
-            onLibraryDismissed = { library: Library ->
-                librariesViewModel.deleteLibrary(library)
-            },
-            onPinLibraryClick = { library: Library, pinned: Boolean ->
-                librariesViewModel.pinLibrary(library, pinned)
-            },
-            onAddLibraryClick = onAddLibraryClick,
-        )
     }
 }
 
