@@ -131,7 +131,7 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun delete_library() {
+    fun delete_library_only_deletes_the_selected_library() {
 
         // Given
         val libraryName = FakeLibraryRepository.Coil.name
@@ -147,6 +147,10 @@ class LibrariesListScreenTest {
         // Then
         composeRule.onNodeWithText(libraryName, useUnmergedTree = true)
             .assertDoesNotExist()
+        composeRule.onNodeWithText(FakeLibraryRepository.Koin.name, useUnmergedTree = true)
+            .assertIsDisplayed()
+        composeRule.onNodeWithText(FakeLibraryRepository.Kotlin.name, useUnmergedTree = true)
+            .assertIsDisplayed()
 
     }
 
