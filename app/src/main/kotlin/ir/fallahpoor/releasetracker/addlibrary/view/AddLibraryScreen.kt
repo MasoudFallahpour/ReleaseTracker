@@ -40,21 +40,23 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object AddLibraryTags {
     const val WHOLE_SCREEN = "wholeScreen"
+    const val CONTENT = "content"
     const val TITLE = "title"
     const val BACK_BUTTON = "backButton"
     const val PROGRESS_INDICATOR = "progressIndicator"
     const val LIBRARY_NAME_TEXT_FIELD = "libraryNameTextField"
     const val LIBRARY_URL_TEXT_FIELD = "libraryUrlTextField"
     const val ADD_LIBRARY_BUTTON = "addLibraryButton"
+    const val ADD_LIBRARY_BUTTON_TEXT = "addLibraryButtonText"
 }
 
 @Composable
 fun AddLibraryScreen(
     addLibraryViewModel: AddLibraryViewModel = hiltViewModel(),
     isDarkTheme: Boolean,
-    onBackClick: () -> Unit,
-    scaffoldState: ScaffoldState = rememberScaffoldState()
+    onBackClick: () -> Unit
 ) {
+    val scaffoldState = rememberScaffoldState()
     ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         Scaffold(
             modifier = Modifier.testTag(AddLibraryTags.WHOLE_SCREEN),
@@ -117,7 +119,7 @@ private fun BackButton(onBackClick: () -> Unit) {
 }
 
 @Composable
-private fun AddLibraryContent(
+fun AddLibraryContent(
     snackbarHostState: SnackbarHostState,
     state: AddLibraryState,
     libraryName: String,
@@ -127,7 +129,11 @@ private fun AddLibraryContent(
     onAddLibraryClick: () -> Unit,
     onErrorDismissed: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag(AddLibraryTags.CONTENT)
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -305,9 +311,11 @@ private fun AddLibraryButton(state: AddLibraryState, onAddLibraryClick: () -> Un
                 )
             } else {
                 Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT),
                     text = stringResource(R.string.add_library),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -337,8 +345,7 @@ private fun AddLibraryScreenPreview() {
         Surface {
             AddLibraryScreen(
                 isDarkTheme = false,
-                onBackClick = {},
-                scaffoldState = rememberScaffoldState()
+                onBackClick = {}
             )
         }
     }
