@@ -9,7 +9,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
-import ir.fallahpoor.releasetracker.libraries.view.states.LibrariesListState
+import ir.fallahpoor.releasetracker.libraries.view.LibrariesListState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

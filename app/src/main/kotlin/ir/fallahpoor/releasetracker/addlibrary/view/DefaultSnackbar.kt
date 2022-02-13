@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.common.composables
+package ir.fallahpoor.releasetracker.addlibrary.view
 
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarData
