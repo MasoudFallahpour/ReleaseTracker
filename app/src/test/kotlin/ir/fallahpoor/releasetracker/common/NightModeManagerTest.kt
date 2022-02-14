@@ -38,7 +38,7 @@ class NightModeManagerTest {
 
     @Before
     fun runBeforeEachTest() {
-        MockitoAnnotations.initMocks(this)
+        MockitoAnnotations.openMocks(this)
         val context: Context = ApplicationProvider.getApplicationContext()
         nightModeManager = NightModeManager(context = context, storage = fakeStorage)
     }

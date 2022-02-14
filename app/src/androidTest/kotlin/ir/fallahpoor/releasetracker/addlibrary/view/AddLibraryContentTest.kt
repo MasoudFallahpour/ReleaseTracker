@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -59,7 +60,7 @@ class AddLibraryContentTest {
             onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD, useUnmergedTree = true)
                 .assertTextEquals(libraryName)
             onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD, useUnmergedTree = true)
-                .assertTextEquals(libraryUrlPath)
+                .assertTextEquals(GITHUB_BASE_URL + libraryUrlPath)
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryUrlErrorText)
