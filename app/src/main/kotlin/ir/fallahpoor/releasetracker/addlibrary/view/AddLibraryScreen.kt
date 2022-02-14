@@ -1,10 +1,9 @@
-@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalAnimationApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class)
 
 package ir.fallahpoor.releasetracker.addlibrary.view
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions

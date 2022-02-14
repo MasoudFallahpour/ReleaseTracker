@@ -1,4 +1,4 @@
-const val kotlinVersion = "1.5.31"
+const val kotlinVersion = "1.6.10"
 
 object Dependencies {
 
@@ -32,14 +32,14 @@ object Dependencies {
     }
 
     object Room {
-        private const val version = "2.3.0"
+        private const val version = "2.4.1"
         const val runtime = "androidx.room:room-runtime:$version"
         const val ktx = "androidx.room:room-ktx:$version"
         const val compiler = "androidx.room:room-compiler:$version"
     }
 
     object Compose {
-        const val version = "1.0.5"
+        const val version = "1.1.0"
         const val ui = "androidx.compose.ui:ui:$version"
         const val tooling = "androidx.compose.ui:ui-tooling:$version"
         const val material = "androidx.compose.material:material:$version"
