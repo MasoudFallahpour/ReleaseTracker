@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LibraryDao {
 
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME}")
     fun getAllAsFlow(): Flow<List<Library>>
 
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME} ASC")
+    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME}")
     suspend fun getAll(): List<Library>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)

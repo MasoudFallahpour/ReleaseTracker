@@ -11,6 +11,7 @@ import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListState
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,8 +49,12 @@ class LibrariesViewModel
                     }
                     .map { libraries: List<Library> ->
                         when (params.sortOrder) {
-                            SortOrder.A_TO_Z -> libraries.sortedBy { it.name }
-                            SortOrder.Z_TO_A -> libraries.sortedByDescending { it.name }
+                            SortOrder.A_TO_Z -> libraries.sortedBy {
+                                it.name.lowercase(Locale.getDefault())
+                            }
+                            SortOrder.Z_TO_A -> libraries.sortedByDescending {
+                                it.name.lowercase(Locale.getDefault())
+                            }
                             SortOrder.PINNED_FIRST -> libraries.sortedByDescending { it.pinned }
                         }
                     }
