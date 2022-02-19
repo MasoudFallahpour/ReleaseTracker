@@ -13,7 +13,7 @@ private val lightColors: Colors = lightColors(
     onPrimary = White,
     secondary = Teal,
     onSecondary = Black,
-    error = LightRed
+    error = DarkRed
 )
 
 private val darkColors: Colors = darkColors(
