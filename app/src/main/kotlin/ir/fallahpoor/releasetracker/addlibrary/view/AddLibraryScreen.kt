@@ -37,7 +37,7 @@ import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object AddLibraryTags {
-    const val WHOLE_SCREEN = "wholeScreen"
+    const val SCREEN = "screen"
     const val CONTENT = "content"
     const val TITLE = "title"
     const val BACK_BUTTON = "backButton"
@@ -57,7 +57,7 @@ fun AddLibraryScreen(
     val scaffoldState = rememberScaffoldState()
     ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         Scaffold(
-            modifier = Modifier.testTag(AddLibraryTags.WHOLE_SCREEN),
+            modifier = Modifier.testTag(AddLibraryTags.SCREEN),
             topBar = { AppBar(onBackClick) },
             scaffoldState = scaffoldState,
             snackbarHost = {
