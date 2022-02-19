@@ -118,7 +118,7 @@ private fun BackButton(onBackClick: () -> Unit) {
 
 @Composable
 fun AddLibraryContent(
-    snackbarHostState: SnackbarHostState,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
     state: AddLibraryState,
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,

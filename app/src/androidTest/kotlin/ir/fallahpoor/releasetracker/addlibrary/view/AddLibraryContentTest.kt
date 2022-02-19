@@ -38,7 +38,6 @@ class AddLibraryContentTest {
         val libraryUrlPath = "coil-kt/coil"
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.Initial,
                 libraryName = libraryName,
                 onLibraryNameChange = {},
@@ -77,7 +76,6 @@ class AddLibraryContentTest {
         // Given
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.EmptyLibraryName,
                 libraryName = "",
                 onLibraryNameChange = {},
@@ -112,7 +110,6 @@ class AddLibraryContentTest {
         // Given
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.EmptyLibraryUrl,
                 libraryName = "",
                 onLibraryNameChange = {},
@@ -147,7 +144,6 @@ class AddLibraryContentTest {
         // Given
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.InvalidLibraryUrl,
                 libraryName = "",
                 onLibraryNameChange = {},
@@ -182,7 +178,6 @@ class AddLibraryContentTest {
         // Given
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.InProgress,
                 libraryName = "",
                 onLibraryNameChange = {},
@@ -299,7 +294,6 @@ class AddLibraryContentTest {
         val libraryName = "Coil"
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.Initial,
                 libraryName = "",
                 onLibraryNameChange = onLibraryNameChange,
@@ -327,7 +321,6 @@ class AddLibraryContentTest {
         val libraryUrl = "coil-kt/coil"
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.Initial,
                 libraryName = "",
                 onLibraryNameChange = {},
@@ -354,7 +347,6 @@ class AddLibraryContentTest {
         val onAddLibraryClick: () -> Unit = mock()
         composeTestRule.setContent {
             AddLibraryContent(
-                snackbarHostState = SnackbarHostState(),
                 state = AddLibraryState.Initial,
                 libraryName = "Coil",
                 onLibraryNameChange = {},
