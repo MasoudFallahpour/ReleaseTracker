@@ -139,7 +139,7 @@ class LibrariesListScreenTest {
 
         // When
         with(composeRule) {
-            onNodeWithText(libraryName, useUnmergedTree = true).performGesture {
+            onNodeWithText(libraryName, useUnmergedTree = true).performTouchInput {
                 swipeRight()
             }
         }
