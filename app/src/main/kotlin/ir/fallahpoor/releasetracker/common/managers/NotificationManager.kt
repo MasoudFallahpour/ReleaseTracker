@@ -7,14 +7,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ir.fallahpoor.releasetracker.MainActivity
 import ir.fallahpoor.releasetracker.R
 import javax.inject.Inject
 
-@ExperimentalAnimationApi
 class NotificationManager
 @Inject constructor(
     private val context: Context

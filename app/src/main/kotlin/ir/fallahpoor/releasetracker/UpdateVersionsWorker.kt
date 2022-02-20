@@ -1,7 +1,6 @@
 package ir.fallahpoor.releasetracker
 
 import android.content.Context
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -17,7 +16,6 @@ import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-@ExperimentalAnimationApi
 @HiltWorker
 class UpdateVersionsWorker
 @AssistedInject constructor(
@@ -44,25 +42,18 @@ class UpdateVersionsWorker
         val libraries: List<Library> = libraryRepository.getLibraries()
 
         coroutineScope {
-
             libraries.forEach { library: Library ->
-
                 launch {
-
                     val latestVersion: String? = getLatestVersion(library)
-
                     latestVersion?.let {
                         val libraryCopy = library.copy(version = it)
                         libraryRepository.updateLibrary(libraryCopy)
                         if (newVersionAvailable(it, library.version)) {
-                            updatedLibraries.add("${library.name}: ${library.version} -> $it")
+                            updatedLibraries += "${library.name}: ${library.version} -> $it"
                         }
                     }
-
                 }
-
             }
-
         }
 
         return updatedLibraries
@@ -80,11 +71,10 @@ class UpdateVersionsWorker
             null
         }
 
-    private fun newVersionAvailable(latestVersion: String?, currentVersion: String): Boolean {
-        return latestVersion != null &&
+    private fun newVersionAvailable(latestVersion: String?, currentVersion: String): Boolean =
+        latestVersion != null &&
                 currentVersion != "N/A" &&
                 latestVersion != currentVersion
-    }
 
     private fun saveUpdateDate() {
         val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)

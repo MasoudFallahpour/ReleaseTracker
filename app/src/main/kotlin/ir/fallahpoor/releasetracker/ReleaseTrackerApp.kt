@@ -1,7 +1,6 @@
 package ir.fallahpoor.releasetracker
 
 import android.app.Application
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
 import dagger.hilt.android.HiltAndroidApp
@@ -11,7 +10,6 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@ExperimentalAnimationApi
 @HiltAndroidApp
 class ReleaseTrackerApp : Application(), Configuration.Provider {
 
