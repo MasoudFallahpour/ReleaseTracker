@@ -33,19 +33,7 @@ class AddLibraryContentTest {
     fun test_Initial_state() {
 
         // Given
-        val libraryName = "Coil"
-        val libraryUrlPath = "coil-kt/coil"
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.Initial,
-                libraryName = libraryName,
-                onLibraryNameChange = {},
-                libraryUrlPath = libraryUrlPath,
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(libraryName = "Coil", libraryUrlPath = "coil-kt/coil")
 
         // Then
         with(composeTestRule) {
@@ -56,9 +44,9 @@ class AddLibraryContentTest {
             onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR, useUnmergedTree = true)
                 .assertDoesNotExist()
             onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD, useUnmergedTree = true)
-                .assertTextEquals(libraryName)
+                .assertTextEquals("Coil")
             onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD, useUnmergedTree = true)
-                .assertTextEquals(GITHUB_BASE_URL + libraryUrlPath)
+                .assertTextEquals(GITHUB_BASE_URL + "coil-kt/coil")
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryUrlErrorText)
@@ -73,17 +61,7 @@ class AddLibraryContentTest {
     fun test_EmptyLibraryName_state() {
 
         // Given
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.EmptyLibraryName,
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(state = AddLibraryState.EmptyLibraryName)
 
         // Then
         with(composeTestRule) {
@@ -107,17 +85,7 @@ class AddLibraryContentTest {
     fun test_EmptyLibraryUrl_state() {
 
         // Given
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.EmptyLibraryUrl,
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(state = AddLibraryState.EmptyLibraryUrl)
 
         // Then
         with(composeTestRule) {
@@ -141,17 +109,7 @@ class AddLibraryContentTest {
     fun test_InvalidLibraryUrl_state() {
 
         // Given
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.InvalidLibraryUrl,
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(state = AddLibraryState.InvalidLibraryUrl)
 
         // Then
         with(composeTestRule) {
@@ -175,17 +133,7 @@ class AddLibraryContentTest {
     fun test_InProgress_state() {
 
         // Given
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.InProgress,
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(state = AddLibraryState.InProgress)
 
         // Then
         with(composeTestRule) {
@@ -210,18 +158,10 @@ class AddLibraryContentTest {
 
         // Given
         val snackbarHostState = SnackbarHostState()
-        composeTestRule.setContent {
-            AddLibraryContent(
-                snackbarHostState = snackbarHostState,
-                state = AddLibraryState.LibraryAdded,
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(
+            state = AddLibraryState.LibraryAdded,
+            snackbarHostState = snackbarHostState
+        )
 
         // Then
         with(composeTestRule) {
@@ -250,19 +190,10 @@ class AddLibraryContentTest {
 
         // Given
         val snackbarHostState = SnackbarHostState()
-        val errorMessage = "Something went wrong"
-        composeTestRule.setContent {
-            AddLibraryContent(
-                snackbarHostState = snackbarHostState,
-                state = AddLibraryState.Error(errorMessage),
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(
+            state = AddLibraryState.Error("Something went wrong"),
+            snackbarHostState = snackbarHostState
+        )
 
         // Then
         with(composeTestRule) {
@@ -281,7 +212,7 @@ class AddLibraryContentTest {
         }
         val actualSnackbarText = snapshotFlow { snackbarHostState.currentSnackbarData }
             .filterNotNull().first().message
-        Truth.assertThat(actualSnackbarText).isEqualTo(errorMessage)
+        Truth.assertThat(actualSnackbarText).isEqualTo("Something went wrong")
 
     }
 
@@ -290,25 +221,14 @@ class AddLibraryContentTest {
 
         // Given
         val onLibraryNameChange: (String) -> Unit = mock()
-        val libraryName = "Coil"
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.Initial,
-                libraryName = "",
-                onLibraryNameChange = onLibraryNameChange,
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(onLibraryNameChange = onLibraryNameChange)
 
         // When
         composeTestRule.onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
-            .performTextInput(libraryName)
+            .performTextInput("Coil")
 
         // Then
-        Mockito.verify(onLibraryNameChange).invoke(libraryName)
+        Mockito.verify(onLibraryNameChange).invoke("Coil")
 
     }
 
@@ -317,25 +237,14 @@ class AddLibraryContentTest {
 
         // Given
         val onLibraryUrlPathChange: (String) -> Unit = mock()
-        val libraryUrl = "coil-kt/coil"
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.Initial,
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = onLibraryUrlPathChange,
-                onAddLibraryClick = {},
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(onLibraryUrlPathChange = onLibraryUrlPathChange)
 
         // When
         composeTestRule.onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
-            .performTextInput(libraryUrl)
+            .performTextInput("coil-kt/coil")
 
         // Then
-        Mockito.verify(onLibraryUrlPathChange).invoke(libraryUrl)
+        Mockito.verify(onLibraryUrlPathChange).invoke("coil-kt/coil")
 
     }
 
@@ -344,17 +253,11 @@ class AddLibraryContentTest {
 
         // Given
         val onAddLibraryClick: () -> Unit = mock()
-        composeTestRule.setContent {
-            AddLibraryContent(
-                state = AddLibraryState.Initial,
-                libraryName = "Coil",
-                onLibraryNameChange = {},
-                libraryUrlPath = "coil-kt/coil",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = onAddLibraryClick,
-                onErrorDismissed = {}
-            )
-        }
+        composeAddLibraryContent(
+            libraryName = "Coil",
+            libraryUrlPath = "coil-kt/coil",
+            onAddLibraryClick = onAddLibraryClick
+        )
 
         // When
         composeTestRule.onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
@@ -371,18 +274,11 @@ class AddLibraryContentTest {
         // Given
         val snackbarHostState = SnackbarHostState()
         val onErrorDismissed: () -> Unit = mock()
-        composeTestRule.setContent {
-            AddLibraryContent(
-                snackbarHostState = snackbarHostState,
-                state = AddLibraryState.Error("Something went wrong"),
-                libraryName = "",
-                onLibraryNameChange = {},
-                libraryUrlPath = "",
-                onLibraryUrlPathChange = {},
-                onAddLibraryClick = {},
-                onErrorDismissed = onErrorDismissed
-            )
-        }
+        composeAddLibraryContent(
+            state = AddLibraryState.Error("Something went wrong"),
+            snackbarHostState = snackbarHostState,
+            onErrorDismissed = onErrorDismissed
+        )
 
         // When
         snackbarHostState.currentSnackbarData?.dismiss()
@@ -390,6 +286,30 @@ class AddLibraryContentTest {
         // Then
         Mockito.verify(onErrorDismissed).invoke()
 
+    }
+
+    private fun composeAddLibraryContent(
+        state: AddLibraryState = AddLibraryState.Initial,
+        snackbarHostState: SnackbarHostState = SnackbarHostState(),
+        libraryName: String = "",
+        onLibraryNameChange: (String) -> Unit = {},
+        libraryUrlPath: String = "",
+        onLibraryUrlPathChange: (String) -> Unit = {},
+        onAddLibraryClick: () -> Unit = {},
+        onErrorDismissed: () -> Unit = {}
+    ) {
+        composeTestRule.setContent {
+            AddLibraryContent(
+                snackbarHostState = snackbarHostState,
+                state = state,
+                libraryName = libraryName,
+                onLibraryNameChange = onLibraryNameChange,
+                libraryUrlPath = libraryUrlPath,
+                onLibraryUrlPathChange = onLibraryUrlPathChange,
+                onAddLibraryClick = onAddLibraryClick,
+                onErrorDismissed = onErrorDismissed
+            )
+        }
     }
 
     private inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
