@@ -8,7 +8,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
-import org.mockito.kotlin.mock
 
 class SearchBarTest {
 
@@ -171,8 +170,10 @@ class SearchBarTest {
 //            .performImeAction()
 
         // Then
-//        Truth.assertThat(query).isEqualTo(newQuery)
+// Truth.assertThat(query).isEqualTo(newQuery)
 
     }
+
+    private inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
 
 }

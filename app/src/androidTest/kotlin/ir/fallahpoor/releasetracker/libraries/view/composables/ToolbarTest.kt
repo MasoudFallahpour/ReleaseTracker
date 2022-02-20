@@ -10,7 +10,6 @@ import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
-import org.mockito.kotlin.mock
 
 class ToolbarTest {
 
@@ -323,5 +322,7 @@ class ToolbarTest {
             )
         }
     }
+
+    private inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
 
 }

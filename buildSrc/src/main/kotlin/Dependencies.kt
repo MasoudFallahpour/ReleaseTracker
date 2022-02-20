@@ -94,9 +94,10 @@ object Dependencies {
     }
 
     object Mockito {
-        private const val version = "3.2.0"
-        const val kotlin = "org.mockito.kotlin:mockito-kotlin:$version"
-        const val android = "org.mockito:mockito-android:3.12.4"
+        private const val version = "4.3.1"
+        const val core = "org.mockito:mockito-core:$version"
+        const val inline = "org.mockito:mockito-inline:$version"
+        const val dexMaker = "com.linkedin.dexmaker:dexmaker-mockito-inline:2.28.1"
     }
 
 }
