@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                                     this@MainActivity,
                                     getString(R.string.no_browser_found_message, library.url),
                                     Toast.LENGTH_LONG
-                                )
+                                ).show()
                             }
                         },
                         onAddLibraryClick = { navController.navigate(Screen.AddLibrary) }
