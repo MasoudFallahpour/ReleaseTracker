@@ -64,7 +64,7 @@ object Dependencies {
     object Hilt {
         private const val jetpackVersion = "1.0.0"
         private const val navigationComposeVersion = "1.0.0-beta01"
-        const val version = "2.38.1"
+        const val version = "2.41"
         const val android = "com.google.dagger:hilt-android:$version"
         const val androidCompiler =
             "com.google.dagger:hilt-android-compiler:$version"
