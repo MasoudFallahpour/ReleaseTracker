@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalComposeUiApi::class)
 
-package ir.fallahpoor.releasetracker.addlibrary.view
+package ir.fallahpoor.releasetracker.addlibrary.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -26,8 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenUiState
+import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
+import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.addlibrary.Intent
-import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL

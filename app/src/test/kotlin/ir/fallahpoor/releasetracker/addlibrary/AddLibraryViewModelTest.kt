@@ -1,10 +1,7 @@
-package ir.fallahpoor.releasetracker.addlibrary.viewmodel
+package ir.fallahpoor.releasetracker.addlibrary
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.addlibrary.Intent
-import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreenUiState
-import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import kotlinx.coroutines.Dispatchers

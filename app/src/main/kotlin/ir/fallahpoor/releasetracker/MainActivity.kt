@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
-import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreen
+import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryScreen
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen

@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.addlibrary.view
+package ir.fallahpoor.releasetracker.addlibrary.ui
 
 import android.content.Context
 import androidx.compose.material.SnackbarHostState
@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first

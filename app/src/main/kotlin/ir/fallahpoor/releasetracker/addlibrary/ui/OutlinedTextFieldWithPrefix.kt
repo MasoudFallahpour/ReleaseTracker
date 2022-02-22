@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.addlibrary.view
+package ir.fallahpoor.releasetracker.addlibrary.ui
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions

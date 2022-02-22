@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.addlibrary.view
+package ir.fallahpoor.releasetracker.addlibrary
 
 data class AddLibraryScreenUiState(
     val libraryName: String = "",

@@ -1,11 +1,8 @@
-package ir.fallahpoor.releasetracker.addlibrary.viewmodel
+package ir.fallahpoor.releasetracker.addlibrary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.fallahpoor.releasetracker.addlibrary.Intent
-import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreenUiState
-import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
