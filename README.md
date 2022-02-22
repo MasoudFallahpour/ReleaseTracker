@@ -2,11 +2,11 @@
 ![Build status](https://github.com/masoodfallahpoor/ReleaseTracker/actions/workflows/build.yml/badge.svg?branch=dev)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/masoodfallahpoor/ReleaseTracker?label=Latest%20version)
 
-Release Tracker is an Android app that shows the latest version of Github-hosted libraries, tools,
-frameworks, or whatever!
+Release Tracker is an Android app that shows and tracks the latest version of Github-hosted
+libraries, tools, frameworks, or whatever.
 
-By default it's pre-populated with a list of some popular Android libraries, and you can add your
-own libraries too.
+By default it's pre-populated with a list of some popular Android libraries. Of course you can add
+your favorite libraries too!
 
 # Screenshots
 
@@ -40,20 +40,14 @@ the tech stack of Release Tracker:
 - Retrofit
 - Timber
 
-# Unit Tests
-
-I've done my best to write unit tests for different parts of the app. I'll keep adding tests to
-reach a decent amount of code coverage.
-
 # Contributing
-
 Pull requests are welcome! Please make your pull requests against the `dev` branch. If you have a
 feature request or bug report, please open a new issue so it could be tracked.
 
 License
 =======
 
-    Copyright 2020 Masood Fallahpoor.
+    Copyright 2022 Masood Fallahpoor.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
