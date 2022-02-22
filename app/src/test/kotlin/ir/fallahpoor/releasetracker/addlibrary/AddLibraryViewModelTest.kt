@@ -43,7 +43,7 @@ class AddLibraryViewModelTest {
     fun `state is correctly updated when library name changes`() {
 
         // When
-        addLibraryViewModel.handleIntent(Intent.UpdateLibraryName(libraryName = "abc"))
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(libraryName = "abc"))
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
@@ -61,7 +61,7 @@ class AddLibraryViewModelTest {
     fun `state is correctly updated when library URL path changes`() {
 
         // When
-        addLibraryViewModel.handleIntent(Intent.UpdateLibraryUrlPath(libraryUrlPath = "abc/def"))
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(libraryUrlPath = "abc/def"))
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
@@ -83,8 +83,8 @@ class AddLibraryViewModelTest {
             fakeLibraryRepository.deleteLibraries()
 
             // When
-            addLibraryViewModel.handleIntent(
-                Intent.AddLibrary(
+            addLibraryViewModel.handleEvent(
+                Event.AddLibrary(
                     libraryName = "",
                     libraryUrlPath = "does not matter"
                 )
@@ -111,8 +111,8 @@ class AddLibraryViewModelTest {
             fakeLibraryRepository.deleteLibraries()
 
             // When
-            addLibraryViewModel.handleIntent(
-                Intent.AddLibrary(
+            addLibraryViewModel.handleEvent(
+                Event.AddLibrary(
                     libraryName = "does not matter",
                     libraryUrlPath = ""
                 )
@@ -139,8 +139,8 @@ class AddLibraryViewModelTest {
             fakeLibraryRepository.deleteLibraries()
 
             // When
-            addLibraryViewModel.handleIntent(
-                Intent.AddLibrary(
+            addLibraryViewModel.handleEvent(
+                Event.AddLibrary(
                     libraryName = "does not matter",
                     libraryUrlPath = "This is an invalid library URL path"
                 )
@@ -172,8 +172,8 @@ class AddLibraryViewModelTest {
             )
 
             // When
-            addLibraryViewModel.handleIntent(
-                Intent.AddLibrary(
+            addLibraryViewModel.handleEvent(
+                Event.AddLibrary(
                     libraryName = "coil",
                     libraryUrlPath = "coil-kt/coil"
                 )
@@ -197,8 +197,8 @@ class AddLibraryViewModelTest {
         runTest {
 
             // When
-            addLibraryViewModel.handleIntent(
-                Intent.AddLibrary(
+            addLibraryViewModel.handleEvent(
+                Event.AddLibrary(
                     libraryName = "abc",
                     libraryUrlPath = "abc/def"
                 )
@@ -225,8 +225,8 @@ class AddLibraryViewModelTest {
             val libraryName: String = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING
 
             // When
-            addLibraryViewModel.handleIntent(
-                Intent.AddLibrary(
+            addLibraryViewModel.handleEvent(
+                Event.AddLibrary(
                     libraryName = libraryName,
                     libraryUrlPath = "abc/def"
                 )
@@ -249,15 +249,15 @@ class AddLibraryViewModelTest {
     fun `state is correctly updated when Intent is Reset`() {
 
         // Given the current state is Error
-        addLibraryViewModel.handleIntent(
-            Intent.AddLibrary(
+        addLibraryViewModel.handleEvent(
+            Event.AddLibrary(
                 libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
                 libraryUrlPath = "abc/def"
             )
         )
 
         // When
-        addLibraryViewModel.handleIntent(Intent.Reset)
+        addLibraryViewModel.handleEvent(Event.Reset)
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)

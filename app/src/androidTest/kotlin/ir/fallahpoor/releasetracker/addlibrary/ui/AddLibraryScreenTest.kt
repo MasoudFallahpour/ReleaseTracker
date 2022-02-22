@@ -8,7 +8,7 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenUiState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
-import ir.fallahpoor.releasetracker.addlibrary.Intent
+import ir.fallahpoor.releasetracker.addlibrary.Event
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
@@ -86,7 +86,7 @@ class AddLibraryScreenTest {
             .performTextInput("Coil")
 
         // Then
-        Mockito.verify(addLibraryViewModel).handleIntent(Intent.UpdateLibraryName("Coil"))
+        Mockito.verify(addLibraryViewModel).handleEvent(Event.UpdateLibraryName("Coil"))
 
     }
 
@@ -102,7 +102,7 @@ class AddLibraryScreenTest {
 
         // Then
         Mockito.verify(addLibraryViewModel)
-            .handleIntent(Intent.UpdateLibraryUrlPath("coil-kt/coil"))
+            .handleEvent(Event.UpdateLibraryUrlPath("coil-kt/coil"))
 
     }
 
@@ -117,7 +117,7 @@ class AddLibraryScreenTest {
             .performClick()
 
         // Then
-        Mockito.verify(addLibraryViewModel).handleIntent(Intent.AddLibrary("Coil", "coil-kt/coil"))
+        Mockito.verify(addLibraryViewModel).handleEvent(Event.AddLibrary("Coil", "coil-kt/coil"))
 
     }
 

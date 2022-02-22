@@ -29,7 +29,7 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenUiState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
-import ir.fallahpoor.releasetracker.addlibrary.Intent
+import ir.fallahpoor.releasetracker.addlibrary.Event
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
@@ -70,17 +70,17 @@ fun AddLibraryScreen(
                 state = state.addLibraryState,
                 libraryName = state.libraryName,
                 onLibraryNameChange = { libraryName ->
-                    addLibraryViewModel.handleIntent(Intent.UpdateLibraryName(libraryName))
+                    addLibraryViewModel.handleEvent(Event.UpdateLibraryName(libraryName))
                 },
                 libraryUrlPath = state.libraryUrlPath,
                 onLibraryUrlPathChange = { libraryUrlPath ->
-                    addLibraryViewModel.handleIntent(Intent.UpdateLibraryUrlPath(libraryUrlPath))
+                    addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(libraryUrlPath))
                 },
                 onAddLibraryClick = { libraryName, libraryUrlPath ->
-                    addLibraryViewModel.handleIntent(Intent.AddLibrary(libraryName, libraryUrlPath))
+                    addLibraryViewModel.handleEvent(Event.AddLibrary(libraryName, libraryUrlPath))
                     keyboardController?.hide()
                 },
-                onErrorDismissed = { addLibraryViewModel.handleIntent(Intent.Reset) }
+                onErrorDismissed = { addLibraryViewModel.handleEvent(Event.Reset) }
             )
         }
     }

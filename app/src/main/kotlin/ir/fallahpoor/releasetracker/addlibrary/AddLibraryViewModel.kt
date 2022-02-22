@@ -24,14 +24,14 @@ class AddLibraryViewModel
     private val _state = MutableStateFlow(AddLibraryScreenUiState())
     val state: StateFlow<AddLibraryScreenUiState> = _state
 
-    fun handleIntent(intent: Intent) {
-        when (intent) {
-            is Intent.UpdateLibraryName -> updateLibraryName(intent.libraryName)
-            is Intent.UpdateLibraryUrlPath -> updateLibraryUrlPath(intent.libraryUrlPath)
-            is Intent.AddLibrary -> {
-                addLibrary(intent.libraryName, intent.libraryUrlPath)
+    fun handleEvent(event: Event) {
+        when (event) {
+            is Event.UpdateLibraryName -> updateLibraryName(event.libraryName)
+            is Event.UpdateLibraryUrlPath -> updateLibraryUrlPath(event.libraryUrlPath)
+            is Event.AddLibrary -> {
+                addLibrary(event.libraryName, event.libraryUrlPath)
             }
-            is Intent.Reset -> resetUiState()
+            is Event.Reset -> resetUiState()
         }
     }
 
