@@ -1,18 +1,17 @@
 package ir.fallahpoor.releasetracker.addlibrary.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.fallahpoor.releasetracker.addlibrary.Intent
+import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreenUiState
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,70 +22,85 @@ class AddLibraryViewModel
     private val exceptionParser: ExceptionParser
 ) : ViewModel() {
 
-    private val _state = MutableLiveData<AddLibraryState>()
-    val state: LiveData<AddLibraryState> = _state
-    var libraryName by mutableStateOf("")
-    var libraryUrlPath by mutableStateOf("")
+    private val GITHUB_URL_PATH_REGEX = Regex("([-.\\w]+)/([-.\\w]+)", RegexOption.IGNORE_CASE)
 
-    fun addLibrary(libraryName: String, libraryUrlPath: String) {
+    private val _state = MutableStateFlow(AddLibraryScreenUiState())
+    val state: StateFlow<AddLibraryScreenUiState> = _state
+
+    fun handleIntent(intent: Intent) {
+        when (intent) {
+            is Intent.UpdateLibraryName -> updateLibraryName(intent.libraryName)
+            is Intent.UpdateLibraryUrlPath -> updateLibraryUrlPath(intent.libraryUrlPath)
+            is Intent.AddLibrary -> {
+                addLibrary(intent.libraryName, intent.libraryUrlPath)
+            }
+            is Intent.Reset -> resetUiState()
+        }
+    }
+
+    private fun updateLibraryName(libraryName: String) {
+        _state.value = _state.value.copy(libraryName = libraryName)
+    }
+
+    private fun updateLibraryUrlPath(libraryUrlPath: String) {
+        _state.value = _state.value.copy(libraryUrlPath = libraryUrlPath)
+    }
+
+    private fun resetUiState() {
+        _state.value = AddLibraryScreenUiState()
+    }
+
+    private fun addLibrary(libraryName: String, libraryUrlPath: String) {
 
         if (libraryName.isEmpty()) {
-            setState(AddLibraryState.EmptyLibraryName)
+            _state.value = createNewState(AddLibraryState.EmptyLibraryName)
             return
         }
 
         if (libraryUrlPath.isEmpty()) {
-            setState(AddLibraryState.EmptyLibraryUrl)
+            _state.value = createNewState(AddLibraryState.EmptyLibraryUrl)
             return
         }
 
         if (!isGithubUrlPath(libraryUrlPath)) {
-            setState(AddLibraryState.InvalidLibraryUrl)
+            _state.value = createNewState(AddLibraryState.InvalidLibraryUrl)
             return
         }
 
-        setState(AddLibraryState.InProgress)
+        _state.value = createNewState(AddLibraryState.InProgress)
 
         viewModelScope.launch {
-
-            val state: AddLibraryState =
-                try {
-                    val library: Library? = libraryRepository.getLibrary(libraryName)
-                    val libraryAlreadyExists = library != null
-                    if (libraryAlreadyExists) {
-                        AddLibraryState.Error("Library already exists")
-                    } else {
-                        val libraryVersion: String =
-                            libraryRepository.getLibraryVersion(libraryName, libraryUrlPath)
-                        libraryRepository.addLibrary(
-                            libraryName,
-                            GITHUB_BASE_URL + libraryUrlPath,
-                            libraryVersion
-                        )
-                        this@AddLibraryViewModel.libraryName = ""
-                        this@AddLibraryViewModel.libraryUrlPath = ""
-                        AddLibraryState.LibraryAdded
-                    }
-                } catch (t: Throwable) {
-                    val message = exceptionParser.getMessage(t)
-                    AddLibraryState.Error(message)
+            val state: AddLibraryScreenUiState = try {
+                val library: Library? = libraryRepository.getLibrary(libraryName)
+                val libraryAlreadyExists = library != null
+                if (libraryAlreadyExists) {
+                    createNewState(AddLibraryState.Error("Library already exists"))
+                } else {
+                    val libraryVersion: String =
+                        libraryRepository.getLibraryVersion(libraryName, libraryUrlPath)
+                    libraryRepository.addLibrary(
+                        libraryName = libraryName,
+                        libraryUrl = GITHUB_BASE_URL + libraryUrlPath,
+                        libraryVersion = libraryVersion
+                    )
+                    _state.value.copy(
+                        libraryName = "",
+                        libraryUrlPath = "",
+                        addLibraryState = AddLibraryState.LibraryAdded
+                    )
                 }
-            setState(state)
+            } catch (t: Throwable) {
+                val message = exceptionParser.getMessage(t)
+                createNewState(AddLibraryState.Error(message))
+            }
+            _state.value = state
         }
 
     }
 
-    fun resetState() {
-        setState(AddLibraryState.Initial)
-    }
+    private fun createNewState(addLibraryState: AddLibraryState): AddLibraryScreenUiState =
+        _state.value.copy(addLibraryState = addLibraryState)
 
-    private fun setState(state: AddLibraryState) {
-        _state.value = state
-    }
-
-    private fun isGithubUrlPath(url: String): Boolean {
-        val githubRegex = Regex("([-.\\w]+)/([-.\\w]+)", RegexOption.IGNORE_CASE)
-        return githubRegex.matches(url)
-    }
+    private fun isGithubUrlPath(url: String): Boolean = GITHUB_URL_PATH_REGEX.matches(url)
 
 }

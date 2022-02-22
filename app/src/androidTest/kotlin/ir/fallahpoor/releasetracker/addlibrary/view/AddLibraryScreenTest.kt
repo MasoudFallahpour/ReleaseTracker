@@ -3,15 +3,15 @@ package ir.fallahpoor.releasetracker.addlibrary.view
 import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.addlibrary.Intent
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
@@ -69,13 +69,12 @@ class AddLibraryScreenTest {
         composeTestRule.onNodeWithTag(
             AddLibraryTags.LIBRARY_URL_TEXT_FIELD,
             useUnmergedTree = true
-        )
-            .assertTextEquals(GITHUB_BASE_URL + "coil-kt/coil")
+        ).assertTextEquals(GITHUB_BASE_URL + "coil-kt/coil")
 
     }
 
     @Test
-    fun libraryName_is_updated_when_a_library_name_is_entered() {
+    fun correct_intent_is_called_when_library_name_is_entered() {
 
         // Given
         initializeAddLibraryScreen()
@@ -85,12 +84,12 @@ class AddLibraryScreenTest {
             .performTextInput("Coil")
 
         // Then
-        Mockito.verify(addLibraryViewModel).libraryName = "Coil"
+        Mockito.verify(addLibraryViewModel).handleIntent(Intent.UpdateLibraryName("Coil"))
 
     }
 
     @Test
-    fun libraryUrlPath_is_updated_when_a_library_URL_is_entered() {
+    fun correct_intent_is_called_when_library_URL_path_is_entered() {
 
         // Given
         initializeAddLibraryScreen()
@@ -100,29 +99,23 @@ class AddLibraryScreenTest {
             .performTextInput("coil-kt/coil")
 
         // Then
-        Mockito.verify(addLibraryViewModel).libraryUrlPath = "coil-kt/coil"
+        Mockito.verify(addLibraryViewModel)
+            .handleIntent(Intent.UpdateLibraryUrlPath("coil-kt/coil"))
 
     }
 
     @Test
-    fun addLibrary_is_called_when_adding_a_new_library() {
+    fun correct_intent_is_called_when_adding_a_new_library() {
 
         // Given
-        initializeAddLibraryScreen()
+        initializeAddLibraryScreen(libraryName = "Coil", libraryUrl = "coil-kt/coil")
 
         // When
-        with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
-                .performTextInput("Coil")
-            onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
-                .performTextInput("coil-kt/coil")
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
-                .performClick()
-        }
+        composeTestRule.onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            .performClick()
 
         // Then
-        // TODO assert for the exact library name and URL not just any string
-        Mockito.verify(addLibraryViewModel).addLibrary(anyString(), anyString())
+        Mockito.verify(addLibraryViewModel).handleIntent(Intent.AddLibrary("Coil", "coil-kt/coil"))
 
     }
 
@@ -151,9 +144,15 @@ class AddLibraryScreenTest {
         libraryUrl: String = "",
         onBackClick: () -> Unit = {}
     ) {
-        Mockito.`when`(addLibraryViewModel.state).thenReturn(MutableLiveData(state))
-        Mockito.`when`(addLibraryViewModel.libraryName).thenReturn(libraryName)
-        Mockito.`when`(addLibraryViewModel.libraryUrlPath).thenReturn(libraryUrl)
+        Mockito.`when`(addLibraryViewModel.state).thenReturn(
+            MutableStateFlow(
+                AddLibraryScreenUiState(
+                    libraryName = libraryName,
+                    libraryUrlPath = libraryUrl,
+                    addLibraryState = state
+                )
+            )
+        )
         composeTestRule.setContent {
             AddLibraryScreen(
                 addLibraryViewModel = addLibraryViewModel,

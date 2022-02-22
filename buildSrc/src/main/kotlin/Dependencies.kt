@@ -97,7 +97,7 @@ object Dependencies {
         private const val version = "4.3.1"
         const val core = "org.mockito:mockito-core:$version"
         const val inline = "org.mockito:mockito-inline:$version"
-        const val dexMaker = "com.linkedin.dexmaker:dexmaker-mockito-inline:2.28.1"
+        const val dexMaker = "com.linkedin.dexmaker:dexmaker-mockito-inline:2.25.1"
     }
 
 }

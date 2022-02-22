@@ -10,11 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.addlibrary.Intent
 import ir.fallahpoor.releasetracker.addlibrary.viewmodel.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
@@ -64,25 +61,24 @@ fun AddLibraryScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
-            val state: AddLibraryState by addLibraryViewModel.state.observeAsState(
-                AddLibraryState.Initial
-            )
+            val state: AddLibraryScreenUiState by addLibraryViewModel.state.collectAsState()
             val keyboardController = LocalSoftwareKeyboardController.current
             AddLibraryContent(
                 snackbarHostState = scaffoldState.snackbarHostState,
-                state = state,
-                libraryName = addLibraryViewModel.libraryName,
-                onLibraryNameChange = { addLibraryViewModel.libraryName = it },
-                libraryUrlPath = addLibraryViewModel.libraryUrlPath,
-                onLibraryUrlPathChange = { addLibraryViewModel.libraryUrlPath = it },
-                onAddLibraryClick = {
-                    addLibraryViewModel.addLibrary(
-                        addLibraryViewModel.libraryName,
-                        addLibraryViewModel.libraryUrlPath
-                    )
+                state = state.addLibraryState,
+                libraryName = state.libraryName,
+                onLibraryNameChange = { libraryName ->
+                    addLibraryViewModel.handleIntent(Intent.UpdateLibraryName(libraryName))
+                },
+                libraryUrlPath = state.libraryUrlPath,
+                onLibraryUrlPathChange = { libraryUrlPath ->
+                    addLibraryViewModel.handleIntent(Intent.UpdateLibraryUrlPath(libraryUrlPath))
+                },
+                onAddLibraryClick = { libraryName, libraryUrlPath ->
+                    addLibraryViewModel.handleIntent(Intent.AddLibrary(libraryName, libraryUrlPath))
                     keyboardController?.hide()
                 },
-                onErrorDismissed = { addLibraryViewModel.resetState() }
+                onErrorDismissed = { addLibraryViewModel.handleIntent(Intent.Reset) }
             )
         }
     }
@@ -124,7 +120,7 @@ fun AddLibraryContent(
     onLibraryNameChange: (String) -> Unit,
     libraryUrlPath: String,
     onLibraryUrlPathChange: (String) -> Unit,
-    onAddLibraryClick: () -> Unit,
+    onAddLibraryClick: (String, String) -> Unit,
     onErrorDismissed: () -> Unit
 ) {
     Box(
@@ -150,13 +146,13 @@ fun AddLibraryContent(
                     libraryUrlPath = libraryUrlPath,
                     onLibraryUrlPathChange = onLibraryUrlPathChange,
                     state = state,
-                    onDoneClick = onAddLibraryClick,
+                    onDoneClick = { onAddLibraryClick(libraryName, libraryUrlPath) },
                     focusRequester = focusRequester
                 )
             }
             AddLibraryButton(
                 state = state,
-                onAddLibraryClick = onAddLibraryClick
+                onAddLibraryClick = { onAddLibraryClick(libraryName, libraryUrlPath) }
             )
         }
         if (state is AddLibraryState.Error) {
@@ -333,7 +329,13 @@ private fun Snackbar(
             onDismiss()
         }
     }
-    DefaultSnackbar(modifier = modifier, snackbarHostState = snackbarHostState)
+    SnackbarHost(
+        modifier = modifier,
+        hostState = snackbarHostState,
+        snackbar = { snackbarData: SnackbarData ->
+            Snackbar(snackbarData = snackbarData)
+        }
+    )
 }
 
 @Composable

@@ -2,6 +2,8 @@ package ir.fallahpoor.releasetracker.addlibrary.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.addlibrary.Intent
+import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryScreenUiState
 import ir.fallahpoor.releasetracker.addlibrary.view.AddLibraryState
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
@@ -41,67 +43,127 @@ class AddLibraryViewModelTest {
     }
 
     @Test
-    fun `addLibrary() should set the state to EmptyLibraryName when library name is empty`() =
+    fun `state is correctly updated when library name changes`() {
+
+        // When
+        addLibraryViewModel.handleIntent(Intent.UpdateLibraryName(libraryName = "abc"))
+
+        // Then
+        Truth.assertThat(addLibraryViewModel.state.value)
+            .isEqualTo(
+                AddLibraryScreenUiState(
+                    libraryName = "abc",
+                    libraryUrlPath = "",
+                    addLibraryState = AddLibraryState.Initial
+                )
+            )
+
+    }
+
+    @Test
+    fun `state is correctly updated when library URL path changes`() {
+
+        // When
+        addLibraryViewModel.handleIntent(Intent.UpdateLibraryUrlPath(libraryUrlPath = "abc/def"))
+
+        // Then
+        Truth.assertThat(addLibraryViewModel.state.value)
+            .isEqualTo(
+                AddLibraryScreenUiState(
+                    libraryName = "",
+                    libraryUrlPath = "abc/def",
+                    addLibraryState = AddLibraryState.Initial
+                )
+            )
+
+    }
+
+    @Test
+    fun `state is correctly updated when library name is empty`() =
         runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
 
             // When
-            addLibraryViewModel.addLibrary(
-                libraryName = "",
-                libraryUrlPath = "does not matter"
+            addLibraryViewModel.handleIntent(
+                Intent.AddLibrary(
+                    libraryName = "",
+                    libraryUrlPath = "does not matter"
+                )
             )
 
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
-                .isInstanceOf(AddLibraryState.EmptyLibraryName::class.java)
+                .isEqualTo(
+                    AddLibraryScreenUiState(
+                        libraryName = "",
+                        libraryUrlPath = "",
+                        addLibraryState = AddLibraryState.EmptyLibraryName
+                    )
+                )
 
         }
 
     @Test
-    fun `addLibrary() should set the state to EmptyLibraryUrl when library URL is empty`() =
+    fun `state is correctly updated when library URL is empty`() =
         runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
 
             // When
-            addLibraryViewModel.addLibrary(
-                libraryName = "does not matter",
-                libraryUrlPath = ""
+            addLibraryViewModel.handleIntent(
+                Intent.AddLibrary(
+                    libraryName = "does not matter",
+                    libraryUrlPath = ""
+                )
             )
 
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
-                .isInstanceOf(AddLibraryState.EmptyLibraryUrl::class.java)
+                .isEqualTo(
+                    AddLibraryScreenUiState(
+                        libraryName = "",
+                        libraryUrlPath = "",
+                        addLibraryState = AddLibraryState.EmptyLibraryUrl
+                    )
+                )
 
         }
 
     @Test
-    fun `addLibrary() should set the state to InvalidLibraryUrl when library URL is invalid`() =
+    fun `state is correctly updated when library URL is invalid`() =
         runTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
 
             // When
-            addLibraryViewModel.addLibrary(
-                libraryName = "does not matter",
-                libraryUrlPath = "This is an invalid library URL path"
+            addLibraryViewModel.handleIntent(
+                Intent.AddLibrary(
+                    libraryName = "does not matter",
+                    libraryUrlPath = "This is an invalid library URL path"
+                )
             )
 
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
-                .isInstanceOf(AddLibraryState.InvalidLibraryUrl::class.java)
+                .isEqualTo(
+                    AddLibraryScreenUiState(
+                        libraryName = "",
+                        libraryUrlPath = "",
+                        addLibraryState = AddLibraryState.InvalidLibraryUrl
+                    )
+                )
 
         }
 
     @Test
-    fun `addLibrary() should set the state to Error when library name already exists`() =
+    fun `state is correctly updated when library name already exists`() =
         runTest {
 
             // Given
@@ -113,73 +175,102 @@ class AddLibraryViewModelTest {
             )
 
             // When
-            addLibraryViewModel.addLibrary(
-                libraryName = "coil",
-                libraryUrlPath = "coil-kt/coil"
+            addLibraryViewModel.handleIntent(
+                Intent.AddLibrary(
+                    libraryName = "coil",
+                    libraryUrlPath = "coil-kt/coil"
+                )
             )
 
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
             Truth.assertThat(addLibraryViewModel.state.value)
-                .isInstanceOf(AddLibraryState.Error::class.java)
+                .isEqualTo(
+                    AddLibraryScreenUiState(
+                        libraryName = "",
+                        libraryUrlPath = "",
+                        addLibraryState = AddLibraryState.Error("Library already exists")
+                    )
+                )
 
         }
 
     @Test
-    fun `addLibrary() should set the state to LibraryAdded when library is added successfully`() =
+    fun `state is correctly updated when library is added successfully`() =
         runTest {
 
-            // Given
-            val libraryName = "abc"
-
             // When
-            addLibraryViewModel.addLibrary(
-                libraryName = libraryName,
-                libraryUrlPath = "abc/def"
+            addLibraryViewModel.handleIntent(
+                Intent.AddLibrary(
+                    libraryName = "abc",
+                    libraryUrlPath = "abc/def"
+                )
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNotNull()
+            Truth.assertThat(fakeLibraryRepository.getLibrary("abc")).isNotNull()
             Truth.assertThat(addLibraryViewModel.state.value)
-                .isInstanceOf(AddLibraryState.LibraryAdded::class.java)
+                .isEqualTo(
+                    AddLibraryScreenUiState(
+                        libraryName = "",
+                        libraryUrlPath = "",
+                        addLibraryState = AddLibraryState.LibraryAdded
+                    )
+                )
 
         }
 
     @Test
-    fun `addLibrary() should set the state to Error when there is an unexpected error`() =
+    fun `state is correctly updated when there is an unexpected error`() =
         runTest {
 
             // Given
             val libraryName: String = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING
 
             // When
-            addLibraryViewModel.addLibrary(
-                libraryName = libraryName,
-                libraryUrlPath = "abc/def"
+            addLibraryViewModel.handleIntent(
+                Intent.AddLibrary(
+                    libraryName = libraryName,
+                    libraryUrlPath = "abc/def"
+                )
             )
 
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
             Truth.assertThat(addLibraryViewModel.state.value)
-                .isInstanceOf(AddLibraryState.Error::class.java)
+                .isEqualTo(
+                    AddLibraryScreenUiState(
+                        libraryName = "",
+                        libraryUrlPath = "",
+                        addLibraryState = AddLibraryState.Error("Internet not connected.")
+                    )
+                )
 
         }
 
     @Test
-    fun `resetState() should set the state to Initial`() {
+    fun `state is correctly updated when Intent is Reset`() {
 
         // Given the current state is Error
-        addLibraryViewModel.addLibrary(
-            libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
-            libraryUrlPath = "abc/def"
+        addLibraryViewModel.handleIntent(
+            Intent.AddLibrary(
+                libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
+                libraryUrlPath = "abc/def"
+            )
         )
 
         // When
-        addLibraryViewModel.resetState()
+        addLibraryViewModel.handleIntent(Intent.Reset)
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
-            .isInstanceOf(AddLibraryState.Initial::class.java)
+            .isEqualTo(
+                AddLibraryScreenUiState(
+                    libraryName = "",
+                    libraryUrlPath = "",
+                    addLibraryState = AddLibraryState.Initial
+                )
+            )
 
     }
 

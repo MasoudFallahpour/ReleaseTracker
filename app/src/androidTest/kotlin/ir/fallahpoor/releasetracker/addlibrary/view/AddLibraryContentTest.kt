@@ -252,7 +252,7 @@ class AddLibraryContentTest {
     fun correct_callback_is_called_when_add_library_button_is_clicked() {
 
         // Given
-        val onAddLibraryClick: () -> Unit = mock()
+        val onAddLibraryClick: (String, String) -> Unit = mock()
         composeAddLibraryContent(
             libraryName = "Coil",
             libraryUrlPath = "coil-kt/coil",
@@ -264,7 +264,7 @@ class AddLibraryContentTest {
             .performClick()
 
         // Then
-        Mockito.verify(onAddLibraryClick).invoke()
+        Mockito.verify(onAddLibraryClick).invoke("Coil", "coil-kt/coil")
 
     }
 
@@ -295,7 +295,7 @@ class AddLibraryContentTest {
         onLibraryNameChange: (String) -> Unit = {},
         libraryUrlPath: String = "",
         onLibraryUrlPathChange: (String) -> Unit = {},
-        onAddLibraryClick: () -> Unit = {},
+        onAddLibraryClick: (String, String) -> Unit = { _, _ -> },
         onErrorDismissed: () -> Unit = {}
     ) {
         composeTestRule.setContent {
