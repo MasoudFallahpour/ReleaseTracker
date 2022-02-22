@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenUiState
+import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.addlibrary.Event
@@ -63,7 +63,7 @@ fun AddLibraryScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
-            val state: AddLibraryScreenUiState by addLibraryViewModel.state.collectAsState()
+            val state: AddLibraryScreenState by addLibraryViewModel.state.collectAsState()
             val keyboardController = LocalSoftwareKeyboardController.current
             AddLibraryContent(
                 snackbarHostState = scaffoldState.snackbarHostState,

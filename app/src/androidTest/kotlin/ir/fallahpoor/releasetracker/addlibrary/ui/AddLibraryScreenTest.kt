@@ -5,7 +5,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenUiState
+import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.addlibrary.Event
@@ -148,7 +148,7 @@ class AddLibraryScreenTest {
     ) {
         Mockito.`when`(addLibraryViewModel.state).thenReturn(
             MutableStateFlow(
-                AddLibraryScreenUiState(
+                AddLibraryScreenState(
                     libraryName = libraryName,
                     libraryUrlPath = libraryUrl,
                     addLibraryState = state

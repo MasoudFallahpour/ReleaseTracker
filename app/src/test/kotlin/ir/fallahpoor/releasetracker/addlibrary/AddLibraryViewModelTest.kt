@@ -48,7 +48,7 @@ class AddLibraryViewModelTest {
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
             .isEqualTo(
-                AddLibraryScreenUiState(
+                AddLibraryScreenState(
                     libraryName = "abc",
                     libraryUrlPath = "",
                     addLibraryState = AddLibraryState.Initial
@@ -66,7 +66,7 @@ class AddLibraryViewModelTest {
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
             .isEqualTo(
-                AddLibraryScreenUiState(
+                AddLibraryScreenState(
                     libraryName = "",
                     libraryUrlPath = "abc/def",
                     addLibraryState = AddLibraryState.Initial
@@ -94,7 +94,7 @@ class AddLibraryViewModelTest {
             Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isEqualTo(
-                    AddLibraryScreenUiState(
+                    AddLibraryScreenState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.EmptyLibraryName
@@ -122,7 +122,7 @@ class AddLibraryViewModelTest {
             Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isEqualTo(
-                    AddLibraryScreenUiState(
+                    AddLibraryScreenState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.EmptyLibraryUrl
@@ -150,7 +150,7 @@ class AddLibraryViewModelTest {
             Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isEqualTo(
-                    AddLibraryScreenUiState(
+                    AddLibraryScreenState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.InvalidLibraryUrl
@@ -183,7 +183,7 @@ class AddLibraryViewModelTest {
             Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isEqualTo(
-                    AddLibraryScreenUiState(
+                    AddLibraryScreenState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.Error("Library already exists")
@@ -208,7 +208,7 @@ class AddLibraryViewModelTest {
             Truth.assertThat(fakeLibraryRepository.getLibrary("abc")).isNotNull()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isEqualTo(
-                    AddLibraryScreenUiState(
+                    AddLibraryScreenState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.LibraryAdded
@@ -236,7 +236,7 @@ class AddLibraryViewModelTest {
             Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
             Truth.assertThat(addLibraryViewModel.state.value)
                 .isEqualTo(
-                    AddLibraryScreenUiState(
+                    AddLibraryScreenState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.Error("Internet not connected.")
@@ -262,7 +262,7 @@ class AddLibraryViewModelTest {
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)
             .isEqualTo(
-                AddLibraryScreenUiState(
+                AddLibraryScreenState(
                     libraryName = "",
                     libraryUrlPath = "",
                     addLibraryState = AddLibraryState.Initial

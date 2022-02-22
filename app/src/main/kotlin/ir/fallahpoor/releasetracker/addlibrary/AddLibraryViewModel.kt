@@ -21,8 +21,8 @@ class AddLibraryViewModel
 
     private val GITHUB_URL_PATH_REGEX = Regex("([-.\\w]+)/([-.\\w]+)", RegexOption.IGNORE_CASE)
 
-    private val _state = MutableStateFlow(AddLibraryScreenUiState())
-    val state: StateFlow<AddLibraryScreenUiState> = _state
+    private val _state = MutableStateFlow(AddLibraryScreenState())
+    val state: StateFlow<AddLibraryScreenState> = _state
 
     fun handleEvent(event: Event) {
         when (event) {
@@ -44,7 +44,7 @@ class AddLibraryViewModel
     }
 
     private fun resetUiState() {
-        _state.value = AddLibraryScreenUiState()
+        _state.value = AddLibraryScreenState()
     }
 
     private fun addLibrary(libraryName: String, libraryUrlPath: String) {
@@ -67,7 +67,7 @@ class AddLibraryViewModel
         _state.value = createNewState(AddLibraryState.InProgress)
 
         viewModelScope.launch {
-            val state: AddLibraryScreenUiState = try {
+            val state: AddLibraryScreenState = try {
                 val library: Library? = libraryRepository.getLibrary(libraryName)
                 val libraryAlreadyExists = library != null
                 if (libraryAlreadyExists) {
@@ -95,7 +95,7 @@ class AddLibraryViewModel
 
     }
 
-    private fun createNewState(addLibraryState: AddLibraryState): AddLibraryScreenUiState =
+    private fun createNewState(addLibraryState: AddLibraryState): AddLibraryScreenState =
         _state.value.copy(addLibraryState = addLibraryState)
 
     private fun isGithubUrlPath(url: String): Boolean = GITHUB_URL_PATH_REGEX.matches(url)

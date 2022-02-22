@@ -1,6 +1,6 @@
 package ir.fallahpoor.releasetracker.addlibrary
 
-data class AddLibraryScreenUiState(
+data class AddLibraryScreenState(
     val libraryName: String = "",
     val libraryUrlPath: String = "",
     val addLibraryState: AddLibraryState = AddLibraryState.Initial
