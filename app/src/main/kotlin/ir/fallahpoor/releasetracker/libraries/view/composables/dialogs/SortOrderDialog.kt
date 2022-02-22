@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
@@ -15,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
@@ -73,13 +70,7 @@ private fun SortItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
-            modifier = Modifier
-                .padding(
-                    top = SPACE_SMALL.dp,
-                    end = SPACE_SMALL.dp,
-                    bottom = SPACE_SMALL.dp
-                )
-                .testTag(text),
+            modifier = Modifier.testTag(text),
             selected = isSelected,
             onClick = { onSortOrderClick(sortOrder) }
         )

@@ -1,4 +1,8 @@
-@file:OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
+@file:OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class
+)
 
 package ir.fallahpoor.releasetracker.libraries.view
 
@@ -8,6 +12,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,7 +22,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -196,6 +203,9 @@ private fun LibrariesList(
                     key = { library: Library -> library.name }
                 ) { library: Library ->
                     LibraryItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateItemPlacement(),
                         library = library,
                         onLibraryClick = onLibraryClick,
                         onPinLibraryClick = onPinLibraryClick,
@@ -211,34 +221,29 @@ private fun LibrariesList(
 
 @Composable
 private fun LibraryItem(
+    modifier: Modifier = Modifier,
     library: Library,
     onLibraryClick: (Library) -> Unit,
     onPinLibraryClick: (Library, Boolean) -> Unit,
     onLibraryDismissed: (Library) -> Unit,
 ) {
-    var libraryIsDismissed by remember { mutableStateOf(false) }
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToEnd) {
-                libraryIsDismissed = true
+                onLibraryDismissed(library)
             }
             true
         }
     )
-    val libraryItemHeight by animateDpAsState(
-        targetValue = if (libraryIsDismissed) 0.dp else 70.dp,
-        animationSpec = tween(delayMillis = 200),
-        finishedListener = { onLibraryDismissed(library) }
-    )
     SwipeToDismiss(
-        modifier = Modifier.testTag(LibrariesListTags.LIBRARY_ITEM),
+        modifier = modifier.testTag(LibrariesListTags.LIBRARY_ITEM),
         state = dismissState,
         dismissThresholds = { FractionalThreshold(0.3f) },
         directions = setOf(DismissDirection.StartToEnd),
         dismissContent = {
             LibraryItemForeground(
                 modifier = Modifier
-                    .height(libraryItemHeight)
+                    .height(70.dp)
                     .fillMaxWidth(),
                 dismissState = dismissState,
                 library = library,
@@ -252,7 +257,7 @@ private fun LibraryItem(
             LibraryItemBackground(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(libraryItemHeight),
+                    .height(70.dp),
                 dismissState = dismissState
             )
         }
