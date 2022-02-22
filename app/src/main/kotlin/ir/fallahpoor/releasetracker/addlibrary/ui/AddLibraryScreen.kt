@@ -2,6 +2,7 @@
 
 package ir.fallahpoor.releasetracker.addlibrary.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -40,6 +41,7 @@ fun AddLibraryScreen(
             val state: AddLibraryScreenState by addLibraryViewModel.state.collectAsState()
             val keyboardController = LocalSoftwareKeyboardController.current
             AddLibraryContent(
+                modifier = Modifier.fillMaxSize(),
                 snackbarHostState = scaffoldState.snackbarHostState,
                 state = state.addLibraryState,
                 libraryName = state.libraryName,

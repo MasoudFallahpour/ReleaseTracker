@@ -29,6 +29,7 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
 fun AddLibraryContent(
+    modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     state: AddLibraryState,
     libraryName: String,
@@ -38,11 +39,7 @@ fun AddLibraryContent(
     onAddLibraryClick: (String, String) -> Unit,
     onErrorDismissed: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag(AddLibraryTags.CONTENT)
-    ) {
+    Box(modifier = modifier.testTag(AddLibraryTags.CONTENT)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -51,6 +48,7 @@ fun AddLibraryContent(
             ) {
                 val focusRequester = remember { FocusRequester() }
                 LibraryNameInput(
+                    modifier = Modifier.fillMaxWidth(),
                     libraryName = libraryName,
                     onLibraryNameChange = onLibraryNameChange,
                     showError = state is AddLibraryState.EmptyLibraryName,
@@ -58,6 +56,7 @@ fun AddLibraryContent(
                 )
                 Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
                 LibraryUrlInput(
+                    modifier = Modifier.fillMaxWidth(),
                     libraryUrlPath = libraryUrlPath,
                     onLibraryUrlPathChange = onLibraryUrlPathChange,
                     state = state,
@@ -91,12 +90,14 @@ fun AddLibraryContent(
 
 @Composable
 private fun LibraryNameInput(
+    modifier: Modifier = Modifier,
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,
     onNextClick: () -> Unit,
     showError: Boolean
 ) {
     LibraryNameTextField(
+        modifier = modifier,
         libraryName = libraryName,
         onLibraryNameChange = onLibraryNameChange,
         isError = showError,
@@ -107,6 +108,7 @@ private fun LibraryNameInput(
 
 @Composable
 private fun LibraryUrlInput(
+    modifier: Modifier = Modifier,
     libraryUrlPath: String,
     onLibraryUrlPathChange: (String) -> Unit,
     state: AddLibraryState,
@@ -114,6 +116,7 @@ private fun LibraryUrlInput(
     focusRequester: FocusRequester
 ) {
     LibraryUrlPathTextField(
+        modifier = modifier,
         libraryUrlPath = libraryUrlPath,
         onLibraryUrlPathChange = onLibraryUrlPathChange,
         isError = state is AddLibraryState.EmptyLibraryUrl || state is AddLibraryState.InvalidLibraryUrl,
@@ -125,15 +128,15 @@ private fun LibraryUrlInput(
 
 @Composable
 private fun LibraryNameTextField(
+    modifier: Modifier = Modifier,
     libraryName: String,
     onLibraryNameChange: (String) -> Unit,
     isError: Boolean,
     onNextClick: () -> Unit
 ) {
     OutlinedTextField(
-        modifier = Modifier
-            .testTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
-            .fillMaxWidth(),
+        modifier = modifier
+            .testTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD),
         value = libraryName,
         label = {
             Text(text = stringResource(R.string.library_name))
@@ -157,6 +160,7 @@ private fun LibraryNameErrorText(show: Boolean) {
 
 @Composable
 private fun LibraryUrlPathTextField(
+    modifier: Modifier = Modifier,
     libraryUrlPath: String,
     onLibraryUrlPathChange: (String) -> Unit,
     isError: Boolean,
@@ -164,9 +168,8 @@ private fun LibraryUrlPathTextField(
     focusRequester: FocusRequester
 ) {
     OutlinedTextFieldWithPrefix(
-        modifier = Modifier
+        modifier = modifier
             .testTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
-            .fillMaxWidth()
             .focusRequester(focusRequester),
         prefix = GITHUB_BASE_URL,
         hint = stringResource(R.string.library_url),
