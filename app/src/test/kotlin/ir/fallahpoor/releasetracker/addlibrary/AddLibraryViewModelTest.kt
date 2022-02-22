@@ -246,7 +246,7 @@ class AddLibraryViewModelTest {
         }
 
     @Test
-    fun `state is correctly updated when Intent is Reset`() {
+    fun `state is correctly updated when an error is dismissed`() {
 
         // Given the current state is Error
         addLibraryViewModel.handleEvent(
@@ -257,7 +257,7 @@ class AddLibraryViewModelTest {
         )
 
         // When
-        addLibraryViewModel.handleEvent(Event.Reset)
+        addLibraryViewModel.handleEvent(Event.ErrorDismissed)
 
         // Then
         Truth.assertThat(addLibraryViewModel.state.value)

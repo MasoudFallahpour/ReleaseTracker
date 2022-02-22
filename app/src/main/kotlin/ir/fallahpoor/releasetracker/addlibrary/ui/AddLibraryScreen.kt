@@ -54,7 +54,7 @@ fun AddLibraryScreen(
                     addLibraryViewModel.handleEvent(Event.AddLibrary(libraryName, libraryUrlPath))
                     keyboardController?.hide()
                 },
-                onErrorDismissed = { addLibraryViewModel.handleEvent(Event.Reset) }
+                onErrorDismissed = { addLibraryViewModel.handleEvent(Event.ErrorDismissed) }
             )
         }
     }

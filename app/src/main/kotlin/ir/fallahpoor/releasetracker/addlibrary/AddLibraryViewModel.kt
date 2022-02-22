@@ -31,7 +31,7 @@ class AddLibraryViewModel
             is Event.AddLibrary -> {
                 addLibrary(event.libraryName, event.libraryUrlPath)
             }
-            is Event.Reset -> resetUiState()
+            is Event.ErrorDismissed -> resetUiState()
         }
     }
 
