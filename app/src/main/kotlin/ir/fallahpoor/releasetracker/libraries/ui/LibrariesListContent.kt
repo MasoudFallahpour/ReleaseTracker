@@ -44,8 +44,11 @@ import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object LibrariesListTags {
+    const val SCREEN = "librariesListScreen"
+    const val LAST_UPDATE_CHECK_TEXT = "lastUpdateCheckText"
     const val ADD_LIBRARY_BUTTON = "addLibraryButton"
     const val PROGRESS_INDICATOR = "progressIndicator"
+    const val LIBRARIES_LIST = "librariesList"
     const val LIBRARY_ITEM = "libraryItem_"
 }
 
@@ -96,7 +99,8 @@ private fun LastUpdateCheckText(lastUpdateCheck: String) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(SPACE_NORMAL.dp),
+                .padding(SPACE_NORMAL.dp)
+                .testTag(LibrariesListTags.LAST_UPDATE_CHECK_TEXT),
             text = stringResource(R.string.last_check_for_updates, lastUpdateCheck)
         )
     }
@@ -111,7 +115,9 @@ private fun LibrariesList(
     onAddLibraryClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag(LibrariesListTags.LIBRARIES_LIST),
         contentAlignment = Alignment.BottomStart
     ) {
         if (libraries.isEmpty()) {

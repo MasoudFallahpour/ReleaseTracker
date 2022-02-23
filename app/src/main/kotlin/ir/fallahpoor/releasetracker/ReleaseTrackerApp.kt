@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
 import dagger.hilt.android.HiltAndroidApp
-import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.common.managers.NotificationManager
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -17,9 +16,6 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
     lateinit var workerFactory: HiltWorkerFactory
 
     @Inject
-    lateinit var nightModeManager: NightModeManager
-
-    @Inject
     lateinit var notificationManager: NotificationManager
 
     override fun onCreate() {
@@ -27,7 +23,6 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
         notificationManager.createNotificationChannel()
         setupTimber()
         startUpdateWorker()
-        nightModeManager.setNightMode(nightModeManager.currentNightMode)
     }
 
     private fun setupTimber() {

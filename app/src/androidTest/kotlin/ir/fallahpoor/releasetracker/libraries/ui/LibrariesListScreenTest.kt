@@ -8,8 +8,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.Event
+import ir.fallahpoor.releasetracker.NightModeViewModel
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
@@ -35,7 +36,7 @@ class LibrariesListScreenTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var nightModeManager: NightModeManager
+    private lateinit var nightModeViewModel: NightModeViewModel
     private lateinit var libraryRepository: FakeLibraryRepository
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var preferencesCoroutineScope: CoroutineScope
@@ -57,20 +58,10 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            onNodeWithText(
-                context.getString(
-                    R.string.last_check_for_updates,
-                    FakeLibraryRepository.LAST_UPDATE_CHECK
-                )
-            ).assertIsDisplayed()
+            onNodeWithTag(LibrariesListTags.LAST_UPDATE_CHECK_TEXT)
+                .assertIsDisplayed()
             libraryRepository.libraries.forEach {
-                onNodeWithText(it.name, useUnmergedTree = true)
-                    .assertIsDisplayed()
-                onNodeWithText(it.url, useUnmergedTree = true)
-                    .assertIsDisplayed()
-                onNodeWithText(it.version, useUnmergedTree = true)
-                    .assertIsDisplayed()
-                onNode(isToggleableWithSiblingText(it.name), useUnmergedTree = true)
+                onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + it.name, useUnmergedTree = true)
                     .assertIsDisplayed()
             }
             onNodeWithText(noLibrariesText)
@@ -118,12 +109,19 @@ class LibrariesListScreenTest {
         }
 
         // Then
-        composeRule.onNodeWithText(libraryName, useUnmergedTree = true)
-            .assertDoesNotExist()
-        composeRule.onNodeWithText(FakeLibraryRepository.Koin.name, useUnmergedTree = true)
-            .assertIsDisplayed()
-        composeRule.onNodeWithText(FakeLibraryRepository.Kotlin.name, useUnmergedTree = true)
-            .assertIsDisplayed()
+        libraryRepository.libraries.forEach { library ->
+            if (library.name == libraryName) {
+                composeRule.onNodeWithTag(
+                    LibrariesListTags.LIBRARY_ITEM + library.name,
+                    useUnmergedTree = true
+                ).assertDoesNotExist()
+            } else {
+                composeRule.onNodeWithTag(
+                    LibrariesListTags.LIBRARY_ITEM + library.name,
+                    useUnmergedTree = true
+                ).assertIsDisplayed()
+            }
+        }
 
     }
 
@@ -132,7 +130,7 @@ class LibrariesListScreenTest {
 
         // Given
         initializeLibrariesListScreen()
-        nightModeManager.setNightMode(NightMode.OFF)
+        nightModeViewModel.handleEvent(Event.ChangeNightMode(NightMode.OFF))
 
         // When
         with(composeRule) {
@@ -147,7 +145,7 @@ class LibrariesListScreenTest {
         }
 
         // Then
-        Truth.assertThat(nightModeManager.currentNightMode).isEqualTo(NightMode.ON)
+        Truth.assertThat(nightModeViewModel.state.value).isEqualTo(NightMode.ON)
 
     }
 
@@ -167,12 +165,18 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            onNodeWithText(FakeLibraryRepository.Coil.name, useUnmergedTree = true)
-                .assertDoesNotExist()
-            onNodeWithText(FakeLibraryRepository.Kotlin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Koin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
+            onNodeWithTag(
+                LibrariesListTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name,
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+            onNodeWithTag(
+                LibrariesListTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name,
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+            onNodeWithTag(
+                LibrariesListTags.LIBRARY_ITEM + FakeLibraryRepository.Koin.name,
+                useUnmergedTree = true
+            ).assertIsDisplayed()
         }
 
     }
@@ -193,8 +197,7 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            onAllNodesWithTag(LibrariesListTags.LIBRARY_ITEM)
-                .assertCountEquals(0)
+            // TODO assert that there is no composable with its test tag starting with LIBRARY_ITEM
             onNodeWithText(noLibrariesText)
                 .assertIsDisplayed()
         }
@@ -219,12 +222,14 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            onNodeWithText(FakeLibraryRepository.Coil.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Kotlin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Koin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
+            libraryRepository.libraries.forEach {
+                onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + it.name, useUnmergedTree = true)
+                    .assertIsDisplayed()
+            }
+            onNodeWithText(noLibrariesText)
+                .assertDoesNotExist()
+            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
+                .assertDoesNotExist()
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
             onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
@@ -251,12 +256,14 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            onNodeWithText(FakeLibraryRepository.Coil.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Kotlin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Koin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
+            libraryRepository.libraries.forEach {
+                onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + it.name, useUnmergedTree = true)
+                    .assertIsDisplayed()
+            }
+            onNodeWithText(noLibrariesText)
+                .assertDoesNotExist()
+            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
+                .assertDoesNotExist()
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
             onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
@@ -312,7 +319,7 @@ class LibrariesListScreenTest {
             context.preferencesDataStoreFile("settings_test")
         }
         val storage = LocalStorage(dataStore)
-        nightModeManager = NightModeManager(context, storage)
+        nightModeViewModel = NightModeViewModel(storage)
         libraryRepository = FakeLibraryRepository()
         librariesViewModel = LibrariesViewModel(
             libraryRepository = libraryRepository,
@@ -322,7 +329,9 @@ class LibrariesListScreenTest {
         composeRule.setContent {
             LibrariesListScreen(
                 librariesViewModel = librariesViewModel,
-                nightModeManager = nightModeManager,
+                currentNightMode = NightMode.ON,
+                onNightModeChange = {},
+                isNightModeSupported = true,
                 onLibraryClick = {},
                 onAddLibraryClick = {}
             )

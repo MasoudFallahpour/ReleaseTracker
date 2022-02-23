@@ -1,14 +1,16 @@
 package ir.fallahpoor.releasetracker.libraries.ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
-import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
@@ -20,22 +22,27 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 @Composable
 fun LibrariesListScreen(
     librariesViewModel: LibrariesViewModel = hiltViewModel(),
-    nightModeManager: NightModeManager,
+    isNightModeSupported: Boolean,
+    currentNightMode: NightMode,
+    onNightModeChange: (NightMode) -> Unit,
     onLibraryClick: (Library) -> Unit,
     onAddLibraryClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
-        nightModeManager.isNightModeOn
-    )
-    val currentNightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
-        nightModeManager.currentNightMode
-    )
     val state: LibrariesListScreenState by librariesViewModel.state.collectAsState()
     val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.collectAsState()
+    val isSystemInDarkTheme = isSystemInDarkTheme()
+    val isNightModeOn by derivedStateOf {
+        when (currentNightMode) {
+            NightMode.OFF -> false
+            NightMode.ON -> true
+            NightMode.AUTO -> isSystemInDarkTheme
+        }
+    }
 
     ReleaseTrackerTheme(darkTheme = isNightModeOn) {
         Scaffold(
+            modifier = Modifier.testTag(LibrariesListTags.SCREEN),
             scaffoldState = scaffoldState,
             snackbarHost = { scaffoldState.snackbarHostState },
             topBar = {
@@ -44,9 +51,9 @@ fun LibrariesListScreen(
                     onSortOrderChange = { sortOrder: SortOrder ->
                         librariesViewModel.handleEvent(Event.ChangeSortOrder(sortOrder))
                     },
-                    isNightModeSupported = nightModeManager.isNightModeSupported,
+                    isNightModeSupported = isNightModeSupported,
                     currentNightMode = currentNightMode,
-                    onNightModeChange = nightModeManager::setNightMode,
+                    onNightModeChange = onNightModeChange,
                     onSearchQueryChange = { query: String ->
                         librariesViewModel.handleEvent(Event.ChangeSearchQuery(query))
                     },
