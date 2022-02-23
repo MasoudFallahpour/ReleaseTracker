@@ -1,10 +1,10 @@
 @file:OptIn(
-    ExperimentalMaterialApi::class,
     ExperimentalAnimationApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class
 )
 
-package ir.fallahpoor.releasetracker.libraries.view
+package ir.fallahpoor.releasetracker.libraries.ui
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -23,9 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -38,17 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.common.SPACE_SMALL
-import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.libraries.Event
-import ir.fallahpoor.releasetracker.libraries.view.composables.Toolbar
-import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
+import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object LibrariesListTags {
@@ -58,62 +50,7 @@ object LibrariesListTags {
 }
 
 @Composable
-fun LibrariesListScreen(
-    librariesViewModel: LibrariesViewModel = hiltViewModel(),
-    nightModeManager: NightModeManager,
-    onLibraryClick: (Library) -> Unit,
-    onAddLibraryClick: () -> Unit,
-    scaffoldState: ScaffoldState = rememberScaffoldState()
-) {
-    val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
-        nightModeManager.isNightModeOn
-    )
-    val currentNightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
-        nightModeManager.currentNightMode
-    )
-    val state: LibrariesListScreenState by librariesViewModel.state.collectAsState()
-    val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.collectAsState()
-
-    ReleaseTrackerTheme(darkTheme = isNightModeOn) {
-        Scaffold(
-            scaffoldState = scaffoldState,
-            snackbarHost = { scaffoldState.snackbarHostState },
-            topBar = {
-                Toolbar(
-                    currentSortOrder = state.sortOrder,
-                    onSortOrderChange = { sortOrder: SortOrder ->
-                        librariesViewModel.handleEvent(Event.ChangeSortOrder(sortOrder))
-                    },
-                    isNightModeSupported = nightModeManager.isNightModeSupported,
-                    currentNightMode = currentNightMode,
-                    onNightModeChange = nightModeManager::setNightMode,
-                    onSearchQueryChange = { query: String ->
-                        librariesViewModel.handleEvent(Event.ChangeSearchQuery(query))
-                    },
-                    onSearchQuerySubmit = { query: String ->
-                        librariesViewModel.handleEvent(Event.ChangeSearchQuery(query))
-                    }
-                )
-            }
-        ) {
-            LibrariesListContent(
-                librariesListState = state.librariesListState,
-                lastUpdateCheck = lastUpdateCheck,
-                onLibraryClick = onLibraryClick,
-                onLibraryDismissed = { library: Library ->
-                    librariesViewModel.handleEvent(Event.DeleteLibrary(library))
-                },
-                onPinLibraryClick = { library: Library, pinned: Boolean ->
-                    librariesViewModel.handleEvent(Event.PinLibrary(library, pinned))
-                },
-                onAddLibraryClick = onAddLibraryClick,
-            )
-        }
-    }
-}
-
-@Composable
-private fun LibrariesListContent(
+fun LibrariesListContent(
     librariesListState: LibrariesListState,
     lastUpdateCheck: String,
     onLibraryClick: (Library) -> Unit,
@@ -129,9 +66,8 @@ private fun LibrariesListContent(
         when (librariesListState) {
             is LibrariesListState.Loading -> ProgressIndicator()
             is LibrariesListState.LibrariesLoaded -> {
-                val libraries: List<Library> = librariesListState.libraries
                 LibrariesList(
-                    libraries = libraries,
+                    libraries = librariesListState.libraries,
                     onLibraryClick = onLibraryClick,
                     onLibraryDismissed = onLibraryDismissed,
                     onPinLibraryClick = onPinLibraryClick,

@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.view.composables
+package ir.fallahpoor.releasetracker.libraries.ui
 
 import android.content.Context
 import androidx.compose.ui.test.*

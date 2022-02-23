@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package ir.fallahpoor.releasetracker.libraries.viewmodel
+package ir.fallahpoor.releasetracker.libraries
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,9 +9,6 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
-import ir.fallahpoor.releasetracker.libraries.Event
-import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreenState
-import ir.fallahpoor.releasetracker.libraries.view.LibrariesListState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

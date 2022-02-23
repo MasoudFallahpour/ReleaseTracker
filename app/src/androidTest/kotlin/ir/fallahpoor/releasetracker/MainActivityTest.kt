@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performClick
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryTags
-import ir.fallahpoor.releasetracker.libraries.view.LibrariesListTags
+import ir.fallahpoor.releasetracker.libraries.ui.LibrariesListTags
 import org.junit.Rule
 import org.junit.Test
 

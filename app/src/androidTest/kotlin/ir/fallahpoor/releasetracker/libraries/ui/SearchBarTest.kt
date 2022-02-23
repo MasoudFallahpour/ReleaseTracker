@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.view.composables
+package ir.fallahpoor.releasetracker.libraries.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

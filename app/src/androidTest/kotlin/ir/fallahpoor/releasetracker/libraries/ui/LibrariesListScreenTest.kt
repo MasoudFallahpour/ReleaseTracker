@@ -1,8 +1,7 @@
-package ir.fallahpoor.releasetracker.libraries.view
+package ir.fallahpoor.releasetracker.libraries.ui
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -14,8 +13,7 @@ import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
-import ir.fallahpoor.releasetracker.libraries.view.composables.SearchBarTags
-import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
+import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -332,7 +330,6 @@ class LibrariesListScreenTest {
 
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
     private fun initializeLibrariesListScreen() {
 
         preferencesCoroutineScope = CoroutineScope(UnconfinedTestDispatcher() + Job())

@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.view.composables.dialogs
+package ir.fallahpoor.releasetracker.libraries.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -15,24 +15,24 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
-fun SortOrderDialog(
-    currentSortOrder: SortOrder,
-    onSortOrderClick: (SortOrder) -> Unit,
+fun NightModeDialog(
+    currentNightMode: NightMode,
+    onNightModeClick: (NightMode) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.select_sort_order))
+            Text(text = stringResource(R.string.select_night_mode))
         },
         text = {
-            SortOrderScreen(
-                currentSortOrder = currentSortOrder,
-                onSortOrderClick = onSortOrderClick
+            NightModeContent(
+                currentNightMode = currentNightMode,
+                onNightModeClick = onNightModeClick
             )
         },
         confirmButton = {}
@@ -40,39 +40,39 @@ fun SortOrderDialog(
 }
 
 @Composable
-private fun SortOrderScreen(
-    currentSortOrder: SortOrder,
-    onSortOrderClick: (SortOrder) -> Unit
+private fun NightModeContent(
+    currentNightMode: NightMode,
+    onNightModeClick: (NightMode) -> Unit
 ) {
     Column {
-        SortOrder.values().forEach { sortOrder: SortOrder ->
-            SortItem(
-                text = stringResource(sortOrder.label),
-                sortOrder = sortOrder,
-                onSortOrderClick = onSortOrderClick,
-                isSelected = currentSortOrder == sortOrder
+        NightMode.values().forEach { nightMode: NightMode ->
+            NightModeItem(
+                text = stringResource(nightMode.label),
+                nightMode = nightMode,
+                onNightModeChange = onNightModeClick,
+                isSelected = currentNightMode == nightMode
             )
         }
     }
 }
 
 @Composable
-private fun SortItem(
+private fun NightModeItem(
     text: String,
-    sortOrder: SortOrder,
-    onSortOrderClick: (SortOrder) -> Unit,
-    isSelected: Boolean,
+    nightMode: NightMode,
+    onNightModeChange: (NightMode) -> Unit,
+    isSelected: Boolean
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = { onSortOrderClick(sortOrder) }),
+            .clickable(onClick = { onNightModeChange(nightMode) }),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             modifier = Modifier.testTag(text),
             selected = isSelected,
-            onClick = { onSortOrderClick(sortOrder) }
+            onClick = { onNightModeChange(nightMode) }
         )
         Text(text = text)
     }
@@ -80,12 +80,12 @@ private fun SortItem(
 
 @Preview
 @Composable
-private fun SortOrderDialogPreview() {
+private fun NightModeDialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
-            SortOrderDialog(
-                currentSortOrder = SortOrder.A_TO_Z,
-                onSortOrderClick = {},
+            NightModeDialog(
+                currentNightMode = NightMode.OFF,
+                onNightModeClick = {},
                 onDismiss = {}
             )
         }

@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.view
+package ir.fallahpoor.releasetracker.libraries
 
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.SortOrder

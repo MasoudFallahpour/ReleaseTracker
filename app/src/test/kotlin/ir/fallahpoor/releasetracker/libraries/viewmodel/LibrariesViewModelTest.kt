@@ -8,8 +8,9 @@ import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import ir.fallahpoor.releasetracker.libraries.Event
-import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreenState
-import ir.fallahpoor.releasetracker.libraries.view.LibrariesListState
+import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenState
+import ir.fallahpoor.releasetracker.libraries.LibrariesListState
+import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

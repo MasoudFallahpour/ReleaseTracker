@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryScreen
 import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreen
+import ir.fallahpoor.releasetracker.libraries.ui.LibrariesListScreen
 import javax.inject.Inject
 
 @AndroidEntryPoint
