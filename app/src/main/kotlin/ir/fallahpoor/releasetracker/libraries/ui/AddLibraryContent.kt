@@ -46,7 +46,7 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 object LibrariesListTags {
     const val ADD_LIBRARY_BUTTON = "addLibraryButton"
     const val PROGRESS_INDICATOR = "progressIndicator"
-    const val LIBRARY_ITEM = "libraryItem"
+    const val LIBRARY_ITEM = "libraryItem_"
 }
 
 @Composable
@@ -156,7 +156,7 @@ private fun LibraryItem(
         }
     )
     SwipeToDismiss(
-        modifier = modifier.testTag(LibrariesListTags.LIBRARY_ITEM),
+        modifier = modifier.testTag(LibrariesListTags.LIBRARY_ITEM + library.name),
         state = dismissState,
         dismissThresholds = { FractionalThreshold(0.3f) },
         directions = setOf(DismissDirection.StartToEnd),

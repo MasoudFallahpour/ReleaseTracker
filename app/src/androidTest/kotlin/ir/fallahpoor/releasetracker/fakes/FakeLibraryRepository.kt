@@ -39,7 +39,7 @@ class FakeLibraryRepository : LibraryRepository {
         const val LIBRARY_VERSION = "0.2"
     }
 
-    private val libraries = mutableListOf(
+    val libraries = mutableListOf(
         Library(Coil.name, Coil.url, Coil.version),
         Library(Kotlin.name, Kotlin.url, Kotlin.version),
         Library(Koin.name, Koin.url, Koin.version, pinned = 1)

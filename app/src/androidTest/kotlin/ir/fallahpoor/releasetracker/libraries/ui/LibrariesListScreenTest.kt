@@ -50,54 +50,29 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun list_of_libraries_is_displayed() {
+    fun libraries_are_displayed() {
 
         // Given
         initializeLibrariesListScreen()
 
         // Then
         with(composeRule) {
-
             onNodeWithText(
                 context.getString(
                     R.string.last_check_for_updates,
                     FakeLibraryRepository.LAST_UPDATE_CHECK
                 )
             ).assertIsDisplayed()
-
-            onNodeWithText(FakeLibraryRepository.Coil.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Coil.url, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Coil.version, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNode(
-                isToggleableWithSiblingText(FakeLibraryRepository.Coil.name),
-                useUnmergedTree = true
-            ).assertIsOff()
-
-            onNodeWithText(FakeLibraryRepository.Kotlin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Kotlin.url, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Kotlin.version, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNode(
-                isToggleableWithSiblingText(FakeLibraryRepository.Kotlin.name),
-                useUnmergedTree = true
-            ).assertIsOff()
-
-            onNodeWithText(FakeLibraryRepository.Koin.name, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Koin.url, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNodeWithText(FakeLibraryRepository.Koin.version, useUnmergedTree = true)
-                .assertIsDisplayed()
-            onNode(
-                isToggleableWithSiblingText(FakeLibraryRepository.Koin.name),
-                useUnmergedTree = true
-            ).assertIsOn()
-
+            libraryRepository.libraries.forEach {
+                onNodeWithText(it.name, useUnmergedTree = true)
+                    .assertIsDisplayed()
+                onNodeWithText(it.url, useUnmergedTree = true)
+                    .assertIsDisplayed()
+                onNodeWithText(it.version, useUnmergedTree = true)
+                    .assertIsDisplayed()
+                onNode(isToggleableWithSiblingText(it.name), useUnmergedTree = true)
+                    .assertIsDisplayed()
+            }
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
             onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
@@ -153,7 +128,7 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun correct_night_mode_is_set_when_selecting_a_night_mode_from_night_mode_dialog() = runTest {
+    fun correct_night_mode_is_set_when_selecting_a_night_mode() = runTest {
 
         // Given
         initializeLibrariesListScreen()
