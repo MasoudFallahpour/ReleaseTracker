@@ -1,15 +1,19 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package ir.fallahpoor.releasetracker.libraries.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
+import ir.fallahpoor.releasetracker.libraries.Event
+import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreenState
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -26,22 +30,17 @@ class LibrariesViewModel
         val searchTerm: String
     )
 
-    private val sortOrderLiveData = MutableLiveData(storage.getSortOrder())
-    private val searchQueryLiveData = MutableLiveData("")
-    private val getLibrariesTriggerLiveData = MediatorLiveData<Params>().apply {
-        addSource(sortOrderLiveData) { sortOrder: SortOrder ->
-            value = Params(sortOrder, searchQueryLiveData.value!!)
+    private val sortOrderFlow = MutableStateFlow(storage.getSortOrder())
+    private val searchQueryFlow = MutableStateFlow("")
+    private val triggerFlow: Flow<Params> =
+        sortOrderFlow.combine(searchQueryFlow) { sortOrder: SortOrder, searchQuery: String ->
+            Params(sortOrder, searchQuery)
         }
-        addSource(searchQueryLiveData) { searchQuery: String ->
-            value = Params(sortOrderLiveData.value!!, searchQuery)
-        }
-    }
 
-    val librariesListState: LiveData<LibrariesListState> =
-        getLibrariesTriggerLiveData.distinctUntilChanged()
-            .switchMap { params: Params ->
+    val state: StateFlow<LibrariesListScreenState> =
+        triggerFlow.distinctUntilChanged()
+            .flatMapLatest { params ->
                 libraryRepository.getLibrariesAsFlow()
-                    .asLiveData()
                     .map { libraries: List<Library> ->
                         libraries.filter {
                             it.name.contains(params.searchTerm, ignoreCase = true)
@@ -59,38 +58,55 @@ class LibrariesViewModel
                         }
                     }
             }.map { libraries: List<Library> ->
-                LibrariesListState.LibrariesLoaded(libraries)
-            }
+                LibrariesListScreenState(
+                    sortOrder = sortOrderFlow.value,
+                    searchQuery = searchQueryFlow.value,
+                    librariesListState = LibrariesListState.LibrariesLoaded(libraries)
+                )
+            }.stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                LibrariesListScreenState(sortOrder = storage.getSortOrder())
+            )
 
-    var searchQuery = ""
-    var sortOrder by mutableStateOf(storage.getSortOrder())
-
-    val lastUpdateCheckState: LiveData<String> =
+    val lastUpdateCheckState: StateFlow<String> =
         libraryRepository.getLastUpdateCheck()
-            .asLiveData()
+            .stateIn(viewModelScope, SharingStarted.Eagerly, "N/A")
 
-    fun getLibraries(sortOrder: SortOrder, searchQuery: String) {
-        storage.setSortOrder(sortOrder)
-        sortOrderLiveData.value = sortOrder
-        searchQueryLiveData.value = searchQuery
+    fun handleEvent(event: Event) {
+        when (event) {
+            is Event.PinLibrary -> pinLibrary(event.library, event.pin)
+            is Event.DeleteLibrary -> deleteLibrary(event.library)
+            is Event.ChangeSortOrder -> changeSortOrder(event.sortOrder)
+            is Event.ChangeSearchQuery -> changeSearchQuery(event.searchQuery)
+        }
     }
 
-    fun pinLibrary(library: Library, pin: Boolean) {
+    private fun pinLibrary(library: Library, pin: Boolean) {
         viewModelScope.launch {
             try {
                 libraryRepository.pinLibrary(library, pin)
-            } catch (t: Throwable) {
+            } catch (_: Throwable) {
             }
         }
     }
 
-    fun deleteLibrary(library: Library) {
+    private fun deleteLibrary(library: Library) {
         viewModelScope.launch {
             try {
                 libraryRepository.deleteLibrary(library)
-            } catch (t: Throwable) {
+            } catch (_: Throwable) {
             }
         }
+    }
+
+    private fun changeSortOrder(sortOrder: SortOrder) {
+        storage.setSortOrder(sortOrder)
+        sortOrderFlow.value = sortOrder
+    }
+
+    private fun changeSearchQuery(searchQuery: String) {
+        searchQueryFlow.value = searchQuery
     }
 
 }

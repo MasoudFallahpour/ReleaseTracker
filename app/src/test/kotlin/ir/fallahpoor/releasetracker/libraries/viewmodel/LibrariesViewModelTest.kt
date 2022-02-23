@@ -1,11 +1,14 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package ir.fallahpoor.releasetracker.libraries.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorage
+import ir.fallahpoor.releasetracker.libraries.Event
+import ir.fallahpoor.releasetracker.libraries.view.LibrariesListScreenState
 import ir.fallahpoor.releasetracker.libraries.view.LibrariesListState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +21,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class LibrariesViewModelTest {
 
     @get:Rule
@@ -45,7 +47,7 @@ class LibrariesViewModelTest {
     }
 
     @Test
-    fun `getLibraries() should return all libraries sorted by given order`() =
+    fun `all libraries are returned sorted by given sort order`() =
         runTest {
 
             // Given
@@ -53,115 +55,88 @@ class LibrariesViewModelTest {
                 .sortedByDescending { it.name }
 
             // When
-            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = "")
+            librariesViewModel.handleEvent(Event.ChangeSortOrder(SortOrder.Z_TO_A))
 
             // Then
-            librariesViewModel.librariesListState.observeForever {}
-            val librariesListState: LibrariesListState? =
-                librariesViewModel.librariesListState.value
-            val librariesLoadedState = librariesListState as LibrariesListState.LibrariesLoaded
+            val librariesListScreenState: LibrariesListScreenState = librariesViewModel.state.value
+            val librariesLoadedState: LibrariesListState.LibrariesLoaded =
+                librariesListScreenState.librariesListState as LibrariesListState.LibrariesLoaded
             Truth.assertThat(librariesLoadedState.libraries)
                 .isEqualTo(expectedLibraries)
 
         }
 
     @Test
-    fun `getLibraries() should return all matched libraries sorted by given order`() =
+    fun `all matched libraries are returned`() =
         runTest {
 
             // Given
             val searchQuery = "ko"
             val expectedLibraries = fakeLibraryRepository.getLibraries().filter {
                 it.name.contains(searchQuery, ignoreCase = true)
-            }.sortedByDescending {
+            }.sortedBy {
                 it.name
             }
 
             // When
-            librariesViewModel.getLibraries(sortOrder = SortOrder.Z_TO_A, searchQuery = searchQuery)
+            librariesViewModel.handleEvent(Event.ChangeSearchQuery(searchQuery))
 
             // Then
-            librariesViewModel.librariesListState.observeForever {}
-            val librariesListState: LibrariesListState? =
-                librariesViewModel.librariesListState.value
-            val librariesLoadedState = librariesListState as LibrariesListState.LibrariesLoaded
+            val librariesListScreenState: LibrariesListScreenState = librariesViewModel.state.value
+            val librariesLoadedState: LibrariesListState.LibrariesLoaded =
+                librariesListScreenState.librariesListState as LibrariesListState.LibrariesLoaded
             Truth.assertThat(librariesLoadedState.libraries)
                 .isEqualTo(expectedLibraries)
 
         }
 
     @Test
-    fun `pinLibrary() should pin the library`() =
+    fun `pin library`() =
         runTest {
 
             // Given
-            val libraryName = "name"
-            fakeLibraryRepository.addLibrary(
-                libraryName = libraryName,
-                libraryUrl = "url",
-                libraryVersion = "version"
-            )
 
             // When
-            val libraryToPin: Library = fakeLibraryRepository.getLibrary(libraryName)!!
-            librariesViewModel.pinLibrary(
-                library = libraryToPin,
-                pin = true
-            )
+            val libraryToPin = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)!!
+            librariesViewModel.handleEvent(Event.PinLibrary(library = libraryToPin, pin = true))
 
             // Then
-            val library = fakeLibraryRepository.getLibrary(libraryName)
+            val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)
             Truth.assertThat(library?.isPinned()).isTrue()
 
         }
 
     @Test
-    fun `pinLibrary() should unpin the library`() =
+    fun `unpin library`() =
         runTest {
 
             // Given
-            val libraryName = "name"
-            fakeLibraryRepository.addLibrary(
-                libraryName = libraryName,
-                libraryUrl = "url",
-                libraryVersion = "version"
-            )
-            val libraryToPin: Library = fakeLibraryRepository.getLibrary(libraryName)!!
-            fakeLibraryRepository.updateLibrary(libraryToPin.copy(pinned = 1))
+            val libraryToUnpin = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)!!
 
             // When
-            val libraryToUnpin: Library = fakeLibraryRepository.getLibrary(libraryName)!!
-            librariesViewModel.pinLibrary(
-                library = libraryToUnpin,
-                pin = false
-            )
+            librariesViewModel.handleEvent(Event.PinLibrary(library = libraryToUnpin, pin = false))
 
             // Then
-            val library = fakeLibraryRepository.getLibrary(libraryName)
+            val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)
             Truth.assertThat(library?.isPinned()).isFalse()
 
         }
 
     @Test
-    fun `deleteLibrary() should delete the library`() =
+    fun `delete library`() =
         runTest {
 
             // Given
-            fakeLibraryRepository.deleteLibraries()
-            val libraryName = "name"
-            fakeLibraryRepository.addLibrary(
-                libraryName = libraryName,
-                libraryUrl = "url",
-                libraryVersion = "version"
-            )
-            val libraryToDelete: Library = fakeLibraryRepository.getLibrary(libraryName)!!
+            val libraryToDelete =
+                fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)!!
 
             // When
-            librariesViewModel.deleteLibrary(libraryToDelete)
+            librariesViewModel.handleEvent(Event.DeleteLibrary(libraryToDelete))
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(0)
-            Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
+            Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(2)
+            Truth.assertThat(fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name))
+                .isNull()
 
         }
 

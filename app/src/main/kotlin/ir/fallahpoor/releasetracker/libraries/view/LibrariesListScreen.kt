@@ -23,7 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -46,6 +46,7 @@ import ir.fallahpoor.releasetracker.common.managers.NightModeManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.libraries.Event
 import ir.fallahpoor.releasetracker.libraries.view.composables.Toolbar
 import ir.fallahpoor.releasetracker.libraries.viewmodel.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
@@ -64,27 +65,14 @@ fun LibrariesListScreen(
     onAddLibraryClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-
     val isNightModeOn: Boolean by nightModeManager.isNightModeOnLiveData.observeAsState(
         nightModeManager.isNightModeOn
     )
     val currentNightMode: NightMode by nightModeManager.nightModeLiveData.observeAsState(
         nightModeManager.currentNightMode
     )
-    val librariesListState: LibrariesListState by librariesViewModel.librariesListState.observeAsState(
-        LibrariesListState.Loading
-    )
-    val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.observeAsState("N/A")
-    val getLibraries = {
-        librariesViewModel.getLibraries(
-            sortOrder = librariesViewModel.sortOrder,
-            searchQuery = librariesViewModel.searchQuery
-        )
-    }
-
-    LaunchedEffect(true) {
-        getLibraries()
-    }
+    val state: LibrariesListScreenState by librariesViewModel.state.collectAsState()
+    val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.collectAsState()
 
     ReleaseTrackerTheme(darkTheme = isNightModeOn) {
         Scaffold(
@@ -92,34 +80,31 @@ fun LibrariesListScreen(
             snackbarHost = { scaffoldState.snackbarHostState },
             topBar = {
                 Toolbar(
-                    currentSortOrder = librariesViewModel.sortOrder,
+                    currentSortOrder = state.sortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
-                        librariesViewModel.sortOrder = sortOrder
-                        getLibraries()
+                        librariesViewModel.handleEvent(Event.ChangeSortOrder(sortOrder))
                     },
                     isNightModeSupported = nightModeManager.isNightModeSupported,
                     currentNightMode = currentNightMode,
                     onNightModeChange = nightModeManager::setNightMode,
                     onSearchQueryChange = { query: String ->
-                        librariesViewModel.searchQuery = query
-                        getLibraries()
+                        librariesViewModel.handleEvent(Event.ChangeSearchQuery(query))
                     },
                     onSearchQuerySubmit = { query: String ->
-                        librariesViewModel.searchQuery = query
-                        getLibraries()
+                        librariesViewModel.handleEvent(Event.ChangeSearchQuery(query))
                     }
                 )
             }
         ) {
             LibrariesListContent(
-                librariesListState = librariesListState,
+                librariesListState = state.librariesListState,
                 lastUpdateCheck = lastUpdateCheck,
                 onLibraryClick = onLibraryClick,
                 onLibraryDismissed = { library: Library ->
-                    librariesViewModel.deleteLibrary(library)
+                    librariesViewModel.handleEvent(Event.DeleteLibrary(library))
                 },
                 onPinLibraryClick = { library: Library, pinned: Boolean ->
-                    librariesViewModel.pinLibrary(library, pinned)
+                    librariesViewModel.handleEvent(Event.PinLibrary(library, pinned))
                 },
                 onAddLibraryClick = onAddLibraryClick,
             )
@@ -153,7 +138,6 @@ private fun LibrariesListContent(
                     onAddLibraryClick = onAddLibraryClick
                 )
             }
-            LibrariesListState.Fresh -> {}
         }
     }
 }
@@ -298,9 +282,7 @@ private fun LibraryItemForeground(
         ) {
             PinToggleButton(
                 isPinned = library.isPinned(),
-                onPinnedChange = { isPinned: Boolean ->
-                    onPinLibraryClick(isPinned)
-                }
+                onPinnedChange = onPinLibraryClick
             )
             Column(modifier = Modifier.weight(1f)) {
                 LibraryNameText(libraryName = library.name)
@@ -388,11 +370,19 @@ private fun LibraryItemBackground(
             .padding(horizontal = SPACE_NORMAL.dp)
     ) {
         val iconColor by animateColorAsState(
-            targetValue = if (dismissState.targetValue == DismissValue.DismissedToEnd) MaterialTheme.colors.onError else MaterialTheme.colors.onSurface,
+            targetValue = if (dismissState.targetValue == DismissValue.DismissedToEnd) {
+                MaterialTheme.colors.onError
+            } else {
+                MaterialTheme.colors.onSurface
+            },
             animationSpec = tween(),
         )
         val iconScale by animateFloatAsState(
-            targetValue = if (dismissState.targetValue == DismissValue.DismissedToEnd) 1f else 0.75f
+            targetValue = if (dismissState.targetValue == DismissValue.DismissedToEnd) {
+                1f
+            } else {
+                0.75f
+            }
         )
         if (dismissState.currentValue == DismissValue.Default) {
             Icon(
