@@ -27,6 +27,7 @@ private enum class ToolbarMode {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Toolbar(
+    modifier: Modifier = Modifier,
     currentSortOrder: SortOrder,
     onSortOrderChange: (SortOrder) -> Unit,
     isNightModeSupported: Boolean,
@@ -35,7 +36,7 @@ fun Toolbar(
     onSearchQueryChange: (String) -> Unit,
     onSearchQuerySubmit: (String) -> Unit
 ) {
-    TopAppBar {
+    TopAppBar(modifier = modifier) {
 
         var toolbarMode by rememberSaveable { mutableStateOf(ToolbarMode.Normal) }
 

@@ -1,6 +1,7 @@
 package ir.fallahpoor.releasetracker.libraries.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -18,6 +19,12 @@ import ir.fallahpoor.releasetracker.libraries.Event
 import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenState
 import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+
+object LibrariesListScreenTags {
+    const val SCREEN = "librariesListScreen"
+    const val TOOLBAR = "librariesListScreenToolbar"
+    const val CONTENT = "librariesListScreenContent"
+}
 
 @Composable
 fun LibrariesListScreen(
@@ -42,11 +49,12 @@ fun LibrariesListScreen(
 
     ReleaseTrackerTheme(darkTheme = isNightModeOn) {
         Scaffold(
-            modifier = Modifier.testTag(LibrariesListTags.SCREEN),
+            modifier = Modifier.testTag(LibrariesListScreenTags.SCREEN),
             scaffoldState = scaffoldState,
             snackbarHost = { scaffoldState.snackbarHostState },
             topBar = {
                 Toolbar(
+                    modifier = Modifier.testTag(LibrariesListScreenTags.TOOLBAR),
                     currentSortOrder = state.sortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
                         librariesViewModel.handleEvent(Event.ChangeSortOrder(sortOrder))
@@ -64,6 +72,9 @@ fun LibrariesListScreen(
             }
         ) {
             LibrariesListContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(LibrariesListScreenTags.CONTENT),
                 librariesListState = state.librariesListState,
                 lastUpdateCheck = lastUpdateCheck,
                 onLibraryClick = onLibraryClick,

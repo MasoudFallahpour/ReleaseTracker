@@ -7,12 +7,12 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
-import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.Event
 import ir.fallahpoor.releasetracker.NightModeViewModel
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
+import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +24,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito
 
 // TODO: Use Hilt to inject the dependencies instead of creating them manually.
 
@@ -51,7 +52,23 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun libraries_are_displayed() {
+    fun screen_is_initialized_correctly() {
+
+        // Given
+        initializeLibrariesListScreen()
+
+        // Then
+        with(composeRule) {
+            onNodeWithTag(LibrariesListScreenTags.TOOLBAR)
+                .assertIsDisplayed()
+            onNodeWithTag(LibrariesListScreenTags.CONTENT)
+                .assertIsDisplayed()
+        }
+
+    }
+
+    @Test
+    fun list_of_libraries_is_displayed() {
 
         // Given
         initializeLibrariesListScreen()
@@ -76,7 +93,7 @@ class LibrariesListScreenTest {
         hasAnySibling(hasText(text)) and isToggleable()
 
     @Test
-    fun when_list_of_libraries_is_empty_a_proper_message_is_displayed() {
+    fun a_proper_message_is_displayed_when_list_of_libraries_is_empty() {
 
         // Given
         initializeLibrariesListScreen()
@@ -126,30 +143,6 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun correct_night_mode_is_set_when_selecting_a_night_mode() = runTest {
-
-        // Given
-        initializeLibrariesListScreen()
-        nightModeViewModel.handleEvent(Event.ChangeNightMode(NightMode.OFF))
-
-        // When
-        with(composeRule) {
-            onNodeWithContentDescription(
-                context.getString(R.string.more_options),
-                useUnmergedTree = true
-            ).performClick()
-            onNodeWithText(context.getString(R.string.night_mode))
-                .performClick()
-            onNodeWithText(context.getString(NightMode.ON.label))
-                .performClick()
-        }
-
-        // Then
-        Truth.assertThat(nightModeViewModel.state.value).isEqualTo(NightMode.ON)
-
-    }
-
-    @Test
     fun search() {
 
         // Given
@@ -182,7 +175,7 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun when_there_is_no_search_result_a_proper_text_is_displayed() {
+    fun a_proper_text_is_displayed_when_there_is_no_search_result() {
 
         // Given
         initializeLibrariesListScreen()
@@ -205,7 +198,7 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun closing_the_search_bar_displays_all_libraries() {
+    fun all_libraries_are_displayed_when_search_bar_is_closed() {
 
         // Given
         initializeLibrariesListScreen()
@@ -239,7 +232,7 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun clearing_the_search_bar_displays_all_libraries() {
+    fun all_libraries_are_displayed_when_search_bar_is_cleared() {
 
         // Given
         initializeLibrariesListScreen()
@@ -312,13 +305,76 @@ class LibrariesListScreenTest {
 
     }
 
-    private fun initializeLibrariesListScreen() {
+    @Test
+    fun correct_callback_is_called_when_a_night_mode_is_selected() {
 
-        preferencesCoroutineScope = CoroutineScope(UnconfinedTestDispatcher() + Job())
-        val dataStore = PreferenceDataStoreFactory.create(scope = preferencesCoroutineScope) {
-            context.preferencesDataStoreFile("settings_test")
+        // Given
+        val onNightModeChange: (NightMode) -> Unit = mock()
+        initializeLibrariesListScreen(onNightModeChange = onNightModeChange)
+
+        // When
+        with(composeRule) {
+            onNodeWithContentDescription(
+                context.getString(R.string.more_options),
+                useUnmergedTree = true
+            ).performClick()
+            onNodeWithText(context.getString(R.string.night_mode))
+                .performClick()
+            onNodeWithText(context.getString(NightMode.ON.label))
+                .performClick()
         }
-        val storage = LocalStorage(dataStore)
+
+        // Then
+        Mockito.verify(onNightModeChange).invoke(NightMode.ON)
+
+    }
+
+    @Test
+    fun correct_callback_is_called_when_a_library_is_clicked() = runTest {
+
+        // Given
+        val onLibraryClick: (Library) -> Unit = mock()
+        initializeLibrariesListScreen(onLibraryClick = onLibraryClick)
+        val library = libraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)!!
+
+        // When
+        with(composeRule) {
+            onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + library.name)
+                .performClick()
+        }
+
+        // Then
+        Mockito.verify(onLibraryClick).invoke(library)
+
+    }
+
+    @Test
+    fun correct_callback_is_called_when_add_library_button_is_clicked() {
+
+        // Given
+        val onAddLibraryClick: () -> Unit = mock()
+        initializeLibrariesListScreen(onAddLibraryClick = onAddLibraryClick)
+
+        // When
+        with(composeRule) {
+            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
+                .performClick()
+        }
+
+        // Then
+        Mockito.verify(onAddLibraryClick).invoke()
+
+    }
+
+    private inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
+
+    private fun initializeLibrariesListScreen(
+        onNightModeChange: (NightMode) -> Unit = {},
+        onLibraryClick: (Library) -> Unit = {},
+        onAddLibraryClick: () -> Unit = {}
+    ) {
+
+        val storage: Storage = createStorage()
         nightModeViewModel = NightModeViewModel(storage)
         libraryRepository = FakeLibraryRepository()
         librariesViewModel = LibrariesViewModel(
@@ -329,13 +385,21 @@ class LibrariesListScreenTest {
         composeRule.setContent {
             LibrariesListScreen(
                 librariesViewModel = librariesViewModel,
-                currentNightMode = NightMode.ON,
-                onNightModeChange = {},
+                currentNightMode = NightMode.AUTO,
+                onNightModeChange = onNightModeChange,
                 isNightModeSupported = true,
-                onLibraryClick = {},
-                onAddLibraryClick = {}
+                onLibraryClick = onLibraryClick,
+                onAddLibraryClick = onAddLibraryClick
             )
         }
+    }
+
+    private fun createStorage(): LocalStorage {
+        preferencesCoroutineScope = CoroutineScope(UnconfinedTestDispatcher() + Job())
+        val dataStore = PreferenceDataStoreFactory.create(scope = preferencesCoroutineScope) {
+            context.preferencesDataStoreFile("settings_test")
+        }
+        return LocalStorage(dataStore)
     }
 
 }

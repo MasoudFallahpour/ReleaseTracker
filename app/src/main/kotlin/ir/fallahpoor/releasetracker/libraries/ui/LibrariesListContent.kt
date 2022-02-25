@@ -44,7 +44,6 @@ import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 object LibrariesListTags {
-    const val SCREEN = "librariesListScreen"
     const val LAST_UPDATE_CHECK_TEXT = "lastUpdateCheckText"
     const val ADD_LIBRARY_BUTTON = "addLibraryButton"
     const val PROGRESS_INDICATOR = "progressIndicator"
@@ -54,6 +53,7 @@ object LibrariesListTags {
 
 @Composable
 fun LibrariesListContent(
+    modifier: Modifier = Modifier,
     librariesListState: LibrariesListState,
     lastUpdateCheck: String,
     onLibraryClick: (Library) -> Unit,
@@ -62,7 +62,7 @@ fun LibrariesListContent(
     onAddLibraryClick: () -> Unit,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LastUpdateCheckText(lastUpdateCheck)
