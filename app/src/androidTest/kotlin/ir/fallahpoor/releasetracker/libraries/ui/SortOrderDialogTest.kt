@@ -19,7 +19,7 @@ class SortOrderDialogTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Test
-    fun sortOrderDialog_is_initialized_correctly() {
+    fun dialog_is_initialized_correctly() {
 
         // Given
         composeTestRule.setContent {
@@ -47,7 +47,7 @@ class SortOrderDialogTest {
     }
 
     @Test
-    fun when_sort_order_is_selected_correct_callback_is_called() {
+    fun correct_callback_is_called_when_sort_order_is_selected() {
 
         // Given
         val onSortOrderClick: (SortOrder) -> Unit = mock()
@@ -71,7 +71,7 @@ class SortOrderDialogTest {
     }
 
     @Test
-    fun when_SortOrderDialog_is_dismissed_correct_callback_is_called() {
+    fun correct_callback_is_called_when_dialog_is_dismissed() {
 
         // Given
         val onDismiss: () -> Unit = mock()

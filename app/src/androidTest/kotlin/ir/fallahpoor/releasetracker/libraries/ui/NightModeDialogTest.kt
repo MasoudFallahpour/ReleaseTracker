@@ -19,7 +19,7 @@ class NightModeDialogTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
     @Test
-    fun nightModeDialog_is_initialized_correctly() {
+    fun dialog_is_initialized_correctly() {
 
         // Given
         composeTestRule.setContent {
@@ -47,7 +47,7 @@ class NightModeDialogTest {
     }
 
     @Test
-    fun when_night_mode_is_selected_correct_callback_is_called() {
+    fun correct_callback_is_called_when_night_mode_is_selected() {
 
         // Given
         val onNightModeClick: (NightMode) -> Unit = mock()
@@ -71,7 +71,7 @@ class NightModeDialogTest {
     }
 
     @Test
-    fun when_dialog_is_dismissed_correct_callback_is_called() {
+    fun correct_callback_is_called_when_dialog_is_dismissed() {
 
         // Given
         val onDismiss: () -> Unit = mock()
