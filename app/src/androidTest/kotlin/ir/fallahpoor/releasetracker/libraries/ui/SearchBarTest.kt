@@ -15,7 +15,7 @@ class SearchBarTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun searchBar_is_initialized_correctly() {
+    fun search_bar_is_initialized_correctly() {
 
         // Given
         val hint = "hint"
@@ -35,6 +35,8 @@ class SearchBarTest {
         // Then
         with(composeTestRule) {
             onNodeWithText(hint).assertIsDisplayed()
+            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
+                .assertTextEquals("")
             onNodeWithTag(SearchBarTags.CLOSE_BUTTON)
                 .assertIsDisplayed()
             onNodeWithTag(SearchBarTags.CLEAR_BUTTON)
@@ -44,7 +46,7 @@ class SearchBarTest {
     }
 
     @Test
-    fun hint_not_displayed_when_query_is_not_empty() {
+    fun hint_is_not_displayed_when_search_query_is_not_empty() {
 
         // Given
         val hint = "Enter library name"
@@ -64,8 +66,10 @@ class SearchBarTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithText(hint).assertDoesNotExist()
-            onNodeWithText(query).assertIsDisplayed()
+            onNodeWithText(hint)
+                .assertDoesNotExist()
+            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
+                .assertTextEquals(query)
         }
 
     }
@@ -78,7 +82,7 @@ class SearchBarTest {
         composeTestRule.setContent {
             SearchBar(
                 hint = "",
-                query = "Coil",
+                query = "",
                 onQueryChange = {},
                 onQuerySubmit = {},
                 onClearClick = onClearClick,
@@ -103,7 +107,7 @@ class SearchBarTest {
         composeTestRule.setContent {
             SearchBar(
                 hint = "",
-                query = "Coil",
+                query = "",
                 onQueryChange = {},
                 onQuerySubmit = {},
                 onClearClick = {},
@@ -125,29 +129,28 @@ class SearchBarTest {
 
         // Given
         val onQueryChange: (String) -> Unit = mock()
-        val query = "Coroutines"
         composeTestRule.setContent {
             SearchBar(
                 hint = "",
                 query = "",
                 onQueryChange = onQueryChange,
-                onQuerySubmit = { },
-                onClearClick = { },
-                onCloseClick = { }
+                onQuerySubmit = {},
+                onClearClick = {},
+                onCloseClick = {}
             )
         }
 
         // When
         composeTestRule.onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-            .performTextInput(query)
+            .performTextInput("Coroutines")
 
         // Then
-        Mockito.verify(onQueryChange).invoke(query)
+        Mockito.verify(onQueryChange).invoke("Coroutines")
 
     }
 
     @Test
-    fun correct_callback_called_when_query_submitted() {
+    fun correct_callback_called_when_query_is_submitted() {
 
         // Given
         var query by mutableStateOf("")
