@@ -26,7 +26,7 @@ class ToolbarTest {
     private val selectNightMode = context.getString(R.string.select_night_mode)
 
     @Test
-    fun toolbar_initialized_correctly_when_night_mode_is_supported() {
+    fun toolbar_is_initialized_correctly_when_night_mode_is_supported() {
 
         // Given
         initializeToolbar()
@@ -52,10 +52,10 @@ class ToolbarTest {
     }
 
     @Test
-    fun toolbar_initialized_correctly_when_night_is_not_supported() {
+    fun toolbar_is_initialized_correctly_when_night_mode_is_not_supported() {
 
         // Given
-        initializeToolbar(nightModeSupported = false)
+        initializeToolbar(isNightModeSupported = false)
 
         // Then
         composeTestRule.onNodeWithText(appNameText)
@@ -78,7 +78,7 @@ class ToolbarTest {
     }
 
     @Test
-    fun when_sort_button_is_clicked_sort_dialog_is_displayed() {
+    fun sort_dialog_is_displayed_when_sort_button_is_clicked() {
 
         // Given
         initializeToolbar()
@@ -96,7 +96,7 @@ class ToolbarTest {
     }
 
     @Test
-    fun when_night_mode_button_is_clicked_night_mode_dialog_is_displayed() {
+    fun night_mode_dialog_is_displayed_when_night_mode_button_is_clicked() {
 
         // Given
         initializeToolbar()
@@ -120,20 +120,10 @@ class ToolbarTest {
     }
 
     @Test
-    fun when_search_button_is_clicked_search_bar_is_displayed() {
+    fun search_bar_is_displayed_when_search_button_is_clicked() {
 
         // Given
-        composeTestRule.setContent {
-            Toolbar(
-                currentSortOrder = SortOrder.A_TO_Z,
-                onSortOrderChange = {},
-                isNightModeSupported = true,
-                currentNightMode = NightMode.ON,
-                onNightModeChange = {},
-                onSearchQueryChange = {},
-                onSearchQuerySubmit = {}
-            )
-        }
+        initializeToolbar()
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -148,21 +138,34 @@ class ToolbarTest {
     }
 
     @Test
-    fun when_sort_order_is_selected_sort_order_dialog_is_closed_and_correct_callback_is_called() {
+    fun correct_callback_is_called_when_sort_order_is_selected() {
 
         // Given
         val onSortOrderChange: (SortOrder) -> Unit = mock()
-        composeTestRule.setContent {
-            Toolbar(
-                currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderChange = onSortOrderChange,
-                isNightModeSupported = true,
-                currentNightMode = NightMode.ON,
-                onNightModeChange = {},
-                onSearchQueryChange = {},
-                onSearchQuerySubmit = {}
-            )
+        initializeToolbar(onSortOrderChange = onSortOrderChange)
+
+        // When
+        with(composeTestRule) {
+            onNodeWithContentDescription(
+                sortText,
+                useUnmergedTree = true
+            ).performClick()
+            onNodeWithText(
+                context.getString(SortOrder.A_TO_Z.label),
+                useUnmergedTree = true
+            ).performClick()
         }
+
+        // Then
+        Mockito.verify(onSortOrderChange).invoke(SortOrder.A_TO_Z)
+
+    }
+
+    @Test
+    fun sort_dialog_is_closed_when_sort_order_is_selected() {
+
+        // Given
+        initializeToolbar()
 
         // When
         with(composeTestRule) {
@@ -179,26 +182,38 @@ class ToolbarTest {
         // Then
         composeTestRule.onNodeWithText(selectSortOrderText)
             .assertDoesNotExist()
-        Mockito.verify(onSortOrderChange).invoke(SortOrder.A_TO_Z)
 
     }
 
     @Test
-    fun when_night_mode_is_selected_night_mode_dialog_is_closed_and_correct_callback_is_called() {
+    fun correct_callback_is_called_when_night_mode_is_selected() {
 
         // Given
         val onNightModeChange: (NightMode) -> Unit = mock()
-        composeTestRule.setContent {
-            Toolbar(
-                currentSortOrder = SortOrder.A_TO_Z,
-                onSortOrderChange = {},
-                isNightModeSupported = true,
-                currentNightMode = NightMode.OFF,
-                onNightModeChange = onNightModeChange,
-                onSearchQueryChange = {},
-                onSearchQuerySubmit = {}
-            )
+        initializeToolbar(onNightModeChange = onNightModeChange)
+
+        // When
+        with(composeTestRule) {
+            onNodeWithContentDescription(
+                moreOptionsText,
+                useUnmergedTree = true
+            ).performClick()
+            onNodeWithText(nightModeText)
+                .performClick()
+            onNodeWithText(context.getString(NightMode.AUTO.label))
+                .performClick()
         }
+
+        // Then
+        Mockito.verify(onNightModeChange).invoke(NightMode.AUTO)
+
+    }
+
+    @Test
+    fun night_mode_dialog_is_closed_when_night_mode_is_selected() {
+
+        // Given
+        initializeToolbar()
 
         // When
         with(composeTestRule) {
@@ -215,26 +230,15 @@ class ToolbarTest {
         // Then
         composeTestRule.onNodeWithText(selectNightMode)
             .assertDoesNotExist()
-        Mockito.verify(onNightModeChange).invoke(NightMode.AUTO)
 
     }
 
     @Test
-    fun when_search_query_is_changed_correct_callback_is_called() {
+    fun correct_callback_is_called_when_search_query_is_changed() {
 
         // Given
         val onSearchQueryChange: (String) -> Unit = mock()
-        composeTestRule.setContent {
-            Toolbar(
-                currentSortOrder = SortOrder.A_TO_Z,
-                onSortOrderChange = {},
-                isNightModeSupported = true,
-                currentNightMode = NightMode.ON,
-                onNightModeChange = {},
-                onSearchQueryChange = onSearchQueryChange,
-                onSearchQuerySubmit = {}
-            )
-        }
+        initializeToolbar(onSearchQueryChange = onSearchQueryChange)
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -250,21 +254,11 @@ class ToolbarTest {
     }
 
     @Test
-    fun when_search_query_is_cleared_correct_callback_is_called() {
+    fun correct_callback_is_called_when_search_query_is_cleared() {
 
         // Given
         val onSearchQueryChange: (String) -> Unit = mock()
-        composeTestRule.setContent {
-            Toolbar(
-                currentSortOrder = SortOrder.A_TO_Z,
-                onSortOrderChange = {},
-                isNightModeSupported = true,
-                currentNightMode = NightMode.ON,
-                onNightModeChange = {},
-                onSearchQueryChange = onSearchQueryChange,
-                onSearchQuerySubmit = {}
-            )
-        }
+        initializeToolbar(onSearchQueryChange = onSearchQueryChange)
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -280,20 +274,10 @@ class ToolbarTest {
     }
 
     @Test
-    fun when_search_bar_is_closed_toolbar_is_set_to_normal_mode() {
+    fun toolbar_is_set_to_normal_mode_when_search_bar_is_closed() {
 
         // Given
-        composeTestRule.setContent {
-            Toolbar(
-                currentSortOrder = SortOrder.A_TO_Z,
-                onSortOrderChange = {},
-                isNightModeSupported = true,
-                currentNightMode = NightMode.ON,
-                onNightModeChange = {},
-                onSearchQueryChange = {},
-                onSearchQuerySubmit = {}
-            )
-        }
+        initializeToolbar()
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -309,16 +293,24 @@ class ToolbarTest {
 
     }
 
-    private fun initializeToolbar(nightModeSupported: Boolean = true) {
+    private fun initializeToolbar(
+        currentSortOrder: SortOrder = SortOrder.A_TO_Z,
+        onSortOrderChange: (SortOrder) -> Unit = {},
+        isNightModeSupported: Boolean = true,
+        currentNightMode: NightMode = NightMode.ON,
+        onNightModeChange: (NightMode) -> Unit = {},
+        onSearchQueryChange: (String) -> Unit = {},
+        onSearchQuerySubmit: (String) -> Unit = {}
+    ) {
         composeTestRule.setContent {
             Toolbar(
-                currentSortOrder = SortOrder.A_TO_Z,
-                onSortOrderChange = {},
-                isNightModeSupported = nightModeSupported,
-                currentNightMode = NightMode.ON,
-                onNightModeChange = {},
-                onSearchQueryChange = {},
-                onSearchQuerySubmit = {}
+                currentSortOrder = currentSortOrder,
+                onSortOrderChange = onSortOrderChange,
+                isNightModeSupported = isNightModeSupported,
+                currentNightMode = currentNightMode,
+                onNightModeChange = onNightModeChange,
+                onSearchQueryChange = onSearchQueryChange,
+                onSearchQuerySubmit = onSearchQuerySubmit
             )
         }
     }
