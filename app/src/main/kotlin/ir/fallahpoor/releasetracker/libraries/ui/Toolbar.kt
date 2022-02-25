@@ -18,6 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.libraries.ui.dialogs.NightModeDialog
+import ir.fallahpoor.releasetracker.libraries.ui.dialogs.SortOrderDialog
 
 private enum class ToolbarMode {
     Normal,

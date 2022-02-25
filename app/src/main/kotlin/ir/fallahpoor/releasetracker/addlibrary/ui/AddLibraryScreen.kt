@@ -28,8 +28,8 @@ fun AddLibraryScreen(
     isDarkTheme: Boolean,
     onBackClick: () -> Unit
 ) {
-    val scaffoldState = rememberScaffoldState()
     ReleaseTrackerTheme(darkTheme = isDarkTheme) {
+        val scaffoldState = rememberScaffoldState()
         Scaffold(
             modifier = Modifier.testTag(AddLibraryTags.SCREEN),
             topBar = { AppBar(onBackClick) },

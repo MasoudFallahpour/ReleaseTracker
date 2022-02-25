@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.ui
+package ir.fallahpoor.releasetracker.libraries.ui.dialogs
 
 import android.content.Context
 import androidx.compose.ui.test.*
@@ -6,12 +6,12 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.utils.NightMode
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
-class SortOrderDialogTest {
+class NightModeDialogTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -23,50 +23,50 @@ class SortOrderDialogTest {
 
         // Given
         composeTestRule.setContent {
-            SortOrderDialog(
-                currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderClick = {},
+            NightModeDialog(
+                currentNightMode = NightMode.ON,
+                onNightModeClick = {},
                 onDismiss = {}
             )
         }
 
         // Then
         with(composeTestRule) {
-            onNodeWithText(context.getString(R.string.select_sort_order))
+            onNodeWithText(context.getString(R.string.select_night_mode))
                 .assertIsDisplayed()
-            SortOrder.values().forEach {
+            NightMode.values().forEach { nightMode: NightMode ->
                 onNodeWithText(
-                    context.getString(it.label),
+                    context.getString(nightMode.label),
                     useUnmergedTree = true
                 ).assertIsDisplayed()
             }
-            onNodeWithTag(context.getString(SortOrder.Z_TO_A.label))
+            onNodeWithTag(context.getString(NightMode.ON.label))
                 .assertIsSelected()
         }
 
     }
 
     @Test
-    fun correct_callback_is_called_when_sort_order_is_selected() {
+    fun correct_callback_is_called_when_night_mode_is_selected() {
 
         // Given
-        val onSortOrderClick: (SortOrder) -> Unit = mock()
+        val onNightModeClick: (NightMode) -> Unit = mock()
         composeTestRule.setContent {
-            SortOrderDialog(
-                currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderClick = onSortOrderClick,
+            NightModeDialog(
+                currentNightMode = NightMode.OFF,
+                onNightModeClick = onNightModeClick,
                 onDismiss = {}
             )
         }
 
         // When
         composeTestRule.onNodeWithText(
-            context.getString(SortOrder.PINNED_FIRST.label),
+            context.getString(NightMode.AUTO.label),
             useUnmergedTree = true
         ).performClick()
 
         // Then
-        Mockito.verify(onSortOrderClick).invoke(SortOrder.PINNED_FIRST)
+        Mockito.verify(onNightModeClick).invoke(NightMode.AUTO)
 
     }
 
@@ -76,9 +76,9 @@ class SortOrderDialogTest {
         // Given
         val onDismiss: () -> Unit = mock()
         composeTestRule.setContent {
-            SortOrderDialog(
-                currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderClick = {},
+            NightModeDialog(
+                currentNightMode = NightMode.OFF,
+                onNightModeClick = {},
                 onDismiss = onDismiss
             )
         }
