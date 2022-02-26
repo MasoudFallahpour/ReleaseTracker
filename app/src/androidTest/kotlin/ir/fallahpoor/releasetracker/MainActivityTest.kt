@@ -8,7 +8,7 @@ import androidx.compose.ui.test.performClick
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryTags
-import ir.fallahpoor.releasetracker.libraries.ui.LibrariesListTags
+import ir.fallahpoor.releasetracker.libraries.ui.LibrariesListContentTags
 import org.junit.Rule
 import org.junit.Test
 
@@ -51,7 +51,7 @@ class MainActivityTest {
     fun when_add_library_button_is_clicked_add_library_screen_is_displayed() {
 
         // When
-        composeRule.onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
+        composeRule.onNodeWithTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON)
             .performClick()
 
         // Then

@@ -68,50 +68,6 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun list_of_libraries_is_displayed() {
-
-        // Given
-        initializeLibrariesListScreen()
-
-        // Then
-        with(composeRule) {
-            onNodeWithTag(LibrariesListTags.LAST_UPDATE_CHECK_TEXT)
-                .assertIsDisplayed()
-            libraryRepository.libraries.forEach {
-                onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + it.name, useUnmergedTree = true)
-                    .assertIsDisplayed()
-            }
-            onNodeWithText(noLibrariesText)
-                .assertDoesNotExist()
-            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
-        }
-
-    }
-
-    private fun isToggleableWithSiblingText(text: String): SemanticsMatcher =
-        hasAnySibling(hasText(text)) and isToggleable()
-
-    @Test
-    fun a_proper_message_is_displayed_when_list_of_libraries_is_empty() {
-
-        // Given
-        initializeLibrariesListScreen()
-        libraryRepository.deleteLibraries()
-
-        // Then
-        with(composeRule) {
-            onAllNodesWithTag(LibrariesListTags.LIBRARY_ITEM)
-                .assertCountEquals(0)
-            onNodeWithText(noLibrariesText)
-                .assertIsDisplayed()
-            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
-        }
-
-    }
-
-    @Test
     fun delete_library_only_deletes_the_selected_library() {
 
         // Given
@@ -129,12 +85,12 @@ class LibrariesListScreenTest {
         libraryRepository.libraries.forEach { library ->
             if (library.name == libraryName) {
                 composeRule.onNodeWithTag(
-                    LibrariesListTags.LIBRARY_ITEM + library.name,
+                    LibrariesListContentTags.LIBRARY_ITEM + library.name,
                     useUnmergedTree = true
                 ).assertDoesNotExist()
             } else {
                 composeRule.onNodeWithTag(
-                    LibrariesListTags.LIBRARY_ITEM + library.name,
+                    LibrariesListContentTags.LIBRARY_ITEM + library.name,
                     useUnmergedTree = true
                 ).assertIsDisplayed()
             }
@@ -159,15 +115,15 @@ class LibrariesListScreenTest {
         // Then
         with(composeRule) {
             onNodeWithTag(
-                LibrariesListTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name,
+                LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name,
                 useUnmergedTree = true
             ).assertDoesNotExist()
             onNodeWithTag(
-                LibrariesListTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name,
+                LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name,
                 useUnmergedTree = true
             ).assertIsDisplayed()
             onNodeWithTag(
-                LibrariesListTags.LIBRARY_ITEM + FakeLibraryRepository.Koin.name,
+                LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Koin.name,
                 useUnmergedTree = true
             ).assertIsDisplayed()
         }
@@ -216,16 +172,19 @@ class LibrariesListScreenTest {
         // Then
         with(composeRule) {
             libraryRepository.libraries.forEach {
-                onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + it.name, useUnmergedTree = true)
+                onNodeWithTag(
+                    LibrariesListContentTags.LIBRARY_ITEM + it.name,
+                    useUnmergedTree = true
+                )
                     .assertIsDisplayed()
             }
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
-            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
+            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
-            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
+            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
         }
 
@@ -250,58 +209,21 @@ class LibrariesListScreenTest {
         // Then
         with(composeRule) {
             libraryRepository.libraries.forEach {
-                onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + it.name, useUnmergedTree = true)
+                onNodeWithTag(
+                    LibrariesListContentTags.LIBRARY_ITEM + it.name,
+                    useUnmergedTree = true
+                )
                     .assertIsDisplayed()
             }
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
-            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
+            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
             onNodeWithText(noLibrariesText)
                 .assertDoesNotExist()
-            onNodeWithTag(LibrariesListTags.PROGRESS_INDICATOR)
+            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
         }
-
-    }
-
-    @Test
-    fun pin_library() {
-
-        // Given
-        initializeLibrariesListScreen()
-
-        // When
-        composeRule.onNode(
-            isToggleableWithSiblingText(FakeLibraryRepository.Coil.name),
-            useUnmergedTree = true
-        ).performClick()
-
-        // Then
-        composeRule.onNode(
-            isToggleableWithSiblingText(FakeLibraryRepository.Coil.name),
-            useUnmergedTree = true
-        ).assertIsOn()
-
-    }
-
-    @Test
-    fun unpin_library() {
-
-        // Given
-        initializeLibrariesListScreen()
-
-        // When
-        composeRule.onNode(
-            isToggleableWithSiblingText(FakeLibraryRepository.Koin.name),
-            useUnmergedTree = true
-        ).performClick()
-
-        // Then
-        composeRule.onNode(
-            isToggleableWithSiblingText(FakeLibraryRepository.Koin.name),
-            useUnmergedTree = true
-        ).assertIsOff()
 
     }
 
@@ -335,16 +257,15 @@ class LibrariesListScreenTest {
         // Given
         val onLibraryClick: (Library) -> Unit = mock()
         initializeLibrariesListScreen(onLibraryClick = onLibraryClick)
-        val library = libraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)!!
 
         // When
         with(composeRule) {
-            onNodeWithTag(LibrariesListTags.LIBRARY_ITEM + library.name)
+            onNodeWithTag(LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
                 .performClick()
         }
 
         // Then
-        Mockito.verify(onLibraryClick).invoke(library)
+        Mockito.verify(onLibraryClick).invoke(FakeLibraryRepository.Kotlin.library)
 
     }
 
@@ -357,7 +278,7 @@ class LibrariesListScreenTest {
 
         // When
         with(composeRule) {
-            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON)
                 .performClick()
         }
 

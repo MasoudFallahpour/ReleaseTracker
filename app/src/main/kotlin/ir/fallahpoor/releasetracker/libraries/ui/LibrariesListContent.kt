@@ -43,12 +43,13 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
-object LibrariesListTags {
+object LibrariesListContentTags {
     const val LAST_UPDATE_CHECK_TEXT = "lastUpdateCheckText"
     const val ADD_LIBRARY_BUTTON = "addLibraryButton"
     const val PROGRESS_INDICATOR = "progressIndicator"
     const val LIBRARIES_LIST = "librariesList"
     const val LIBRARY_ITEM = "libraryItem_"
+    const val PIN_BUTTON = "pin_"
 }
 
 @Composable
@@ -59,7 +60,7 @@ fun LibrariesListContent(
     onLibraryClick: (Library) -> Unit,
     onLibraryDismissed: (Library) -> Unit,
     onPinLibraryClick: (Library, Boolean) -> Unit,
-    onAddLibraryClick: () -> Unit,
+    onAddLibraryClick: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -86,7 +87,7 @@ private fun ProgressIndicator() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .testTag(LibrariesListTags.PROGRESS_INDICATOR),
+            .testTag(LibrariesListContentTags.PROGRESS_INDICATOR),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
@@ -100,7 +101,7 @@ private fun LastUpdateCheckText(lastUpdateCheck: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(SPACE_NORMAL.dp)
-                .testTag(LibrariesListTags.LAST_UPDATE_CHECK_TEXT),
+                .testTag(LibrariesListContentTags.LAST_UPDATE_CHECK_TEXT),
             text = stringResource(R.string.last_check_for_updates, lastUpdateCheck)
         )
     }
@@ -117,7 +118,7 @@ private fun LibrariesList(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .testTag(LibrariesListTags.LIBRARIES_LIST),
+            .testTag(LibrariesListContentTags.LIBRARIES_LIST),
         contentAlignment = Alignment.BottomStart
     ) {
         if (libraries.isEmpty()) {
@@ -162,7 +163,7 @@ private fun LibraryItem(
         }
     )
     SwipeToDismiss(
-        modifier = modifier.testTag(LibrariesListTags.LIBRARY_ITEM + library.name),
+        modifier = modifier.testTag(LibrariesListContentTags.LIBRARY_ITEM + library.name),
         state = dismissState,
         dismissThresholds = { FractionalThreshold(0.3f) },
         directions = setOf(DismissDirection.StartToEnd),
@@ -223,6 +224,7 @@ private fun LibraryItemForeground(
             verticalAlignment = Alignment.CenterVertically
         ) {
             PinToggleButton(
+                modifier = Modifier.testTag(LibrariesListContentTags.PIN_BUTTON + library.name),
                 isPinned = library.isPinned(),
                 onPinnedChange = onPinLibraryClick
             )
@@ -241,8 +243,13 @@ private fun LibraryItemForeground(
 }
 
 @Composable
-private fun PinToggleButton(isPinned: Boolean, onPinnedChange: (Boolean) -> Unit) {
+private fun PinToggleButton(
+    modifier: Modifier = Modifier,
+    isPinned: Boolean,
+    onPinnedChange: (Boolean) -> Unit
+) {
     IconToggleButton(
+        modifier = modifier,
         checked = isPinned,
         onCheckedChange = onPinnedChange
     ) {
@@ -344,7 +351,7 @@ private fun AddLibraryButton(clickListener: () -> Unit) {
     FloatingActionButton(
         modifier = Modifier
             .padding(SPACE_NORMAL.dp)
-            .testTag(LibrariesListTags.ADD_LIBRARY_BUTTON),
+            .testTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON),
         onClick = clickListener
     ) {
         Icon(
