@@ -1,15 +1,17 @@
 package ir.fallahpoor.releasetracker.libraries.ui
 
+import android.content.Context
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.test.core.app.ApplicationProvider
+import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
-import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
-class LibrariesListContentTest {
+class LibrariesListTest {
 
     @get:Rule
     val composeRule = createComposeRule()
@@ -20,42 +22,50 @@ class LibrariesListContentTest {
         FakeLibraryRepository.Kotlin.library
     )
 
+    private val context: Context = ApplicationProvider.getApplicationContext()
+
     @Test
-    fun test_loading_state() {
+    fun list_of_libraries_is_displayed() {
 
         // Given
-        composeLibrariesListContent(librariesListState = LibrariesListState.Loading)
+        val libraries = listOf(
+            FakeLibraryRepository.Coil.library,
+            FakeLibraryRepository.Koin.library,
+            FakeLibraryRepository.Kotlin.library
+        )
+        composeLibrariesList(libraries = libraries)
 
         // Then
         with(composeRule) {
-            composeRule.onNodeWithTag(LibrariesListContentTags.LAST_UPDATE_CHECK_TEXT)
+            libraries.forEach {
+                onNodeWithTag(
+                    LibraryItemTags.LIBRARY_ITEM + it.name,
+                    useUnmergedTree = true
+                ).assertIsDisplayed()
+            }
+            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
                 .assertIsDisplayed()
-            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
-                .assertIsDisplayed()
-            onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+            onNodeWithText(context.getString(R.string.no_libraries), useUnmergedTree = true)
                 .assertDoesNotExist()
         }
 
     }
 
     @Test
-    fun list_of_libraries_is_displayed() {
+    fun a_proper_message_is_displayed_when_list_of_libraries_is_empty() {
 
         // Given
-        composeLibrariesListContent(
-            librariesListState = LibrariesListState.LibrariesLoaded(
-                libraries
-            )
-        )
+        composeLibrariesList(libraries = emptyList())
 
         // Then
         with(composeRule) {
-            onNodeWithTag(LibrariesListContentTags.LAST_UPDATE_CHECK_TEXT)
-                .assertIsDisplayed()
             onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
+                .onChildren()
+                .assertCountEquals(2)
+            onNodeWithText(context.getString(R.string.no_libraries), useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
+            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
+                .assertIsDisplayed()
         }
 
     }
@@ -66,8 +76,8 @@ class LibrariesListContentTest {
         // Given
         val library: Library = FakeLibraryRepository.Kotlin.library
         val onLibraryClick: (Library) -> Unit = mock()
-        composeLibrariesListContent(
-            librariesListState = LibrariesListState.LibrariesLoaded(libraries),
+        composeLibrariesList(
+            libraries = libraries,
             onLibraryClick = onLibraryClick
         )
 
@@ -86,8 +96,8 @@ class LibrariesListContentTest {
         // Given
         val library: Library = FakeLibraryRepository.Coil.library
         val onLibraryDismissed: (Library) -> Unit = mock()
-        composeLibrariesListContent(
-            librariesListState = LibrariesListState.LibrariesLoaded(libraries),
+        composeLibrariesList(
+            libraries = libraries,
             onLibraryDismissed = onLibraryDismissed
         )
 
@@ -106,19 +116,19 @@ class LibrariesListContentTest {
     fun correct_callback_is_called_when_a_library_is_pinned() {
 
         // Given
+        val library: Library = FakeLibraryRepository.Coil.library
         val onPinLibrary: (Library, Boolean) -> Unit = mock()
-        composeLibrariesListContent(
-            librariesListState = LibrariesListState.LibrariesLoaded(libraries),
+        composeLibrariesList(
+            libraries = libraries,
             onPinLibraryClick = onPinLibrary
         )
 
         // When
-        composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + FakeLibraryRepository.Coil.name
-        ).performClick()
+        composeRule.onNodeWithTag(LibraryItemTags.PIN_BUTTON + library.name)
+            .performClick()
 
         // Then
-        Mockito.verify(onPinLibrary).invoke(FakeLibraryRepository.Coil.library, true)
+        Mockito.verify(onPinLibrary).invoke(library, true)
 
     }
 
@@ -126,34 +136,52 @@ class LibrariesListContentTest {
     fun correct_callback_is_called_when_a_library_is_unpinned() {
 
         // Given
+        val library: Library = FakeLibraryRepository.Koin.library
         val onPinLibrary: (Library, Boolean) -> Unit = mock()
-        composeLibrariesListContent(
-            librariesListState = LibrariesListState.LibrariesLoaded(libraries),
+        composeLibrariesList(
+            libraries = libraries,
             onPinLibraryClick = onPinLibrary
         )
 
         // When
         composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + FakeLibraryRepository.Koin.name
+            LibraryItemTags.PIN_BUTTON + library.name
         ).performClick()
 
         // Then
-        Mockito.verify(onPinLibrary).invoke(FakeLibraryRepository.Koin.library, false)
+        Mockito.verify(onPinLibrary).invoke(library, false)
 
     }
 
-    private fun composeLibrariesListContent(
-        librariesListState: LibrariesListState = LibrariesListState.Loading,
-        lastUpdateCheck: String = "N/A",
+    @Test
+    fun correct_callback_is_called_when_add_library_button_is_clicked() {
+
+        // Given
+        val onAddLibraryLick: () -> Unit = mock()
+        composeLibrariesList(
+            libraries = libraries,
+            onAddLibraryClick = onAddLibraryLick
+        )
+
+        // When
+        composeRule.onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
+            .performClick()
+
+        // Then
+        Mockito.verify(onAddLibraryLick).invoke()
+
+    }
+
+    private fun composeLibrariesList(
+        libraries: List<Library>,
         onLibraryClick: (Library) -> Unit = {},
         onLibraryDismissed: (Library) -> Unit = {},
         onPinLibraryClick: (Library, Boolean) -> Unit = { _, _ -> },
         onAddLibraryClick: () -> Unit = {}
     ) {
         composeRule.setContent {
-            LibrariesListContent(
-                librariesListState = librariesListState,
-                lastUpdateCheck = lastUpdateCheck,
+            LibrariesList(
+                libraries = libraries,
                 onLibraryClick = onLibraryClick,
                 onLibraryDismissed = onLibraryDismissed,
                 onPinLibraryClick = onPinLibraryClick,
