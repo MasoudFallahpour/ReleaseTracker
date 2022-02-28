@@ -15,22 +15,22 @@ class FakeLibraryRepository : LibraryRepository {
 
     object Coil {
         const val name = "Coil"
-        private const val url = GITHUB_BASE_URL + "coil-kt/coil"
-        private const val version = "1.3.1"
+        const val url = GITHUB_BASE_URL + "coil-kt/coil"
+        const val version = "1.3.1"
         val library = Library(name = name, url = url, version = version)
     }
 
     object Kotlin {
         const val name = "Kotlin"
-        private const val url = GITHUB_BASE_URL + "JetBrains/kotlin"
-        private const val version = "1.5.21"
+        const val url = GITHUB_BASE_URL + "JetBrains/kotlin"
+        const val version = "1.5.21"
         val library = Library(name = name, url = url, version = version)
     }
 
     object Koin {
         const val name = "Koin"
-        private const val url = GITHUB_BASE_URL + "InsertKoinIO/koin"
-        private const val version = "3.1.2"
+        const val url = GITHUB_BASE_URL + "InsertKoinIO/koin"
+        const val version = "3.1.2"
         val library = Library(name = name, url = url, version = version, pinned = 1)
     }
 

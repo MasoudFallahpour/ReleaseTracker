@@ -85,12 +85,12 @@ class LibrariesListScreenTest {
         libraryRepository.libraries.forEach { library ->
             if (library.name == libraryName) {
                 composeRule.onNodeWithTag(
-                    LibrariesListContentTags.LIBRARY_ITEM + library.name,
+                    LibraryItemTags.LIBRARY_ITEM + library.name,
                     useUnmergedTree = true
                 ).assertDoesNotExist()
             } else {
                 composeRule.onNodeWithTag(
-                    LibrariesListContentTags.LIBRARY_ITEM + library.name,
+                    LibraryItemTags.LIBRARY_ITEM + library.name,
                     useUnmergedTree = true
                 ).assertIsDisplayed()
             }
@@ -115,15 +115,15 @@ class LibrariesListScreenTest {
         // Then
         with(composeRule) {
             onNodeWithTag(
-                LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name,
+                LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name,
                 useUnmergedTree = true
             ).assertDoesNotExist()
             onNodeWithTag(
-                LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name,
+                LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name,
                 useUnmergedTree = true
             ).assertIsDisplayed()
             onNodeWithTag(
-                LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Koin.name,
+                LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Koin.name,
                 useUnmergedTree = true
             ).assertIsDisplayed()
         }
@@ -173,7 +173,7 @@ class LibrariesListScreenTest {
         with(composeRule) {
             libraryRepository.libraries.forEach {
                 onNodeWithTag(
-                    LibrariesListContentTags.LIBRARY_ITEM + it.name,
+                    LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
                 )
                     .assertIsDisplayed()
@@ -210,7 +210,7 @@ class LibrariesListScreenTest {
         with(composeRule) {
             libraryRepository.libraries.forEach {
                 onNodeWithTag(
-                    LibrariesListContentTags.LIBRARY_ITEM + it.name,
+                    LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
                 )
                     .assertIsDisplayed()
@@ -260,7 +260,7 @@ class LibrariesListScreenTest {
 
         // When
         with(composeRule) {
-            onNodeWithTag(LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
+            onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
                 .performClick()
         }
 
@@ -278,7 +278,7 @@ class LibrariesListScreenTest {
 
         // When
         with(composeRule) {
-            onNodeWithTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
                 .performClick()
         }
 

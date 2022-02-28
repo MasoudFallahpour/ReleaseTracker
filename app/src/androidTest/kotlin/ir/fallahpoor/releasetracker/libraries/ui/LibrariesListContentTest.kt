@@ -31,11 +31,11 @@ class LibrariesListContentTest {
                 .assertIsDisplayed()
             onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertIsDisplayed()
-            onNodeWithTag(LibrariesListContentTags.LIBRARIES_LIST)
+            onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
                 .assertDoesNotExist()
             onNodeWithText(context.getString(R.string.no_libraries), useUnmergedTree = true)
                 .assertDoesNotExist()
-            onNodeWithTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
                 .assertDoesNotExist()
         }
 
@@ -62,11 +62,11 @@ class LibrariesListContentTest {
                 .assertIsDisplayed()
             libraries.forEach {
                 onNodeWithTag(
-                    LibrariesListContentTags.LIBRARY_ITEM + it.name,
+                    LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
                 ).assertIsDisplayed()
             }
-            onNodeWithTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
                 .assertIsDisplayed()
             onNodeWithText(context.getString(R.string.no_libraries), useUnmergedTree = true)
                 .assertDoesNotExist()
@@ -90,12 +90,12 @@ class LibrariesListContentTest {
         with(composeRule) {
             composeRule.onNodeWithTag(LibrariesListContentTags.LAST_UPDATE_CHECK_TEXT)
                 .assertIsDisplayed()
-            onNodeWithTag(LibrariesListContentTags.LIBRARIES_LIST)
+            onNodeWithTag(LibrariesListTags.LIBRARIES_LIST)
                 .onChildren()
                 .assertCountEquals(2)
             onNodeWithText(context.getString(R.string.no_libraries), useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
                 .assertIsDisplayed()
             onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
@@ -119,7 +119,7 @@ class LibrariesListContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
+        composeRule.onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
             .performClick()
 
         // Then
@@ -143,7 +143,7 @@ class LibrariesListContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibrariesListContentTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name)
+        composeRule.onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name)
             .performTouchInput {
                 swipeRight()
             }
@@ -170,7 +170,7 @@ class LibrariesListContentTest {
 
         // When
         composeRule.onNodeWithTag(
-            LibrariesListContentTags.PIN_BUTTON + FakeLibraryRepository.Coil.name
+            LibraryItemTags.PIN_BUTTON + FakeLibraryRepository.Coil.name
         ).performClick()
 
         // Then
@@ -195,7 +195,7 @@ class LibrariesListContentTest {
 
         // When
         composeRule.onNodeWithTag(
-            LibrariesListContentTags.PIN_BUTTON + FakeLibraryRepository.Koin.name
+            LibraryItemTags.PIN_BUTTON + FakeLibraryRepository.Koin.name
         ).performClick()
 
         // Then
@@ -219,7 +219,7 @@ class LibrariesListContentTest {
         )
 
         // When
-        composeRule.onNodeWithTag(LibrariesListContentTags.ADD_LIBRARY_BUTTON)
+        composeRule.onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
             .performClick()
 
         // Then
