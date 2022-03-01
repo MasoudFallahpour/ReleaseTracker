@@ -38,13 +38,11 @@ following list highlights its tech stack:
 - Compose
 - ViewModel
 - Coroutines
-- LiveData
 - Room
 - Navigation
 - Dagger Hilt
 - WorkManager
 - Retrofit
-- Timber
 
 # Contributing
 Pull requests are welcome! Please make your pull requests against the `dev` branch. If you have a
