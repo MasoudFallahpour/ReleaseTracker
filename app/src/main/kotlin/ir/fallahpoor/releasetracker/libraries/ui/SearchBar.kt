@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+import ir.fallahpoor.releasetracker.theme.spacing
 
 object SearchBarTags {
     const val CLOSE_BUTTON = "searchBarCloseButton"
@@ -41,7 +41,7 @@ object SearchBarTags {
 fun SearchBar(
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.small,
-    elevation: Dp = SPACE_SMALL.dp,
+    elevation: Dp = MaterialTheme.spacing.small,
     hint: String,
     query: String,
     onQueryChange: (String) -> Unit,

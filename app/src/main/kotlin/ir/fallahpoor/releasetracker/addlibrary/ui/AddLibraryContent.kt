@@ -23,9 +23,8 @@ import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
-import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
-import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+import ir.fallahpoor.releasetracker.theme.spacing
 
 @Composable
 fun AddLibraryContent(
@@ -44,7 +43,7 @@ fun AddLibraryContent(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(SPACE_NORMAL.dp)
+                    .padding(MaterialTheme.spacing.normal)
             ) {
                 val focusRequester = remember { FocusRequester() }
                 LibraryNameInput(
@@ -54,7 +53,7 @@ fun AddLibraryContent(
                     showError = state is AddLibraryState.EmptyLibraryName,
                     onNextClick = { focusRequester.requestFocus() }
                 )
-                Spacer(modifier = Modifier.height(SPACE_SMALL.dp))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                 LibraryUrlInput(
                     modifier = Modifier.fillMaxWidth(),
                     libraryUrlPath = libraryUrlPath,
@@ -210,7 +209,7 @@ private fun AddLibraryButton(state: AddLibraryState, onAddLibraryClick: () -> Un
         Button(
             modifier = Modifier
                 .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
-                .padding(SPACE_NORMAL.dp),
+                .padding(MaterialTheme.spacing.normal),
             onClick = onAddLibraryClick,
             enabled = state !is AddLibraryState.InProgress
         ) {
@@ -222,6 +221,7 @@ private fun AddLibraryButton(state: AddLibraryState, onAddLibraryClick: () -> Un
                     strokeWidth = 3.dp
                 )
             } else {
+                MaterialTheme
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()

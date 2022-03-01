@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,12 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+import ir.fallahpoor.releasetracker.theme.spacing
 
 object LibrariesListContentTags {
     const val LAST_UPDATE_CHECK_TEXT = "lastUpdateCheckText"
@@ -74,7 +74,7 @@ private fun LastUpdateCheckText(lastUpdateCheck: String) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(SPACE_NORMAL.dp)
+                .padding(MaterialTheme.spacing.normal)
                 .testTag(LibrariesListContentTags.LAST_UPDATE_CHECK_TEXT),
             text = stringResource(R.string.last_check_for_updates, lastUpdateCheck)
         )

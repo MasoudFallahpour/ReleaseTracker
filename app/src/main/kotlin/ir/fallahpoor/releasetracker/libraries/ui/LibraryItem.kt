@@ -29,10 +29,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
-import ir.fallahpoor.releasetracker.common.SPACE_SMALL
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
+import ir.fallahpoor.releasetracker.theme.spacing
 
 object LibraryItemTags {
     const val LIBRARY_ITEM = "libraryItem_"
@@ -125,7 +124,7 @@ private fun LibraryVersion(libraryVersion: String) {
     AnimatedContent(targetState = libraryVersion) { version: String ->
         Text(
             modifier = Modifier
-                .padding(horizontal = SPACE_NORMAL.dp)
+                .padding(horizontal = MaterialTheme.spacing.normal)
                 .testTag(LibraryItemTags.LIBRARY_VERSION),
             text = version
         )
@@ -176,7 +175,7 @@ private fun LibraryUrlText(libraryUrl: String) {
     EllipsisText(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = SPACE_SMALL.dp)
+            .padding(top = MaterialTheme.spacing.small)
             .testTag(LibraryItemTags.LIBRARY_URL),
         text = libraryUrl,
         style = MaterialTheme.typography.body2
@@ -209,7 +208,7 @@ private fun LibraryItemBackground(
     Box(
         modifier = modifier
             .background(backgroundColor)
-            .padding(horizontal = SPACE_NORMAL.dp)
+            .padding(horizontal = MaterialTheme.spacing.normal)
     ) {
         val iconColor by animateColorAsState(
             targetValue = if (dismissState.targetValue == DismissValue.DismissedToEnd) {

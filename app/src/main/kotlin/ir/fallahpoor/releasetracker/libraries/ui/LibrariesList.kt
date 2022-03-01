@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
@@ -20,10 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.common.SPACE_NORMAL
 import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.theme.spacing
 
 object LibrariesListTags {
     const val LIBRARIES_LIST = "librariesList"
@@ -76,7 +72,7 @@ private fun NoLibrariesText() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            modifier = Modifier.padding(SPACE_NORMAL.dp),
+            modifier = Modifier.padding(MaterialTheme.spacing.normal),
             text = stringResource(R.string.no_libraries)
         )
     }
@@ -86,7 +82,7 @@ private fun NoLibrariesText() {
 private fun AddLibraryButton(clickListener: () -> Unit) {
     FloatingActionButton(
         modifier = Modifier
-            .padding(SPACE_NORMAL.dp)
+            .padding(MaterialTheme.spacing.normal)
             .testTag(LibrariesListTags.ADD_LIBRARY_BUTTON),
         onClick = clickListener
     ) {
