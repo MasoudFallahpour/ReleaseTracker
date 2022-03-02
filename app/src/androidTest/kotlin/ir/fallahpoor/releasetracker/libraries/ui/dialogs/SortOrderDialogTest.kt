@@ -22,13 +22,7 @@ class SortOrderDialogTest {
     fun dialog_is_initialized_correctly() {
 
         // Given
-        composeTestRule.setContent {
-            SortOrderDialog(
-                currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderClick = {},
-                onDismiss = {}
-            )
-        }
+        composeSortOrderDialog()
 
         // Then
         with(composeTestRule) {
@@ -40,7 +34,7 @@ class SortOrderDialogTest {
                     useUnmergedTree = true
                 ).assertIsDisplayed()
             }
-            onNodeWithTag(context.getString(SortOrder.Z_TO_A.label))
+            onNodeWithTag(context.getString(SortOrder.A_TO_Z.label))
                 .assertIsSelected()
         }
 
@@ -51,13 +45,7 @@ class SortOrderDialogTest {
 
         // Given
         val onSortOrderClick: (SortOrder) -> Unit = mock()
-        composeTestRule.setContent {
-            SortOrderDialog(
-                currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderClick = onSortOrderClick,
-                onDismiss = {}
-            )
-        }
+        composeSortOrderDialog(onSortOrderClick = onSortOrderClick)
 
         // When
         composeTestRule.onNodeWithText(
@@ -75,13 +63,7 @@ class SortOrderDialogTest {
 
         // Given
         val onDismiss: () -> Unit = mock()
-        composeTestRule.setContent {
-            SortOrderDialog(
-                currentSortOrder = SortOrder.Z_TO_A,
-                onSortOrderClick = {},
-                onDismiss = onDismiss
-            )
-        }
+        composeSortOrderDialog(onDismiss = onDismiss)
 
         // When
         Espresso.pressBack()
@@ -92,5 +74,19 @@ class SortOrderDialogTest {
     }
 
     private inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
+
+    private fun composeSortOrderDialog(
+        currentSortOrder: SortOrder = SortOrder.A_TO_Z,
+        onSortOrderClick: (SortOrder) -> Unit = {},
+        onDismiss: () -> Unit = {}
+    ) {
+        composeTestRule.setContent {
+            SortOrderDialog(
+                currentSortOrder = currentSortOrder,
+                onSortOrderClick = onSortOrderClick,
+                onDismiss = onDismiss
+            )
+        }
+    }
 
 }

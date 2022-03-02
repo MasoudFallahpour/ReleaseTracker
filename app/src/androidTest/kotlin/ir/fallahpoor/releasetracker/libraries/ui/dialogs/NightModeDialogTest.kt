@@ -22,13 +22,7 @@ class NightModeDialogTest {
     fun dialog_is_initialized_correctly() {
 
         // Given
-        composeTestRule.setContent {
-            NightModeDialog(
-                currentNightMode = NightMode.ON,
-                onNightModeClick = {},
-                onDismiss = {}
-            )
-        }
+        composeNightModeDialog()
 
         // Then
         with(composeTestRule) {
@@ -51,13 +45,10 @@ class NightModeDialogTest {
 
         // Given
         val onNightModeClick: (NightMode) -> Unit = mock()
-        composeTestRule.setContent {
-            NightModeDialog(
-                currentNightMode = NightMode.OFF,
-                onNightModeClick = onNightModeClick,
-                onDismiss = {}
-            )
-        }
+        composeNightModeDialog(
+            currentNightMode = NightMode.OFF,
+            onNightModeClick = onNightModeClick
+        )
 
         // When
         composeTestRule.onNodeWithText(
@@ -75,13 +66,7 @@ class NightModeDialogTest {
 
         // Given
         val onDismiss: () -> Unit = mock()
-        composeTestRule.setContent {
-            NightModeDialog(
-                currentNightMode = NightMode.OFF,
-                onNightModeClick = {},
-                onDismiss = onDismiss
-            )
-        }
+        composeNightModeDialog(onDismiss = onDismiss)
 
         // When
         Espresso.pressBack()
@@ -92,5 +77,19 @@ class NightModeDialogTest {
     }
 
     private inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
+
+    private fun composeNightModeDialog(
+        currentNightMode: NightMode = NightMode.ON,
+        onNightModeClick: (NightMode) -> Unit = {},
+        onDismiss: () -> Unit = {}
+    ) {
+        composeTestRule.setContent {
+            NightModeDialog(
+                currentNightMode = currentNightMode,
+                onNightModeClick = onNightModeClick,
+                onDismiss = onDismiss
+            )
+        }
+    }
 
 }
