@@ -29,7 +29,7 @@ class ToolbarTest {
     fun toolbar_is_initialized_correctly_when_night_mode_is_supported() {
 
         // Given
-        initializeToolbar()
+        composeToolbar()
 
         // Then
         composeTestRule.onNodeWithText(appNameText)
@@ -55,7 +55,7 @@ class ToolbarTest {
     fun toolbar_is_initialized_correctly_when_night_mode_is_not_supported() {
 
         // Given
-        initializeToolbar(isNightModeSupported = false)
+        composeToolbar(isNightModeSupported = false)
 
         // Then
         composeTestRule.onNodeWithText(appNameText)
@@ -81,7 +81,7 @@ class ToolbarTest {
     fun sort_dialog_is_displayed_when_sort_button_is_clicked() {
 
         // Given
-        initializeToolbar()
+        composeToolbar()
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -99,7 +99,7 @@ class ToolbarTest {
     fun night_mode_dialog_is_displayed_when_night_mode_button_is_clicked() {
 
         // Given
-        initializeToolbar()
+        composeToolbar()
 
         // When
         with(composeTestRule) {
@@ -123,7 +123,7 @@ class ToolbarTest {
     fun search_bar_is_displayed_when_search_button_is_clicked() {
 
         // Given
-        initializeToolbar()
+        composeToolbar()
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -142,7 +142,7 @@ class ToolbarTest {
 
         // Given
         val onSortOrderChange: (SortOrder) -> Unit = mock()
-        initializeToolbar(onSortOrderChange = onSortOrderChange)
+        composeToolbar(onSortOrderChange = onSortOrderChange)
 
         // When
         with(composeTestRule) {
@@ -165,7 +165,7 @@ class ToolbarTest {
     fun sort_dialog_is_closed_when_sort_order_is_selected() {
 
         // Given
-        initializeToolbar()
+        composeToolbar()
 
         // When
         with(composeTestRule) {
@@ -190,7 +190,7 @@ class ToolbarTest {
 
         // Given
         val onNightModeChange: (NightMode) -> Unit = mock()
-        initializeToolbar(onNightModeChange = onNightModeChange)
+        composeToolbar(onNightModeChange = onNightModeChange)
 
         // When
         with(composeTestRule) {
@@ -213,7 +213,7 @@ class ToolbarTest {
     fun night_mode_dialog_is_closed_when_night_mode_is_selected() {
 
         // Given
-        initializeToolbar()
+        composeToolbar()
 
         // When
         with(composeTestRule) {
@@ -238,7 +238,7 @@ class ToolbarTest {
 
         // Given
         val onSearchQueryChange: (String) -> Unit = mock()
-        initializeToolbar(onSearchQueryChange = onSearchQueryChange)
+        composeToolbar(onSearchQueryChange = onSearchQueryChange)
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -258,7 +258,7 @@ class ToolbarTest {
 
         // Given
         val onSearchQueryChange: (String) -> Unit = mock()
-        initializeToolbar(onSearchQueryChange = onSearchQueryChange)
+        composeToolbar(onSearchQueryChange = onSearchQueryChange)
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -277,7 +277,7 @@ class ToolbarTest {
     fun toolbar_is_set_to_normal_mode_when_search_bar_is_closed() {
 
         // Given
-        initializeToolbar()
+        composeToolbar()
 
         // When
         composeTestRule.onNodeWithContentDescription(
@@ -293,7 +293,7 @@ class ToolbarTest {
 
     }
 
-    private fun initializeToolbar(
+    private fun composeToolbar(
         currentSortOrder: SortOrder = SortOrder.A_TO_Z,
         onSortOrderChange: (SortOrder) -> Unit = {},
         isNightModeSupported: Boolean = true,
