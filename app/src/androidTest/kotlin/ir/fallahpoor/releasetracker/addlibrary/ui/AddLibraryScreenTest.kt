@@ -9,7 +9,6 @@ import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.addlibrary.Event
-import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
 import org.junit.Test
@@ -31,58 +30,30 @@ class AddLibraryScreenTest {
     fun screen_is_initialized_correctly() {
 
         // Given
-        initializeAddLibraryScreen()
+        composeAddLibraryScreen()
 
         // When the screen is initially displayed
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.TITLE)
+            onNodeWithTag(AddLibraryScreenTags.TITLE)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.BACK_BUTTON)
+            onNodeWithTag(AddLibraryScreenTags.BACK_BUTTON)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.CONTENT)
+            onNodeWithTag(AddLibraryScreenTags.CONTENT)
                 .assertIsDisplayed()
         }
 
     }
 
     @Test
-    fun correct_library_name_is_displayed() {
+    fun correct_event_is_called_when_library_name_is_entered() {
 
         // Given
-        initializeAddLibraryScreen(libraryName = "Coil")
-
-        // Then
-        composeTestRule.onNodeWithTag(
-            AddLibraryTags.LIBRARY_NAME_TEXT_FIELD,
-            useUnmergedTree = true
-        ).assertTextEquals("Coil")
-
-    }
-
-    @Test
-    fun correct_library_url_is_displayed() {
-
-        // Given
-        initializeAddLibraryScreen(libraryUrl = "coil-kt/coil")
-
-        // Then
-        composeTestRule.onNodeWithTag(
-            AddLibraryTags.LIBRARY_URL_TEXT_FIELD,
-            useUnmergedTree = true
-        ).assertTextEquals(GITHUB_BASE_URL + "coil-kt/coil")
-
-    }
-
-    @Test
-    fun correct_intent_is_called_when_library_name_is_entered() {
-
-        // Given
-        initializeAddLibraryScreen()
+        composeAddLibraryScreen()
 
         // When
-        composeTestRule.onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
+        composeTestRule.onNodeWithTag(AddLibraryContentTags.LIBRARY_NAME_TEXT_FIELD)
             .performTextInput("Coil")
 
         // Then
@@ -91,13 +62,13 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun correct_intent_is_called_when_library_URL_path_is_entered() {
+    fun correct_event_is_called_when_library_URL_path_is_entered() {
 
         // Given
-        initializeAddLibraryScreen()
+        composeAddLibraryScreen()
 
         // When
-        composeTestRule.onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
+        composeTestRule.onNodeWithTag(AddLibraryContentTags.LIBRARY_URL_TEXT_FIELD)
             .performTextInput("coil-kt/coil")
 
         // Then
@@ -107,13 +78,13 @@ class AddLibraryScreenTest {
     }
 
     @Test
-    fun correct_intent_is_called_when_adding_a_new_library() {
+    fun correct_event_is_called_when_adding_a_new_library() {
 
         // Given
-        initializeAddLibraryScreen(libraryName = "Coil", libraryUrl = "coil-kt/coil")
+        composeAddLibraryScreen(libraryName = "Coil", libraryUrl = "coil-kt/coil")
 
         // When
-        composeTestRule.onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+        composeTestRule.onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
             .performClick()
 
         // Then
@@ -129,7 +100,7 @@ class AddLibraryScreenTest {
         // Given
         val context: Context = ApplicationProvider.getApplicationContext()
         val onBackClick: () -> Unit = mock()
-        initializeAddLibraryScreen(onBackClick = onBackClick)
+        composeAddLibraryScreen(onBackClick = onBackClick)
 
         // When
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.back))
@@ -140,7 +111,7 @@ class AddLibraryScreenTest {
 
     }
 
-    private fun initializeAddLibraryScreen(
+    private fun composeAddLibraryScreen(
         state: AddLibraryState = AddLibraryState.Initial,
         libraryName: String = "",
         libraryUrl: String = "",

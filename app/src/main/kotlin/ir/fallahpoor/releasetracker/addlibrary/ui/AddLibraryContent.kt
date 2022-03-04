@@ -26,6 +26,14 @@ import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import ir.fallahpoor.releasetracker.theme.spacing
 
+object AddLibraryContentTags {
+    const val PROGRESS_INDICATOR = "progressIndicator"
+    const val LIBRARY_NAME_TEXT_FIELD = "libraryNameTextField"
+    const val LIBRARY_URL_TEXT_FIELD = "libraryUrlTextField"
+    const val ADD_LIBRARY_BUTTON = "addLibraryButton"
+    const val ADD_LIBRARY_BUTTON_TEXT = "addLibraryButtonText"
+}
+
 @Composable
 fun AddLibraryContent(
     modifier: Modifier = Modifier,
@@ -38,7 +46,7 @@ fun AddLibraryContent(
     onAddLibraryClick: (String, String) -> Unit,
     onErrorDismissed: () -> Unit
 ) {
-    Box(modifier = modifier.testTag(AddLibraryTags.CONTENT)) {
+    Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -134,8 +142,7 @@ private fun LibraryNameTextField(
     onNextClick: () -> Unit
 ) {
     OutlinedTextField(
-        modifier = modifier
-            .testTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD),
+        modifier = modifier.testTag(AddLibraryContentTags.LIBRARY_NAME_TEXT_FIELD),
         value = libraryName,
         label = {
             Text(text = stringResource(R.string.library_name))
@@ -168,7 +175,7 @@ private fun LibraryUrlPathTextField(
 ) {
     OutlinedTextFieldWithPrefix(
         modifier = modifier
-            .testTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
+            .testTag(AddLibraryContentTags.LIBRARY_URL_TEXT_FIELD)
             .focusRequester(focusRequester),
         prefix = GITHUB_BASE_URL,
         hint = stringResource(R.string.library_url),
@@ -208,7 +215,7 @@ private fun AddLibraryButton(state: AddLibraryState, onAddLibraryClick: () -> Un
     ) {
         Button(
             modifier = Modifier
-                .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+                .testTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .padding(MaterialTheme.spacing.normal),
             onClick = onAddLibraryClick,
             enabled = state !is AddLibraryState.InProgress
@@ -217,7 +224,7 @@ private fun AddLibraryButton(state: AddLibraryState, onAddLibraryClick: () -> Un
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(30.dp)
-                        .testTag(AddLibraryTags.PROGRESS_INDICATOR),
+                        .testTag(AddLibraryContentTags.PROGRESS_INDICATOR),
                     strokeWidth = 3.dp
                 )
             } else {
@@ -225,7 +232,7 @@ private fun AddLibraryButton(state: AddLibraryState, onAddLibraryClick: () -> Un
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT),
+                        .testTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT),
                     text = stringResource(R.string.add_library),
                     textAlign = TextAlign.Center
                 )

@@ -41,15 +41,15 @@ class AddLibraryContentTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.PROGRESS_INDICATOR, useUnmergedTree = true)
                 .assertDoesNotExist()
-            onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.LIBRARY_NAME_TEXT_FIELD, useUnmergedTree = true)
                 .assertTextEquals("Coil")
-            onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.LIBRARY_URL_TEXT_FIELD, useUnmergedTree = true)
                 .assertTextEquals(GITHUB_BASE_URL + "coil-kt/coil")
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
@@ -69,11 +69,11 @@ class AddLibraryContentTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.PROGRESS_INDICATOR, useUnmergedTree = true)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertIsDisplayed()
@@ -93,11 +93,11 @@ class AddLibraryContentTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.PROGRESS_INDICATOR, useUnmergedTree = true)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
@@ -117,11 +117,11 @@ class AddLibraryContentTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.PROGRESS_INDICATOR, useUnmergedTree = true)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
@@ -141,11 +141,11 @@ class AddLibraryContentTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .assertIsNotEnabled()
-            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.PROGRESS_INDICATOR, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
@@ -169,11 +169,11 @@ class AddLibraryContentTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
+            onNodeWithTag(AddLibraryContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
@@ -201,11 +201,11 @@ class AddLibraryContentTest {
 
         // Then
         with(composeTestRule) {
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
                 .assertIsEnabled()
-            onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
+            onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON_TEXT, useUnmergedTree = true)
                 .assertIsDisplayed()
-            onNodeWithTag(AddLibraryTags.PROGRESS_INDICATOR)
+            onNodeWithTag(AddLibraryContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
             onNodeWithText(emptyLibraryNameErrorText)
                 .assertDoesNotExist()
@@ -228,7 +228,7 @@ class AddLibraryContentTest {
         composeAddLibraryContent(onLibraryNameChange = onLibraryNameChange)
 
         // When
-        composeTestRule.onNodeWithTag(AddLibraryTags.LIBRARY_NAME_TEXT_FIELD)
+        composeTestRule.onNodeWithTag(AddLibraryContentTags.LIBRARY_NAME_TEXT_FIELD)
             .performTextInput("Coil")
 
         // Then
@@ -244,7 +244,7 @@ class AddLibraryContentTest {
         composeAddLibraryContent(onLibraryUrlPathChange = onLibraryUrlPathChange)
 
         // When
-        composeTestRule.onNodeWithTag(AddLibraryTags.LIBRARY_URL_TEXT_FIELD)
+        composeTestRule.onNodeWithTag(AddLibraryContentTags.LIBRARY_URL_TEXT_FIELD)
             .performTextInput("coil-kt/coil")
 
         // Then
@@ -264,7 +264,7 @@ class AddLibraryContentTest {
         )
 
         // When
-        composeTestRule.onNodeWithTag(AddLibraryTags.ADD_LIBRARY_BUTTON)
+        composeTestRule.onNodeWithTag(AddLibraryContentTags.ADD_LIBRARY_BUTTON)
             .performClick()
 
         // Then

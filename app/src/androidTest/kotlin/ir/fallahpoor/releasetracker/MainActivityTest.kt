@@ -1,18 +1,16 @@
 package ir.fallahpoor.releasetracker
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryTags
+import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryScreenTags
 import ir.fallahpoor.releasetracker.libraries.ui.LibrariesListTags
 import org.junit.Rule
 import org.junit.Test
 
-@OptIn(ExperimentalAnimationApi::class)
 @HiltAndroidTest
 class MainActivityTest {
 
@@ -55,7 +53,7 @@ class MainActivityTest {
             .performClick()
 
         // Then
-        composeRule.onNodeWithTag(AddLibraryTags.SCREEN)
+        composeRule.onNodeWithTag(AddLibraryScreenTags.SCREEN)
             .assertIsDisplayed()
 
     }

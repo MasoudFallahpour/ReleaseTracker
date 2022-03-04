@@ -22,6 +22,13 @@ import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.addlibrary.Event
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
+object AddLibraryScreenTags {
+    const val SCREEN = "screen"
+    const val CONTENT = "content"
+    const val TITLE = "title"
+    const val BACK_BUTTON = "backButton"
+}
+
 @Composable
 fun AddLibraryScreen(
     addLibraryViewModel: AddLibraryViewModel = hiltViewModel(),
@@ -31,7 +38,7 @@ fun AddLibraryScreen(
     ReleaseTrackerTheme(darkTheme = isDarkTheme) {
         val scaffoldState = rememberScaffoldState()
         Scaffold(
-            modifier = Modifier.testTag(AddLibraryTags.SCREEN),
+            modifier = Modifier.testTag(AddLibraryScreenTags.SCREEN),
             topBar = { AppBar(onBackClick) },
             scaffoldState = scaffoldState,
             snackbarHost = {
@@ -41,7 +48,9 @@ fun AddLibraryScreen(
             val state: AddLibraryScreenState by addLibraryViewModel.state.collectAsState()
             val keyboardController = LocalSoftwareKeyboardController.current
             AddLibraryContent(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(AddLibraryScreenTags.CONTENT),
                 snackbarHostState = scaffoldState.snackbarHostState,
                 state = state.addLibraryState,
                 libraryName = state.libraryName,
@@ -67,7 +76,7 @@ private fun AppBar(onBackClick: () -> Unit) {
     TopAppBar(
         title = {
             Text(
-                modifier = Modifier.testTag(AddLibraryTags.TITLE),
+                modifier = Modifier.testTag(AddLibraryScreenTags.TITLE),
                 text = stringResource(R.string.add_library)
             )
         },
@@ -80,7 +89,7 @@ private fun AppBar(onBackClick: () -> Unit) {
 @Composable
 private fun BackButton(onBackClick: () -> Unit) {
     IconButton(
-        modifier = Modifier.testTag(AddLibraryTags.BACK_BUTTON),
+        modifier = Modifier.testTag(AddLibraryScreenTags.BACK_BUTTON),
         onClick = onBackClick
     ) {
         Icon(
