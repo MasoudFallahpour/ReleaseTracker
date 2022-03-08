@@ -19,7 +19,7 @@ class FakeStorage : Storage {
 
     override fun getSortOrder() = sortOrder
 
-    override fun setLastUpdateCheck(date: String) {
+    override suspend fun setLastUpdateCheck(date: String) {
         lastUpdateCheckDateLiveData.value = date
     }
 

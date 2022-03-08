@@ -76,7 +76,7 @@ class UpdateVersionsWorker
                 currentVersion != "N/A" &&
                 latestVersion != currentVersion
 
-    private fun saveUpdateDate() {
+    private suspend fun saveUpdateDate() {
         val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
         libraryRepository.setLastUpdateCheck(simpleDateFormat.format(Date()))
     }

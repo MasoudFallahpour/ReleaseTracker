@@ -111,7 +111,7 @@ class FakeLibraryRepository : LibraryRepository {
             emit(LAST_UPDATE_CHECK)
         }
 
-    override fun setLastUpdateCheck(date: String) {
+    override suspend fun setLastUpdateCheck(date: String) {
         TODO("Not yet implemented")
     }
 

@@ -23,6 +23,6 @@ interface LibraryRepository {
 
     fun getLastUpdateCheck(): Flow<String>
 
-    fun setLastUpdateCheck(date: String)
+    suspend fun setLastUpdateCheck(date: String)
 
 }

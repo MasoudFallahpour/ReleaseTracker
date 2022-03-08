@@ -38,10 +38,8 @@ class LocalStorage @Inject constructor(
         return SortOrder.valueOf(sortOrderStr ?: SortOrder.A_TO_Z.name)
     }
 
-    override fun setLastUpdateCheck(date: String) {
-        runBlocking {
-            putString(KEY_LAST_UPDATE_CHECK, date)
-        }
+    override suspend fun setLastUpdateCheck(date: String) {
+        putString(KEY_LAST_UPDATE_CHECK, date)
     }
 
     override fun getLastUpdateCheck(): Flow<String> {

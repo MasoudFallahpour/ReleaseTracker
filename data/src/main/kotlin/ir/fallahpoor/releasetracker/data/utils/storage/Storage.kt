@@ -10,7 +10,7 @@ interface Storage {
 
     fun getSortOrder(): SortOrder
 
-    fun setLastUpdateCheck(date: String)
+    suspend fun setLastUpdateCheck(date: String)
 
     fun getLastUpdateCheck(): Flow<String>
 
