@@ -28,9 +28,7 @@ class AddLibraryViewModel
         when (event) {
             is Event.UpdateLibraryName -> updateLibraryName(event.libraryName)
             is Event.UpdateLibraryUrlPath -> updateLibraryUrlPath(event.libraryUrlPath)
-            is Event.AddLibrary -> {
-                addLibrary(event.libraryName, event.libraryUrlPath)
-            }
+            is Event.AddLibrary -> addLibrary(event.libraryName, event.libraryUrlPath)
             is Event.ErrorDismissed -> resetUiState()
         }
     }
@@ -50,28 +48,28 @@ class AddLibraryViewModel
     private fun addLibrary(libraryName: String, libraryUrlPath: String) {
 
         if (libraryName.isEmpty()) {
-            _state.value = createNewState(AddLibraryState.EmptyLibraryName)
+            _state.value = _state.value.copy(addLibraryState = AddLibraryState.EmptyLibraryName)
             return
         }
 
         if (libraryUrlPath.isEmpty()) {
-            _state.value = createNewState(AddLibraryState.EmptyLibraryUrl)
+            _state.value = _state.value.copy(addLibraryState = AddLibraryState.EmptyLibraryUrl)
             return
         }
 
         if (!isGithubUrlPath(libraryUrlPath)) {
-            _state.value = createNewState(AddLibraryState.InvalidLibraryUrl)
+            _state.value = _state.value.copy(addLibraryState = AddLibraryState.InvalidLibraryUrl)
             return
         }
 
-        _state.value = createNewState(AddLibraryState.InProgress)
+        _state.value = _state.value.copy(addLibraryState = AddLibraryState.InProgress)
 
         viewModelScope.launch {
             val state: AddLibraryScreenState = try {
                 val library: Library? = libraryRepository.getLibrary(libraryName)
                 val libraryAlreadyExists = library != null
                 if (libraryAlreadyExists) {
-                    createNewState(AddLibraryState.Error("Library already exists"))
+                    _state.value.copy(addLibraryState = AddLibraryState.Error("Library already exists"))
                 } else {
                     val libraryVersion: String =
                         libraryRepository.getLibraryVersion(libraryName, libraryUrlPath)
@@ -88,15 +86,12 @@ class AddLibraryViewModel
                 }
             } catch (t: Throwable) {
                 val message = exceptionParser.getMessage(t)
-                createNewState(AddLibraryState.Error(message))
+                _state.value.copy(addLibraryState = AddLibraryState.Error(message))
             }
             _state.value = state
         }
 
     }
-
-    private fun createNewState(addLibraryState: AddLibraryState): AddLibraryScreenState =
-        _state.value.copy(addLibraryState = addLibraryState)
 
     private fun isGithubUrlPath(url: String): Boolean = GITHUB_URL_PATH_REGEX.matches(url)
 

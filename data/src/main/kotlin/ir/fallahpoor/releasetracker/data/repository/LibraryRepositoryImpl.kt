@@ -31,9 +31,8 @@ class LibraryRepositoryImpl
         libraryDao.update(library)
     }
 
-    override suspend fun getLibrary(libraryName: String): Library? {
-        return libraryDao.get(libraryName.trim())
-    }
+    override suspend fun getLibrary(libraryName: String): Library? =
+        libraryDao.get(libraryName.trim())
 
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
         libraryDao.getAllAsFlow()
@@ -60,12 +59,10 @@ class LibraryRepositoryImpl
     private fun getRefinedLibraryVersion(
         libraryName: String,
         libraryVersion: LibraryVersion
-    ): String {
-        return if (libraryVersion.name.isNotBlank()) {
-            getRefinedLibraryVersion(libraryName, libraryVersion.name)
-        } else {
-            getRefinedLibraryVersion(libraryName, libraryVersion.tagName)
-        }
+    ): String = if (libraryVersion.name.isNotBlank()) {
+        getRefinedLibraryVersion(libraryName, libraryVersion.name)
+    } else {
+        getRefinedLibraryVersion(libraryName, libraryVersion.tagName)
     }
 
     /**
