@@ -1,46 +1,33 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
-
 package ir.fallahpoor.releasetracker
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class NightModeViewModelTest {
 
-    @JvmField
-    @Rule
-    var rule: MockitoRule = MockitoJUnit.rule()
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var nightModeViewModel: NightModeViewModel
-    private val fakeStorage = FakeStorage()
+    private lateinit var fakeStorage: FakeStorage
 
     @Before
     fun runBeforeEachTest() {
-        MockitoAnnotations.openMocks(this)
+        fakeStorage = FakeStorage()
         nightModeViewModel = NightModeViewModel(storage = fakeStorage)
     }
 
-    @After
-    fun runAfterEachTest() {
-        Mockito.validateMockitoUsage()
-    }
-
     @Test
-    fun `change night mode`() {
+    fun `night mode is changed if new night mode is not equal to current night mode`() {
 
         // When
         nightModeViewModel.handleEvent(Event.ChangeNightMode(NightMode.ON))
@@ -49,6 +36,21 @@ class NightModeViewModelTest {
         Truth.assertThat(nightModeViewModel.state.value).isEqualTo(NightMode.ON)
         Truth.assertThat(AppCompatDelegate.getDefaultNightMode())
             .isEqualTo(AppCompatDelegate.MODE_NIGHT_YES)
+
+    }
+
+    @Test
+    fun `night mode is not changed if new night mode is equal to current night mode`() = runTest {
+
+        // Given
+        fakeStorage.setNightMode(NightMode.OFF)
+
+        // When
+        nightModeViewModel.handleEvent(Event.ChangeNightMode(NightMode.OFF))
+
+        // Then
+        Truth.assertThat(nightModeViewModel.state.value).isEqualTo(NightMode.OFF)
+        Truth.assertThat(fakeStorage.getNightMode()).isEqualTo(NightMode.OFF)
 
     }
 
