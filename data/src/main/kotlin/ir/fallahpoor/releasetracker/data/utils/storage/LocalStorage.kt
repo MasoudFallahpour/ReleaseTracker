@@ -70,10 +70,8 @@ class LocalStorage @Inject constructor(
         return NightMode.valueOf(nightModeStr ?: defaultNightMode.name)
     }
 
-    override fun setNightMode(nightMode: NightMode) {
-        runBlocking {
-            putString(KEY_NIGHT_MODE, nightMode.name)
-        }
+    override suspend fun setNightMode(nightMode: NightMode) {
+        putString(KEY_NIGHT_MODE, nightMode.name)
     }
 
     private suspend fun putString(key: String, value: String) {

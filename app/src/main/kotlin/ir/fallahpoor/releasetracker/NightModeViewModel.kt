@@ -10,6 +10,8 @@ import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 sealed class Event {
@@ -35,12 +37,18 @@ class NightModeViewModel @Inject constructor(
         if (nightMode == state.value) {
             return
         }
-        when (nightMode) {
-            NightMode.ON -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            NightMode.OFF -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            NightMode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        viewModelScope.launch {
+            try {
+                storage.setNightMode(nightMode)
+                when (nightMode) {
+                    NightMode.ON -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    NightMode.OFF -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    NightMode.AUTO -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+            } catch (t: Throwable) {
+                Timber.d(t, "Failed to set the night mode")
+            }
         }
-        storage.setNightMode(nightMode)
     }
 
 }

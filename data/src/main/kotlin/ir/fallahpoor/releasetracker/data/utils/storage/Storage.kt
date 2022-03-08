@@ -18,6 +18,6 @@ interface Storage {
 
     fun getNightMode(): NightMode
 
-    fun setNightMode(nightMode: NightMode)
+    suspend fun setNightMode(nightMode: NightMode)
 
 }

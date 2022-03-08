@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.Flow
 class FakeStorage : Storage {
 
     private var sortOrder = SortOrder.A_TO_Z
-    private var lastUpdateCheckDateLiveData = MutableLiveData("N/A")
-    private var nightModeLiveData = MutableLiveData(NightMode.AUTO)
+    private val lastUpdateCheckDateLiveData = MutableLiveData("N/A")
+    private val nightModeLiveData = MutableLiveData(NightMode.AUTO)
 
     override fun setSortOrder(sortOrder: SortOrder) {
         this.sortOrder = sortOrder
@@ -29,8 +29,8 @@ class FakeStorage : Storage {
 
     override fun getNightMode() = nightModeLiveData.value!!
 
-    override fun setNightMode(nightMode: NightMode) {
-        this.nightModeLiveData.value = nightMode
+    override suspend fun setNightMode(nightMode: NightMode) {
+        nightModeLiveData.value = nightMode
     }
 
 }
