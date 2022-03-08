@@ -259,10 +259,8 @@ class LibrariesListScreenTest {
         initializeLibrariesListScreen(onLibraryClick = onLibraryClick)
 
         // When
-        with(composeRule) {
-            onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
-                .performClick()
-        }
+        composeRule.onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
+            .performClick()
 
         // Then
         Mockito.verify(onLibraryClick).invoke(FakeLibraryRepository.Kotlin.library)
@@ -277,10 +275,8 @@ class LibrariesListScreenTest {
         initializeLibrariesListScreen(onAddLibraryClick = onAddLibraryClick)
 
         // When
-        with(composeRule) {
-            onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
-                .performClick()
-        }
+        composeRule.onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
+            .performClick()
 
         // Then
         Mockito.verify(onAddLibraryClick).invoke()
