@@ -13,7 +13,7 @@ class FakeStorage : Storage {
     private val lastUpdateCheckDateLiveData = MutableLiveData("N/A")
     private val nightModeLiveData = MutableLiveData(NightMode.AUTO)
 
-    override fun setSortOrder(sortOrder: SortOrder) {
+    override suspend fun setSortOrder(sortOrder: SortOrder) {
         this.sortOrder = sortOrder
     }
 

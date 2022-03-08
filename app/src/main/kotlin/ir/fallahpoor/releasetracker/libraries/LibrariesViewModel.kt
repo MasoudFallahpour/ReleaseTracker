@@ -98,8 +98,13 @@ class LibrariesViewModel
     }
 
     private fun changeSortOrder(sortOrder: SortOrder) {
-        storage.setSortOrder(sortOrder)
-        sortOrderFlow.value = sortOrder
+        viewModelScope.launch {
+            try {
+                storage.setSortOrder(sortOrder)
+                sortOrderFlow.value = sortOrder
+            } catch (_: Throwable) {
+            }
+        }
     }
 
     private fun changeSearchQuery(searchQuery: String) {

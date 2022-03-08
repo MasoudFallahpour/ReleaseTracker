@@ -26,10 +26,8 @@ class LocalStorage @Inject constructor(
 
     private val defaultNightMode = NightMode.AUTO
 
-    override fun setSortOrder(sortOrder: SortOrder) {
-        runBlocking {
-            putString(KEY_SORT_ORDER, sortOrder.name)
-        }
+    override suspend fun setSortOrder(sortOrder: SortOrder) {
+        putString(KEY_SORT_ORDER, sortOrder.name)
     }
 
     override fun getSortOrder(): SortOrder {
