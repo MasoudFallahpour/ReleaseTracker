@@ -5,8 +5,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.fakes.FakeStorage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -22,8 +27,14 @@ class NightModeViewModelTest {
 
     @Before
     fun runBeforeEachTest() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         fakeStorage = FakeStorage()
         nightModeViewModel = NightModeViewModel(storage = fakeStorage)
+    }
+
+    @After
+    fun runAfterEachTest() {
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -54,7 +65,7 @@ class NightModeViewModelTest {
 
     }
 
-    // TODO Find a way to assert the sequence of the values of a StateFlow
+    // TODO Find a way to assert the sequence of NightModes
 //    @Test
 //    fun `night modes are emitted correctly`() = runTest {
 //
