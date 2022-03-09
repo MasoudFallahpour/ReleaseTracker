@@ -8,7 +8,7 @@ import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import ir.fallahpoor.releasetracker.libraries.Event
-import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenState
+import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenUiState
 import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
 import kotlinx.coroutines.Dispatchers
@@ -59,9 +59,10 @@ class LibrariesViewModelTest {
             librariesViewModel.handleEvent(Event.ChangeSortOrder(SortOrder.Z_TO_A))
 
             // Then
-            val librariesListScreenState: LibrariesListScreenState = librariesViewModel.state.value
+            val librariesListScreenUiState: LibrariesListScreenUiState =
+                librariesViewModel.uiState.value
             val librariesLoadedState: LibrariesListState.LibrariesLoaded =
-                librariesListScreenState.librariesListState as LibrariesListState.LibrariesLoaded
+                librariesListScreenUiState.librariesListState as LibrariesListState.LibrariesLoaded
             Truth.assertThat(librariesLoadedState.libraries)
                 .isEqualTo(expectedLibraries)
 
@@ -83,9 +84,10 @@ class LibrariesViewModelTest {
             librariesViewModel.handleEvent(Event.ChangeSearchQuery(searchQuery))
 
             // Then
-            val librariesListScreenState: LibrariesListScreenState = librariesViewModel.state.value
+            val librariesListScreenUiState: LibrariesListScreenUiState =
+                librariesViewModel.uiState.value
             val librariesLoadedState: LibrariesListState.LibrariesLoaded =
-                librariesListScreenState.librariesListState as LibrariesListState.LibrariesLoaded
+                librariesListScreenUiState.librariesListState as LibrariesListState.LibrariesLoaded
             Truth.assertThat(librariesLoadedState.libraries)
                 .isEqualTo(expectedLibraries)
 

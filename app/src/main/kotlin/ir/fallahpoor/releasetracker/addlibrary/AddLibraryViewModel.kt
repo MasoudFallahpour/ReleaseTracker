@@ -21,8 +21,8 @@ class AddLibraryViewModel
 
     private val GITHUB_URL_PATH_REGEX = Regex("([-.\\w]+)/([-.\\w]+)", RegexOption.IGNORE_CASE)
 
-    private val _state = MutableStateFlow(AddLibraryScreenState())
-    val state: StateFlow<AddLibraryScreenState> = _state
+    private val _uiState = MutableStateFlow(AddLibraryScreenUiState())
+    val uiState: StateFlow<AddLibraryScreenUiState> = _uiState
 
     fun handleEvent(event: Event) {
         when (event) {
@@ -34,42 +34,43 @@ class AddLibraryViewModel
     }
 
     private fun updateLibraryName(libraryName: String) {
-        _state.value = _state.value.copy(libraryName = libraryName)
+        _uiState.value = _uiState.value.copy(libraryName = libraryName)
     }
 
     private fun updateLibraryUrlPath(libraryUrlPath: String) {
-        _state.value = _state.value.copy(libraryUrlPath = libraryUrlPath)
+        _uiState.value = _uiState.value.copy(libraryUrlPath = libraryUrlPath)
     }
 
     private fun resetUiState() {
-        _state.value = AddLibraryScreenState()
+        _uiState.value = AddLibraryScreenUiState()
     }
 
     private fun addLibrary(libraryName: String, libraryUrlPath: String) {
 
         if (libraryName.isEmpty()) {
-            _state.value = _state.value.copy(addLibraryState = AddLibraryState.EmptyLibraryName)
+            _uiState.value = _uiState.value.copy(addLibraryState = AddLibraryState.EmptyLibraryName)
             return
         }
 
         if (libraryUrlPath.isEmpty()) {
-            _state.value = _state.value.copy(addLibraryState = AddLibraryState.EmptyLibraryUrl)
+            _uiState.value = _uiState.value.copy(addLibraryState = AddLibraryState.EmptyLibraryUrl)
             return
         }
 
         if (!isGithubUrlPath(libraryUrlPath)) {
-            _state.value = _state.value.copy(addLibraryState = AddLibraryState.InvalidLibraryUrl)
+            _uiState.value =
+                _uiState.value.copy(addLibraryState = AddLibraryState.InvalidLibraryUrl)
             return
         }
 
-        _state.value = _state.value.copy(addLibraryState = AddLibraryState.InProgress)
+        _uiState.value = _uiState.value.copy(addLibraryState = AddLibraryState.InProgress)
 
         viewModelScope.launch {
-            val state: AddLibraryScreenState = try {
+            val state: AddLibraryScreenUiState = try {
                 val library: Library? = libraryRepository.getLibrary(libraryName)
                 val libraryAlreadyExists = library != null
                 if (libraryAlreadyExists) {
-                    _state.value.copy(addLibraryState = AddLibraryState.Error("Library already exists"))
+                    _uiState.value.copy(addLibraryState = AddLibraryState.Error("Library already exists"))
                 } else {
                     val libraryVersion: String =
                         libraryRepository.getLibraryVersion(libraryName, libraryUrlPath)
@@ -78,7 +79,7 @@ class AddLibraryViewModel
                         libraryUrl = GITHUB_BASE_URL + libraryUrlPath,
                         libraryVersion = libraryVersion
                     )
-                    _state.value.copy(
+                    _uiState.value.copy(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.LibraryAdded
@@ -86,9 +87,9 @@ class AddLibraryViewModel
                 }
             } catch (t: Throwable) {
                 val message = exceptionParser.getMessage(t)
-                _state.value.copy(addLibraryState = AddLibraryState.Error(message))
+                _uiState.value.copy(addLibraryState = AddLibraryState.Error(message))
             }
-            _state.value = state
+            _uiState.value = state
         }
 
     }

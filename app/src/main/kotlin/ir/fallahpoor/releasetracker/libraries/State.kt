@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.libraries
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 
-data class LibrariesListScreenState(
+data class LibrariesListScreenUiState(
     val sortOrder: SortOrder = SortOrder.A_TO_Z,
     val searchQuery: String = "",
     val librariesListState: LibrariesListState = LibrariesListState.Loading

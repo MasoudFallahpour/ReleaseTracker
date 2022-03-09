@@ -46,9 +46,9 @@ class AddLibraryViewModelTest {
         addLibraryViewModel.handleEvent(Event.UpdateLibraryName(libraryName = "abc"))
 
         // Then
-        Truth.assertThat(addLibraryViewModel.state.value)
+        Truth.assertThat(addLibraryViewModel.uiState.value)
             .isEqualTo(
-                AddLibraryScreenState(
+                AddLibraryScreenUiState(
                     libraryName = "abc",
                     libraryUrlPath = "",
                     addLibraryState = AddLibraryState.Initial
@@ -64,9 +64,9 @@ class AddLibraryViewModelTest {
         addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(libraryUrlPath = "abc/def"))
 
         // Then
-        Truth.assertThat(addLibraryViewModel.state.value)
+        Truth.assertThat(addLibraryViewModel.uiState.value)
             .isEqualTo(
-                AddLibraryScreenState(
+                AddLibraryScreenUiState(
                     libraryName = "",
                     libraryUrlPath = "abc/def",
                     addLibraryState = AddLibraryState.Initial
@@ -91,10 +91,10 @@ class AddLibraryViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
-            Truth.assertThat(addLibraryViewModel.state.value)
+            Truth.assertThat(fakeLibraryRepository.getLibraries()).isEmpty()
+            Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
-                    AddLibraryScreenState(
+                    AddLibraryScreenUiState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.EmptyLibraryName
@@ -119,10 +119,10 @@ class AddLibraryViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
-            Truth.assertThat(addLibraryViewModel.state.value)
+            Truth.assertThat(fakeLibraryRepository.getLibraries()).isEmpty()
+            Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
-                    AddLibraryScreenState(
+                    AddLibraryScreenUiState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.EmptyLibraryUrl
@@ -147,10 +147,10 @@ class AddLibraryViewModelTest {
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibraries().isEmpty()).isTrue()
-            Truth.assertThat(addLibraryViewModel.state.value)
+            Truth.assertThat(fakeLibraryRepository.getLibraries()).isEmpty()
+            Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
-                    AddLibraryScreenState(
+                    AddLibraryScreenUiState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.InvalidLibraryUrl
@@ -181,9 +181,9 @@ class AddLibraryViewModelTest {
 
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(1)
-            Truth.assertThat(addLibraryViewModel.state.value)
+            Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
-                    AddLibraryScreenState(
+                    AddLibraryScreenUiState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.Error("Library already exists")
@@ -193,29 +193,31 @@ class AddLibraryViewModelTest {
         }
 
     @Test
-    fun `state is correctly updated when library is added successfully`() =
-        runTest {
+    fun `state is correctly updated when a library is added successfully`() = runTest {
 
-            // When
-            addLibraryViewModel.handleEvent(
-                Event.AddLibrary(
-                    libraryName = "abc",
-                    libraryUrlPath = "abc/def"
+        // TODO don't just assert the final state. Assert that the correct sequence of state updates
+        //  happens
+
+        // When
+        addLibraryViewModel.handleEvent(
+            Event.AddLibrary(
+                libraryName = "abc",
+                libraryUrlPath = "abc/def"
+            )
+        )
+
+        // Then
+        Truth.assertThat(fakeLibraryRepository.getLibrary("abc")).isNotNull()
+        Truth.assertThat(addLibraryViewModel.uiState.value)
+            .isEqualTo(
+                AddLibraryScreenUiState(
+                    libraryName = "",
+                    libraryUrlPath = "",
+                    addLibraryState = AddLibraryState.LibraryAdded
                 )
             )
 
-            // Then
-            Truth.assertThat(fakeLibraryRepository.getLibrary("abc")).isNotNull()
-            Truth.assertThat(addLibraryViewModel.state.value)
-                .isEqualTo(
-                    AddLibraryScreenState(
-                        libraryName = "",
-                        libraryUrlPath = "",
-                        addLibraryState = AddLibraryState.LibraryAdded
-                    )
-                )
-
-        }
+    }
 
     @Test
     fun `state is correctly updated when there is an unexpected error`() =
@@ -234,9 +236,9 @@ class AddLibraryViewModelTest {
 
             // Then
             Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
-            Truth.assertThat(addLibraryViewModel.state.value)
+            Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
-                    AddLibraryScreenState(
+                    AddLibraryScreenUiState(
                         libraryName = "",
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.Error("Internet not connected.")
@@ -260,9 +262,9 @@ class AddLibraryViewModelTest {
         addLibraryViewModel.handleEvent(Event.ErrorDismissed)
 
         // Then
-        Truth.assertThat(addLibraryViewModel.state.value)
+        Truth.assertThat(addLibraryViewModel.uiState.value)
             .isEqualTo(
-                AddLibraryScreenState(
+                AddLibraryScreenUiState(
                     libraryName = "",
                     libraryUrlPath = "",
                     addLibraryState = AddLibraryState.Initial

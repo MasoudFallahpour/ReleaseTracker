@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenState
+import ir.fallahpoor.releasetracker.addlibrary.AddLibraryScreenUiState
 import ir.fallahpoor.releasetracker.addlibrary.AddLibraryViewModel
 import ir.fallahpoor.releasetracker.addlibrary.Event
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
@@ -45,19 +45,19 @@ fun AddLibraryScreen(
                 scaffoldState.snackbarHostState
             }
         ) {
-            val state: AddLibraryScreenState by addLibraryViewModel.state.collectAsState()
+            val uiState: AddLibraryScreenUiState by addLibraryViewModel.uiState.collectAsState()
             val keyboardController = LocalSoftwareKeyboardController.current
             AddLibraryContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .testTag(AddLibraryScreenTags.CONTENT),
                 snackbarHostState = scaffoldState.snackbarHostState,
-                state = state.addLibraryState,
-                libraryName = state.libraryName,
+                state = uiState.addLibraryState,
+                libraryName = uiState.libraryName,
                 onLibraryNameChange = { libraryName ->
                     addLibraryViewModel.handleEvent(Event.UpdateLibraryName(libraryName))
                 },
-                libraryUrlPath = state.libraryUrlPath,
+                libraryUrlPath = uiState.libraryUrlPath,
                 onLibraryUrlPathChange = { libraryUrlPath ->
                     addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(libraryUrlPath))
                 },

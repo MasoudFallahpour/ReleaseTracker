@@ -16,7 +16,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.libraries.Event
-import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenState
+import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenUiState
 import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
@@ -36,8 +36,8 @@ fun LibrariesListScreen(
     onAddLibraryClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    val state: LibrariesListScreenState by librariesViewModel.state.collectAsState()
-    val lastUpdateCheck: String by librariesViewModel.lastUpdateCheckState.collectAsState()
+    val uiState: LibrariesListScreenUiState by librariesViewModel.uiState.collectAsState()
+    val lastUpdateCheck: String by librariesViewModel.lastUpdateCheck.collectAsState()
     val isSystemInDarkTheme = isSystemInDarkTheme()
     val isNightModeOn by derivedStateOf {
         when (currentNightMode) {
@@ -55,7 +55,7 @@ fun LibrariesListScreen(
             topBar = {
                 Toolbar(
                     modifier = Modifier.testTag(LibrariesListScreenTags.TOOLBAR),
-                    currentSortOrder = state.sortOrder,
+                    currentSortOrder = uiState.sortOrder,
                     onSortOrderChange = { sortOrder: SortOrder ->
                         librariesViewModel.handleEvent(Event.ChangeSortOrder(sortOrder))
                     },
@@ -75,7 +75,7 @@ fun LibrariesListScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .testTag(LibrariesListScreenTags.CONTENT),
-                librariesListState = state.librariesListState,
+                librariesListState = uiState.librariesListState,
                 lastUpdateCheck = lastUpdateCheck,
                 onLibraryClick = onLibraryClick,
                 onLibraryDismissed = { library: Library ->

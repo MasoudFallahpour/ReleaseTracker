@@ -34,7 +34,7 @@ class LibrariesViewModel
             Params(sortOrder, searchQuery)
         }
 
-    val state: StateFlow<LibrariesListScreenState> =
+    val uiState: StateFlow<LibrariesListScreenUiState> =
         triggerFlow.distinctUntilChanged()
             .flatMapLatest { params ->
                 libraryRepository.getLibrariesAsFlow()
@@ -55,7 +55,7 @@ class LibrariesViewModel
                         }
                     }
             }.map { libraries: List<Library> ->
-                LibrariesListScreenState(
+                LibrariesListScreenUiState(
                     sortOrder = sortOrderFlow.value,
                     searchQuery = searchQueryFlow.value,
                     librariesListState = LibrariesListState.LibrariesLoaded(libraries)
@@ -63,10 +63,10 @@ class LibrariesViewModel
             }.stateIn(
                 viewModelScope,
                 SharingStarted.Eagerly,
-                LibrariesListScreenState(sortOrder = storage.getSortOrder())
+                LibrariesListScreenUiState(sortOrder = storage.getSortOrder())
             )
 
-    val lastUpdateCheckState: StateFlow<String> =
+    val lastUpdateCheck: StateFlow<String> =
         libraryRepository.getLastUpdateCheck()
             .stateIn(viewModelScope, SharingStarted.Eagerly, "N/A")
 
