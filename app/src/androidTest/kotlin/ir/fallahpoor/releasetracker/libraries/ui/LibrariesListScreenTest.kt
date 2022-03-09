@@ -55,7 +55,7 @@ class LibrariesListScreenTest {
     fun screen_is_initialized_correctly() {
 
         // Given
-        initializeLibrariesListScreen()
+        composeLibrariesListScreen()
 
         // Then
         with(composeRule) {
@@ -72,7 +72,7 @@ class LibrariesListScreenTest {
 
         // Given
         val libraryName = FakeLibraryRepository.Coil.name
-        initializeLibrariesListScreen()
+        composeLibrariesListScreen()
 
         // When
         with(composeRule) {
@@ -102,7 +102,7 @@ class LibrariesListScreenTest {
     fun search() {
 
         // Given
-        initializeLibrariesListScreen()
+        composeLibrariesListScreen()
 
         // When
         with(composeRule) {
@@ -134,7 +134,7 @@ class LibrariesListScreenTest {
     fun a_proper_text_is_displayed_when_there_is_no_search_result() {
 
         // Given
-        initializeLibrariesListScreen()
+        composeLibrariesListScreen()
 
         // When
         with(composeRule) {
@@ -157,7 +157,7 @@ class LibrariesListScreenTest {
     fun all_libraries_are_displayed_when_search_bar_is_closed() {
 
         // Given
-        initializeLibrariesListScreen()
+        composeLibrariesListScreen()
         with(composeRule) {
             onNodeWithContentDescription(searchText, useUnmergedTree = true)
                 .performClick()
@@ -194,7 +194,7 @@ class LibrariesListScreenTest {
     fun all_libraries_are_displayed_when_search_bar_is_cleared() {
 
         // Given
-        initializeLibrariesListScreen()
+        composeLibrariesListScreen()
         with(composeRule) {
             onNodeWithContentDescription(searchText, useUnmergedTree = true)
                 .performClick()
@@ -232,7 +232,7 @@ class LibrariesListScreenTest {
 
         // Given
         val onNightModeChange: (NightMode) -> Unit = mock()
-        initializeLibrariesListScreen(onNightModeChange = onNightModeChange)
+        composeLibrariesListScreen(onNightModeChange = onNightModeChange)
 
         // When
         with(composeRule) {
@@ -256,7 +256,7 @@ class LibrariesListScreenTest {
 
         // Given
         val onLibraryClick: (Library) -> Unit = mock()
-        initializeLibrariesListScreen(onLibraryClick = onLibraryClick)
+        composeLibrariesListScreen(onLibraryClick = onLibraryClick)
 
         // When
         composeRule.onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
@@ -272,7 +272,7 @@ class LibrariesListScreenTest {
 
         // Given
         val onAddLibraryClick: () -> Unit = mock()
-        initializeLibrariesListScreen(onAddLibraryClick = onAddLibraryClick)
+        composeLibrariesListScreen(onAddLibraryClick = onAddLibraryClick)
 
         // When
         composeRule.onNodeWithTag(LibrariesListTags.ADD_LIBRARY_BUTTON)
@@ -285,7 +285,7 @@ class LibrariesListScreenTest {
 
     private inline fun <reified T : Any> mock(): T = Mockito.mock(T::class.java)
 
-    private fun initializeLibrariesListScreen(
+    private fun composeLibrariesListScreen(
         onNightModeChange: (NightMode) -> Unit = {},
         onLibraryClick: (Library) -> Unit = {},
         onAddLibraryClick: () -> Unit = {}
