@@ -92,18 +92,17 @@ class LibrariesViewModelTest {
         }
 
     @Test
-    fun `pin library`() =
-        runTest {
+    fun `pin library`() = runTest {
 
-            // Given
+        // Given
 
-            // When
-            val libraryToPin = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)!!
-            librariesViewModel.handleEvent(Event.PinLibrary(library = libraryToPin, pin = true))
+        // When
+        val libraryToPin = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)!!
+        librariesViewModel.handleEvent(Event.PinLibrary(library = libraryToPin, pin = true))
 
-            // Then
-            val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)
-            Truth.assertThat(library?.isPinned()).isTrue()
+        // Then
+        val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)
+        Truth.assertThat(library?.isPinned()).isTrue()
 
         }
 
