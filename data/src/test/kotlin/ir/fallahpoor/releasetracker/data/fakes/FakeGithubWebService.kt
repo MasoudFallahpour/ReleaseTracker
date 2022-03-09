@@ -9,8 +9,8 @@ import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 
 class FakeGithubWebService : GithubWebservice {
 
-    override suspend fun getLatestVersion(owner: String, repo: String): LibraryVersion {
-        return if (owner == OWNER_1) {
+    override suspend fun getLatestVersion(owner: String, repo: String): LibraryVersion =
+        if (owner == OWNER_1) {
             LibraryVersion(
                 name = VERSION_1,
                 tagName = TAG_NAME_1
@@ -21,6 +21,5 @@ class FakeGithubWebService : GithubWebservice {
                 tagName = TAG_NAME_2
             )
         }
-    }
 
 }
