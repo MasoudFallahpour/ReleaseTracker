@@ -17,18 +17,21 @@ class FakeLibraryRepository : LibraryRepository {
         const val name = "Coil"
         const val url = GITHUB_BASE_URL + "coil-kt/coil"
         const val version = "1.3.1"
+        val library = Library(name = name, url = url, version = version)
     }
 
     object Kotlin {
         const val name = "Kotlin"
         const val url = GITHUB_BASE_URL + "JetBrains/kotlin"
         const val version = "1.5.21"
+        val library = Library(name = name, url = url, version = version)
     }
 
     object Koin {
         const val name = "Koin"
         const val url = GITHUB_BASE_URL + "InsertKoinIO/koin"
         const val version = "3.1.2"
+        val library = Library(name = name, url = url, version = version, pinned = 1)
     }
 
     companion object {
@@ -40,9 +43,9 @@ class FakeLibraryRepository : LibraryRepository {
     }
 
     private val libraries = mutableListOf(
-        Library(Coil.name, Coil.url, Coil.version),
-        Library(Kotlin.name, Kotlin.url, Kotlin.version),
-        Library(Koin.name, Koin.url, Koin.version, pinned = 1)
+        Coil.library,
+        Kotlin.library,
+        Koin.library
     )
     private val librariesLiveData = MutableLiveData<List<Library>>(libraries)
 
