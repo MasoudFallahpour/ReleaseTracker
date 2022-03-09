@@ -3,8 +3,9 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     id("com.android.application")
     id("dagger.hilt.android.plugin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    // TODO re-enable Crashlytics after resolving the build error
+//    id("com.google.gms.google-services")
+//    id("com.google.firebase.crashlytics")
     kotlin("android")
     kotlin("kapt")
 }
@@ -104,8 +105,8 @@ dependencies {
     implementation(Dependencies.WorkManager.runtime)
     implementation(Dependencies.timber)
 
-    implementation(platform(Dependencies.Firebase.bom))
-    implementation(Dependencies.Firebase.crashlytics)
+//    implementation(platform(Dependencies.Firebase.bom))
+//    implementation(Dependencies.Firebase.crashlytics)
 
     implementation(Dependencies.Hilt.android)
     implementation(Dependencies.Hilt.workManager)

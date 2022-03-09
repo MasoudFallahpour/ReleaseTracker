@@ -8,8 +8,9 @@ buildscript {
         classpath("com.android.tools.build:gradle:7.3.0-alpha05")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Dependencies.Hilt.version}")
-        classpath("com.google.gms:google-services:4.3.10")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
+        // TODO re-enable Crashlytics after resolving the build error
+//        classpath("com.google.gms:google-services:4.3.10")
+//        classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
     }
 }
 
