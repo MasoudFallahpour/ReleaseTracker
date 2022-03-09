@@ -15,6 +15,7 @@ val sp: String = properties.getProperty("storePassword")
 val kp: String = properties.getProperty("keyPassword")
 
 android {
+    namespace = "ir.fallahpoor.releasetracker"
     compileSdk = SdkVersions.compileSdk
 
     defaultConfig {

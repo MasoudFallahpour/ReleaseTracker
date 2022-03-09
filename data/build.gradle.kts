@@ -9,7 +9,7 @@ plugins {
 val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToken")
 
 android {
-
+    namespace = "ir.fallahpoor.releasetracker.data"
     compileSdk = SdkVersions.compileSdk
 
     defaultConfig {
