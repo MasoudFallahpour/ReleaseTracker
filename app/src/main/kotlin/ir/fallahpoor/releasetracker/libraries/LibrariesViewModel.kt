@@ -44,15 +44,7 @@ class LibrariesViewModel
                         }
                     }
                     .map { libraries: List<Library> ->
-                        when (params.sortOrder) {
-                            SortOrder.A_TO_Z -> libraries.sortedBy {
-                                it.name.lowercase(Locale.getDefault())
-                            }
-                            SortOrder.Z_TO_A -> libraries.sortedByDescending {
-                                it.name.lowercase(Locale.getDefault())
-                            }
-                            SortOrder.PINNED_FIRST -> libraries.sortedByDescending { it.pinned }
-                        }
+                        libraries.sort(params.sortOrder)
                     }
             }.map { libraries: List<Library> ->
                 LibrariesListScreenUiState(
@@ -65,6 +57,12 @@ class LibrariesViewModel
                 SharingStarted.Eagerly,
                 LibrariesListScreenUiState(sortOrder = storage.getSortOrder())
             )
+
+    private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
+        SortOrder.A_TO_Z -> sortedBy { it.name.lowercase(Locale.getDefault()) }
+        SortOrder.Z_TO_A -> sortedByDescending { it.name.lowercase(Locale.getDefault()) }
+        SortOrder.PINNED_FIRST -> sortedByDescending { it.pinned }
+    }
 
     val lastUpdateCheck: StateFlow<String> =
         libraryRepository.getLastUpdateCheck()
