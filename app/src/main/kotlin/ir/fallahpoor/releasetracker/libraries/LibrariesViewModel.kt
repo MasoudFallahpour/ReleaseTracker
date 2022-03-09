@@ -38,24 +38,24 @@ class LibrariesViewModel
         triggerFlow.distinctUntilChanged()
             .flatMapLatest { params ->
                 libraryRepository.getLibrariesAsFlow()
-                    .map { libraries: List<Library> ->
+                    .map { libraries ->
                         libraries.filter {
                             it.name.contains(params.searchTerm, ignoreCase = true)
                         }
                     }
-                    .map { libraries: List<Library> ->
+                    .map { libraries ->
                         libraries.sort(params.sortOrder)
                     }
-            }.map { libraries: List<Library> ->
+            }.map { libraries ->
                 LibrariesListScreenUiState(
                     sortOrder = sortOrderFlow.value,
                     searchQuery = searchQueryFlow.value,
                     librariesListState = LibrariesListState.LibrariesLoaded(libraries)
                 )
             }.stateIn(
-                viewModelScope,
-                SharingStarted.Eagerly,
-                LibrariesListScreenUiState(sortOrder = storage.getSortOrder())
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = LibrariesListScreenUiState(sortOrder = storage.getSortOrder())
             )
 
     private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
@@ -64,9 +64,8 @@ class LibrariesViewModel
         SortOrder.PINNED_FIRST -> sortedByDescending { it.pinned }
     }
 
-    val lastUpdateCheck: StateFlow<String> =
-        libraryRepository.getLastUpdateCheck()
-            .stateIn(viewModelScope, SharingStarted.Eagerly, "N/A")
+    val lastUpdateCheck: StateFlow<String> = libraryRepository.getLastUpdateCheck()
+        .stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = "N/A")
 
     fun handleEvent(event: Event) {
         when (event) {
