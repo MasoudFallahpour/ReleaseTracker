@@ -63,7 +63,7 @@ class FakeLibraryRepository : LibraryRepository {
             if (library != null) {
                 throw RuntimeException(ExceptionParser.SOMETHING_WENT_WRONG)
             } else {
-                libraries.add(Library(libraryName, libraryUrl, libraryVersion, 0))
+                libraries += Library(libraryName, libraryUrl, libraryVersion, 0)
                 updateLibrariesLiveData(libraries)
             }
         }
@@ -74,7 +74,7 @@ class FakeLibraryRepository : LibraryRepository {
             it.name.equals(library.name, ignoreCase = true)
         }
         if (removed) {
-            libraries.add(library)
+            libraries += library
             updateLibrariesLiveData(libraries)
         }
     }
@@ -109,10 +109,9 @@ class FakeLibraryRepository : LibraryRepository {
         updateLibrary(library.copy(pinned = if (pinned) 1 else 0))
     }
 
-    override fun getLastUpdateCheck(): Flow<String> =
-        flow {
-            emit(LAST_UPDATE_CHECK)
-        }
+    override fun getLastUpdateCheck(): Flow<String> = flow {
+        emit(LAST_UPDATE_CHECK)
+    }
 
     override suspend fun setLastUpdateCheck(date: String) {
         TODO("Not yet implemented")
