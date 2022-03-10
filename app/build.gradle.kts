@@ -116,10 +116,10 @@ dependencies {
     kapt(Dependencies.Hilt.compiler)
 
     implementation(Dependencies.Compose.ui)
-    implementation(Dependencies.Compose.tooling)
+    debugImplementation(Dependencies.Compose.tooling)
+    implementation(Dependencies.Compose.toolingPreview)
     implementation(Dependencies.Compose.material)
     implementation(Dependencies.Compose.runtime)
-    implementation(Dependencies.Compose.runtimeLiveData)
 
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.truth)

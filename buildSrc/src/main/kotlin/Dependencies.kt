@@ -39,12 +39,12 @@ object Dependencies {
     }
 
     object Compose {
-        const val version = "1.1.0"
+        const val version = "1.1.1"
         const val ui = "androidx.compose.ui:ui:$version"
         const val tooling = "androidx.compose.ui:ui-tooling:$version"
+        const val toolingPreview = "androidx.compose.ui:ui-tooling-preview:$version"
         const val material = "androidx.compose.material:material:$version"
         const val runtime = "androidx.compose.runtime:runtime:$version"
-        const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:$version"
         const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:$version"
         const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:$version"
     }
@@ -56,7 +56,7 @@ object Dependencies {
     }
 
     object Firebase {
-        private const val version = "29.0.1"
+        private const val version = "29.1.0"
         const val bom = "com.google.firebase:firebase-bom:$version"
         const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     }
