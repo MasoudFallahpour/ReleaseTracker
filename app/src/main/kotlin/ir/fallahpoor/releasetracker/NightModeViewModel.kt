@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.fallahpoor.releasetracker.data.repository.NightModeRepository
 import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -20,11 +20,11 @@ sealed class Event {
 
 @HiltViewModel
 class NightModeViewModel @Inject constructor(
-    private val storage: Storage
+    private val nightModeRepository: NightModeRepository
 ) : ViewModel() {
 
-    val state: StateFlow<NightMode> = storage.getNightModeAsFlow()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, storage.getNightMode())
+    val state: StateFlow<NightMode> = nightModeRepository.getNightModeAsFlow()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, nightModeRepository.getNightMode())
     val isNightModeSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     fun handleEvent(event: Event) {
@@ -39,7 +39,7 @@ class NightModeViewModel @Inject constructor(
         }
         viewModelScope.launch {
             try {
-                storage.setNightMode(nightMode)
+                nightModeRepository.setNightMode(nightMode)
                 when (nightMode) {
                     NightMode.ON -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                     NightMode.OFF -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

@@ -3,8 +3,9 @@ package ir.fallahpoor.releasetracker
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.data.repository.NightModeRepository
 import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.fakes.FakeStorage
+import ir.fallahpoor.releasetracker.fakes.FakeNightModeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -23,13 +24,13 @@ class NightModeViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var nightModeViewModel: NightModeViewModel
-    private lateinit var fakeStorage: FakeStorage
+    private lateinit var fakeNightModeRepository: NightModeRepository
 
     @Before
     fun runBeforeEachTest() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        fakeStorage = FakeStorage()
-        nightModeViewModel = NightModeViewModel(storage = fakeStorage)
+        fakeNightModeRepository = FakeNightModeRepository()
+        nightModeViewModel = NightModeViewModel(fakeNightModeRepository)
     }
 
     @After
@@ -54,14 +55,14 @@ class NightModeViewModelTest {
     fun `night mode is not changed if new night mode is equal to current night mode`() = runTest {
 
         // Given
-        fakeStorage.setNightMode(NightMode.OFF)
+        fakeNightModeRepository.setNightMode(NightMode.OFF)
 
         // When
         nightModeViewModel.handleEvent(Event.ChangeNightMode(NightMode.OFF))
 
         // Then
         Truth.assertThat(nightModeViewModel.state.value).isEqualTo(NightMode.OFF)
-        Truth.assertThat(fakeStorage.getNightMode()).isEqualTo(NightMode.OFF)
+        Truth.assertThat(fakeNightModeRepository.getNightMode()).isEqualTo(NightMode.OFF)
 
     }
 

@@ -9,22 +9,22 @@ import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepositoryImpl
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
 import ir.fallahpoor.releasetracker.data.webservice.WebserviceFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule {
+object LibraryRepositoryModule {
 
     @Provides
-    fun provideLibraryRepository(libraryRepositoryImpl: LibraryRepositoryImpl): LibraryRepository {
-        return libraryRepositoryImpl
-    }
+    fun provideLibraryRepository(libraryRepositoryImpl: LibraryRepositoryImpl): LibraryRepository =
+        libraryRepositoryImpl
 
     @Provides
-    fun provideGithubWebservice(webserviceFactory: WebserviceFactory): GithubWebservice {
-        return webserviceFactory.createGithubService(
+    @Singleton
+    fun provideGithubWebservice(webserviceFactory: WebserviceFactory): GithubWebservice =
+        webserviceFactory.createGithubService(
             serviceClass = GithubWebservice::class.java,
             isDebugBuild = BuildConfig.DEBUG
         )
-    }
 
 }
