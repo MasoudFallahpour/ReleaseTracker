@@ -1,37 +1,32 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class FakeLibraryDao : LibraryDao {
 
-    private val _librariesLiveData = MutableLiveData<List<Library>>()
+    private val librariesLiveData = MutableLiveData<List<Library>>()
     private val libraries = mutableListOf<Library>()
 
-    override fun getAllAsFlow(): Flow<List<Library>> =
-        flow {
-            emit(
-                libraries.sortedBy { it.name }
-            )
-        }
+    override fun getAllAsFlow(): Flow<List<Library>> = librariesLiveData.asFlow()
 
     override suspend fun getAll(): List<Library> = libraries.sortedBy {
         it.name
     }
 
     override suspend fun insert(library: Library) {
-        libraries.add(library)
-        _librariesLiveData.value = libraries
+        libraries += library
+        updateLibrariesLiveData()
     }
 
     override suspend fun update(library: Library) {
         val removed = libraries.remove(get(library.name))
         if (removed) {
-            libraries.add(library)
-            _librariesLiveData.value = libraries
+            libraries += library
+            updateLibrariesLiveData()
         }
     }
 
@@ -40,13 +35,16 @@ class FakeLibraryDao : LibraryDao {
             it.name == libraryName
         }
         if (removed) {
-            _librariesLiveData.value = libraries
+            updateLibrariesLiveData()
         }
     }
 
-    override suspend fun get(libraryName: String): Library? =
-        _librariesLiveData.value?.find {
-            it.name == libraryName
-        }
+    override suspend fun get(libraryName: String): Library? = libraries.find {
+        it.name.contentEquals(libraryName, ignoreCase = true)
+    }
+
+    private fun updateLibrariesLiveData() {
+        librariesLiveData.value = libraries
+    }
 
 }
