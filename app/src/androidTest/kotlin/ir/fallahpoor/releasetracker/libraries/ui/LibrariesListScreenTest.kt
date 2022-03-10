@@ -262,10 +262,7 @@ class LibrariesListScreenTest {
         val storage: Storage = createStorage()
         nightModeViewModel = NightModeViewModel(storage)
         libraryRepository = FakeLibraryRepository()
-        librariesViewModel = LibrariesViewModel(
-            libraryRepository = libraryRepository,
-            storage = storage
-        )
+        librariesViewModel = LibrariesViewModel(libraryRepository)
 
         composeRule.setContent {
             LibrariesListScreen(

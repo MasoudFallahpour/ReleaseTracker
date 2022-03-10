@@ -9,15 +9,17 @@ import kotlinx.coroutines.flow.Flow
 
 class FakeStorage : Storage {
 
-    private var sortOrder = SortOrder.A_TO_Z
+    private var sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
     private val lastUpdateCheckDateLiveData = MutableLiveData("N/A")
     private val nightModeLiveData = MutableLiveData(NightMode.AUTO)
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {
-        this.sortOrder = sortOrder
+        sortOrderLiveData.value = sortOrder
     }
 
-    override fun getSortOrder() = sortOrder
+    override fun getSortOrder() = sortOrderLiveData.value!!
+
+    override fun getSortOrderAsFlow(): Flow<SortOrder> = sortOrderLiveData.asFlow()
 
     override suspend fun setLastUpdateCheck(date: String) {
         lastUpdateCheckDateLiveData.value = date

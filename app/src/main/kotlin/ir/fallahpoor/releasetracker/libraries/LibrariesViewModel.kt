@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -18,8 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LibrariesViewModel
 @Inject constructor(
-    private val libraryRepository: LibraryRepository,
-    private val storage: Storage
+    private val libraryRepository: LibraryRepository
 ) : ViewModel() {
 
     private data class Params(
@@ -27,12 +25,12 @@ class LibrariesViewModel
         val searchTerm: String
     )
 
-    private val sortOrderFlow = MutableStateFlow(storage.getSortOrder())
     private val searchQueryFlow = MutableStateFlow("")
     private val triggerFlow: Flow<Params> =
-        sortOrderFlow.combine(searchQueryFlow) { sortOrder: SortOrder, searchQuery: String ->
-            Params(sortOrder, searchQuery)
-        }
+        libraryRepository.getSortOrderAsFlow()
+            .combine(searchQueryFlow) { sortOrder: SortOrder, searchQuery: String ->
+                Params(sortOrder, searchQuery)
+            }
 
     val uiState: StateFlow<LibrariesListScreenUiState> =
         triggerFlow.distinctUntilChanged()
@@ -48,14 +46,14 @@ class LibrariesViewModel
                     }
             }.map { libraries ->
                 LibrariesListScreenUiState(
-                    sortOrder = sortOrderFlow.value,
+                    sortOrder = libraryRepository.getSortOrder(),
                     searchQuery = searchQueryFlow.value,
                     librariesListState = LibrariesListState.LibrariesLoaded(libraries)
                 )
             }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = LibrariesListScreenUiState(sortOrder = storage.getSortOrder())
+                initialValue = LibrariesListScreenUiState(sortOrder = libraryRepository.getSortOrder())
             )
 
     private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
@@ -97,8 +95,7 @@ class LibrariesViewModel
     private fun changeSortOrder(sortOrder: SortOrder) {
         viewModelScope.launch {
             try {
-                storage.setSortOrder(sortOrder)
-                sortOrderFlow.value = sortOrder
+                libraryRepository.setSortOrder(sortOrder)
             } catch (_: Throwable) {
             }
         }

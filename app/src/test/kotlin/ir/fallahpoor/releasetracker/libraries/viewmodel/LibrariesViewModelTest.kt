@@ -6,7 +6,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
-import ir.fallahpoor.releasetracker.fakes.FakeStorage
 import ir.fallahpoor.releasetracker.libraries.Event
 import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenUiState
 import ir.fallahpoor.releasetracker.libraries.LibrariesListState
@@ -29,17 +28,12 @@ class LibrariesViewModelTest {
 
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var fakeLibraryRepository: FakeLibraryRepository
-    private lateinit var fakeStorage: FakeStorage
 
     @Before
     fun runBeforeEachTest() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         fakeLibraryRepository = FakeLibraryRepository()
-        fakeStorage = FakeStorage()
-        librariesViewModel = LibrariesViewModel(
-            libraryRepository = fakeLibraryRepository,
-            storage = fakeStorage
-        )
+        librariesViewModel = LibrariesViewModel(fakeLibraryRepository)
     }
 
     @After
@@ -106,7 +100,7 @@ class LibrariesViewModelTest {
         val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)
         Truth.assertThat(library?.isPinned()).isTrue()
 
-        }
+    }
 
     @Test
     fun `unpin library`() =

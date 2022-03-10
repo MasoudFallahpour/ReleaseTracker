@@ -5,13 +5,16 @@ import androidx.lifecycle.asFlow
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class FakeLibraryDao : LibraryDao {
 
     private val librariesLiveData = MutableLiveData<List<Library>>()
     private val libraries = mutableListOf<Library>()
 
-    override fun getAllAsFlow(): Flow<List<Library>> = librariesLiveData.asFlow()
+    override fun getAllAsFlow(): Flow<List<Library>> = librariesLiveData.asFlow().map {
+        libraries.sortedBy { it.name }
+    }
 
     override suspend fun getAll(): List<Library> = libraries.sortedBy {
         it.name

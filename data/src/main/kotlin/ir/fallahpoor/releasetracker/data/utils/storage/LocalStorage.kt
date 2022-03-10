@@ -25,6 +25,7 @@ class LocalStorage @Inject constructor(
     }
 
     private val defaultNightMode = NightMode.AUTO
+    private val defaultSortOrder = SortOrder.A_TO_Z
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {
         putString(KEY_SORT_ORDER, sortOrder.name)
@@ -38,24 +39,29 @@ class LocalStorage @Inject constructor(
         return SortOrder.valueOf(sortOrderStr ?: SortOrder.A_TO_Z.name)
     }
 
+    override fun getSortOrderAsFlow(): Flow<SortOrder> {
+        val prefKey = stringPreferencesKey(KEY_SORT_ORDER)
+        return dataStore.data.map { preferences ->
+            SortOrder.valueOf(preferences[prefKey] ?: defaultSortOrder.name)
+        }
+    }
+
     override suspend fun setLastUpdateCheck(date: String) {
         putString(KEY_LAST_UPDATE_CHECK, date)
     }
 
     override fun getLastUpdateCheck(): Flow<String> {
         val prefKey = stringPreferencesKey(KEY_LAST_UPDATE_CHECK)
-        return dataStore.data
-            .map { preferences ->
-                preferences[prefKey] ?: "N/A"
-            }
+        return dataStore.data.map { preferences ->
+            preferences[prefKey] ?: "N/A"
+        }
     }
 
     override fun getNightModeAsFlow(): Flow<NightMode> {
         val prefKey = stringPreferencesKey(KEY_NIGHT_MODE)
-        return dataStore.data
-            .map { preferences ->
-                NightMode.valueOf(preferences[prefKey] ?: defaultNightMode.name)
-            }
+        return dataStore.data.map { preferences ->
+            NightMode.valueOf(preferences[prefKey] ?: defaultNightMode.name)
+        }
     }
 
     override fun getNightMode(): NightMode {
@@ -79,10 +85,9 @@ class LocalStorage @Inject constructor(
 
     private suspend fun getString(key: String): String? {
         val prefKey = stringPreferencesKey(key)
-        val flow: Flow<String?> = dataStore.data
-            .map { preferences ->
-                preferences[prefKey]
-            }
+        val flow: Flow<String?> = dataStore.data.map { preferences ->
+            preferences[prefKey]
+        }
         return flow.first()
     }
 
