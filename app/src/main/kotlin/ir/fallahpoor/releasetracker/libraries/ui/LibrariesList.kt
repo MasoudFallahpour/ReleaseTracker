@@ -24,6 +24,7 @@ import ir.fallahpoor.releasetracker.theme.spacing
 object LibrariesListTags {
     const val LIBRARIES_LIST = "librariesList"
     const val ADD_LIBRARY_BUTTON = "LibrariesListAddLibraryButton"
+    const val NO_LIBRARIES_TEXT = "librariesListNoLibraries"
 }
 
 @Composable
@@ -68,7 +69,9 @@ fun LibrariesList(
 @Composable
 private fun NoLibrariesText() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag(LibrariesListTags.NO_LIBRARIES_TEXT),
         contentAlignment = Alignment.Center
     ) {
         Text(

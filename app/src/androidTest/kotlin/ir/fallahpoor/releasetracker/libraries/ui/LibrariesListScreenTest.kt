@@ -43,7 +43,6 @@ class LibrariesListScreenTest {
     private lateinit var preferencesCoroutineScope: CoroutineScope
 
     private val context: Context = ApplicationProvider.getApplicationContext()
-    private val noLibrariesText = context.getString(R.string.no_libraries)
     private val searchText = context.getString(R.string.search)
 
     @After
@@ -131,29 +130,6 @@ class LibrariesListScreenTest {
     }
 
     @Test
-    fun a_proper_text_is_displayed_when_there_is_no_search_result() {
-
-        // Given
-        composeLibrariesListScreen()
-
-        // When
-        with(composeRule) {
-            onNodeWithContentDescription(searchText, useUnmergedTree = true)
-                .performClick()
-            onNodeWithTag(SearchBarTags.QUERY_TEXT_FIELD)
-                .performTextInput("this will not match any library!")
-        }
-
-        // Then
-        with(composeRule) {
-            // TODO assert that there is no composable with its test tag starting with LIBRARY_ITEM
-            onNodeWithText(noLibrariesText)
-                .assertIsDisplayed()
-        }
-
-    }
-
-    @Test
     fun all_libraries_are_displayed_when_search_bar_is_closed() {
 
         // Given
@@ -178,11 +154,7 @@ class LibrariesListScreenTest {
                 )
                     .assertIsDisplayed()
             }
-            onNodeWithText(noLibrariesText)
-                .assertDoesNotExist()
-            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
-            onNodeWithText(noLibrariesText)
+            onNodeWithText(LibrariesListTags.NO_LIBRARIES_TEXT)
                 .assertDoesNotExist()
             onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
@@ -215,11 +187,7 @@ class LibrariesListScreenTest {
                 )
                     .assertIsDisplayed()
             }
-            onNodeWithText(noLibrariesText)
-                .assertDoesNotExist()
-            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
-                .assertDoesNotExist()
-            onNodeWithText(noLibrariesText)
+            onNodeWithText(LibrariesListTags.NO_LIBRARIES_TEXT)
                 .assertDoesNotExist()
             onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
                 .assertDoesNotExist()
