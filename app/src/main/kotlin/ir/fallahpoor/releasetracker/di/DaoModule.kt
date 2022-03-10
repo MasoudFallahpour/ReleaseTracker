@@ -16,9 +16,8 @@ import javax.inject.Singleton
 object DaoModule {
 
     @Provides
-    fun provideLibraryDao(libraryDatabase: LibraryDatabase): LibraryDao {
-        return libraryDatabase.libraryDao()
-    }
+    fun provideLibraryDao(libraryDatabase: LibraryDatabase): LibraryDao =
+        libraryDatabase.libraryDao()
 
     @Provides
     @Singleton

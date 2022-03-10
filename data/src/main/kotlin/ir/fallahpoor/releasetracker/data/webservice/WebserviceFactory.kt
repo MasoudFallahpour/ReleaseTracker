@@ -28,12 +28,11 @@ class WebserviceFactory @Inject constructor() {
             .build()
             .create(serviceClass)
 
-    private fun getOkhttpClient(isDebugBuild: Boolean): OkHttpClient {
-        return OkHttpClient.Builder()
+    private fun getOkhttpClient(isDebugBuild: Boolean): OkHttpClient =
+        OkHttpClient.Builder()
             .addInterceptor(HeadersInterceptor())
             .addInterceptor(getLoggingInterceptor(isDebugBuild))
             .build()
-    }
 
     private fun getLoggingInterceptor(isDebugBuild: Boolean): HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply {
@@ -47,9 +46,7 @@ class WebserviceFactory @Inject constructor() {
     private inner class HeadersInterceptor : Interceptor {
 
         override fun intercept(chain: Interceptor.Chain): Response {
-
             val original = chain.request()
-
             val request = original.newBuilder()
                 .header(
                     HEADER_NAME_AUTHORIZATION,
@@ -57,9 +54,7 @@ class WebserviceFactory @Inject constructor() {
                 )
                 .method(original.method, original.body)
                 .build()
-
             return chain.proceed(request)
-
         }
 
     }

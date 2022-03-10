@@ -18,9 +18,7 @@ import javax.inject.Singleton
 object StorageModule {
 
     @Provides
-    fun provideStorage(localStorage: LocalStorage): Storage {
-        return localStorage
-    }
+    fun provideStorage(localStorage: LocalStorage): Storage = localStorage
 
     @Provides
     @Singleton

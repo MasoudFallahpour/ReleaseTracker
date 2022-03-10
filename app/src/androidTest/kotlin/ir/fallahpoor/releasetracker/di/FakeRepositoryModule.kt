@@ -10,7 +10,7 @@ import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [RepositoryModule::class]
+    replaces = [LibraryRepositoryModule::class]
 )
 object FakeRepositoryModule {
 
