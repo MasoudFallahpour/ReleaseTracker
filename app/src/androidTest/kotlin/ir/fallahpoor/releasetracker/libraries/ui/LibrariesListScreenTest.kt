@@ -4,24 +4,14 @@ import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
-import ir.fallahpoor.releasetracker.NightModeViewModel
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -37,18 +27,10 @@ class LibrariesListScreenTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var nightModeViewModel: NightModeViewModel
-    private lateinit var libraryRepository: FakeLibraryRepository
-    private lateinit var librariesViewModel: LibrariesViewModel
-    private lateinit var preferencesCoroutineScope: CoroutineScope
+    private lateinit var fakeLibraryRepository: FakeLibraryRepository
 
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val searchText = context.getString(R.string.search)
-
-    @After
-    fun runAfterEachTest() {
-        preferencesCoroutineScope.cancel()
-    }
 
     @Test
     fun screen_is_initialized_correctly() {
@@ -81,7 +63,7 @@ class LibrariesListScreenTest {
         }
 
         // Then
-        libraryRepository.libraries.forEach { library ->
+        fakeLibraryRepository.libraries.forEach { library ->
             if (library.name == libraryName) {
                 composeRule.onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + library.name,
@@ -147,12 +129,11 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            libraryRepository.libraries.forEach {
+            fakeLibraryRepository.libraries.forEach {
                 onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
-                )
-                    .assertIsDisplayed()
+                ).assertIsDisplayed()
             }
             onNodeWithText(LibrariesListTags.NO_LIBRARIES_TEXT)
                 .assertDoesNotExist()
@@ -180,12 +161,11 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            libraryRepository.libraries.forEach {
+            fakeLibraryRepository.libraries.forEach {
                 onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
-                )
-                    .assertIsDisplayed()
+                ).assertIsDisplayed()
             }
             onNodeWithText(LibrariesListTags.NO_LIBRARIES_TEXT)
                 .assertDoesNotExist()
@@ -258,15 +238,10 @@ class LibrariesListScreenTest {
         onLibraryClick: (Library) -> Unit = {},
         onAddLibraryClick: () -> Unit = {}
     ) {
-
-        val storage: Storage = createStorage()
-        nightModeViewModel = NightModeViewModel(storage)
-        libraryRepository = FakeLibraryRepository()
-        librariesViewModel = LibrariesViewModel(libraryRepository)
-
+        fakeLibraryRepository = FakeLibraryRepository()
         composeRule.setContent {
             LibrariesListScreen(
-                librariesViewModel = librariesViewModel,
+                librariesViewModel = LibrariesViewModel(fakeLibraryRepository),
                 currentNightMode = NightMode.AUTO,
                 onNightModeChange = onNightModeChange,
                 isNightModeSupported = true,
@@ -274,14 +249,6 @@ class LibrariesListScreenTest {
                 onAddLibraryClick = onAddLibraryClick
             )
         }
-    }
-
-    private fun createStorage(): LocalStorage {
-        preferencesCoroutineScope = CoroutineScope(UnconfinedTestDispatcher() + Job())
-        val dataStore = PreferenceDataStoreFactory.create(scope = preferencesCoroutineScope) {
-            context.preferencesDataStoreFile("settings_test")
-        }
-        return LocalStorage(dataStore)
     }
 
 }
