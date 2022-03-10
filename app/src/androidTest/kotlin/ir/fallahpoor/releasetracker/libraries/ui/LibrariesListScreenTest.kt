@@ -49,6 +49,28 @@ class LibrariesListScreenTest {
     }
 
     @Test
+    fun all_libraries_are_displayed() {
+
+        // Given
+        composeLibrariesListScreen()
+
+        // Then
+        with(composeRule) {
+            fakeLibraryRepository.libraries.forEach {
+                onNodeWithTag(
+                    LibraryItemTags.LIBRARY_ITEM + it.name,
+                    useUnmergedTree = true
+                ).assertIsDisplayed()
+            }
+            onNodeWithText(LibrariesListTags.NO_LIBRARIES_TEXT)
+                .assertDoesNotExist()
+            onNodeWithTag(LibrariesListContentTags.PROGRESS_INDICATOR)
+                .assertDoesNotExist()
+        }
+
+    }
+
+    @Test
     fun delete_library_only_deletes_the_selected_library() {
 
         // Given
@@ -94,19 +116,18 @@ class LibrariesListScreenTest {
         }
 
         // Then
-        with(composeRule) {
-            onNodeWithTag(
-                LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Coil.name,
-                useUnmergedTree = true
-            ).assertDoesNotExist()
-            onNodeWithTag(
-                LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
-            onNodeWithTag(
-                LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Koin.name,
-                useUnmergedTree = true
-            ).assertIsDisplayed()
+        fakeLibraryRepository.libraries.forEach { library ->
+            if (library.name.contains("ko", ignoreCase = true)) {
+                composeRule.onNodeWithTag(
+                    LibraryItemTags.LIBRARY_ITEM + library.name,
+                    useUnmergedTree = true
+                ).assertIsDisplayed()
+            } else {
+                composeRule.onNodeWithTag(
+                    LibraryItemTags.LIBRARY_ITEM + library.name,
+                    useUnmergedTree = true
+                ).assertDoesNotExist()
+            }
         }
 
     }
