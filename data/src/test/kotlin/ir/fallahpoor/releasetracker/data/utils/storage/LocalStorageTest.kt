@@ -94,8 +94,7 @@ class LocalStorageTest {
         localStorage.setNightMode(expectedNightMode)
 
         // Then
-        val actualNightMode =
-            NightMode.valueOf(getString(KEY_NIGHT_MODE) ?: "")
+        val actualNightMode = NightMode.valueOf(getString(KEY_NIGHT_MODE) ?: "")
         Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
 
     }
@@ -110,8 +109,7 @@ class LocalStorageTest {
         localStorage.setSortOrder(expectedSortOrder)
 
         // Then
-        val actualSortOrder =
-            SortOrder.valueOf(getString(KEY_SORT_ORDER) ?: "")
+        val actualSortOrder = SortOrder.valueOf(getString(KEY_SORT_ORDER) ?: "")
         Truth.assertThat(actualSortOrder).isEqualTo(expectedSortOrder)
 
     }
