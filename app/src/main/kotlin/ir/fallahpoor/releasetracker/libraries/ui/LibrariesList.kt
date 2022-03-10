@@ -62,7 +62,7 @@ fun LibrariesList(
                 }
             }
         }
-        AddLibraryButton(clickListener = onAddLibraryClick)
+        AddLibraryButton(onClick = onAddLibraryClick)
     }
 }
 
@@ -82,12 +82,12 @@ private fun NoLibrariesText() {
 }
 
 @Composable
-private fun AddLibraryButton(clickListener: () -> Unit) {
+private fun AddLibraryButton(onClick: () -> Unit) {
     FloatingActionButton(
         modifier = Modifier
             .padding(MaterialTheme.spacing.normal)
             .testTag(LibrariesListTags.ADD_LIBRARY_BUTTON),
-        onClick = clickListener
+        onClick = onClick
     ) {
         Icon(
             imageVector = Icons.Filled.Add,

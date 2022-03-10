@@ -52,11 +52,9 @@ fun Toolbar(
                     currentSortOrder = currentSortOrder,
                     onSortOrderChange = onSortOrderChange
                 )
-                SearchButton(
-                    onClick = {
-                        toolbarMode = ToolbarMode.Search
-                    }
-                )
+                SearchButton {
+                    toolbarMode = ToolbarMode.Search
+                }
                 if (isNightModeSupported) {
                     NightModeButton(
                         currentNightMode = currentNightMode,

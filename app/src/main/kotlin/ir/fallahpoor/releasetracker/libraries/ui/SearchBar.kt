@@ -58,7 +58,7 @@ fun SearchBar(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            CloseButton(onCloseClick = onCloseClick)
+            CloseButton(onClick = onCloseClick)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -73,16 +73,16 @@ fun SearchBar(
                     onQuerySubmit = onQuerySubmit
                 )
             }
-            ClearButton(onClearClick = onClearClick)
+            ClearButton(onClick = onClearClick)
         }
     }
 }
 
 @Composable
-private fun CloseButton(onCloseClick: () -> Unit) {
+private fun CloseButton(onClick: () -> Unit) {
     IconButton(
         modifier = Modifier.testTag(SearchBarTags.CLOSE_BUTTON),
-        onClick = onCloseClick
+        onClick = onClick
     ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
@@ -132,10 +132,10 @@ private fun HintText(hint: String) {
 }
 
 @Composable
-private fun ClearButton(onClearClick: () -> Unit) {
+private fun ClearButton(onClick: () -> Unit) {
     IconButton(
         modifier = Modifier.testTag(SearchBarTags.CLEAR_BUTTON),
-        onClick = onClearClick
+        onClick = onClick
     ) {
         Icon(
             imageVector = Icons.Filled.Clear,
