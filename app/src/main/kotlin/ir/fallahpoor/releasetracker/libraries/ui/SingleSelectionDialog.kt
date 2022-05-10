@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.libraries.ui.dialogs
+package ir.fallahpoor.releasetracker.libraries.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,27 +12,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable
-fun NightModeDialog(
-    currentNightMode: NightMode,
-    onNightModeClick: (NightMode) -> Unit,
+fun <T> SingleSelectionDialog(
+    title: String,
+    items: List<T>,
+    labels: List<String>,
+    selectedItem: T,
+    onItemSelect: (T) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = stringResource(R.string.select_night_mode))
+            Text(text = title)
         },
         text = {
-            NightModeContent(
-                currentNightMode = currentNightMode,
-                onNightModeClick = onNightModeClick
+            DialogContent(
+                items = items,
+                labels = labels,
+                selectedItem = selectedItem,
+                onItemSelect = onItemSelect
             )
         },
         confirmButton = {}
@@ -40,39 +43,39 @@ fun NightModeDialog(
 }
 
 @Composable
-private fun NightModeContent(
-    currentNightMode: NightMode,
-    onNightModeClick: (NightMode) -> Unit
+private fun <T> DialogContent(
+    items: List<T>,
+    labels: List<String>,
+    selectedItem: T,
+    onItemSelect: (T) -> Unit
 ) {
     Column {
-        NightMode.values().forEach { nightMode: NightMode ->
-            NightModeItem(
-                text = stringResource(nightMode.label),
-                nightMode = nightMode,
-                onNightModeChange = onNightModeClick,
-                isSelected = currentNightMode == nightMode
+        labels.forEachIndexed { index, label ->
+            Item(
+                text = label,
+                onItemSelect = { onItemSelect(items[index]) },
+                isSelected = items[index] == selectedItem
             )
         }
     }
 }
 
 @Composable
-private fun NightModeItem(
+private fun Item(
     text: String,
-    nightMode: NightMode,
-    onNightModeChange: (NightMode) -> Unit,
+    onItemSelect: () -> Unit,
     isSelected: Boolean
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = { onNightModeChange(nightMode) }),
+            .clickable(onClick = onItemSelect),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             modifier = Modifier.testTag(text),
             selected = isSelected,
-            onClick = { onNightModeChange(nightMode) }
+            onClick = onItemSelect
         )
         Text(text = text)
     }
@@ -83,9 +86,12 @@ private fun NightModeItem(
 private fun NightModeDialogPreview() {
     ReleaseTrackerTheme(darkTheme = false) {
         Surface {
-            NightModeDialog(
-                currentNightMode = NightMode.OFF,
-                onNightModeClick = {},
+            SingleSelectionDialog(
+                title = "Awesome title",
+                items = NightMode.values().toList(),
+                labels = NightMode.values().map { it.name }.toList(),
+                selectedItem = NightMode.ON,
+                onItemSelect = {},
                 onDismiss = {}
             )
         }

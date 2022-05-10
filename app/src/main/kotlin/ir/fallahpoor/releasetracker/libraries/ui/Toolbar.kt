@@ -17,8 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.libraries.ui.dialogs.NightModeDialog
-import ir.fallahpoor.releasetracker.libraries.ui.dialogs.SortOrderDialog
 
 private enum class ToolbarMode {
     Normal,
@@ -98,9 +96,12 @@ private fun SortOrderButton(currentSortOrder: SortOrder, onSortOrderChange: (Sor
         )
     }
     if (showSortOrderDialog) {
-        SortOrderDialog(
-            currentSortOrder = currentSortOrder,
-            onSortOrderClick = { sortOrder: SortOrder ->
+        SingleSelectionDialog(
+            title = stringResource(R.string.select_sort_order),
+            items = SortOrder.values().toList(),
+            labels = SortOrder.values().toList().map { stringResource(it.label) },
+            selectedItem = currentSortOrder,
+            onItemSelect = { sortOrder: SortOrder ->
                 showSortOrderDialog = false
                 onSortOrderChange(sortOrder)
             },
@@ -148,9 +149,12 @@ private fun NightModeButton(
         }
     }
     if (showNightModeDialog) {
-        NightModeDialog(
-            currentNightMode = currentNightMode,
-            onNightModeClick = { nightMode: NightMode ->
+        SingleSelectionDialog(
+            title = stringResource(R.string.select_night_mode),
+            items = NightMode.values().toList(),
+            labels = NightMode.values().toList().map { stringResource(it.label) },
+            selectedItem = currentNightMode,
+            onItemSelect = { nightMode: NightMode ->
                 showNightModeDialog = false
                 onNightModeChange(nightMode)
             },
