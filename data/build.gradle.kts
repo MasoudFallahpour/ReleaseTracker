@@ -10,11 +10,11 @@ val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToke
 
 android {
     namespace = "ir.fallahpoor.releasetracker.data"
-    compileSdk = SdkVersions.compileSdk
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = SdkVersions.minSdk
-        targetSdk = SdkVersions.targetSdk
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
@@ -23,7 +23,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
             isMinifyEnabled = true
             proguardFiles(
@@ -33,7 +33,7 @@ android {
                 "proguard-rules.pro"
             )
         }
-        getByName("debug") {
+        debug {
             buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
             isMinifyEnabled = false
         }
@@ -55,28 +55,27 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 }
 
 dependencies {
-    implementation(Dependencies.kotlinStdLib)
-    implementation(Dependencies.core)
-    implementation(Dependencies.dataStore)
-    implementation(Dependencies.Lifecycle.liveData)
-    implementation(Dependencies.Coroutines.android)
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.core)
+    implementation(libs.datastore.preferences)
+    implementation(libs.lifecycle.liveData)
+    implementation(libs.coroutines.android)
 
-    implementation(Dependencies.Room.runtime)
-    kapt(Dependencies.Room.compiler)
-    implementation(Dependencies.Room.ktx)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
 
-    implementation(Dependencies.inject)
+    implementation(libs.inject)
 
-    implementation(Dependencies.Retrofit.retrofit)
-    implementation(Dependencies.Retrofit.converterGson)
-    implementation(Dependencies.okhttpLoggingInterceptor)
+    implementation(libs.bundles.retrofit)
+    implementation(libs.okhttpLoggingInterceptor)
 
-    testImplementation(Dependencies.junit)
-    testImplementation(Dependencies.truth)
-    testImplementation(Dependencies.Coroutines.test)
-    testImplementation(Dependencies.coreTesting)
-    testImplementation(Dependencies.AndroidXTest.core)
-    testImplementation(Dependencies.robolectric)
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.coreTesting)
+    testImplementation(libs.androidxTest.core)
+    testImplementation(libs.robolectric)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

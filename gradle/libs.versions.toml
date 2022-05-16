@@ -1,0 +1,89 @@
+[versions]
+compileSdk = "31"
+minSdk = "21"
+targetSdk = "31"
+
+kotlin = "1.6.10"
+workManager = "2.7.1"
+lifecycle = "2.3.1"
+room = "2.4.1"
+compose = "1.1.1"
+coroutines = "1.6.0"
+firebase = "29.1.0"
+hilt = "2.41"
+hiltJetpack = "1.0.0"
+retrofit = "2.9.0"
+espresso = "3.4.0"
+mockito = "4.3.1"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+core = { module = "androidx.core:core-ktx", version = "1.7.0" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.0.0" }
+appcompat = { module = "androidx.appcompat:appcompat", version = "1.3.1" }
+activityCompose = { module = "androidx.activity:activity-compose", version = "1.3.1" }
+navigationCompose = { module = "androidx.navigation:navigation-compose", version = "2.4.0-beta02" }
+material = "com.google.android.material:material:1.4.0"
+timber = { module = "com.jakewharton.timber:timber", version = "5.0.1" }
+inject = { module = "javax.inject:javax.inject", version = "1" }
+okhttpLoggingInterceptor = { module = "com.squareup.okhttp3:logging-interceptor", version = "4.9.0" }
+junit = { module = "junit:junit", version = "4.13.2" }
+truth = { module = "com.google.truth:truth", version = "1.1.3" }
+coreTesting = { module = "androidx.arch.core:core-testing", version = "2.1.0" }
+robolectric = { module = "org.robolectric:robolectric", version = "4.7.3" }
+
+workManagar-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
+workManagar-testing = { module = "androidx.work:work-testing", version.ref = "workManager" }
+
+lifecycle-liveData = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+lifecycle-viewModel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
+
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+compose-UiTestJunit = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose" }
+compose-UiTestManifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose" }
+
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-androidCompiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltJetpack" }
+hilt-workManager = { module = "androidx.hilt:hilt-work", version.ref = "hiltJetpack" }
+hilt-navigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0-beta01" }
+hilt-androidTesting = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converterGson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+
+androidxTest-core = { module = "androidx.test:core", version = "1.0.0" }
+androidxTest-runner = { module = "androidx.test:runner", version = "1.1.0" }
+androidxTest-rules = { module = "androidx.test:rules", version = "1.1.0" }
+
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espresso" }
+
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito" }
+
+dexMaker = { module = "com.linkedin.dexmaker:dexmaker-mockito-inline", version = "2.25.1" }
+
+[bundles]
+retrofit = ["retrofit", "retrofit-converterGson"]
+
+[plugins]
+android = { id = "com.android.tools.build:gradle", version = "7.3.0-beta01" }
+kotlin = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+dagger = { id = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
+googleService = { id = "com.google.gms:google-services", version = "4.3.10" }
+firebaseCrashlytics = { id = "com.google.firebase:firebase-crashlytics-gradle", version = "2.8.1" }
