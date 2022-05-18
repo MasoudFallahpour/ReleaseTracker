@@ -4,6 +4,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
+    kotlin("plugin.serialization") version "1.6.10"
 }
 
 val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToken")
@@ -67,8 +68,7 @@ dependencies {
 
     implementation(libs.inject)
 
-    implementation(libs.bundles.retrofit)
-    implementation(libs.okhttpLoggingInterceptor)
+    implementation(libs.bundles.ktor)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)

@@ -121,6 +121,8 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.compose.runtime)
 
+    implementation(libs.bundles.ktor)
+
     testImplementation(libs.junit)
     testImplementation(libs.truth)
     testImplementation(libs.coreTesting)

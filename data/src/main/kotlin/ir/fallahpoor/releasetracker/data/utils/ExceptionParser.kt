@@ -1,6 +1,6 @@
 package ir.fallahpoor.releasetracker.data.utils
 
-import retrofit2.HttpException
+import io.ktor.client.plugins.*
 import java.io.IOException
 import javax.inject.Inject
 
@@ -12,12 +12,10 @@ class ExceptionParser @Inject constructor() {
         const val SOMETHING_WENT_WRONG = "Unfortunately, something went wrong."
     }
 
-    fun getMessage(t: Throwable): String {
-        return when (t) {
-            is HttpException -> LIBRARY_DOES_NOT_EXIST
-            is IOException -> INTERNET_NOT_CONNECTED
-            else -> SOMETHING_WENT_WRONG
-        }
+    fun getMessage(t: Throwable): String = when (t) {
+        is ClientRequestException -> LIBRARY_DOES_NOT_EXIST
+        is IOException -> INTERNET_NOT_CONNECTED
+        else -> SOMETHING_WENT_WRONG
     }
 
 }

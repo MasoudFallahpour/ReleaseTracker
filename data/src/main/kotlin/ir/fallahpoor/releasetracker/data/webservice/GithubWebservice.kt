@@ -1,15 +1,20 @@
 package ir.fallahpoor.releasetracker.data.webservice
 
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import ir.fallahpoor.releasetracker.data.BuildConfig
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
-import retrofit2.http.GET
-import retrofit2.http.Path
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface GithubWebservice {
+@Singleton
+class GithubWebservice @Inject constructor(private val httpClient: HttpClient) {
 
-    @GET("repos/{owner}/{repo}/releases/latest")
-    suspend fun getLatestVersion(
-        @Path("owner") owner: String,
-        @Path("repo") repo: String
-    ): LibraryVersion
+    suspend fun getLatestVersion(owner: String, repository: String): LibraryVersion =
+        httpClient.get("https://api.github.com/repos/$owner/$repository/releases/latest") {
+            header(HttpHeaders.Authorization, "token ${BuildConfig.ACCESS_TOKEN}")
+        }.body()
 
 }
