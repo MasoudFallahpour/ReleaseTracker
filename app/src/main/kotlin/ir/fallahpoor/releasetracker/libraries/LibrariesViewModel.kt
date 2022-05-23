@@ -22,39 +22,37 @@ class LibrariesViewModel
 
     private data class Params(
         val sortOrder: SortOrder,
-        val searchTerm: String
+        val searchQuery: String
     )
 
     private val searchQueryFlow = MutableStateFlow("")
-    private val triggerFlow: Flow<Params> =
-        libraryRepository.getSortOrderAsFlow()
-            .combine(searchQueryFlow) { sortOrder: SortOrder, searchQuery: String ->
-                Params(sortOrder, searchQuery)
-            }
+    private val triggerFlow: Flow<Params> = libraryRepository.getSortOrderAsFlow()
+        .combine(searchQueryFlow) { sortOrder: SortOrder, searchQuery: String ->
+            Params(sortOrder, searchQuery)
+        }
 
-    val uiState: StateFlow<LibrariesListScreenUiState> =
-        triggerFlow.distinctUntilChanged()
-            .flatMapLatest { params ->
-                libraryRepository.getLibrariesAsFlow()
-                    .map { libraries ->
-                        libraries.filter {
-                            it.name.contains(params.searchTerm, ignoreCase = true)
-                        }
+    val uiState: StateFlow<LibrariesListScreenUiState> = triggerFlow.distinctUntilChanged()
+        .flatMapLatest { params ->
+            libraryRepository.getLibrariesAsFlow()
+                .map { libraries ->
+                    libraries.filter {
+                        it.name.contains(params.searchQuery, ignoreCase = true)
                     }
-                    .map { libraries ->
-                        libraries.sort(params.sortOrder)
-                    }
-            }.map { libraries ->
-                LibrariesListScreenUiState(
-                    sortOrder = libraryRepository.getSortOrder(),
-                    searchQuery = searchQueryFlow.value,
-                    librariesListState = LibrariesListState.LibrariesLoaded(libraries)
-                )
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = LibrariesListScreenUiState(sortOrder = libraryRepository.getSortOrder())
+                }
+                .map { libraries ->
+                    libraries.sort(params.sortOrder)
+                }
+        }.map { libraries ->
+            LibrariesListScreenUiState(
+                sortOrder = libraryRepository.getSortOrder(),
+                searchQuery = searchQueryFlow.value,
+                librariesListState = LibrariesListState.LibrariesLoaded(libraries)
             )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = LibrariesListScreenUiState(sortOrder = libraryRepository.getSortOrder())
+        )
 
     private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
         SortOrder.A_TO_Z -> sortedBy { it.name.lowercase(Locale.getDefault()) }
