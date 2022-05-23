@@ -11,6 +11,8 @@ import io.ktor.serialization.kotlinx.json.*
 import ir.fallahpoor.releasetracker.data.BuildConfig
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepositoryImpl
+import ir.fallahpoor.releasetracker.data.webservice.GithubWebService
+import ir.fallahpoor.releasetracker.data.webservice.GithubWebServiceImpl
 import kotlinx.serialization.json.Json
 
 @Module
@@ -20,6 +22,10 @@ object LibraryRepositoryModule {
     @Provides
     fun provideLibraryRepository(libraryRepositoryImpl: LibraryRepositoryImpl): LibraryRepository =
         libraryRepositoryImpl
+
+    @Provides
+    fun provideGithubWebService(githubWebServiceImpl: GithubWebServiceImpl): GithubWebService =
+        githubWebServiceImpl
 
     @Provides
     fun provideHttpClient() =

@@ -10,9 +10,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GithubWebservice @Inject constructor(private val httpClient: HttpClient) {
+class GithubWebServiceImpl
+@Inject constructor(
+    private val httpClient: HttpClient
+) : GithubWebService {
 
-    suspend fun getLatestVersion(owner: String, repository: String): LibraryVersion =
+    override suspend fun getLatestVersion(owner: String, repository: String): LibraryVersion =
         httpClient.get("https://api.github.com/repos/$owner/$repository/releases/latest") {
             header(HttpHeaders.Authorization, "token ${BuildConfig.ACCESS_TOKEN}")
         }.body()

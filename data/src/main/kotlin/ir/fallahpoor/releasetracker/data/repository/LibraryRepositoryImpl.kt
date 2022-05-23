@@ -5,7 +5,7 @@ import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.data.utils.storage.Storage
-import ir.fallahpoor.releasetracker.data.webservice.GithubWebservice
+import ir.fallahpoor.releasetracker.data.webservice.GithubWebService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -13,7 +13,7 @@ class LibraryRepositoryImpl
 @Inject constructor(
     private val storage: Storage,
     private val libraryDao: LibraryDao,
-    private val githubWebservice: GithubWebservice
+    private val githubWebservice: GithubWebService
 ) : LibraryRepository {
 
     companion object {
