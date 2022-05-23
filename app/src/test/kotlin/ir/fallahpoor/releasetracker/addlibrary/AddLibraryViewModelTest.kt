@@ -18,6 +18,11 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class AddLibraryViewModelTest {
 
+    companion object {
+        private const val LIBRARY_NAME = "ReleaseTracker"
+        private const val LIBRARY_URL_PATH = "masoodfallahpoor/ReleaseTracker"
+    }
+
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -42,15 +47,18 @@ class AddLibraryViewModelTest {
     @Test
     fun `state is correctly updated when library name changes`() {
 
+        // Given
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
+
         // When
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(libraryName = "abc"))
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(libraryName = LIBRARY_NAME))
 
         // Then
         Truth.assertThat(addLibraryViewModel.uiState.value)
             .isEqualTo(
                 AddLibraryScreenUiState(
-                    libraryName = "abc",
-                    libraryUrlPath = "",
+                    libraryName = LIBRARY_NAME,
+                    libraryUrlPath = LIBRARY_URL_PATH,
                     addLibraryState = AddLibraryState.Initial
                 )
             )
@@ -60,15 +68,18 @@ class AddLibraryViewModelTest {
     @Test
     fun `state is correctly updated when library URL path changes`() {
 
+        // Given
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
+
         // When
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(libraryUrlPath = "abc/def"))
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(libraryUrlPath = LIBRARY_URL_PATH))
 
         // Then
         Truth.assertThat(addLibraryViewModel.uiState.value)
             .isEqualTo(
                 AddLibraryScreenUiState(
-                    libraryName = "",
-                    libraryUrlPath = "abc/def",
+                    libraryName = LIBRARY_NAME,
+                    libraryUrlPath = LIBRARY_URL_PATH,
                     addLibraryState = AddLibraryState.Initial
                 )
             )
@@ -81,12 +92,13 @@ class AddLibraryViewModelTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
 
             // When
             addLibraryViewModel.handleEvent(
                 Event.AddLibrary(
                     libraryName = "",
-                    libraryUrlPath = "does not matter"
+                    libraryUrlPath = LIBRARY_URL_PATH
                 )
             )
 
@@ -96,7 +108,7 @@ class AddLibraryViewModelTest {
                 .isEqualTo(
                     AddLibraryScreenUiState(
                         libraryName = "",
-                        libraryUrlPath = "",
+                        libraryUrlPath = LIBRARY_URL_PATH,
                         addLibraryState = AddLibraryState.EmptyLibraryName
                     )
                 )
@@ -109,11 +121,12 @@ class AddLibraryViewModelTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
 
             // When
             addLibraryViewModel.handleEvent(
                 Event.AddLibrary(
-                    libraryName = "does not matter",
+                    libraryName = LIBRARY_NAME,
                     libraryUrlPath = ""
                 )
             )
@@ -123,7 +136,7 @@ class AddLibraryViewModelTest {
             Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
                     AddLibraryScreenUiState(
-                        libraryName = "",
+                        libraryName = LIBRARY_NAME,
                         libraryUrlPath = "",
                         addLibraryState = AddLibraryState.EmptyLibraryUrl
                     )
@@ -137,12 +150,14 @@ class AddLibraryViewModelTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath("this is an invalid URL"))
 
             // When
             addLibraryViewModel.handleEvent(
                 Event.AddLibrary(
-                    libraryName = "does not matter",
-                    libraryUrlPath = "This is an invalid library URL path"
+                    libraryName = LIBRARY_NAME,
+                    libraryUrlPath = "this is an invalid URL"
                 )
             )
 
@@ -151,8 +166,8 @@ class AddLibraryViewModelTest {
             Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
                     AddLibraryScreenUiState(
-                        libraryName = "",
-                        libraryUrlPath = "",
+                        libraryName = LIBRARY_NAME,
+                        libraryUrlPath = "this is an invalid URL",
                         addLibraryState = AddLibraryState.InvalidLibraryUrl
                     )
                 )
@@ -166,16 +181,19 @@ class AddLibraryViewModelTest {
             // Given
             fakeLibraryRepository.deleteLibraries()
             fakeLibraryRepository.addLibrary(
-                libraryName = "coil",
-                libraryUrl = "https://github.com/coil-kt/coil",
-                libraryVersion = "1.0.0"
+                libraryName = LIBRARY_NAME,
+                libraryUrl = "https://github.com/masoodfallahpoor/ReleaseTracker",
+                libraryVersion = "1.0"
             )
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
+
 
             // When
             addLibraryViewModel.handleEvent(
                 Event.AddLibrary(
-                    libraryName = "coil",
-                    libraryUrlPath = "coil-kt/coil"
+                    libraryName = LIBRARY_NAME,
+                    libraryUrlPath = LIBRARY_URL_PATH
                 )
             )
 
@@ -184,8 +202,8 @@ class AddLibraryViewModelTest {
             Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
                     AddLibraryScreenUiState(
-                        libraryName = "",
-                        libraryUrlPath = "",
+                        libraryName = LIBRARY_NAME,
+                        libraryUrlPath = LIBRARY_URL_PATH,
                         addLibraryState = AddLibraryState.Error("Library already exists")
                     )
                 )
@@ -201,13 +219,13 @@ class AddLibraryViewModelTest {
         // When
         addLibraryViewModel.handleEvent(
             Event.AddLibrary(
-                libraryName = "abc",
-                libraryUrlPath = "abc/def"
+                libraryName = LIBRARY_NAME,
+                libraryUrlPath = LIBRARY_URL_PATH
             )
         )
 
         // Then
-        Truth.assertThat(fakeLibraryRepository.getLibrary("abc")).isNotNull()
+        Truth.assertThat(fakeLibraryRepository.getLibrary(LIBRARY_NAME)).isNotNull()
         Truth.assertThat(addLibraryViewModel.uiState.value)
             .isEqualTo(
                 AddLibraryScreenUiState(
@@ -224,23 +242,25 @@ class AddLibraryViewModelTest {
         runTest {
 
             // Given
-            val libraryName: String = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING))
+            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
 
             // When
             addLibraryViewModel.handleEvent(
                 Event.AddLibrary(
-                    libraryName = libraryName,
-                    libraryUrlPath = "abc/def"
+                    libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
+                    libraryUrlPath = LIBRARY_URL_PATH
                 )
             )
 
             // Then
-            Truth.assertThat(fakeLibraryRepository.getLibrary(libraryName)).isNull()
+            Truth.assertThat(fakeLibraryRepository.getLibrary(FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING))
+                .isNull()
             Truth.assertThat(addLibraryViewModel.uiState.value)
                 .isEqualTo(
                     AddLibraryScreenUiState(
-                        libraryName = "",
-                        libraryUrlPath = "",
+                        libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
+                        libraryUrlPath = LIBRARY_URL_PATH,
                         addLibraryState = AddLibraryState.Error("Internet not connected.")
                     )
                 )
@@ -251,10 +271,12 @@ class AddLibraryViewModelTest {
     fun `state is correctly updated when an error is dismissed`() {
 
         // Given the current state is Error
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING))
+        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
         addLibraryViewModel.handleEvent(
             Event.AddLibrary(
                 libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
-                libraryUrlPath = "abc/def"
+                libraryUrlPath = LIBRARY_URL_PATH
             )
         )
 
@@ -265,8 +287,8 @@ class AddLibraryViewModelTest {
         Truth.assertThat(addLibraryViewModel.uiState.value)
             .isEqualTo(
                 AddLibraryScreenUiState(
-                    libraryName = "",
-                    libraryUrlPath = "",
+                    libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
+                    libraryUrlPath = LIBRARY_URL_PATH,
                     addLibraryState = AddLibraryState.Initial
                 )
             )
