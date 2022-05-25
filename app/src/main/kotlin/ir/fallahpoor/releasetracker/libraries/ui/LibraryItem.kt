@@ -34,11 +34,11 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import ir.fallahpoor.releasetracker.theme.spacing
 
 object LibraryItemTags {
-    const val LIBRARY_ITEM = "libraryItem_"
-    const val LIBRARY_NAME = "libraryName"
-    const val LIBRARY_URL = "libraryUrl"
-    const val LIBRARY_VERSION = "libraryVersion"
-    const val PIN_BUTTON = "pinButton_"
+    const val LIBRARY_ITEM = "LibraryItem_"
+    const val LIBRARY_NAME = "LibraryItemLibraryName"
+    const val LIBRARY_URL = "LibraryItemLibraryUrl"
+    const val LIBRARY_VERSION = "LibraryItemLibraryVersion"
+    const val PIN_BUTTON = "LibraryItemPinButton_"
 }
 
 @Composable

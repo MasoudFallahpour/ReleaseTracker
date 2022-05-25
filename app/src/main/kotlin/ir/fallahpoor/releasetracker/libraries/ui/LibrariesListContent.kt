@@ -22,8 +22,8 @@ import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import ir.fallahpoor.releasetracker.theme.spacing
 
 object LibrariesListContentTags {
-    const val LAST_UPDATE_CHECK_TEXT = "lastUpdateCheckText"
-    const val PROGRESS_INDICATOR = "progressIndicator"
+    const val LAST_UPDATE_CHECK_TEXT = "librariesListContentLastUpdateCheckText"
+    const val PROGRESS_INDICATOR = "librariesListContentProgressIndicator"
 }
 
 @Composable

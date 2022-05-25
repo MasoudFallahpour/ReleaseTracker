@@ -84,7 +84,7 @@ fun LibrariesListScreen(
                 onPinLibraryClick = { library: Library, pinned: Boolean ->
                     librariesViewModel.handleEvent(Event.PinLibrary(library, pinned))
                 },
-                onAddLibraryClick = onAddLibraryClick,
+                onAddLibraryClick = onAddLibraryClick
             )
         }
     }
