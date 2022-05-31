@@ -32,26 +32,20 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
     }
 
     private fun startUpdateWorker() {
-
-        val workRequest = createWorkRequest()
-
         WorkManager.getInstance(this)
             .enqueueUniquePeriodicWork(
                 getString(R.string.worker_tag),
                 ExistingPeriodicWorkPolicy.REPLACE,
-                workRequest
+                createWorkRequest()
             )
-
     }
 
     private fun createWorkRequest(): PeriodicWorkRequest {
-
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(true)
             .build()
-
-        return PeriodicWorkRequestBuilder<UpdateVersionsWorker>(8, TimeUnit.HOURS)
+        return PeriodicWorkRequestBuilder<UpdateVersionsWorker>(1, TimeUnit.DAYS)
             .setConstraints(constraints)
             .setBackoffCriteria(
                 BackoffPolicy.LINEAR,
@@ -61,7 +55,6 @@ class ReleaseTrackerApp : Application(), Configuration.Provider {
             .setInitialDelay(10, TimeUnit.SECONDS)
             .addTag(getString(R.string.worker_tag))
             .build()
-
     }
 
     override fun getWorkManagerConfiguration(): Configuration =

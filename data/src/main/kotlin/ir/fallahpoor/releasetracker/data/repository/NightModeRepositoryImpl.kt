@@ -5,6 +5,8 @@ import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+// TODO Add tests
+
 class NightModeRepositoryImpl @Inject constructor(
     private val storage: Storage
 ) : NightModeRepository {

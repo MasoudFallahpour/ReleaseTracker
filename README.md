@@ -14,7 +14,10 @@ your favorite libraries too!
 ![Screenshots](/screenshots/screenshots_2.png?raw=true "Screenshots")
 
 # How it works
-There is a [worker](https://developer.android.com/topic/libraries/architecture/workmanager) that runs 3 times a day. In each run, for each library, it connects to the [Github REST API](https://docs.github.com/en/free-pro-team@latest/rest) and fetches the latest version of the library.
+There is a [worker](https://developer.android.com/topic/libraries/architecture/workmanager) that
+runs once a day. In each run, for each library, it connects to
+the [Github REST API](https://docs.github.com/en/free-pro-team@latest/rest) and fetches the latest
+version of the library.
 
 # How to build
 
