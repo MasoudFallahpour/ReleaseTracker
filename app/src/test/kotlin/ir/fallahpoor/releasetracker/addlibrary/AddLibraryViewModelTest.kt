@@ -19,8 +19,10 @@ import org.junit.Test
 class AddLibraryViewModelTest {
 
     companion object {
-        private const val LIBRARY_NAME = "ReleaseTracker"
-        private const val LIBRARY_URL_PATH = "masoodfallahpoor/ReleaseTracker"
+        // I've put some leading and trailing spaces intentionally to make sure that the library name and URL
+        // are trimmed.
+        private const val LIBRARY_NAME = "  ReleaseTracker "
+        private const val LIBRARY_URL_PATH = " masoodfallahpoor/ReleaseTracker   "
     }
 
     @get:Rule

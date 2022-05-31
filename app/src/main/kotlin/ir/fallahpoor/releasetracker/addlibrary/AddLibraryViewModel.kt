@@ -28,7 +28,7 @@ class AddLibraryViewModel
         when (event) {
             is Event.UpdateLibraryName -> updateLibraryName(event.libraryName)
             is Event.UpdateLibraryUrlPath -> updateLibraryUrlPath(event.libraryUrlPath)
-            is Event.AddLibrary -> addLibrary(event.libraryName, event.libraryUrlPath)
+            is Event.AddLibrary -> addLibrary(event.libraryName.trim(), event.libraryUrlPath.trim())
             is Event.ErrorDismissed -> resetUiState()
         }
     }

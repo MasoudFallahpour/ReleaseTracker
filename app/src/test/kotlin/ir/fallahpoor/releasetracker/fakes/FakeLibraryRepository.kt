@@ -56,16 +56,16 @@ class FakeLibraryRepository : LibraryRepository {
         libraryUrl: String,
         libraryVersion: String
     ) {
-        if (libraryName == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING) {
+        if (libraryName.trim() == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING) {
             throw IOException(ERROR_MESSAGE)
         } else {
             val library: Library? = libraries.find {
-                it.name.equals(libraryName, ignoreCase = true)
+                it.name.equals(libraryName.trim(), ignoreCase = true)
             }
             if (library != null) {
                 throw RuntimeException(ExceptionParser.SOMETHING_WENT_WRONG)
             } else {
-                libraries += Library(libraryName, libraryUrl, libraryVersion, 0)
+                libraries += Library(libraryName.trim(), libraryUrl.trim(), libraryVersion, 0)
                 updateLibrariesLiveData(libraries)
             }
         }
@@ -73,7 +73,7 @@ class FakeLibraryRepository : LibraryRepository {
 
     override suspend fun updateLibrary(library: Library) {
         val removed: Boolean = libraries.removeIf {
-            it.name.equals(library.name, ignoreCase = true)
+            it.name.equals(library.name.trim(), ignoreCase = true)
         }
         if (removed) {
             libraries += library
@@ -82,7 +82,7 @@ class FakeLibraryRepository : LibraryRepository {
     }
 
     override suspend fun getLibrary(libraryName: String): Library? =
-        libraries.firstOrNull { it.name.equals(libraryName, ignoreCase = true) }
+        libraries.firstOrNull { it.name.equals(libraryName.trim(), ignoreCase = true) }
 
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
         librariesLiveData.map { libraries: List<Library> ->

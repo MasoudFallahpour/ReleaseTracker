@@ -25,7 +25,7 @@ class LibraryRepositoryImpl
 
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
 
-        val libraryPath = libraryUrl.removePrefix(GITHUB_BASE_URL)
+        val libraryPath = libraryUrl.trim().removePrefix(GITHUB_BASE_URL)
         val libraryOwner = libraryPath.substring(0 until libraryPath.indexOf("/"))
         val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
 
@@ -62,7 +62,7 @@ class LibraryRepositoryImpl
         libraryUrl: String,
         libraryVersion: String
     ) {
-        libraryDao.insert(Library(libraryName.trim(), libraryUrl, libraryVersion))
+        libraryDao.insert(Library(libraryName.trim(), libraryUrl.trim(), libraryVersion))
     }
 
     override suspend fun deleteLibrary(library: Library) {
