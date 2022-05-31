@@ -22,8 +22,8 @@ android {
         applicationId = "ir.fallahpoor.releasetracker"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 4
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "1.1"
         setProperty("archivesBaseName", "ReleaseTracker")
         testInstrumentationRunner = "ir.fallahpoor.releasetracker.CustomTestRunner"
     }
