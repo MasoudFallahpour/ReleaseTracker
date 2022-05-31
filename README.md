@@ -34,6 +34,7 @@ at [Jetpack Release Tracker](https://github.com/lmj0011/jetpack-release-tracker)
 Release Tracker uses (almost) the latest and greatest technologies of Android development. The
 following list highlights its tech stack:
 
+- Kotlin
 - MVI
 - Compose
 - ViewModel
@@ -42,7 +43,7 @@ following list highlights its tech stack:
 - Navigation
 - Dagger Hilt
 - WorkManager
-- Retrofit
+- Ktor
 
 # Contributing
 Pull requests are welcome! Please make your pull requests against the `dev` branch. If you have a
