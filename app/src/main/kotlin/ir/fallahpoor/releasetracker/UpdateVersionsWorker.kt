@@ -9,7 +9,7 @@ import dagger.assisted.AssistedInject
 import ir.fallahpoor.releasetracker.common.managers.NotificationManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
-import ir.fallahpoor.releasetracker.data.utils.NetworkUtils
+import ir.fallahpoor.releasetracker.data.utils.ConnectionChecker
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,12 +22,12 @@ class UpdateVersionsWorker
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val libraryRepository: LibraryRepository,
-    private val networkUtils: NetworkUtils,
+    private val connectionChecker: ConnectionChecker,
     private val notificationManager: NotificationManager
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result =
-        if (!networkUtils.isNetworkReachable()) {
+        if (!connectionChecker.isInternetConnected()) {
             Result.retry()
         } else {
             val updatedLibraries: List<String> = updateLibraries()
