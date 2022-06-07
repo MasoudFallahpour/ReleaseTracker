@@ -2,9 +2,9 @@ package ir.fallahpoor.releasetracker.fakes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
+import ir.fallahpoor.releasetracker.data.storage.Storage
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import kotlinx.coroutines.flow.Flow
 
 class FakeStorage : Storage {

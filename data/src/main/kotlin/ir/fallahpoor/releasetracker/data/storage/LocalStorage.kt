@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data.utils.storage
+package ir.fallahpoor.releasetracker.data.storage
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

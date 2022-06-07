@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.data.repository
 
+import ir.fallahpoor.releasetracker.data.storage.Storage
 import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

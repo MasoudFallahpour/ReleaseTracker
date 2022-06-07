@@ -9,8 +9,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ir.fallahpoor.releasetracker.data.utils.storage.LocalStorage
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
+import ir.fallahpoor.releasetracker.data.storage.LocalStorage
+import ir.fallahpoor.releasetracker.data.storage.Storage
 import javax.inject.Singleton
 
 @Module

@@ -3,8 +3,8 @@ package ir.fallahpoor.releasetracker.data.repository
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
+import ir.fallahpoor.releasetracker.data.storage.Storage
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.data.utils.storage.Storage
 import ir.fallahpoor.releasetracker.data.webservice.GithubWebService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

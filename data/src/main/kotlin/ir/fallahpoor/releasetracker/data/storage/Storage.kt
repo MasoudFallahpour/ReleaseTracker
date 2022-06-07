@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data.utils.storage
+package ir.fallahpoor.releasetracker.data.storage
 
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
