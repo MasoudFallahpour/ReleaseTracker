@@ -83,7 +83,7 @@ mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito
 
 dexMaker = { module = "com.linkedin.dexmaker:dexmaker-mockito-inline", version = "2.25.1" }
 
-androidPlugin = { module = "com.android.tools.build:gradle", version = "7.3.0-beta01" }
+androidPlugin = { module = "com.android.tools.build:gradle", version = "7.4.0-alpha08" }
 kotlinPlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 daggerPlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 googleServicePlugin = { module = "com.google.gms:google-services", version = "4.3.10" }
