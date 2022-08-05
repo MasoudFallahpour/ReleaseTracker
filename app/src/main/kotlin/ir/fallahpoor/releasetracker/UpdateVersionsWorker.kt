@@ -10,8 +10,8 @@ import ir.fallahpoor.releasetracker.common.managers.NotificationManager
 import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ConnectionChecker
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,7 +41,7 @@ class UpdateVersionsWorker
         val updatedLibraries = mutableListOf<String>()
         val libraries: List<Library> = libraryRepository.getLibraries()
 
-        coroutineScope {
+        supervisorScope {
             libraries.forEach { library: Library ->
                 launch {
                     val latestVersion: String? = getLatestVersion(library)
