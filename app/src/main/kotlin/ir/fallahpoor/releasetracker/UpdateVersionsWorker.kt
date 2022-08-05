@@ -60,21 +60,17 @@ class UpdateVersionsWorker
 
     }
 
-    private suspend fun getLatestVersion(library: Library): String? =
-        try {
-            val libraryVersion: String =
-                libraryRepository.getLibraryVersion(library.name, library.url)
-            Timber.d("Update SUCCESS (%s): %s", library.name, libraryVersion)
-            libraryVersion
-        } catch (t: Throwable) {
-            Timber.d("Update FAILURE (%s): %s", library.name, t.message)
-            null
-        }
+    private suspend fun getLatestVersion(library: Library): String? = try {
+        val libraryVersion: String = libraryRepository.getLibraryVersion(library.name, library.url)
+        Timber.d("Update SUCCESS (%s): %s", library.name, libraryVersion)
+        libraryVersion
+    } catch (t: Throwable) {
+        Timber.d("Update FAILURE (%s): %s", library.name, t.message)
+        null
+    }
 
     private fun newVersionAvailable(latestVersion: String?, currentVersion: String): Boolean =
-        latestVersion != null &&
-                currentVersion != "N/A" &&
-                latestVersion != currentVersion
+        latestVersion != null && currentVersion != "N/A" && latestVersion != currentVersion
 
     private suspend fun saveUpdateDate() {
         val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
