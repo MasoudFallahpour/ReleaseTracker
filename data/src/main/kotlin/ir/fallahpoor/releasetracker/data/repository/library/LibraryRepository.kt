@@ -1,6 +1,5 @@
-package ir.fallahpoor.releasetracker.data.repository
+package ir.fallahpoor.releasetracker.data.repository.library
 
-import ir.fallahpoor.releasetracker.data.entity.Library
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 

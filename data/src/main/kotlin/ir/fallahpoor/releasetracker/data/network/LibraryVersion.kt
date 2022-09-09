@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data.entity
+package ir.fallahpoor.releasetracker.data.network
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

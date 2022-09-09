@@ -2,7 +2,7 @@ package ir.fallahpoor.releasetracker.fakes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
-import ir.fallahpoor.releasetracker.data.repository.NightModeRepository
+import ir.fallahpoor.releasetracker.data.repository.nightmode.NightModeRepository
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import kotlinx.coroutines.flow.Flow
 

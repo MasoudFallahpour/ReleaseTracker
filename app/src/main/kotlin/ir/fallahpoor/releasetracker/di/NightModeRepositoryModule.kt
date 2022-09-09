@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ir.fallahpoor.releasetracker.data.repository.NightModeRepository
-import ir.fallahpoor.releasetracker.data.repository.NightModeRepositoryImpl
+import ir.fallahpoor.releasetracker.data.repository.nightmode.NightModeRepository
+import ir.fallahpoor.releasetracker.data.repository.nightmode.NightModeRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

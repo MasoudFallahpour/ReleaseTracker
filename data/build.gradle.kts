@@ -17,11 +17,6 @@ android {
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
-        }
     }
 
     buildTypes {
@@ -64,11 +59,8 @@ dependencies {
     implementation(libs.coroutines.android)
     implementation(libs.inject)
     implementation(libs.bundles.ktor)
-    implementation(libs.sqlDelight)
-
-    implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
-    implementation(libs.room.ktx)
+    implementation(libs.sqlDelight.driver)
+    implementation(libs.sqlDelight.coroutines)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)

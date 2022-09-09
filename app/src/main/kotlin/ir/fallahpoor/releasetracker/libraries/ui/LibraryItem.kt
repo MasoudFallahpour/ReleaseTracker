@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import ir.fallahpoor.releasetracker.theme.spacing
 
@@ -107,7 +107,7 @@ private fun LibraryItemForeground(
         ) {
             PinToggleButton(
                 modifier = Modifier.testTag(LibraryItemTags.PIN_BUTTON + library.name),
-                isPinned = library.isPinned(),
+                isPinned = library.isPinned,
                 onPinnedChange = onPinLibraryClick
             )
             Column(modifier = Modifier.weight(1f)) {
@@ -248,7 +248,7 @@ private fun LibraryItemForegroundPreview() {
                     name = "Release Tracker",
                     url = "https://github.com/masoodfallahpoor/ReleaseTracker",
                     version = "1.0",
-                    pinned = 0
+                    isPinned = false
                 ),
                 onLibraryClick = {},
                 onPinLibraryClick = {},

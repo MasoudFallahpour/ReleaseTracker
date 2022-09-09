@@ -102,9 +102,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.lifecycle.viewModel)
     implementation(libs.lifecycle.liveData)
-    implementation(libs.room.runtime)
     implementation(libs.workManagar.runtime)
     implementation(libs.timber)
+    implementation(libs.sqlDelight.driver)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)

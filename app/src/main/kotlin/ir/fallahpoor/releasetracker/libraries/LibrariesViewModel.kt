@@ -5,8 +5,8 @@ package ir.fallahpoor.releasetracker.libraries
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
+import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -106,7 +106,7 @@ class LibrariesViewModel
     private fun List<Library>.sort(sortOrder: SortOrder): List<Library> = when (sortOrder) {
         SortOrder.A_TO_Z -> sortedBy { it.name.lowercase(Locale.getDefault()) }
         SortOrder.Z_TO_A -> sortedByDescending { it.name.lowercase(Locale.getDefault()) }
-        SortOrder.PINNED_FIRST -> sortedByDescending { it.pinned }
+        SortOrder.PINNED_FIRST -> sortedByDescending { it.isPinned }
     }
 
 }

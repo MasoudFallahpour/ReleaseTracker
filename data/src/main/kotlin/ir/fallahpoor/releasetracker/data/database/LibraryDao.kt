@@ -1,28 +1,20 @@
 package ir.fallahpoor.releasetracker.data.database
 
-import androidx.room.*
-import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import kotlinx.coroutines.flow.Flow
 
-@Dao
 interface LibraryDao {
 
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME}")
-    fun getAllAsFlow(): Flow<List<Library>>
+    fun getAllAsFlow(): Flow<List<LibraryEntity>>
 
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} ORDER BY ${DatabaseContract.FIELD_NAME}")
-    suspend fun getAll(): List<Library>
+    suspend fun getAll(): List<LibraryEntity>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(library: Library)
+    suspend fun get(libraryName: String): LibraryEntity?
 
-    @Update
-    suspend fun update(library: Library)
+    suspend fun insert(library: LibraryEntity)
 
-    @Query("DELETE FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} = :libraryName")
+    suspend fun update(library: LibraryEntity)
+
     suspend fun delete(libraryName: String)
-
-    @Query("SELECT * FROM ${DatabaseContract.TABLE_NAME} WHERE ${DatabaseContract.FIELD_NAME} = :libraryName COLLATE NOCASE LIMIT 1")
-    suspend fun get(libraryName: String): Library?
 
 }

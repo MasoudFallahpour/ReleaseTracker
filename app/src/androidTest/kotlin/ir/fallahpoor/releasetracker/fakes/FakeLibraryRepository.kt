@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
-import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
+import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
@@ -18,21 +18,21 @@ class FakeLibraryRepository : LibraryRepository {
         const val name = "Coil"
         const val url = GITHUB_BASE_URL + "coil-kt/coil"
         const val version = "1.3.1"
-        val library = Library(name = name, url = url, version = version)
+        val library = Library(name = name, url = url, version = version, isPinned = false)
     }
 
     object Kotlin {
         const val name = "Kotlin"
         const val url = GITHUB_BASE_URL + "JetBrains/kotlin"
         const val version = "1.5.21"
-        val library = Library(name = name, url = url, version = version)
+        val library = Library(name = name, url = url, version = version, isPinned = false)
     }
 
     object Koin {
         const val name = "Koin"
         const val url = GITHUB_BASE_URL + "InsertKoinIO/koin"
         const val version = "3.1.2"
-        val library = Library(name = name, url = url, version = version, pinned = 1)
+        val library = Library(name = name, url = url, version = version, isPinned = true)
     }
 
     companion object {
@@ -65,7 +65,12 @@ class FakeLibraryRepository : LibraryRepository {
             if (library != null) {
                 throw RuntimeException(ExceptionParser.SOMETHING_WENT_WRONG)
             } else {
-                libraries += Library(libraryName.trim(), libraryUrl.trim(), libraryVersion, 0)
+                libraries += Library(
+                    libraryName.trim(),
+                    libraryUrl.trim(),
+                    libraryVersion,
+                    isPinned = false
+                )
                 updateLibrariesLiveData(libraries)
             }
         }
@@ -108,7 +113,7 @@ class FakeLibraryRepository : LibraryRepository {
     }
 
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
-        updateLibrary(library.copy(pinned = if (pinned) 1 else 0))
+        updateLibrary(library.copy(isPinned = pinned))
     }
 
     override fun getLastUpdateCheck(): Flow<String> = flow {

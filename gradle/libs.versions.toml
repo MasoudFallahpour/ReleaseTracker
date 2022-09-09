@@ -39,10 +39,6 @@ workManagar-testing = { module = "androidx.work:work-testing", version.ref = "wo
 lifecycle-liveData = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 lifecycle-viewModel = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-uiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
@@ -83,7 +79,8 @@ mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito
 
 dexMaker = { module = "com.linkedin.dexmaker:dexmaker-mockito-inline", version = "2.25.1" }
 
-sqlDelight = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-driver = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-coroutines = { module = "com.squareup.sqldelight:coroutines-extensions-jvm", version.ref = "sqlDelight" }
 
 androidPlugin = { module = "com.android.tools.build:gradle", version = "7.4.0-alpha10" }
 kotlinPlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -95,4 +92,3 @@ sqlDelightPlugin = { module = "com.squareup.sqldelight:gradle-plugin", version.r
 [bundles]
 ktor = ["ktor-core", "ktor-okhttp", "ktor-logging", "ktor-contentNegotiation", "ktor-serialization", "ktor-logback"]
 espresso = ["espresso-core", "espresso-intents"]
-

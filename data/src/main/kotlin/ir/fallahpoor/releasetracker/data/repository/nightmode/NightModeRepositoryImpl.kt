@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data.repository
+package ir.fallahpoor.releasetracker.data.repository.nightmode
 
 import ir.fallahpoor.releasetracker.data.storage.Storage
 import ir.fallahpoor.releasetracker.data.utils.NightMode

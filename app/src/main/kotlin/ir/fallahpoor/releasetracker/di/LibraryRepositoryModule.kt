@@ -5,15 +5,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
-import ir.fallahpoor.releasetracker.data.BuildConfig
-import ir.fallahpoor.releasetracker.data.repository.LibraryRepository
-import ir.fallahpoor.releasetracker.data.repository.LibraryRepositoryImpl
-import ir.fallahpoor.releasetracker.data.webservice.GithubWebService
-import ir.fallahpoor.releasetracker.data.webservice.GithubWebServiceImpl
-import kotlinx.serialization.json.Json
+import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
+import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepositoryImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -22,24 +19,5 @@ object LibraryRepositoryModule {
     @Provides
     fun provideLibraryRepository(libraryRepositoryImpl: LibraryRepositoryImpl): LibraryRepository =
         libraryRepositoryImpl
-
-    @Provides
-    fun provideGithubWebService(githubWebServiceImpl: GithubWebServiceImpl): GithubWebService =
-        githubWebServiceImpl
-
-    @Provides
-    fun provideHttpClient() =
-        HttpClient {
-            expectSuccess = true
-            install(Logging) {
-                level = if (BuildConfig.DEBUG) LogLevel.BODY else LogLevel.NONE
-            }
-            install(ContentNegotiation) {
-                json(Json {
-                    prettyPrint = true
-                    ignoreUnknownKeys = true
-                })
-            }
-        }
 
 }

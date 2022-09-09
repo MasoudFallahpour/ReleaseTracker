@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import ir.fallahpoor.releasetracker.R
-import ir.fallahpoor.releasetracker.data.entity.Library
+import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 import ir.fallahpoor.releasetracker.theme.spacing

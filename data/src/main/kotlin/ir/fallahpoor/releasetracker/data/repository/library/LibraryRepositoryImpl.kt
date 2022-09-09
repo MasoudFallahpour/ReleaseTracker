@@ -1,27 +1,31 @@
-package ir.fallahpoor.releasetracker.data.repository
+package ir.fallahpoor.releasetracker.data.repository.library
 
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
-import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
+import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
+import ir.fallahpoor.releasetracker.data.network.GithubApi
+import ir.fallahpoor.releasetracker.data.network.LibraryVersion
 import ir.fallahpoor.releasetracker.data.storage.Storage
+import ir.fallahpoor.releasetracker.data.toLibrary
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
-import ir.fallahpoor.releasetracker.data.webservice.GithubWebService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
 @Inject constructor(
     private val storage: Storage,
     private val libraryDao: LibraryDao,
-    private val githubWebservice: GithubWebService
+    private val githubWebservice: GithubApi
 ) : LibraryRepository {
 
     companion object {
         private const val GITHUB_BASE_URL = "https://github.com/"
     }
 
-    override suspend fun getLibrary(libraryName: String): Library? =
-        libraryDao.get(libraryName.trim())
+    override suspend fun getLibrary(libraryName: String): Library? {
+        val libraryEntity = libraryDao.get(libraryName.trim())
+        return libraryEntity?.toLibrary()
+    }
 
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
 
@@ -62,7 +66,14 @@ class LibraryRepositoryImpl
         libraryUrl: String,
         libraryVersion: String
     ) {
-        libraryDao.insert(Library(libraryName.trim(), libraryUrl.trim(), libraryVersion))
+        libraryDao.insert(
+            LibraryEntity(
+                name = libraryName.trim(),
+                url = libraryUrl.trim(),
+                version = libraryVersion,
+                pinned = 0
+            )
+        )
     }
 
     override suspend fun deleteLibrary(library: Library) {
@@ -70,17 +81,19 @@ class LibraryRepositoryImpl
     }
 
     override suspend fun updateLibrary(library: Library) {
-        libraryDao.update(library)
+        libraryDao.update(library.toLibraryEntity())
     }
 
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
-        val newLibrary = library.copy(pinned = if (pinned) 1 else 0)
-        libraryDao.update(newLibrary)
+        val newLibrary = library.copy(isPinned = pinned)
+        libraryDao.update(newLibrary.toLibraryEntity())
     }
 
-    override suspend fun getLibraries(): List<Library> = libraryDao.getAll()
+    override suspend fun getLibraries(): List<Library> =
+        libraryDao.getAll().map { libraryEntity -> libraryEntity.toLibrary() }
 
-    override fun getLibrariesAsFlow(): Flow<List<Library>> = libraryDao.getAllAsFlow()
+    override fun getLibrariesAsFlow(): Flow<List<Library>> =
+        libraryDao.getAllAsFlow().map { libraryEntities -> libraryEntities.map { it.toLibrary() } }
 
     override fun getLastUpdateCheck(): Flow<String> = storage.getLastUpdateCheck()
 

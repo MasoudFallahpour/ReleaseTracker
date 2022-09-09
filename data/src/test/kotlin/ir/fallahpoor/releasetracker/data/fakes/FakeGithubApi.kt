@@ -1,12 +1,12 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
 import ir.fallahpoor.releasetracker.data.TestData
-import ir.fallahpoor.releasetracker.data.entity.LibraryVersion
-import ir.fallahpoor.releasetracker.data.webservice.GithubWebService
+import ir.fallahpoor.releasetracker.data.network.GithubApi
+import ir.fallahpoor.releasetracker.data.network.LibraryVersion
 
-class FakeGithubWebService : GithubWebService {
+class FakeGithubApi : GithubApi {
 
-    override suspend fun getLatestVersion(owner: String, repo: String): LibraryVersion =
+    override suspend fun getLatestVersion(owner: String, repository: String): LibraryVersion =
         if (owner == TestData.OWNER_1) {
             LibraryVersion(
                 name = TestData.VERSION_1,

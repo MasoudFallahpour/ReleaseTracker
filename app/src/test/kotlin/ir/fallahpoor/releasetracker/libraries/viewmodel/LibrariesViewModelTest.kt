@@ -98,7 +98,7 @@ class LibrariesViewModelTest {
 
         // Then
         val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)
-        Truth.assertThat(library?.isPinned()).isTrue()
+        Truth.assertThat(library?.isPinned).isTrue()
 
     }
 
@@ -114,7 +114,7 @@ class LibrariesViewModelTest {
 
             // Then
             val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)
-            Truth.assertThat(library?.isPinned()).isFalse()
+            Truth.assertThat(library?.isPinned).isFalse()
 
         }
 

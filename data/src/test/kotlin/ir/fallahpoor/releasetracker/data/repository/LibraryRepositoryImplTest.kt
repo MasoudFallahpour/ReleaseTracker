@@ -12,10 +12,12 @@ import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_VERSION_2
 import ir.fallahpoor.releasetracker.data.TestData.RELEASE_TRACKER
 import ir.fallahpoor.releasetracker.data.TestData.TIMBER
 import ir.fallahpoor.releasetracker.data.TestData.VERSION_1
-import ir.fallahpoor.releasetracker.data.entity.Library
-import ir.fallahpoor.releasetracker.data.fakes.FakeGithubWebService
+import ir.fallahpoor.releasetracker.data.fakes.FakeGithubApi
 import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
 import ir.fallahpoor.releasetracker.data.fakes.FakeStorage
+import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.LibraryMapper
+import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepositoryImpl
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,16 +39,19 @@ class LibraryRepositoryImplTest {
     private lateinit var libraryRepository: LibraryRepositoryImpl
     private lateinit var fakeLibraryDao: FakeLibraryDao
     private lateinit var fakeStorage: FakeStorage
+    private lateinit var libraryMapper: LibraryMapper
 
     @Before
     fun runBeforeEachTest() {
         Dispatchers.setMain(StandardTestDispatcher())
         fakeStorage = FakeStorage()
         fakeLibraryDao = FakeLibraryDao()
+        libraryMapper = LibraryMapper()
         libraryRepository = LibraryRepositoryImpl(
             storage = fakeStorage,
             libraryDao = fakeLibraryDao,
-            githubWebservice = FakeGithubWebService()
+            githubWebservice = FakeGithubApi(),
+            libraryMapper = libraryMapper
         )
     }
 
@@ -117,7 +122,7 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(COIL)
 
         // When
-        libraryRepository.deleteLibrary(RELEASE_TRACKER)
+        libraryRepository.deleteLibrary(libraryMapper.map(RELEASE_TRACKER))
 
         // Then
         Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(listOf(COIL))
@@ -132,7 +137,7 @@ class LibraryRepositoryImplTest {
 
         // When
         val updatedLibrary = RELEASE_TRACKER.copy(version = "0.3")
-        libraryRepository.updateLibrary(updatedLibrary)
+        libraryRepository.updateLibrary(libraryMapper.map(updatedLibrary))
 
         // Then
         Truth.assertThat(libraryRepository.getLibrary(RELEASE_TRACKER.name))
@@ -147,7 +152,7 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(RELEASE_TRACKER)
 
         // When
-        libraryRepository.pinLibrary(RELEASE_TRACKER, true)
+        libraryRepository.pinLibrary(libraryMapper.map(RELEASE_TRACKER), true)
 
         // Then
         val pinnedLibrary = RELEASE_TRACKER.copy(pinned = 1)
@@ -163,7 +168,7 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(RELEASE_TRACKER.copy(pinned = 1))
 
         // When
-        libraryRepository.pinLibrary(RELEASE_TRACKER, false)
+        libraryRepository.pinLibrary(libraryMapper.map(RELEASE_TRACKER), false)
 
         // Then
         val unpinnedLibrary = RELEASE_TRACKER.copy(pinned = 0)
