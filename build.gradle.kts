@@ -10,6 +10,7 @@ buildscript {
         classpath(libs.daggerPlugin)
         classpath(libs.googleServicePlugin)
         classpath(libs.firebaseCrashlyticsPlugin)
+        classpath(libs.sqlDelightPlugin)
     }
 }
 

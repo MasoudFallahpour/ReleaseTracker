@@ -16,6 +16,7 @@ retrofit = "2.9.0"
 espresso = "3.4.0"
 mockito = "4.3.1"
 ktor = "2.0.1"
+sqlDelight = "1.5.3"
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -83,11 +84,14 @@ mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockito
 
 dexMaker = { module = "com.linkedin.dexmaker:dexmaker-mockito-inline", version = "2.25.1" }
 
-androidPlugin = { module = "com.android.tools.build:gradle", version = "7.4.0-alpha08" }
+sqlDelight = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelight" }
+
+androidPlugin = { module = "com.android.tools.build:gradle", version = "7.4.0-alpha10" }
 kotlinPlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 daggerPlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 googleServicePlugin = { module = "com.google.gms:google-services", version = "4.3.10" }
 firebaseCrashlyticsPlugin = { module = "com.google.firebase:firebase-crashlytics-gradle", version = "2.8.1" }
+sqlDelightPlugin = { module = "com.squareup.sqldelight:gradle-plugin", version.ref = "sqlDelight" }
 
 [bundles]
 ktor = ["ktor-core", "ktor-okhttp", "ktor-logging", "ktor-contentNegotiation", "ktor-serialization", "ktor-logback"]

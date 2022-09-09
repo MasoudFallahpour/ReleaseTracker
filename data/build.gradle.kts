@@ -5,6 +5,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("plugin.serialization") version "1.6.10"
+    id("com.squareup.sqldelight")
 }
 
 val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToken")
@@ -61,14 +62,13 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.lifecycle.liveData)
     implementation(libs.coroutines.android)
+    implementation(libs.inject)
+    implementation(libs.bundles.ktor)
+    implementation(libs.sqlDelight)
 
     implementation(libs.room.runtime)
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
-
-    implementation(libs.inject)
-
-    implementation(libs.bundles.ktor)
 
     testImplementation(libs.junit)
     testImplementation(libs.truth)
