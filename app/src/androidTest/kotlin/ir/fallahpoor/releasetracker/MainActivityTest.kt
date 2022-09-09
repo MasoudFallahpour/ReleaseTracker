@@ -4,20 +4,14 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryScreenTags
 import ir.fallahpoor.releasetracker.libraries.ui.LibrariesListTags
 import org.junit.Rule
 import org.junit.Test
 
-@HiltAndroidTest
 class MainActivityTest {
 
-    @get:Rule(order = 0)
-    var hiltAndroidRule = HiltAndroidRule(this)
-
-    @get:Rule(order = 1)
+    @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
 //    @get:Rule(order = 2)

@@ -62,7 +62,6 @@ hilt-androidCompiler = { module = "com.google.dagger:hilt-android-compiler", ver
 hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltJetpack" }
 hilt-workManager = { module = "androidx.hilt:hilt-work", version.ref = "hiltJetpack" }
 hilt-navigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.0.0-beta01" }
-hilt-androidTesting = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }

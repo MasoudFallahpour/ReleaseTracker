@@ -25,7 +25,7 @@ android {
         versionCode = 5
         versionName = "1.1"
         setProperty("archivesBaseName", "ReleaseTracker")
-        testInstrumentationRunner = "ir.fallahpoor.releasetracker.CustomTestRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -129,7 +129,6 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(libs.androidxTest.core)
     testImplementation(libs.robolectric)
-    testImplementation(libs.hilt.androidTesting)
     kaptTest(libs.hilt.androidCompiler)
     testImplementation(libs.mockito.inline)
 
@@ -141,7 +140,6 @@ dependencies {
     androidTestImplementation(libs.dexMaker)
     androidTestImplementation(libs.coreTesting)
     androidTestImplementation(libs.bundles.espresso)
-    androidTestImplementation(libs.hilt.androidTesting)
     kaptAndroidTest(libs.hilt.androidCompiler)
     androidTestImplementation(libs.coroutines.test)
 
