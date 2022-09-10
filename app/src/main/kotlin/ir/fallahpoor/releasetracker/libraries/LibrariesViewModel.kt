@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
+import ir.fallahpoor.releasetracker.data.repository.storage.StorageRepository
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LibrariesViewModel
 @Inject constructor(
-    private val libraryRepository: LibraryRepository
+    private val libraryRepository: LibraryRepository,
+    private val storageRepository: StorageRepository
 ) : ViewModel() {
 
     private data class Params(
@@ -28,7 +30,7 @@ class LibrariesViewModel
 
     private val searchQueryFlow = MutableStateFlow("")
     private val getLibrariesTriggerFlow: Flow<Params> = combine(
-        libraryRepository.getSortOrderAsFlow(),
+        storageRepository.getSortOrderAsFlow(),
         searchQueryFlow
     ) { sortOrder: SortOrder, searchQuery: String ->
         Params(sortOrder, searchQuery)
@@ -39,7 +41,7 @@ class LibrariesViewModel
             .flatMapLatest { params -> getLibrariesAsFlow(params) }
             .map { libraries ->
                 LibrariesListScreenUiState(
-                    sortOrder = libraryRepository.getSortOrder(),
+                    sortOrder = storageRepository.getSortOrder(),
                     searchQuery = searchQueryFlow.value,
                     librariesListState = LibrariesListState.LibrariesLoaded(libraries)
                 )
@@ -47,10 +49,10 @@ class LibrariesViewModel
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = LibrariesListScreenUiState(sortOrder = libraryRepository.getSortOrder())
+                initialValue = LibrariesListScreenUiState(sortOrder = storageRepository.getSortOrder())
             )
 
-    val lastUpdateCheck: StateFlow<String> = libraryRepository.getLastUpdateCheck()
+    val lastUpdateCheck: StateFlow<String> = storageRepository.getLastUpdateCheck()
         .stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = "N/A")
 
     fun handleEvent(event: Event) {
@@ -85,7 +87,7 @@ class LibrariesViewModel
     private fun changeSortOrder(sortOrder: SortOrder) {
         viewModelScope.launch {
             try {
-                libraryRepository.setSortOrder(sortOrder)
+                storageRepository.setSortOrder(sortOrder)
             } catch (t: Throwable) {
                 Timber.e(t)
             }

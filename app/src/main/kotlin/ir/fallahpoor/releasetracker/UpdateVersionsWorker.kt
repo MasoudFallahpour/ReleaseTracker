@@ -9,6 +9,7 @@ import dagger.assisted.AssistedInject
 import ir.fallahpoor.releasetracker.common.managers.NotificationManager
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
+import ir.fallahpoor.releasetracker.data.repository.storage.StorageRepository
 import ir.fallahpoor.releasetracker.data.utils.ConnectionChecker
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
@@ -22,6 +23,7 @@ class UpdateVersionsWorker
     @Assisted private val context: Context,
     @Assisted workerParams: WorkerParameters,
     private val libraryRepository: LibraryRepository,
+    private val storageRepository: StorageRepository,
     private val connectionChecker: ConnectionChecker,
     private val notificationManager: NotificationManager
 ) : CoroutineWorker(context, workerParams) {
@@ -73,7 +75,7 @@ class UpdateVersionsWorker
 
     private suspend fun saveUpdateDate() {
         val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
-        libraryRepository.setLastUpdateCheck(simpleDateFormat.format(Date()))
+        storageRepository.setLastUpdateCheck(simpleDateFormat.format(Date()))
     }
 
     private fun showNotification(updatedLibraries: List<String>) {

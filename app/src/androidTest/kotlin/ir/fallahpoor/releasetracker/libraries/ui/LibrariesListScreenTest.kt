@@ -9,6 +9,7 @@ import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.fakes.FakeStorageRepository
 import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -28,6 +29,7 @@ class LibrariesListScreenTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var fakeLibraryRepository: FakeLibraryRepository
+    private lateinit var fakeStorageRepository: FakeStorageRepository
 
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val searchText = context.getString(R.string.search)
@@ -260,9 +262,13 @@ class LibrariesListScreenTest {
         onAddLibraryClick: () -> Unit = {}
     ) {
         fakeLibraryRepository = FakeLibraryRepository()
+        fakeStorageRepository = FakeStorageRepository()
         composeRule.setContent {
             LibrariesListScreen(
-                librariesViewModel = LibrariesViewModel(fakeLibraryRepository),
+                librariesViewModel = LibrariesViewModel(
+                    fakeLibraryRepository,
+                    fakeStorageRepository
+                ),
                 currentNightMode = NightMode.AUTO,
                 onNightModeChange = onNightModeChange,
                 isNightModeSupported = true,

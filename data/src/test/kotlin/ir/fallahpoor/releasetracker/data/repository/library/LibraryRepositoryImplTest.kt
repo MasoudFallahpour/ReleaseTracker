@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data.repository
+package ir.fallahpoor.releasetracker.data.repository.library
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
@@ -14,11 +14,7 @@ import ir.fallahpoor.releasetracker.data.TestData.TIMBER
 import ir.fallahpoor.releasetracker.data.TestData.VERSION_1
 import ir.fallahpoor.releasetracker.data.fakes.FakeGithubApi
 import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
-import ir.fallahpoor.releasetracker.data.fakes.FakeStorage
-import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.data.repository.library.LibraryMapper
-import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepositoryImpl
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.toLibrary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -38,20 +34,14 @@ class LibraryRepositoryImplTest {
 
     private lateinit var libraryRepository: LibraryRepositoryImpl
     private lateinit var fakeLibraryDao: FakeLibraryDao
-    private lateinit var fakeStorage: FakeStorage
-    private lateinit var libraryMapper: LibraryMapper
 
     @Before
     fun runBeforeEachTest() {
         Dispatchers.setMain(StandardTestDispatcher())
-        fakeStorage = FakeStorage()
         fakeLibraryDao = FakeLibraryDao()
-        libraryMapper = LibraryMapper()
         libraryRepository = LibraryRepositoryImpl(
-            storage = fakeStorage,
             libraryDao = fakeLibraryDao,
-            githubWebservice = FakeGithubApi(),
-            libraryMapper = libraryMapper
+            githubWebservice = FakeGithubApi()
         )
     }
 
@@ -70,7 +60,7 @@ class LibraryRepositoryImplTest {
         val library: Library? = libraryRepository.getLibrary(LIBRARY_NAME_1)
 
         // Then
-        Truth.assertThat(library).isEqualTo(RELEASE_TRACKER)
+        Truth.assertThat(library).isEqualTo(RELEASE_TRACKER.toLibrary())
 
     }
 
@@ -110,7 +100,7 @@ class LibraryRepositoryImplTest {
 
         // Then
         val library: Library? = libraryRepository.getLibrary(LIBRARY_NAME_1)
-        Truth.assertThat(library).isEqualTo(RELEASE_TRACKER)
+        Truth.assertThat(library).isEqualTo(RELEASE_TRACKER.toLibrary())
 
     }
 
@@ -122,10 +112,10 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(COIL)
 
         // When
-        libraryRepository.deleteLibrary(libraryMapper.map(RELEASE_TRACKER))
+        libraryRepository.deleteLibrary(RELEASE_TRACKER.toLibrary())
 
         // Then
-        Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(listOf(COIL))
+        Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(listOf(COIL.toLibrary()))
 
     }
 
@@ -137,11 +127,11 @@ class LibraryRepositoryImplTest {
 
         // When
         val updatedLibrary = RELEASE_TRACKER.copy(version = "0.3")
-        libraryRepository.updateLibrary(libraryMapper.map(updatedLibrary))
+        libraryRepository.updateLibrary(updatedLibrary.toLibrary())
 
         // Then
         Truth.assertThat(libraryRepository.getLibrary(RELEASE_TRACKER.name))
-            .isEqualTo(updatedLibrary)
+            .isEqualTo(updatedLibrary.toLibrary())
 
     }
 
@@ -152,12 +142,12 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(RELEASE_TRACKER)
 
         // When
-        libraryRepository.pinLibrary(libraryMapper.map(RELEASE_TRACKER), true)
+        libraryRepository.pinLibrary(RELEASE_TRACKER.toLibrary(), true)
 
         // Then
         val pinnedLibrary = RELEASE_TRACKER.copy(pinned = 1)
         Truth.assertThat(libraryRepository.getLibrary(RELEASE_TRACKER.name))
-            .isEqualTo(pinnedLibrary)
+            .isEqualTo(pinnedLibrary.toLibrary())
 
     }
 
@@ -168,12 +158,12 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao.insert(RELEASE_TRACKER.copy(pinned = 1))
 
         // When
-        libraryRepository.pinLibrary(libraryMapper.map(RELEASE_TRACKER), false)
+        libraryRepository.pinLibrary(RELEASE_TRACKER.toLibrary(), false)
 
         // Then
         val unpinnedLibrary = RELEASE_TRACKER.copy(pinned = 0)
         Truth.assertThat(libraryRepository.getLibrary(RELEASE_TRACKER.name))
-            .isEqualTo(unpinnedLibrary)
+            .isEqualTo(unpinnedLibrary.toLibrary())
 
     }
 
@@ -188,7 +178,7 @@ class LibraryRepositoryImplTest {
         val libraries = libraryRepository.getLibraries()
 
         // Then
-        Truth.assertThat(libraries).isEqualTo(listOf(COIL, RELEASE_TRACKER))
+        Truth.assertThat(libraries).isEqualTo(listOf(COIL, RELEASE_TRACKER).map { it.toLibrary() })
 
     }
 
@@ -206,67 +196,8 @@ class LibraryRepositoryImplTest {
 
             // Then
             Truth.assertThat(libraries)
-                .isEqualTo(listOf(COIL, RELEASE_TRACKER, TIMBER))
+                .isEqualTo(listOf(COIL, RELEASE_TRACKER, TIMBER).map { it.toLibrary() })
 
         }
-
-    @Test
-    fun `get last update check date`() = runTest {
-
-        // Given
-        val expectedLastUpdateCheckDate = "15:30, March"
-        fakeStorage.setLastUpdateCheck(expectedLastUpdateCheckDate)
-
-        // When
-        val actualLastUpdateCheck: String = libraryRepository.getLastUpdateCheck().first()
-
-        // Then
-        Truth.assertThat(actualLastUpdateCheck).isEqualTo(expectedLastUpdateCheckDate)
-
-    }
-
-    @Test
-    fun `set last update check date`() = runTest {
-
-        // Given
-        val lastUpdateCheckDate = "15:30, March"
-
-        // When
-        libraryRepository.setLastUpdateCheck(lastUpdateCheckDate)
-
-        // Then
-        Truth.assertThat(fakeStorage.getLastUpdateCheck().first()).isEqualTo(lastUpdateCheckDate)
-
-    }
-
-    @Test
-    fun `set sort order`() = runTest {
-
-        // Given
-        fakeStorage.setSortOrder(SortOrder.Z_TO_A)
-
-        // When
-        libraryRepository.setSortOrder(SortOrder.PINNED_FIRST)
-
-        // Then
-        Truth.assertThat(fakeStorage.getSortOrder()).isEqualTo(SortOrder.PINNED_FIRST)
-
-    }
-
-    @Test
-    fun `get sort order`() = runTest {
-
-        // Given
-        fakeStorage.setSortOrder(SortOrder.Z_TO_A)
-
-        // When
-        val actualSortOrder = libraryRepository.getSortOrder()
-
-        // Then
-        Truth.assertThat(actualSortOrder).isEqualTo(SortOrder.Z_TO_A)
-
-    }
-
-    // TODO add tests for getSortOrderAsFlow()
 
 }

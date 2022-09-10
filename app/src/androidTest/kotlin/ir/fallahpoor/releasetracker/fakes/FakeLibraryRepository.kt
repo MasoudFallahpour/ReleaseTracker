@@ -7,9 +7,7 @@ import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
 class FakeLibraryRepository : LibraryRepository {
@@ -49,7 +47,6 @@ class FakeLibraryRepository : LibraryRepository {
         Koin.library
     )
     private val librariesLiveData = MutableLiveData<List<Library>>(libraries)
-    private var sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
 
     override suspend fun addLibrary(
         libraryName: String,
@@ -115,22 +112,6 @@ class FakeLibraryRepository : LibraryRepository {
     override suspend fun pinLibrary(library: Library, pinned: Boolean) {
         updateLibrary(library.copy(isPinned = pinned))
     }
-
-    override fun getLastUpdateCheck(): Flow<String> = flow {
-        emit(LAST_UPDATE_CHECK)
-    }
-
-    override suspend fun setLastUpdateCheck(date: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setSortOrder(sortOrder: SortOrder) {
-        sortOrderLiveData.value = sortOrder
-    }
-
-    override fun getSortOrder() = sortOrderLiveData.value!!
-
-    override fun getSortOrderAsFlow(): Flow<SortOrder> = sortOrderLiveData.asFlow()
 
     private fun updateLibrariesLiveData(libraries: List<Library>) {
         librariesLiveData.value = libraries

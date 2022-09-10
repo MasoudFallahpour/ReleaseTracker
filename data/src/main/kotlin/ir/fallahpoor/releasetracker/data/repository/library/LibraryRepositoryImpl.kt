@@ -4,16 +4,13 @@ import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GithubApi
 import ir.fallahpoor.releasetracker.data.network.LibraryVersion
-import ir.fallahpoor.releasetracker.data.storage.Storage
 import ir.fallahpoor.releasetracker.data.toLibrary
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LibraryRepositoryImpl
 @Inject constructor(
-    private val storage: Storage,
     private val libraryDao: LibraryDao,
     private val githubWebservice: GithubApi
 ) : LibraryRepository {
@@ -94,19 +91,5 @@ class LibraryRepositoryImpl
 
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
         libraryDao.getAllAsFlow().map { libraryEntities -> libraryEntities.map { it.toLibrary() } }
-
-    override fun getLastUpdateCheck(): Flow<String> = storage.getLastUpdateCheck()
-
-    override suspend fun setLastUpdateCheck(date: String) {
-        storage.setLastUpdateCheck(date)
-    }
-
-    override fun getSortOrder(): SortOrder = storage.getSortOrder()
-
-    override fun getSortOrderAsFlow(): Flow<SortOrder> = storage.getSortOrderAsFlow()
-
-    override suspend fun setSortOrder(sortOrder: SortOrder) {
-        storage.setSortOrder(sortOrder)
-    }
 
 }

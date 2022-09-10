@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.fakes.FakeStorageRepository
 import ir.fallahpoor.releasetracker.libraries.Event
 import ir.fallahpoor.releasetracker.libraries.LibrariesListScreenUiState
 import ir.fallahpoor.releasetracker.libraries.LibrariesListState
@@ -28,12 +29,14 @@ class LibrariesViewModelTest {
 
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var fakeLibraryRepository: FakeLibraryRepository
+    private lateinit var fakeStorageRepository: FakeStorageRepository
 
     @Before
     fun runBeforeEachTest() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         fakeLibraryRepository = FakeLibraryRepository()
-        librariesViewModel = LibrariesViewModel(fakeLibraryRepository)
+        fakeStorageRepository = FakeStorageRepository()
+        librariesViewModel = LibrariesViewModel(fakeLibraryRepository, fakeStorageRepository)
     }
 
     @After
