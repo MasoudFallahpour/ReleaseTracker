@@ -10,11 +10,13 @@ import dagger.hilt.components.SingletonComponent
 import ir.fallahpoor.releasetracker.data.Database
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.LibraryDaoImpl
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    @Singleton
     @Provides
     fun provideDatabase(context: Context): Database {
         val driver: SqlDriver = AndroidSqliteDriver(Database.Schema, context, "ReleaseTracker.db")
@@ -22,6 +24,7 @@ object DatabaseModule {
     }
 
     @Provides
+    @Singleton
     fun provideLibraryDao(libraryDaoImpl: LibraryDaoImpl): LibraryDao = libraryDaoImpl
 
 }
