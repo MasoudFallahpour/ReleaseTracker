@@ -3,6 +3,7 @@ package ir.fallahpoor.releasetracker.data.utils
 import com.google.common.truth.Truth
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
+import ir.fallahpoor.releasetracker.data.network.ConnectionChecker
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import java.io.IOException

@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data.utils
+package ir.fallahpoor.releasetracker.data.network
 
 import io.ktor.client.*
 import io.ktor.client.request.*
