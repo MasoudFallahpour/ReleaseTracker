@@ -5,10 +5,10 @@ package ir.fallahpoor.releasetracker.libraries
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import ir.fallahpoor.releasetracker.data.repository.storage.StorageRepository
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

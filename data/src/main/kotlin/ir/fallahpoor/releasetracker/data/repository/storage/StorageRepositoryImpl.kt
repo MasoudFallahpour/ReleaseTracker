@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.data.repository.storage
 
+import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.storage.Storage
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

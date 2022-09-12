@@ -2,8 +2,8 @@ package ir.fallahpoor.releasetracker.data.repository.storage
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.fakes.FakeStorage
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first

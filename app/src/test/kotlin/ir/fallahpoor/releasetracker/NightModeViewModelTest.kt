@@ -3,8 +3,8 @@ package ir.fallahpoor.releasetracker
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.repository.nightmode.NightModeRepository
-import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.fakes.FakeNightModeRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

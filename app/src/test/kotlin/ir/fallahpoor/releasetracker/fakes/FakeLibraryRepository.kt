@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
-import ir.fallahpoor.releasetracker.data.InternetNotConnectedException
+import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
+import ir.fallahpoor.releasetracker.data.exceptions.InternetNotConnectedException
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
-import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.flow.Flow
 
 class FakeLibraryRepository : LibraryRepository {

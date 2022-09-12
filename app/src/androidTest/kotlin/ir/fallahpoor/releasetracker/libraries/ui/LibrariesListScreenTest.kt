@@ -6,8 +6,8 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.releasetracker.R
+import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorageRepository
 import ir.fallahpoor.releasetracker.libraries.LibrariesViewModel

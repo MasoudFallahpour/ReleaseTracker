@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.repository.nightmode.NightModeRepository
-import ir.fallahpoor.releasetracker.data.utils.NightMode
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

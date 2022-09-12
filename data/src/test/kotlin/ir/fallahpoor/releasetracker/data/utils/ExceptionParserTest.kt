@@ -1,8 +1,9 @@
 package ir.fallahpoor.releasetracker.data.utils
 
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.data.InternetNotConnectedException
-import ir.fallahpoor.releasetracker.data.LibraryDoesNotExistException
+import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
+import ir.fallahpoor.releasetracker.data.exceptions.InternetNotConnectedException
+import ir.fallahpoor.releasetracker.data.exceptions.LibraryDoesNotExistException
 import org.junit.Test
 
 class ExceptionParserTest {

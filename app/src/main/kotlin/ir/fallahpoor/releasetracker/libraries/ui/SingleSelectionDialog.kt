@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import ir.fallahpoor.releasetracker.data.utils.NightMode
+import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.theme.ReleaseTrackerTheme
 
 @Composable

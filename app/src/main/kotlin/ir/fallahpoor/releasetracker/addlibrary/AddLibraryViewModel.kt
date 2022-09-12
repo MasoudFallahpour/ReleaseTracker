@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
+import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
-import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

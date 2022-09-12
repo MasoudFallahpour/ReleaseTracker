@@ -10,9 +10,9 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import ir.fallahpoor.releasetracker.data.BuildConfig
-import ir.fallahpoor.releasetracker.data.InternetNotConnectedException
-import ir.fallahpoor.releasetracker.data.LibraryDoesNotExistException
-import ir.fallahpoor.releasetracker.data.UnknownException
+import ir.fallahpoor.releasetracker.data.exceptions.InternetNotConnectedException
+import ir.fallahpoor.releasetracker.data.exceptions.LibraryDoesNotExistException
+import ir.fallahpoor.releasetracker.data.exceptions.UnknownException
 import ir.fallahpoor.releasetracker.data.network.GithubApi
 import ir.fallahpoor.releasetracker.data.network.GithubApiImpl
 import kotlinx.serialization.json.Json

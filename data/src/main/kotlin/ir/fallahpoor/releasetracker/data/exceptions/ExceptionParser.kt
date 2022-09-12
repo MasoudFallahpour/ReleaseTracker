@@ -1,7 +1,5 @@
-package ir.fallahpoor.releasetracker.data.utils
+package ir.fallahpoor.releasetracker.data.exceptions
 
-import ir.fallahpoor.releasetracker.data.InternetNotConnectedException
-import ir.fallahpoor.releasetracker.data.LibraryDoesNotExistException
 import javax.inject.Inject
 
 class ExceptionParser @Inject constructor() {

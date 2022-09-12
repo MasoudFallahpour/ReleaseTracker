@@ -4,7 +4,7 @@ package ir.fallahpoor.releasetracker.libraries.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorageRepository
 import ir.fallahpoor.releasetracker.libraries.Event

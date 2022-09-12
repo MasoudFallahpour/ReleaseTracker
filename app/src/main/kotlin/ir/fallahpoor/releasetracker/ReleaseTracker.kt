@@ -15,8 +15,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ir.fallahpoor.releasetracker.addlibrary.ui.AddLibraryScreen
+import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.data.utils.NightMode
 import ir.fallahpoor.releasetracker.libraries.ui.LibrariesListScreen
 
 @Composable

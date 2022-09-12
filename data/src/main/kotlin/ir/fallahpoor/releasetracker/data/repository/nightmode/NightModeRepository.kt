@@ -1,6 +1,6 @@
 package ir.fallahpoor.releasetracker.data.repository.nightmode
 
-import ir.fallahpoor.releasetracker.data.utils.NightMode
+import ir.fallahpoor.releasetracker.data.NightMode
 import kotlinx.coroutines.flow.Flow
 
 interface NightModeRepository {

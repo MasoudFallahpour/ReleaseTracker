@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data
+package ir.fallahpoor.releasetracker.data.exceptions
 
 class LibraryDoesNotExistException : RuntimeException()
 class InternetNotConnectedException : RuntimeException()

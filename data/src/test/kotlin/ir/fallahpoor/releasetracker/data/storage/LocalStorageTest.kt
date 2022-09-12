@@ -9,11 +9,11 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.data.NightMode
+import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.storage.LocalStorage.Companion.KEY_LAST_UPDATE_CHECK
 import ir.fallahpoor.releasetracker.data.storage.LocalStorage.Companion.KEY_NIGHT_MODE
 import ir.fallahpoor.releasetracker.data.storage.LocalStorage.Companion.KEY_SORT_ORDER
-import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job

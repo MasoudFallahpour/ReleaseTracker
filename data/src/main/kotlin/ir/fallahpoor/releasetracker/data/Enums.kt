@@ -1,7 +1,6 @@
-package ir.fallahpoor.releasetracker.data.utils
+package ir.fallahpoor.releasetracker.data
 
 import androidx.annotation.StringRes
-import ir.fallahpoor.releasetracker.data.R
 
 enum class NightMode(@StringRes val label: Int) {
     ON(R.string.on),

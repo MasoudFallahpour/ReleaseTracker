@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.data.storage
 
-import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.NightMode
+import ir.fallahpoor.releasetracker.data.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 interface Storage {

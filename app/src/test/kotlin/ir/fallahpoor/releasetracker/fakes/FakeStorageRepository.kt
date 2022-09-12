@@ -2,8 +2,8 @@ package ir.fallahpoor.releasetracker.fakes
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
+import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.repository.storage.StorageRepository
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

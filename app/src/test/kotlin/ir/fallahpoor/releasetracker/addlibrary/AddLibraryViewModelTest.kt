@@ -2,7 +2,7 @@ package ir.fallahpoor.releasetracker.addlibrary
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.data.utils.ExceptionParser
+import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

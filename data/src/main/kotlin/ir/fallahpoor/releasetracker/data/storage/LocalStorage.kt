@@ -4,8 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import ir.fallahpoor.releasetracker.data.utils.NightMode
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.NightMode
+import ir.fallahpoor.releasetracker.data.SortOrder
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

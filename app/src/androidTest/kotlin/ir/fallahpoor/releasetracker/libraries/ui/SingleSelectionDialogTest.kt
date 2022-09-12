@@ -6,7 +6,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
-import ir.fallahpoor.releasetracker.data.utils.NightMode
+import ir.fallahpoor.releasetracker.data.NightMode
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito

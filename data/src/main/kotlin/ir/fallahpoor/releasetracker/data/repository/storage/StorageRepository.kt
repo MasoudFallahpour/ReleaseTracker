@@ -1,6 +1,6 @@
 package ir.fallahpoor.releasetracker.data.repository.storage
 
-import ir.fallahpoor.releasetracker.data.utils.SortOrder
+import ir.fallahpoor.releasetracker.data.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 interface StorageRepository {
