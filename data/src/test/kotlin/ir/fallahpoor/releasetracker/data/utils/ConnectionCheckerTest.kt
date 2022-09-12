@@ -3,9 +3,9 @@ package ir.fallahpoor.releasetracker.data.utils
 import com.google.common.truth.Truth
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
-import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import java.io.IOException
 
 class ConnectionCheckerTest {
 
@@ -29,7 +29,7 @@ class ConnectionCheckerTest {
     fun internetIsNotConnected() = runBlocking {
 
         // Given
-        val mockEngine = MockEngine { respondError(status = HttpStatusCode.BadGateway) }
+        val mockEngine = MockEngine { throw IOException() }
         val httpClient = HttpClient(mockEngine)
         val connectionChecker = ConnectionChecker(httpClient)
 

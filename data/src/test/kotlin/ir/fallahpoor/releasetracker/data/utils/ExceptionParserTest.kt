@@ -1,33 +1,33 @@
 package ir.fallahpoor.releasetracker.data.utils
 
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.data.InternetNotConnectedException
+import ir.fallahpoor.releasetracker.data.LibraryDoesNotExistException
 import org.junit.Test
-import java.io.IOException
 
 class ExceptionParserTest {
 
     private val exceptionParser = ExceptionParser()
 
-    // TODO Find a way to create an instance of ClientRequestException
-//    @Test
-//    fun `correct message is returned when the exception is ClientResponseException`() {
-//
-//        // Given
-//        val throwable: Throwable = ClientRequestException()
-//
-//        // When
-//        val message = exceptionParser.getMessage(throwable)
-//
-//        // Then
-//        Truth.assertThat(message).isEqualTo(ExceptionParser.LIBRARY_DOES_NOT_EXIST)
-//
-//    }
-
     @Test
-    fun `correct message is returned when the exception is IOException`() {
+    fun `correct message is returned when exception is LibraryDoesNotExistException`() {
 
         // Given
-        val throwable: Throwable = IOException()
+        val throwable: Throwable = LibraryDoesNotExistException()
+
+        // When
+        val message = exceptionParser.getMessage(throwable)
+
+        // Then
+        Truth.assertThat(message).isEqualTo(ExceptionParser.LIBRARY_DOES_NOT_EXIST)
+
+    }
+
+    @Test
+    fun `correct message is returned when exception is InternetNotConnectedException`() {
+
+        // Given
+        val throwable: Throwable = InternetNotConnectedException()
 
         // When
         val message = exceptionParser.getMessage(throwable)
@@ -38,9 +38,9 @@ class ExceptionParserTest {
     }
 
     @Test
-    fun `correct message is returned when the exception is neither IOException nor ClientResponseException`() {
+    fun `correct message is returned when exception is unknown`() {
 
-        // Given any exception other than ClientResponseException and IOException
+        // Given any exception other than LibraryDoesNotExistException and InternetNotConnectedException
         val throwable: Throwable = ArithmeticException()
 
         // When

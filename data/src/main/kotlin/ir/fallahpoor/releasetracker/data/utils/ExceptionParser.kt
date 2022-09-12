@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.data.utils
 
-import io.ktor.client.plugins.*
-import java.io.IOException
+import ir.fallahpoor.releasetracker.data.InternetNotConnectedException
+import ir.fallahpoor.releasetracker.data.LibraryDoesNotExistException
 import javax.inject.Inject
 
 class ExceptionParser @Inject constructor() {
@@ -13,8 +13,8 @@ class ExceptionParser @Inject constructor() {
     }
 
     fun getMessage(t: Throwable): String = when (t) {
-        is ClientRequestException -> LIBRARY_DOES_NOT_EXIST
-        is IOException -> INTERNET_NOT_CONNECTED
+        is LibraryDoesNotExistException -> LIBRARY_DOES_NOT_EXIST
+        is InternetNotConnectedException -> INTERNET_NOT_CONNECTED
         else -> SOMETHING_WENT_WRONG
     }
 
