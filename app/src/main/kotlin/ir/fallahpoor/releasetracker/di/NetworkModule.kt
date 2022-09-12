@@ -17,6 +17,7 @@ import ir.fallahpoor.releasetracker.data.network.GithubApi
 import ir.fallahpoor.releasetracker.data.network.GithubApiImpl
 import kotlinx.serialization.json.Json
 import java.io.IOException
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,6 +28,7 @@ object NetworkModule {
         githubWebServiceImpl
 
     @Provides
+    @Singleton
     fun provideHttpClient() =
         HttpClient {
             expectSuccess = true
