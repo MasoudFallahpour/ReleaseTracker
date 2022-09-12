@@ -6,7 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import ir.fallahpoor.releasetracker.common.managers.NotificationManager
+import ir.fallahpoor.releasetracker.common.NotificationManager
 import ir.fallahpoor.releasetracker.data.network.ConnectionChecker
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
