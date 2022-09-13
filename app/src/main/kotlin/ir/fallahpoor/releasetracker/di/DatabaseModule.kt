@@ -10,6 +10,8 @@ import dagger.hilt.components.SingletonComponent
 import ir.fallahpoor.releasetracker.data.Database
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.LibraryDaoImpl
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -26,5 +28,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideLibraryDao(libraryDaoImpl: LibraryDaoImpl): LibraryDao = libraryDaoImpl
+
+    @Provides
+    fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
 }
