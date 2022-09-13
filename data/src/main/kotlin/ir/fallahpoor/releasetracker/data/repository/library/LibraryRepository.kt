@@ -2,8 +2,6 @@ package ir.fallahpoor.releasetracker.data.repository.library
 
 import kotlinx.coroutines.flow.Flow
 
-// TODO probably we can separate this interface into multiple ones.
-
 interface LibraryRepository {
 
     suspend fun getLibrary(libraryName: String): Library?
