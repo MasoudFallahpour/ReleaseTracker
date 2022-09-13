@@ -5,12 +5,12 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath(libs.androidPlugin)
-        classpath(libs.kotlinPlugin)
-        classpath(libs.daggerPlugin)
-        classpath(libs.googleServicePlugin)
-        classpath(libs.firebaseCrashlyticsPlugin)
-        classpath(libs.sqlDelightPlugin)
+        classpath(libs.plugin.android)
+        classpath(libs.plugin.kotlin)
+        classpath(libs.plugin.dagger)
+        classpath(libs.plugin.googleServices)
+        classpath(libs.plugin.firebaseCrashlytics)
+        classpath(libs.plugin.sqlDelight)
     }
 }
 
