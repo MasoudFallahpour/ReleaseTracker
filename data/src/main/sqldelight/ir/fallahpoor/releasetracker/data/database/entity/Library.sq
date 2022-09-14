@@ -19,7 +19,7 @@ VALUES ?;
 
 update:
 UPDATE LibraryEntity
-SET version = ?
+SET url = ?, version = ?, pinned = ?
 WHERE name = ?;
 
 delete:

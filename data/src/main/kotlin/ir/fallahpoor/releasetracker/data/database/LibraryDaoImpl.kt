@@ -38,7 +38,12 @@ class LibraryDaoImpl @Inject constructor(
     }
 
     override suspend fun update(library: LibraryEntity) = withContext(dispatcher) {
-        libraryQueries.update(version = library.version, name = library.name)
+        libraryQueries.update(
+            url = library.url,
+            version = library.version,
+            pinned = library.pinned,
+            name = library.name
+        )
     }
 
     override suspend fun delete(libraryName: String) = withContext(dispatcher) {
