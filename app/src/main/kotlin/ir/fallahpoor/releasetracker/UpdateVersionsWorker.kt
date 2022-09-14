@@ -28,20 +28,22 @@ class UpdateVersionsWorker
     private val notificationManager: NotificationManager
 ) : CoroutineWorker(context, workerParams) {
 
-    override suspend fun doWork(): Result = if (!connectionChecker.isInternetConnected()) {
-        Result.retry()
-    } else {
-        val updatedLibraries: List<String> = updateLibraries()
-        saveUpdateDate()
-        showNotification(updatedLibraries)
-        Result.success()
+    override suspend fun doWork(): Result {
+        val libraries: List<Library> = libraryRepository.getLibraries()
+        return if (libraries.isEmpty()) {
+            Result.success()
+        } else if (!connectionChecker.isInternetConnected()) {
+            Result.retry()
+        } else {
+            val updatedLibraries: List<String> = updateLibraries(libraries)
+            saveUpdateDate()
+            showNotification(updatedLibraries)
+            Result.success()
+        }
     }
 
-    private suspend fun updateLibraries(): List<String> {
-
+    private suspend fun updateLibraries(libraries: List<Library>): List<String> {
         val updatedLibraries = mutableListOf<String>()
-        val libraries: List<Library> = libraryRepository.getLibraries()
-
         supervisorScope {
             libraries.forEach { library: Library ->
                 launch {
@@ -56,9 +58,7 @@ class UpdateVersionsWorker
                 }
             }
         }
-
         return updatedLibraries
-
     }
 
     private suspend fun getLatestVersion(library: Library): String? = try {
