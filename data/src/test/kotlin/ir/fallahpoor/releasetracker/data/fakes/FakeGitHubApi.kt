@@ -1,10 +1,11 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
 import ir.fallahpoor.releasetracker.data.TestData
-import ir.fallahpoor.releasetracker.data.network.GithubApi
+import ir.fallahpoor.releasetracker.data.network.GitHubApi
 import ir.fallahpoor.releasetracker.data.network.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 
-class FakeGithubApi : GithubApi {
+class FakeGitHubApi : GitHubApi {
 
     override suspend fun getLatestRelease(owner: String, repository: String): LibraryVersion =
         if (owner == TestData.OWNER_1) {
@@ -18,5 +19,13 @@ class FakeGithubApi : GithubApi {
                 tagName = TestData.TAG_NAME_2
             )
         }
+
+    override suspend fun searchRepositories(
+        repositoryName: String,
+        page: Int,
+        pageSize: Int
+    ): List<SearchResults> {
+        TODO("Not yet implemented")
+    }
 
 }

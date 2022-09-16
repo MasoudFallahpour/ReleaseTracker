@@ -13,6 +13,7 @@ plugins {
 val properties: java.util.Properties = gradleLocalProperties(rootDir)
 val sp: String = properties.getProperty("storePassword")
 val kp: String = properties.getProperty("keyPassword")
+val accessToken: String = properties.getProperty("accessToken")
 
 android {
     namespace = "ir.fallahpoor.releasetracker"
@@ -39,6 +40,7 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -48,6 +50,10 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs["release"]
+        }
+        debug {
+            buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
+            isMinifyEnabled = false
         }
     }
 

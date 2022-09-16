@@ -12,7 +12,7 @@ import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_VERSION_2
 import ir.fallahpoor.releasetracker.data.TestData.RELEASE_TRACKER
 import ir.fallahpoor.releasetracker.data.TestData.TIMBER
 import ir.fallahpoor.releasetracker.data.TestData.VERSION_1
-import ir.fallahpoor.releasetracker.data.fakes.FakeGithubApi
+import ir.fallahpoor.releasetracker.data.fakes.FakeGitHubApi
 import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
 import ir.fallahpoor.releasetracker.data.toLibrary
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +41,7 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao = FakeLibraryDao()
         libraryRepository = LibraryRepositoryImpl(
             libraryDao = fakeLibraryDao,
-            githubWebservice = FakeGithubApi()
+            githubWebservice = FakeGitHubApi()
         )
     }
 

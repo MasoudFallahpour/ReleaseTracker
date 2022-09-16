@@ -8,13 +8,15 @@ import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import ir.fallahpoor.releasetracker.data.BuildConfig
+import ir.fallahpoor.releasetracker.BuildConfig
 import ir.fallahpoor.releasetracker.data.exceptions.InternetNotConnectedException
 import ir.fallahpoor.releasetracker.data.exceptions.LibraryDoesNotExistException
 import ir.fallahpoor.releasetracker.data.exceptions.UnknownException
-import ir.fallahpoor.releasetracker.data.network.GithubApi
-import ir.fallahpoor.releasetracker.data.network.GithubApiImpl
+import ir.fallahpoor.releasetracker.data.network.GitHubApi
+import ir.fallahpoor.releasetracker.data.network.GitHubApiImpl
 import kotlinx.serialization.json.Json
 import java.io.IOException
 import javax.inject.Singleton
@@ -24,14 +26,17 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideGithubWebService(githubWebServiceImpl: GithubApiImpl): GithubApi =
-        githubWebServiceImpl
+    fun provideGithubWebService(gitHubApiImpl: GitHubApiImpl): GitHubApi = gitHubApiImpl
 
     @Provides
     @Singleton
     fun provideHttpClient() =
         HttpClient {
             expectSuccess = true
+            install(DefaultRequest) {
+                url("https://api.github.com/")
+                header(HttpHeaders.Authorization, "token ${BuildConfig.ACCESS_TOKEN}")
+            }
             install(Logging) {
                 level = if (BuildConfig.DEBUG) LogLevel.BODY else LogLevel.NONE
             }

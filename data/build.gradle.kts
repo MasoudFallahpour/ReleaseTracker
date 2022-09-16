@@ -1,5 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -7,8 +5,6 @@ plugins {
     kotlin("plugin.serialization") version "1.6.10"
     id("com.squareup.sqldelight")
 }
-
-val accessToken: String = gradleLocalProperties(rootDir).getProperty("accessToken")
 
 android {
     namespace = "ir.fallahpoor.releasetracker.data"
@@ -21,7 +17,6 @@ android {
 
     buildTypes {
         release {
-            buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile(
@@ -29,10 +24,6 @@ android {
                 ),
                 "proguard-rules.pro"
             )
-        }
-        debug {
-            buildConfigField("String", "ACCESS_TOKEN", "\"$accessToken\"")
-            isMinifyEnabled = false
         }
     }
 
