@@ -6,7 +6,7 @@ import ir.fallahpoor.releasetracker.data.network.LibraryVersion
 
 class FakeGithubApi : GithubApi {
 
-    override suspend fun getLatestVersion(owner: String, repository: String): LibraryVersion =
+    override suspend fun getLatestRelease(owner: String, repository: String): LibraryVersion =
         if (owner == TestData.OWNER_1) {
             LibraryVersion(
                 name = TestData.VERSION_1,

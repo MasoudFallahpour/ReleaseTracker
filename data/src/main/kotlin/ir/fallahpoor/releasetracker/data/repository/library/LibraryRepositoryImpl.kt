@@ -31,7 +31,7 @@ class LibraryRepositoryImpl
         val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
 
         val libraryVersion: LibraryVersion =
-            githubWebservice.getLatestVersion(libraryOwner, libraryRepo)
+            githubWebservice.getLatestRelease(libraryOwner, libraryRepo)
 
         return getRefinedLibraryVersion(libraryName.trim(), libraryVersion)
 

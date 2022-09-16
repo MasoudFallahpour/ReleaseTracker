@@ -14,7 +14,7 @@ class GithubApiImpl
     private val httpClient: HttpClient
 ) : GithubApi {
 
-    override suspend fun getLatestVersion(owner: String, repository: String): LibraryVersion =
+    override suspend fun getLatestRelease(owner: String, repository: String): LibraryVersion =
         httpClient.get("https://api.github.com/repos/$owner/$repository/releases/latest") {
             header(HttpHeaders.Authorization, "token ${BuildConfig.ACCESS_TOKEN}")
         }.body()
