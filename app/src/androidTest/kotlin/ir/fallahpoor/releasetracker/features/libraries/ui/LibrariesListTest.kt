@@ -6,7 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.fakes.FakeData
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -17,9 +17,9 @@ class LibrariesListTest {
     val composeRule = createComposeRule()
 
     private val libraries = listOf(
-        FakeLibraryRepository.Coil.library,
-        FakeLibraryRepository.Koin.library,
-        FakeLibraryRepository.Kotlin.library
+        FakeData.Coil.library,
+        FakeData.Koin.library,
+        FakeData.Kotlin.library
     )
 
     private val context: Context = ApplicationProvider.getApplicationContext()
@@ -29,9 +29,9 @@ class LibrariesListTest {
 
         // Given
         val libraries = listOf(
-            FakeLibraryRepository.Coil.library,
-            FakeLibraryRepository.Koin.library,
-            FakeLibraryRepository.Kotlin.library
+            FakeData.Coil.library,
+            FakeData.Koin.library,
+            FakeData.Kotlin.library
         )
         composeLibrariesList(libraries = libraries)
 
@@ -74,7 +74,7 @@ class LibrariesListTest {
     fun correct_callback_is_called_when_a_library_is_clicked() {
 
         // Given
-        val library: Library = FakeLibraryRepository.Kotlin.library
+        val library: Library = FakeData.Kotlin.library
         val onLibraryClick: (Library) -> Unit = mock()
         composeLibrariesList(
             libraries = libraries,
@@ -94,7 +94,7 @@ class LibrariesListTest {
     fun correct_callback_is_called_when_a_library_is_dismissed() {
 
         // Given
-        val library: Library = FakeLibraryRepository.Coil.library
+        val library: Library = FakeData.Coil.library
         val onLibraryDismissed: (Library) -> Unit = mock()
         composeLibrariesList(
             libraries = libraries,
@@ -116,7 +116,7 @@ class LibrariesListTest {
     fun correct_callback_is_called_when_a_library_is_pinned() {
 
         // Given
-        val library: Library = FakeLibraryRepository.Coil.library
+        val library: Library = FakeData.Coil.library
         val onPinLibrary: (Library, Boolean) -> Unit = mock()
         composeLibrariesList(
             libraries = libraries,
@@ -136,7 +136,7 @@ class LibrariesListTest {
     fun correct_callback_is_called_when_a_library_is_unpinned() {
 
         // Given
-        val library: Library = FakeLibraryRepository.Koin.library
+        val library: Library = FakeData.Koin.library
         val onPinLibrary: (Library, Boolean) -> Unit = mock()
         composeLibrariesList(
             libraries = libraries,

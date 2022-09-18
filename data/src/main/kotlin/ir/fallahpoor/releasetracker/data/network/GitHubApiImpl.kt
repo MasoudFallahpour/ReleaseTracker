@@ -25,7 +25,7 @@ class GitHubApiImpl
             parameter("q", "$repositoryName in:name")
             parameter("sort", "stars")
             parameter("page", page)
-            parameter("per_page", "30")
+            parameter("per_page", pageSize)
         }.body()
 
 }

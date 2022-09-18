@@ -3,8 +3,9 @@ package ir.fallahpoor.releasetracker.fakes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.map
-import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
 import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
+import ir.fallahpoor.releasetracker.data.network.models.SearchResultItem
+import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import kotlinx.coroutines.flow.Flow
@@ -12,41 +13,29 @@ import java.io.IOException
 
 class FakeLibraryRepository : LibraryRepository {
 
-    object Coil {
-        const val name = "Coil"
-        const val url = GITHUB_BASE_URL + "coil-kt/coil"
-        const val version = "1.3.1"
-        val library = Library(name = name, url = url, version = version, isPinned = false)
-    }
-
-    object Kotlin {
-        const val name = "Kotlin"
-        const val url = GITHUB_BASE_URL + "JetBrains/kotlin"
-        const val version = "1.5.21"
-        val library = Library(name = name, url = url, version = version, isPinned = false)
-    }
-
-    object Koin {
-        const val name = "Koin"
-        const val url = GITHUB_BASE_URL + "InsertKoinIO/koin"
-        const val version = "3.1.2"
-        val library = Library(name = name, url = url, version = version, isPinned = true)
-    }
-
     companion object {
         const val LAST_UPDATE_CHECK = "N/A"
         const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING = "Coroutines"
-        const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING = Kotlin.name
+        const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING = FakeData.Kotlin.name
         const val ERROR_MESSAGE = ExceptionParser.SOMETHING_WENT_WRONG
         const val LIBRARY_VERSION = "0.2"
     }
 
-    val libraries = mutableListOf(
-        Coil.library,
-        Kotlin.library,
-        Koin.library
+    val localLibraries = mutableListOf(
+        FakeData.Coil.library,
+        FakeData.Kotlin.library,
+        FakeData.Koin.library
     )
-    private val librariesLiveData = MutableLiveData<List<Library>>(libraries)
+    private val remoteLibraries = listOf(
+        FakeData.Coil.library,
+        FakeData.Coroutines.library,
+        FakeData.Eks.library,
+        FakeData.Koin.library,
+        FakeData.Kotlin.library,
+        FakeData.Timber.library,
+        FakeData.ReleaseTracker.library
+    )
+    private val localLibrariesLiveData = MutableLiveData<List<Library>>(localLibraries)
 
     override suspend fun addLibrary(
         libraryName: String,
@@ -56,50 +45,59 @@ class FakeLibraryRepository : LibraryRepository {
         if (libraryName.trim() == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING) {
             throw IOException(ERROR_MESSAGE)
         } else {
-            val library: Library? = libraries.find {
+            val library: Library? = localLibraries.find {
                 it.name.equals(libraryName.trim(), ignoreCase = true)
             }
             if (library != null) {
                 throw RuntimeException(ExceptionParser.SOMETHING_WENT_WRONG)
             } else {
-                libraries += Library(
+                localLibraries += Library(
                     libraryName.trim(),
                     libraryUrl.trim(),
                     libraryVersion,
                     isPinned = false
                 )
-                updateLibrariesLiveData(libraries)
+                updateLibrariesLiveData(localLibraries)
             }
         }
     }
 
     override suspend fun updateLibrary(library: Library) {
-        val removed: Boolean = libraries.removeIf {
+        val removed: Boolean = localLibraries.removeIf {
             it.name.equals(library.name, ignoreCase = true)
         }
         if (removed) {
-            libraries += library
-            updateLibrariesLiveData(libraries)
+            localLibraries += library
+            updateLibrariesLiveData(localLibraries)
         }
     }
 
     override suspend fun getLibrary(libraryName: String): Library? =
-        libraries.firstOrNull { it.name.equals(libraryName.trim(), ignoreCase = true) }
+        localLibraries.firstOrNull { it.name.equals(libraryName.trim(), ignoreCase = true) }
 
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
-        librariesLiveData.map { libraries: List<Library> ->
+        localLibrariesLiveData.map { libraries: List<Library> ->
             libraries.sortedBy { it.name }
         }.asFlow()
 
-    override suspend fun getLibraries(): List<Library> = libraries
+    override suspend fun searchLibraries(libraryName: String): SearchResults {
+        val items = remoteLibraries.filter { it.name.contains(libraryName, ignoreCase = true) }
+            .mapIndexed { index, library ->
+                library.toSearchResult(id = index.toLong())
+            }
+        return SearchResults(totalCount = items.size, incompleteResults = false, items = items)
+    }
+
+    override suspend fun getLibraries(): List<Library> = localLibraries
 
     override suspend fun deleteLibrary(library: Library) {
         if (library.name == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING) {
             throw RuntimeException(ERROR_MESSAGE)
         } else {
-            val removed = libraries.removeIf { it.name.equals(library.name, ignoreCase = true) }
+            val removed =
+                localLibraries.removeIf { it.name.equals(library.name, ignoreCase = true) }
             if (removed) {
-                updateLibrariesLiveData(libraries)
+                updateLibrariesLiveData(localLibraries)
             }
         }
     }
@@ -114,7 +112,14 @@ class FakeLibraryRepository : LibraryRepository {
     }
 
     private fun updateLibrariesLiveData(libraries: List<Library>) {
-        librariesLiveData.value = libraries
+        localLibrariesLiveData.value = libraries
     }
+
+    private fun Library.toSearchResult(id: Long) = SearchResultItem(
+        id = id,
+        name = this.name,
+        url = this.url,
+        description = ""
+    )
 
 }

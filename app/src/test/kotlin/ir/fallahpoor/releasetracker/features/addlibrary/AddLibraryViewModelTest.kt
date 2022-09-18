@@ -263,7 +263,7 @@ class AddLibraryViewModelTest {
                     AddLibraryScreenUiState(
                         libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
                         libraryUrlPath = LIBRARY_URL_PATH,
-                        addLibraryState = AddLibraryState.Error("Internet not connected.")
+                        addLibraryState = AddLibraryState.Error(ExceptionParser.SOMETHING_WENT_WRONG)
                     )
                 )
 

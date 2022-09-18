@@ -9,5 +9,5 @@ data class SearchResults(
     @SerialName("incomplete_results")
     val incompleteResults: Boolean,
     @SerialName("items")
-    val items: List<SearchResult>
+    val items: List<SearchResultItem>
 )

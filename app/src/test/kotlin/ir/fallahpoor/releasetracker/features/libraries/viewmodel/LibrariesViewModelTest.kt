@@ -5,6 +5,7 @@ package ir.fallahpoor.releasetracker.features.libraries.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.SortOrder
+import ir.fallahpoor.releasetracker.fakes.FakeData
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorageRepository
 import ir.fallahpoor.releasetracker.features.libraries.Event
@@ -91,11 +92,11 @@ class LibrariesViewModelTest {
         // Given
 
         // When
-        val libraryToPin = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)!!
+        val libraryToPin = fakeLibraryRepository.getLibrary(FakeData.Kotlin.name)!!
         librariesViewModel.handleEvent(Event.PinLibrary(library = libraryToPin, pin = true))
 
         // Then
-        val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Kotlin.name)
+        val library = fakeLibraryRepository.getLibrary(FakeData.Kotlin.name)
         Truth.assertThat(library?.isPinned).isTrue()
 
     }
@@ -104,13 +105,13 @@ class LibrariesViewModelTest {
     fun `unpin library`() = runTest {
 
         // Given
-        val libraryToUnpin = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)!!
+        val libraryToUnpin = fakeLibraryRepository.getLibrary(FakeData.Koin.name)!!
 
         // When
         librariesViewModel.handleEvent(Event.PinLibrary(library = libraryToUnpin, pin = false))
 
         // Then
-        val library = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)
+        val library = fakeLibraryRepository.getLibrary(FakeData.Koin.name)
         Truth.assertThat(library?.isPinned).isFalse()
 
     }
@@ -119,14 +120,14 @@ class LibrariesViewModelTest {
     fun `delete library`() = runTest {
 
         // Given
-        val libraryToDelete = fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)!!
+        val libraryToDelete = fakeLibraryRepository.getLibrary(FakeData.Koin.name)!!
 
         // When
         librariesViewModel.handleEvent(Event.DeleteLibrary(libraryToDelete))
 
         // Then
         Truth.assertThat(fakeLibraryRepository.getLibraries().size).isEqualTo(2)
-        Truth.assertThat(fakeLibraryRepository.getLibrary(FakeLibraryRepository.Koin.name)).isNull()
+        Truth.assertThat(fakeLibraryRepository.getLibrary(FakeData.Koin.name)).isNull()
 
     }
 

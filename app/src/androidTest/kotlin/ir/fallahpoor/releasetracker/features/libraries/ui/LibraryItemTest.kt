@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.features.libraries.ui
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.fakes.FakeData
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -17,7 +17,7 @@ class LibraryItemTest {
     fun library_is_displayed() {
 
         // Given
-        val library: Library = FakeLibraryRepository.Koin.library
+        val library: Library = FakeData.Koin.library
         composeLibraryItem(library = library)
 
         // Then
@@ -39,7 +39,7 @@ class LibraryItemTest {
 
         // Given
         val onLibraryClick: (Library) -> Unit = mock()
-        val library: Library = FakeLibraryRepository.Coil.library
+        val library: Library = FakeData.Coil.library
         composeLibraryItem(
             library = library,
             onLibraryClick = onLibraryClick
@@ -60,17 +60,17 @@ class LibraryItemTest {
         // Given
         val onPinLibrary: (Library, Boolean) -> Unit = mock()
         composeLibraryItem(
-            library = FakeLibraryRepository.Coil.library,
+            library = FakeData.Coil.library,
             onPinLibraryClick = onPinLibrary
         )
 
         // When
         composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + FakeLibraryRepository.Coil.name
+            LibraryItemTags.PIN_BUTTON + FakeData.Coil.name
         ).performClick()
 
         // Then
-        Mockito.verify(onPinLibrary).invoke(FakeLibraryRepository.Coil.library, true)
+        Mockito.verify(onPinLibrary).invoke(FakeData.Coil.library, true)
 
     }
 
@@ -79,7 +79,7 @@ class LibraryItemTest {
 
         // Given
         val onPinLibrary: (Library, Boolean) -> Unit = mock()
-        val library: Library = FakeLibraryRepository.Koin.library
+        val library: Library = FakeData.Koin.library
         composeLibraryItem(
             library = library,
             onPinLibraryClick = onPinLibrary
@@ -100,7 +100,7 @@ class LibraryItemTest {
 
         // Given
         val onLibraryDismissed: (Library) -> Unit = mock()
-        val library: Library = FakeLibraryRepository.Coil.library
+        val library: Library = FakeData.Coil.library
         composeLibraryItem(
             library = library,
             onLibraryDismissed = onLibraryDismissed

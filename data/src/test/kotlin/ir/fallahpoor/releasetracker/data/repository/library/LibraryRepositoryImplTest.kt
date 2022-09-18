@@ -2,16 +2,7 @@ package ir.fallahpoor.releasetracker.data.repository.library
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
-import ir.fallahpoor.releasetracker.data.TestData.COIL
-import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_NAME_1
-import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_NAME_2
-import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_URL_1
-import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_URL_2
-import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_VERSION_1
-import ir.fallahpoor.releasetracker.data.TestData.LIBRARY_VERSION_2
-import ir.fallahpoor.releasetracker.data.TestData.RELEASE_TRACKER
-import ir.fallahpoor.releasetracker.data.TestData.TIMBER
-import ir.fallahpoor.releasetracker.data.TestData.VERSION_1
+import ir.fallahpoor.releasetracker.data.fakes.FakeData
 import ir.fallahpoor.releasetracker.data.fakes.FakeGitHubApi
 import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
 import ir.fallahpoor.releasetracker.data.toLibrary
@@ -41,7 +32,7 @@ class LibraryRepositoryImplTest {
         fakeLibraryDao = FakeLibraryDao()
         libraryRepository = LibraryRepositoryImpl(
             libraryDao = fakeLibraryDao,
-            githubWebservice = FakeGitHubApi()
+            gitHubApi = FakeGitHubApi()
         )
     }
 
@@ -54,39 +45,28 @@ class LibraryRepositoryImplTest {
     fun `get library`() = runTest {
 
         // Given
-        fakeLibraryDao.insert(RELEASE_TRACKER)
+        val expectedLibrary: Library = FakeData.ReleaseTracker.library
+        fakeLibraryDao.insert(expectedLibrary.toLibraryEntity())
 
         // When
-        val library: Library? = libraryRepository.getLibrary(LIBRARY_NAME_1)
+        val actualLibrary: Library? = libraryRepository.getLibrary(expectedLibrary.name)
 
         // Then
-        Truth.assertThat(library).isEqualTo(RELEASE_TRACKER.toLibrary())
+        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
 
     }
 
     @Test
-    fun `library version name is returned when it is available`() = runTest {
-
-        // Given
+    fun `get library version`() = runTest {
 
         // When
-        val version: String = libraryRepository.getLibraryVersion(LIBRARY_NAME_1, LIBRARY_URL_1)
+        val version: String = libraryRepository.getLibraryVersion(
+            FakeData.ReleaseTracker.NAME,
+            FakeData.ReleaseTracker.URL
+        )
 
         // Then
-        Truth.assertThat(version).isEqualTo(VERSION_1)
-
-    }
-
-    @Test
-    fun `library tag name is returned when its version name is not available`() = runTest {
-
-        // Given
-
-        // When
-        val version: String = libraryRepository.getLibraryVersion(LIBRARY_NAME_2, LIBRARY_URL_2)
-
-        // Then
-        Truth.assertThat(version).isEqualTo(LIBRARY_VERSION_2)
+        Truth.assertThat(version).isEqualTo(FakeData.ReleaseTracker.VERSION)
 
     }
 
@@ -94,13 +74,18 @@ class LibraryRepositoryImplTest {
     fun `add library`() = runTest {
 
         // Given
+        val expectedLibrary: Library = FakeData.Coil.library
 
         // When
-        libraryRepository.addLibrary(LIBRARY_NAME_1, LIBRARY_URL_1, LIBRARY_VERSION_1)
+        libraryRepository.addLibrary(
+            libraryName = expectedLibrary.name,
+            libraryUrl = expectedLibrary.url,
+            libraryVersion = expectedLibrary.version
+        )
 
         // Then
-        val library: Library? = libraryRepository.getLibrary(LIBRARY_NAME_1)
-        Truth.assertThat(library).isEqualTo(RELEASE_TRACKER.toLibrary())
+        val actualLibrary: Library? = fakeLibraryDao.get(expectedLibrary.name)?.toLibrary()
+        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
 
     }
 
@@ -108,14 +93,14 @@ class LibraryRepositoryImplTest {
     fun `delete library`() = runTest {
 
         // Given
-        fakeLibraryDao.insert(RELEASE_TRACKER)
-        fakeLibraryDao.insert(COIL)
+        fakeLibraryDao.insert(FakeData.ReleaseTracker.library.toLibraryEntity())
+        fakeLibraryDao.insert(FakeData.Coil.library.toLibraryEntity())
 
         // When
-        libraryRepository.deleteLibrary(RELEASE_TRACKER.toLibrary())
+        libraryRepository.deleteLibrary(FakeData.ReleaseTracker.library)
 
         // Then
-        Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(listOf(COIL.toLibrary()))
+        Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(listOf(FakeData.Coil.library))
 
     }
 
@@ -123,15 +108,16 @@ class LibraryRepositoryImplTest {
     fun `update library`() = runTest {
 
         // Given
-        fakeLibraryDao.insert(RELEASE_TRACKER)
+        val expectedLibrary: Library = FakeData.ReleaseTracker.library
+        fakeLibraryDao.insert(expectedLibrary.toLibraryEntity())
 
         // When
-        val updatedLibrary = RELEASE_TRACKER.copy(version = "0.3")
-        libraryRepository.updateLibrary(updatedLibrary.toLibrary())
+        val updatedLibrary = expectedLibrary.copy(version = "0.3")
+        libraryRepository.updateLibrary(updatedLibrary)
 
         // Then
-        Truth.assertThat(libraryRepository.getLibrary(RELEASE_TRACKER.name))
-            .isEqualTo(updatedLibrary.toLibrary())
+        Truth.assertThat(libraryRepository.getLibrary(expectedLibrary.name))
+            .isEqualTo(updatedLibrary)
 
     }
 
@@ -139,15 +125,16 @@ class LibraryRepositoryImplTest {
     fun `pin library`() = runTest {
 
         // Given
-        fakeLibraryDao.insert(RELEASE_TRACKER)
+        val expectedLibrary: Library = FakeData.ReleaseTracker.library
+        fakeLibraryDao.insert(expectedLibrary.toLibraryEntity())
 
         // When
-        libraryRepository.pinLibrary(RELEASE_TRACKER.toLibrary(), true)
+        libraryRepository.pinLibrary(expectedLibrary, true)
 
         // Then
-        val pinnedLibrary = RELEASE_TRACKER.copy(pinned = 1)
-        Truth.assertThat(libraryRepository.getLibrary(RELEASE_TRACKER.name))
-            .isEqualTo(pinnedLibrary.toLibrary())
+        val pinnedLibrary = expectedLibrary.copy(isPinned = true)
+        Truth.assertThat(libraryRepository.getLibrary(expectedLibrary.name))
+            .isEqualTo(pinnedLibrary)
 
     }
 
@@ -155,15 +142,16 @@ class LibraryRepositoryImplTest {
     fun `unpin library`() = runTest {
 
         // Given
-        fakeLibraryDao.insert(RELEASE_TRACKER.copy(pinned = 1))
+        val expectedLibrary: Library = FakeData.ReleaseTracker.library
+        fakeLibraryDao.insert(expectedLibrary.copy(isPinned = true).toLibraryEntity())
 
         // When
-        libraryRepository.pinLibrary(RELEASE_TRACKER.toLibrary(), false)
+        libraryRepository.pinLibrary(expectedLibrary, false)
 
         // Then
-        val unpinnedLibrary = RELEASE_TRACKER.copy(pinned = 0)
-        Truth.assertThat(libraryRepository.getLibrary(RELEASE_TRACKER.name))
-            .isEqualTo(unpinnedLibrary.toLibrary())
+        val actualLibrary = expectedLibrary.copy(isPinned = false)
+        Truth.assertThat(libraryRepository.getLibrary(expectedLibrary.name))
+            .isEqualTo(actualLibrary)
 
     }
 
@@ -171,14 +159,15 @@ class LibraryRepositoryImplTest {
     fun `get libraries`() = runTest {
 
         // Given
-        fakeLibraryDao.insert(RELEASE_TRACKER)
-        fakeLibraryDao.insert(COIL)
+        fakeLibraryDao.insert(FakeData.ReleaseTracker.library.toLibraryEntity())
+        fakeLibraryDao.insert(FakeData.Coil.library.toLibraryEntity())
 
         // When
-        val libraries = libraryRepository.getLibraries()
+        val actualLibraries = libraryRepository.getLibraries()
 
         // Then
-        Truth.assertThat(libraries).isEqualTo(listOf(COIL, RELEASE_TRACKER).map { it.toLibrary() })
+        val expectedLibraries = listOf(FakeData.Coil.library, FakeData.ReleaseTracker.library)
+        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
 
     }
 
@@ -187,17 +176,22 @@ class LibraryRepositoryImplTest {
         runTest {
 
             // Given
-            fakeLibraryDao.insert(RELEASE_TRACKER)
-            fakeLibraryDao.insert(COIL)
-            fakeLibraryDao.insert(TIMBER)
+            fakeLibraryDao.insert(FakeData.ReleaseTracker.library.toLibraryEntity())
+            fakeLibraryDao.insert(FakeData.Coil.library.toLibraryEntity())
+            fakeLibraryDao.insert(FakeData.Timber.library.toLibraryEntity())
 
             // When
-            val libraries: List<Library> = libraryRepository.getLibrariesAsFlow().first()
+            val actualLibraries: List<Library> = libraryRepository.getLibrariesAsFlow().first()
 
             // Then
-            Truth.assertThat(libraries)
-                .isEqualTo(listOf(COIL, RELEASE_TRACKER, TIMBER).map { it.toLibrary() })
+            val expectedLibraries = listOf(
+                FakeData.Coil.library,
+                FakeData.ReleaseTracker.library,
+                FakeData.Timber.library
+            )
+            Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
 
         }
 
+    // TODO add a test for searchLibraries
 }

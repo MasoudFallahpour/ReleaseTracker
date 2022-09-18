@@ -4,6 +4,7 @@ import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
 import ir.fallahpoor.releasetracker.data.network.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.toLibrary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -12,7 +13,7 @@ import javax.inject.Inject
 class LibraryRepositoryImpl
 @Inject constructor(
     private val libraryDao: LibraryDao,
-    private val githubWebservice: GitHubApi
+    private val gitHubApi: GitHubApi
 ) : LibraryRepository {
 
     companion object {
@@ -25,16 +26,11 @@ class LibraryRepositoryImpl
     }
 
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
-
         val libraryPath = libraryUrl.trim().removePrefix(GITHUB_BASE_URL)
         val libraryOwner = libraryPath.substring(0 until libraryPath.indexOf("/"))
         val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
-
-        val libraryVersion: LibraryVersion =
-            githubWebservice.getLatestRelease(libraryOwner, libraryRepo)
-
+        val libraryVersion: LibraryVersion = gitHubApi.getLatestRelease(libraryOwner, libraryRepo)
         return getRefinedLibraryVersion(libraryName.trim(), libraryVersion)
-
     }
 
     private fun getRefinedLibraryVersion(
@@ -91,5 +87,8 @@ class LibraryRepositoryImpl
 
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
         libraryDao.getAllAsFlow().map { libraryEntities -> libraryEntities.map { it.toLibrary() } }
+
+    override suspend fun searchLibraries(libraryName: String): SearchResults =
+        gitHubApi.searchRepositories(libraryName)
 
 }

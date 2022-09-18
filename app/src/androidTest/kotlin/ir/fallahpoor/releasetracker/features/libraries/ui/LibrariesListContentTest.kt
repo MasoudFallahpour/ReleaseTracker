@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.features.libraries.ui
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
+import ir.fallahpoor.releasetracker.fakes.FakeData
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesListState
 import org.junit.Rule
 import org.junit.Test
@@ -15,9 +15,9 @@ class LibrariesListContentTest {
     val composeRule = createComposeRule()
 
     private val libraries = listOf(
-        FakeLibraryRepository.Coil.library,
-        FakeLibraryRepository.Koin.library,
-        FakeLibraryRepository.Kotlin.library
+        FakeData.Coil.library,
+        FakeData.Koin.library,
+        FakeData.Kotlin.library
     )
 
     @Test
@@ -64,7 +64,7 @@ class LibrariesListContentTest {
     fun correct_callback_is_called_when_a_library_is_clicked() {
 
         // Given
-        val library: Library = FakeLibraryRepository.Kotlin.library
+        val library: Library = FakeData.Kotlin.library
         val onLibraryClick: (Library) -> Unit = mock()
         composeLibrariesListContent(
             librariesListState = LibrariesListState.LibrariesLoaded(libraries),
@@ -84,7 +84,7 @@ class LibrariesListContentTest {
     fun correct_callback_is_called_when_a_library_is_dismissed() {
 
         // Given
-        val library: Library = FakeLibraryRepository.Coil.library
+        val library: Library = FakeData.Coil.library
         val onLibraryDismissed: (Library) -> Unit = mock()
         composeLibrariesListContent(
             librariesListState = LibrariesListState.LibrariesLoaded(libraries),
@@ -114,11 +114,11 @@ class LibrariesListContentTest {
 
         // When
         composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + FakeLibraryRepository.Coil.name
+            LibraryItemTags.PIN_BUTTON + FakeData.Coil.name
         ).performClick()
 
         // Then
-        Mockito.verify(onPinLibrary).invoke(FakeLibraryRepository.Coil.library, true)
+        Mockito.verify(onPinLibrary).invoke(FakeData.Coil.library, true)
 
     }
 
@@ -134,11 +134,11 @@ class LibrariesListContentTest {
 
         // When
         composeRule.onNodeWithTag(
-            LibraryItemTags.PIN_BUTTON + FakeLibraryRepository.Koin.name
+            LibraryItemTags.PIN_BUTTON + FakeData.Koin.name
         ).performClick()
 
         // Then
-        Mockito.verify(onPinLibrary).invoke(FakeLibraryRepository.Koin.library, false)
+        Mockito.verify(onPinLibrary).invoke(FakeData.Koin.library, false)
 
     }
 

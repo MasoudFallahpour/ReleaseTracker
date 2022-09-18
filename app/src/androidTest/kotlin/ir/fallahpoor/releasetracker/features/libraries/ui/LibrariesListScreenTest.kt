@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.fakes.FakeData
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import ir.fallahpoor.releasetracker.fakes.FakeStorageRepository
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesViewModel
@@ -59,7 +60,7 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            fakeLibraryRepository.libraries.forEach {
+            fakeLibraryRepository.localLibraries.forEach {
                 onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
@@ -77,7 +78,7 @@ class LibrariesListScreenTest {
     fun delete_library_only_deletes_the_selected_library() {
 
         // Given
-        val libraryName = FakeLibraryRepository.Coil.name
+        val libraryName = FakeData.Coil.name
         composeLibrariesListScreen()
 
         // When
@@ -88,7 +89,7 @@ class LibrariesListScreenTest {
         }
 
         // Then
-        fakeLibraryRepository.libraries.forEach { library ->
+        fakeLibraryRepository.localLibraries.forEach { library ->
             if (library.name == libraryName) {
                 composeRule.onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + library.name,
@@ -119,7 +120,7 @@ class LibrariesListScreenTest {
         }
 
         // Then
-        fakeLibraryRepository.libraries.forEach { library ->
+        fakeLibraryRepository.localLibraries.forEach { library ->
             if (library.name.contains("ko", ignoreCase = true)) {
                 composeRule.onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + library.name,
@@ -153,7 +154,7 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            fakeLibraryRepository.libraries.forEach {
+            fakeLibraryRepository.localLibraries.forEach {
                 onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
@@ -185,7 +186,7 @@ class LibrariesListScreenTest {
 
         // Then
         with(composeRule) {
-            fakeLibraryRepository.libraries.forEach {
+            fakeLibraryRepository.localLibraries.forEach {
                 onNodeWithTag(
                     LibraryItemTags.LIBRARY_ITEM + it.name,
                     useUnmergedTree = true
@@ -231,11 +232,11 @@ class LibrariesListScreenTest {
         composeLibrariesListScreen(onLibraryClick = onLibraryClick)
 
         // When
-        composeRule.onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeLibraryRepository.Kotlin.name)
+        composeRule.onNodeWithTag(LibraryItemTags.LIBRARY_ITEM + FakeData.Kotlin.name)
             .performClick()
 
         // Then
-        Mockito.verify(onLibraryClick).invoke(FakeLibraryRepository.Kotlin.library)
+        Mockito.verify(onLibraryClick).invoke(FakeData.Kotlin.library)
 
     }
 
