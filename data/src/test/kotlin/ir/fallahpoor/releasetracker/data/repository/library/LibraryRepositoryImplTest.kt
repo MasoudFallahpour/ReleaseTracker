@@ -25,13 +25,15 @@ class LibraryRepositoryImplTest {
 
     private lateinit var libraryRepository: LibraryRepositoryImpl
     private lateinit var fakeLibraryDao: FakeLibraryDao
+    private lateinit var fakeGitHubApi: FakeGitHubApi
 
     @Before
     fun runBeforeEachTest() {
         fakeLibraryDao = FakeLibraryDao()
+        fakeGitHubApi = FakeGitHubApi()
         libraryRepository = LibraryRepositoryImpl(
             libraryDao = fakeLibraryDao,
-            gitHubApi = FakeGitHubApi()
+            gitHubApi = fakeGitHubApi
         )
     }
 
@@ -94,7 +96,9 @@ class LibraryRepositoryImplTest {
         libraryRepository.deleteLibrary(FakeData.ReleaseTracker.library)
 
         // Then
-        Truth.assertThat(libraryRepository.getLibraries()).isEqualTo(listOf(FakeData.Coil.library))
+        val actualLibraries = fakeLibraryDao.getAll().map { it.toLibrary() }
+        val expectedLibraries = listOf(FakeData.Coil.library)
+        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
 
     }
 
@@ -102,16 +106,16 @@ class LibraryRepositoryImplTest {
     fun `update library`() = runTest {
 
         // Given
-        val expectedLibrary: Library = FakeData.ReleaseTracker.library
-        fakeLibraryDao.insert(expectedLibrary.toLibraryEntity())
+        val library: Library = FakeData.ReleaseTracker.library
+        fakeLibraryDao.insert(library.toLibraryEntity())
 
         // When
-        val updatedLibrary = expectedLibrary.copy(version = "0.3")
-        libraryRepository.updateLibrary(updatedLibrary)
+        val expectedLibrary = library.copy(version = "0.3")
+        libraryRepository.updateLibrary(expectedLibrary)
 
         // Then
-        Truth.assertThat(libraryRepository.getLibrary(expectedLibrary.name))
-            .isEqualTo(updatedLibrary)
+        val actualLibrary = fakeLibraryDao.get(library.name)?.toLibrary()
+        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
 
     }
 
@@ -119,16 +123,16 @@ class LibraryRepositoryImplTest {
     fun `pin library`() = runTest {
 
         // Given
-        val expectedLibrary: Library = FakeData.ReleaseTracker.library
-        fakeLibraryDao.insert(expectedLibrary.toLibraryEntity())
+        val library: Library = FakeData.ReleaseTracker.library
+        fakeLibraryDao.insert(library.toLibraryEntity())
 
         // When
-        libraryRepository.pinLibrary(expectedLibrary, true)
+        libraryRepository.pinLibrary(library, true)
 
         // Then
-        val pinnedLibrary = expectedLibrary.copy(isPinned = true)
-        Truth.assertThat(libraryRepository.getLibrary(expectedLibrary.name))
-            .isEqualTo(pinnedLibrary)
+        val expectedLibrary = library.copy(isPinned = true)
+        val actualLibrary = fakeLibraryDao.get(library.name)?.toLibrary()
+        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
 
     }
 
@@ -136,16 +140,16 @@ class LibraryRepositoryImplTest {
     fun `unpin library`() = runTest {
 
         // Given
-        val expectedLibrary: Library = FakeData.ReleaseTracker.library
-        fakeLibraryDao.insert(expectedLibrary.copy(isPinned = true).toLibraryEntity())
+        val library: Library = FakeData.ReleaseTracker.library
+        fakeLibraryDao.insert(library.copy(isPinned = true).toLibraryEntity())
 
         // When
-        libraryRepository.pinLibrary(expectedLibrary, false)
+        libraryRepository.pinLibrary(library, false)
 
         // Then
-        val actualLibrary = expectedLibrary.copy(isPinned = false)
-        Truth.assertThat(libraryRepository.getLibrary(expectedLibrary.name))
-            .isEqualTo(actualLibrary)
+        val expectedLibrary = library.copy(isPinned = false)
+        val actualLibrary = fakeLibraryDao.get(library.name)?.toLibrary()
+        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
 
     }
 
@@ -187,5 +191,19 @@ class LibraryRepositoryImplTest {
 
         }
 
-    // TODO add a test for searchLibraries
+    @Test
+    fun `search libraries`() = runTest {
+
+        // Given
+        val searchQuery = "co"
+        val expectedSearchResults = fakeGitHubApi.searchRepositories(searchQuery)
+
+        // When
+        val searchResults = libraryRepository.searchLibraries(searchQuery)
+
+        // Then
+        Truth.assertThat(searchResults).isEqualTo(expectedSearchResults)
+
+    }
+
 }
