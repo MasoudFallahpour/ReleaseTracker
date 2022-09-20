@@ -5,6 +5,15 @@ import ir.fallahpoor.releasetracker.data.repository.library.Library
 object FakeData {
 
     private const val GITHUB_BASE_URL = "https://github.com/"
+    val allLibraries = listOf(
+        Coil.library,
+        Coroutines.library,
+        Eks.library,
+        Koin.library,
+        Kotlin.library,
+        Timber.library,
+        ReleaseTracker.library
+    )
 
     object Coil {
         const val NAME = "Coil"
