@@ -4,6 +4,7 @@ package ir.fallahpoor.releasetracker.features.libraries.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.MainDispatcherRule
 import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.fakes.FakeData
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
@@ -12,13 +13,8 @@ import ir.fallahpoor.releasetracker.features.libraries.Event
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesListScreenUiState
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesListState
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,21 +24,18 @@ class LibrariesViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     private lateinit var librariesViewModel: LibrariesViewModel
     private lateinit var fakeLibraryRepository: FakeLibraryRepository
     private lateinit var fakeStorageRepository: FakeStorageRepository
 
     @Before
     fun runBeforeEachTest() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         fakeLibraryRepository = FakeLibraryRepository()
         fakeStorageRepository = FakeStorageRepository()
         librariesViewModel = LibrariesViewModel(fakeLibraryRepository, fakeStorageRepository)
-    }
-
-    @After
-    fun runAfterEachTest() {
-        Dispatchers.resetMain()
     }
 
     @Test

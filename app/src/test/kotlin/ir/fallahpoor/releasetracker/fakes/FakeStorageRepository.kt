@@ -5,18 +5,16 @@ import androidx.lifecycle.asFlow
 import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.repository.storage.StorageRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class FakeStorageRepository : StorageRepository {
 
     private var sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
+    private val lastUpdateCheckDateLiveData = MutableLiveData("N/A")
 
-    override fun getLastUpdateCheck(): Flow<String> = flow {
-        emit(FakeLibraryRepository.LAST_UPDATE_CHECK)
-    }
+    override fun getLastUpdateCheck(): Flow<String> = lastUpdateCheckDateLiveData.asFlow()
 
     override suspend fun setLastUpdateCheck(date: String) {
-        TODO("Not yet implemented")
+        lastUpdateCheckDateLiveData.value = date
     }
 
     override suspend fun setSortOrder(sortOrder: SortOrder) {

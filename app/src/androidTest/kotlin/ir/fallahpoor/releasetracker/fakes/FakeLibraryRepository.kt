@@ -14,7 +14,6 @@ import java.io.IOException
 class FakeLibraryRepository : LibraryRepository {
 
     companion object {
-        const val LAST_UPDATE_CHECK = "N/A"
         const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING = "Coroutines"
         const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING = FakeData.Kotlin.name
         const val ERROR_MESSAGE = ExceptionParser.SOMETHING_WENT_WRONG

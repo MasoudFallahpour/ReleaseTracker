@@ -14,7 +14,6 @@ import java.io.IOException
 class FakeLibraryRepository : LibraryRepository {
 
     companion object {
-        const val LAST_UPDATE_CHECK = "N/A"
         const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING = "Coroutines"
         const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING = FakeData.Kotlin.name
         const val ERROR_MESSAGE = ExceptionParser.SOMETHING_WENT_WRONG
@@ -83,7 +82,7 @@ class FakeLibraryRepository : LibraryRepository {
     override suspend fun searchLibraries(libraryName: String): SearchResults {
         val items = remoteLibraries.filter { it.name.contains(libraryName, ignoreCase = true) }
             .mapIndexed { index, library ->
-                library.toSearchResult(id = index.toLong())
+                library.toSearchResultItem(id = index.toLong())
             }
         return SearchResults(totalCount = items.size, incompleteResults = false, items = items)
     }
@@ -120,7 +119,7 @@ class FakeLibraryRepository : LibraryRepository {
         localLibrariesLiveData.value = libraries
     }
 
-    private fun Library.toSearchResult(id: Long) = SearchResultItem(
+    private fun Library.toSearchResultItem(id: Long) = SearchResultItem(
         id = id,
         name = this.name,
         url = this.url,

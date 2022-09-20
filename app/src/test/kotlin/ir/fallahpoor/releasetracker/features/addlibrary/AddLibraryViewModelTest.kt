@@ -2,15 +2,11 @@ package ir.fallahpoor.releasetracker.features.addlibrary
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.MainDispatcherRule
 import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,22 +24,19 @@ class AddLibraryViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     private lateinit var addLibraryViewModel: AddLibraryViewModel
     private lateinit var fakeLibraryRepository: FakeLibraryRepository
 
     @Before
     fun runBeforeEachTest() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         fakeLibraryRepository = FakeLibraryRepository()
         addLibraryViewModel = AddLibraryViewModel(
             libraryRepository = fakeLibraryRepository,
             exceptionParser = ExceptionParser()
         )
-    }
-
-    @After
-    fun runAfterEachTest() {
-        Dispatchers.resetMain()
     }
 
     @Test

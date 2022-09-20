@@ -6,13 +6,8 @@ import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.repository.nightmode.NightModeRepository
 import ir.fallahpoor.releasetracker.fakes.FakeNightModeRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,19 +18,16 @@ class NightModeViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     private lateinit var nightModeViewModel: NightModeViewModel
     private lateinit var fakeNightModeRepository: NightModeRepository
 
     @Before
     fun runBeforeEachTest() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         fakeNightModeRepository = FakeNightModeRepository()
         nightModeViewModel = NightModeViewModel(fakeNightModeRepository)
-    }
-
-    @After
-    fun runAfterEachTest() {
-        Dispatchers.resetMain()
     }
 
     @Test
