@@ -9,20 +9,20 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth
+import ir.fallahpoor.releasetracker.data.MainDispatcherRule
 import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.storage.LocalStorage.Companion.KEY_LAST_UPDATE_CHECK
 import ir.fallahpoor.releasetracker.data.storage.LocalStorage.Companion.KEY_NIGHT_MODE
 import ir.fallahpoor.releasetracker.data.storage.LocalStorage.Companion.KEY_SORT_ORDER
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.*
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -33,6 +33,9 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 class LocalStorageTest {
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     private lateinit var localStorage: LocalStorage
     private lateinit var dataStoreTestScope: TestScope
     private lateinit var dataStore: DataStore<Preferences>
@@ -40,20 +43,13 @@ class LocalStorageTest {
 
     @Before
     fun runBeforeEachTest() {
-        val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
-        Dispatchers.setMain(testDispatcher)
-        dataStoreTestScope = TestScope(testDispatcher + Job())
+        dataStoreTestScope = TestScope(mainDispatcherRule.testDispatcher + Job())
         dataStore = PreferenceDataStoreFactory.create(scope = dataStoreTestScope) {
             context.preferencesDataStoreFile(
                 "test-preferences-file"
             )
         }
         localStorage = LocalStorage(dataStore)
-    }
-
-    @After
-    fun runAfterEachTest() {
-        Dispatchers.resetMain()
     }
 
     @Test
