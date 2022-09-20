@@ -76,6 +76,7 @@ class GitHubApiImplTest {
 
             // Then
             Truth.assertThat(actualSearchResults).isEqualTo(expectedSearchResults)
+
         }
 
     private fun createFakeSearchResults(searchQuery: String): SearchResults {
@@ -102,6 +103,7 @@ class GitHubApiImplTest {
             gitHubApiImpl.searchRepositories(repositoryName = "re")
 
             // Then
+
         }
 
 }

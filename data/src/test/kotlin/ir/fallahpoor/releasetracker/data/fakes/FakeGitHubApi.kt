@@ -28,7 +28,9 @@ class FakeGitHubApi : GitHubApi {
     }
 
     override suspend fun searchRepositories(
-        repositoryName: String, page: Int, pageSize: Int
+        repositoryName: String,
+        page: Int,
+        pageSize: Int
     ): SearchResults {
         val items = allLibraries.filter {
             it.name.contains(repositoryName, ignoreCase = true)
