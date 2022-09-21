@@ -1,22 +1,25 @@
 package ir.fallahpoor.releasetracker.data.utils
 
 import com.google.common.truth.Truth
-import io.ktor.client.*
-import io.ktor.client.engine.mock.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandleScope
+import io.ktor.client.engine.mock.respondOk
+import io.ktor.client.request.HttpResponseData
 import ir.fallahpoor.releasetracker.data.network.ConnectionChecker
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.io.IOException
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ConnectionCheckerTest {
 
     @Test
-    fun internetIsConnected() = runBlocking {
+    fun `isInternetConnected returns true given that the Internet is connected`() = runTest {
 
         // Given
-        val mockEngine = MockEngine { respondOk() }
-        val httpClient = HttpClient(mockEngine)
-        val connectionChecker = ConnectionChecker(httpClient)
+        val connectionChecker = createConnectionChecker { respondOk() }
 
         // When
         val isInternetConnected = connectionChecker.isInternetConnected()
@@ -27,19 +30,24 @@ class ConnectionCheckerTest {
     }
 
     @Test
-    fun internetIsNotConnected() = runBlocking {
+    fun `isInternetConnected returns false given that the Internet is not connected`() =
+        runTest {
 
-        // Given
-        val mockEngine = MockEngine { throw IOException() }
+            // Given
+            val connectionChecker = createConnectionChecker { throw IOException() }
+
+            // When
+            val isInternetConnected = connectionChecker.isInternetConnected()
+
+            // Then
+            Truth.assertThat(isInternetConnected).isFalse()
+
+        }
+
+    private fun createConnectionChecker(response: MockRequestHandleScope.() -> HttpResponseData): ConnectionChecker {
+        val mockEngine = MockEngine { response() }
         val httpClient = HttpClient(mockEngine)
-        val connectionChecker = ConnectionChecker(httpClient)
-
-        // When
-        val isInternetConnected = connectionChecker.isInternetConnected()
-
-        // Then
-        Truth.assertThat(isInternetConnected).isFalse()
-
+        return ConnectionChecker(httpClient)
     }
 
 }
