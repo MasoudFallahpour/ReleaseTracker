@@ -11,7 +11,7 @@ class ExceptionParserTest {
     private val exceptionParser = ExceptionParser()
 
     @Test
-    fun `correct message is returned when exception is LibraryDoesNotExistException`() {
+    fun `getMessage returns the correct message given that the exception is LibraryDoesNotExistException`() {
 
         // Given
         val throwable: Throwable = LibraryDoesNotExistException()
@@ -25,7 +25,7 @@ class ExceptionParserTest {
     }
 
     @Test
-    fun `correct message is returned when exception is InternetNotConnectedException`() {
+    fun `getMessage returns the correct message given that the exception is InternetNotConnectedException`() {
 
         // Given
         val throwable: Throwable = InternetNotConnectedException()
@@ -39,7 +39,7 @@ class ExceptionParserTest {
     }
 
     @Test
-    fun `correct message is returned when exception is unknown`() {
+    fun `getMessage returns the correct message given that the exception is unknown`() {
 
         // Given any exception other than LibraryDoesNotExistException and InternetNotConnectedException
         val throwable: Throwable = ArithmeticException()
