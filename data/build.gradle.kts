@@ -60,10 +60,5 @@ dependencies {
     testImplementation(libs.androidxTest.core)
     testImplementation(libs.robolectric)
     testImplementation(libs.ktor.mock)
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
-    }
+    testImplementation(libs.mockito.inline)
 }
