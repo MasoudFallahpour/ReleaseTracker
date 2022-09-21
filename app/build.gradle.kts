@@ -95,7 +95,7 @@ kapt {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+    kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
 }
 
 dependencies {
@@ -136,7 +136,6 @@ dependencies {
     testImplementation(libs.androidxTest.core)
     testImplementation(libs.robolectric)
     kaptTest(libs.hilt.androidCompiler)
-    testImplementation(libs.mockito.inline)
 
     androidTestImplementation(libs.androidxTest.runner)
     androidTestImplementation(libs.androidxTest.rules)
