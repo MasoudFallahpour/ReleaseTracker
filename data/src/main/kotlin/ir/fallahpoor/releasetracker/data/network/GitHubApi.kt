@@ -1,10 +1,10 @@
 package ir.fallahpoor.releasetracker.data.network
 
-import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 
 interface GitHubApi {
-    suspend fun getLatestRelease(owner: String, repository: String): LibraryVersion
+    suspend fun getLatestRelease(owner: String, repository: String): LatestRelease
 
     suspend fun searchRepositories(
         repositoryName: String,

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class LibraryVersion(
+class LatestRelease(
     @SerialName("name")
     val name: String,
     @SerialName("tag_name")

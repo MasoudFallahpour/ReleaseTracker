@@ -4,7 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,7 +15,7 @@ class GitHubApiImpl
     private val httpClient: HttpClient
 ) : GitHubApi {
 
-    override suspend fun getLatestRelease(owner: String, repository: String): LibraryVersion =
+    override suspend fun getLatestRelease(owner: String, repository: String): LatestRelease =
         httpClient.get("repos/$owner/$repository/releases/latest").body()
 
     override suspend fun searchRepositories(

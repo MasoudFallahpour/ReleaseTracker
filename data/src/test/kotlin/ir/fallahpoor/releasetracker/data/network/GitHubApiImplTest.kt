@@ -6,7 +6,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import ir.fallahpoor.releasetracker.data.fakes.FakeData
 import ir.fallahpoor.releasetracker.data.fakes.FakeKtorEngine
-import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.toSearchResultItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,13 +37,13 @@ class GitHubApiImplTest {
             FakeKtorEngine.throwException = false
 
             // When
-            val libraryVersion: LibraryVersion = gitHubApiImpl.getLatestRelease(
+            val latestRelease: LatestRelease = gitHubApiImpl.getLatestRelease(
                 owner = FakeData.ReleaseTracker.OWNER,
                 repository = FakeData.ReleaseTracker.REPOSITORY_NAME
             )
 
             // Then
-            Truth.assertThat(libraryVersion.name).isEqualTo(FakeData.ReleaseTracker.VERSION)
+            Truth.assertThat(latestRelease.name).isEqualTo(FakeData.ReleaseTracker.VERSION)
 
         }
 

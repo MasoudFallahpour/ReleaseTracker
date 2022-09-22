@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.data.repository.library
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
-import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.toLibrary
 import kotlinx.coroutines.flow.Flow
@@ -29,15 +29,15 @@ class LibraryRepositoryImpl
         val libraryPath = libraryUrl.trim().removePrefix(GITHUB_BASE_URL)
         val libraryOwner = libraryPath.substring(0 until libraryPath.indexOf("/"))
         val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
-        val libraryVersion: LibraryVersion = gitHubApi.getLatestRelease(libraryOwner, libraryRepo)
-        return getRefinedLibraryVersion(libraryName.trim(), libraryVersion)
+        val latestRelease: LatestRelease = gitHubApi.getLatestRelease(libraryOwner, libraryRepo)
+        return getRefinedLibraryVersion(libraryName.trim(), latestRelease)
     }
 
     private fun getRefinedLibraryVersion(
         libraryName: String,
-        libraryVersion: LibraryVersion
+        latestRelease: LatestRelease
     ): String {
-        val version: String = libraryVersion.name.ifBlank { libraryVersion.tagName }
+        val version: String = latestRelease.name.ifBlank { latestRelease.tagName }
         return getRefinedLibraryVersion(libraryName, version)
     }
 

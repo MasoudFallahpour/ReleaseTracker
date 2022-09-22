@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
-import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.toSearchResultItem
@@ -18,10 +18,10 @@ class FakeGitHubApi : GitHubApi {
         FakeData.ReleaseTracker.library
     )
 
-    override suspend fun getLatestRelease(owner: String, repository: String): LibraryVersion {
+    override suspend fun getLatestRelease(owner: String, repository: String): LatestRelease {
         val library: Library? = allLibraries.find { it.url.endsWith("$owner/$repository") }
         if (library != null) {
-            return LibraryVersion(name = library.version, tagName = "")
+            return LatestRelease(name = library.version, tagName = "")
         } else {
             throw Exception()
         }
