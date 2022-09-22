@@ -12,7 +12,7 @@ import io.ktor.http.fullPath
 import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
-import ir.fallahpoor.releasetracker.data.network.models.SearchResults
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.toSearchResultItem
 import kotlinx.serialization.encodeToString
@@ -82,12 +82,12 @@ object FakeKtorEngine {
         val searchResultItems = libraries.mapIndexed { index, library ->
             library.toSearchResultItem(index)
         }
-        val searchResults = SearchResults(
+        val searchRepositoriesResult = SearchRepositoriesResult(
             totalCount = searchResultItems.size,
             incompleteResults = false,
             items = searchResultItems
         )
-        return json.encodeToString(searchResults)
+        return json.encodeToString(searchRepositoriesResult)
     }
 
 }

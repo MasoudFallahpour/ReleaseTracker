@@ -7,7 +7,7 @@ import io.ktor.serialization.kotlinx.json.json
 import ir.fallahpoor.releasetracker.data.fakes.FakeData
 import ir.fallahpoor.releasetracker.data.fakes.FakeKtorEngine
 import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
-import ir.fallahpoor.releasetracker.data.network.models.SearchResults
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
 import ir.fallahpoor.releasetracker.data.toSearchResultItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -80,13 +80,13 @@ class GitHubApiImplTest {
 
         }
 
-    private fun createFakeSearchResults(searchQuery: String): SearchResults {
+    private fun createFakeSearchResults(searchQuery: String): SearchRepositoriesResult {
         val searchResultItems = FakeData.allLibraries.filter {
             it.name.contains(searchQuery, ignoreCase = true)
         }.mapIndexed { index, library ->
             library.toSearchResultItem(id = index)
         }
-        return SearchResults(
+        return SearchRepositoriesResult(
             totalCount = searchResultItems.size,
             incompleteResults = false,
             items = searchResultItems

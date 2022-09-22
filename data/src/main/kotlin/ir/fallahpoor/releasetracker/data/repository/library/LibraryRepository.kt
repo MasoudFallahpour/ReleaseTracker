@@ -1,6 +1,6 @@
 package ir.fallahpoor.releasetracker.data.repository.library
 
-import ir.fallahpoor.releasetracker.data.network.models.SearchResults
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
 import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
@@ -21,6 +21,6 @@ interface LibraryRepository {
 
     fun getLibrariesAsFlow(): Flow<List<Library>>
 
-    suspend fun searchLibraries(libraryName: String): SearchResults
+    suspend fun searchLibraries(libraryName: String): SearchRepositoriesResult
 
 }

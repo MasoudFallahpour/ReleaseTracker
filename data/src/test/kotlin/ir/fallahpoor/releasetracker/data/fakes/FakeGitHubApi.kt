@@ -2,7 +2,7 @@ package ir.fallahpoor.releasetracker.data.fakes
 
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
 import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
-import ir.fallahpoor.releasetracker.data.network.models.SearchResults
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.toSearchResultItem
 
@@ -31,13 +31,17 @@ class FakeGitHubApi : GitHubApi {
         repositoryName: String,
         page: Int,
         pageSize: Int
-    ): SearchResults {
+    ): SearchRepositoriesResult {
         val items = allLibraries.filter {
             it.name.contains(repositoryName, ignoreCase = true)
         }.mapIndexed { index, library ->
             library.toSearchResultItem(id = index)
         }
-        return SearchResults(totalCount = items.size, incompleteResults = false, items = items)
+        return SearchRepositoriesResult(
+            totalCount = items.size,
+            incompleteResults = false,
+            items = items
+        )
     }
 
 }
