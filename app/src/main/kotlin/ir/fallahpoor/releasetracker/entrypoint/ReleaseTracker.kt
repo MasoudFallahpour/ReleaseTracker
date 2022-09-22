@@ -18,7 +18,7 @@ import ir.fallahpoor.releasetracker.Event
 import ir.fallahpoor.releasetracker.NightModeViewModel
 import ir.fallahpoor.releasetracker.R
 import ir.fallahpoor.releasetracker.data.NightMode
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.features.addlibrary.ui.AddLibraryScreen
 import ir.fallahpoor.releasetracker.features.libraries.ui.LibrariesListScreen
 

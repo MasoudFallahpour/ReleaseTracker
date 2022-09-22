@@ -8,8 +8,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import ir.fallahpoor.releasetracker.common.NotificationManager
 import ir.fallahpoor.releasetracker.data.network.ConnectionChecker
-import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.data.repository.storage.StorageRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope

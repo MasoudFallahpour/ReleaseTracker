@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.fakes
 
 import ir.fallahpoor.releasetracker.common.GITHUB_BASE_URL
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 
 object FakeData {
     object Coil {

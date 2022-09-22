@@ -1,6 +1,6 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 
 object FakeData {
 

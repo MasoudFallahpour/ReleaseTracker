@@ -5,6 +5,7 @@ import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
 import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.data.toLibrary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

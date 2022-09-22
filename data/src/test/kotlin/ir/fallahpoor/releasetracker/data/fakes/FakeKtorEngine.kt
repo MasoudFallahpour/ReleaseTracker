@@ -13,7 +13,7 @@ import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResultItemDto
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

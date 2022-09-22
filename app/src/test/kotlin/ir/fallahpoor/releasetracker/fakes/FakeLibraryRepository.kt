@@ -6,8 +6,8 @@ import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultItemDto
-import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 

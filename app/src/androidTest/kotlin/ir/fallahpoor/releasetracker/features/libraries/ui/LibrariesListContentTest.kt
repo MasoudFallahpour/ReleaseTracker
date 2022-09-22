@@ -1,8 +1,12 @@
 package ir.fallahpoor.releasetracker.features.libraries.ui
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeRight
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.fakes.FakeData
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesListState
 import org.junit.Rule

@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.data.fakes
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
 import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResultItemDto
 
 class FakeGitHubApi : GitHubApi {

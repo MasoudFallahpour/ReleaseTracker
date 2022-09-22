@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.features.libraries
 
 import ir.fallahpoor.releasetracker.data.SortOrder
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 
 data class LibrariesListScreenUiState(
     val sortOrder: SortOrder = SortOrder.A_TO_Z,

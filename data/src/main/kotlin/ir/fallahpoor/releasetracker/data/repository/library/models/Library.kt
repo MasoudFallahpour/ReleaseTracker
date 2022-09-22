@@ -1,4 +1,4 @@
-package ir.fallahpoor.releasetracker.data.repository.library
+package ir.fallahpoor.releasetracker.data.repository.library.models
 
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 

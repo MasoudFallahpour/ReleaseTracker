@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.SortOrder
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.features.libraries.Event
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesListScreenUiState
 import ir.fallahpoor.releasetracker.features.libraries.LibrariesViewModel

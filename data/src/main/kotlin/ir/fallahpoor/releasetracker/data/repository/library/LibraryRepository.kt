@@ -1,6 +1,7 @@
 package ir.fallahpoor.releasetracker.data.repository.library
 
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {

@@ -1,7 +1,7 @@
 package ir.fallahpoor.releasetracker.features.libraries
 
 import ir.fallahpoor.releasetracker.data.SortOrder
-import ir.fallahpoor.releasetracker.data.repository.library.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 
 sealed class Event {
     data class PinLibrary(val library: Library, val pin: Boolean) : Event()
