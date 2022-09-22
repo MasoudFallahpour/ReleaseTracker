@@ -1,10 +1,10 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
-import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
+import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
 import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.data.toSearchResultItem
+import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResultItemDto
 
 class FakeGitHubApi : GitHubApi {
 
@@ -18,10 +18,10 @@ class FakeGitHubApi : GitHubApi {
         FakeData.ReleaseTracker.library
     )
 
-    override suspend fun getLatestRelease(owner: String, repository: String): LatestRelease {
+    override suspend fun getLatestRelease(owner: String, repository: String): LatestReleaseDto {
         val library: Library? = allLibraries.find { it.url.endsWith("$owner/$repository") }
         if (library != null) {
-            return LatestRelease(name = library.version, tagName = "")
+            return LatestReleaseDto(name = library.version, tagName = "")
         } else {
             throw Exception()
         }
@@ -31,13 +31,13 @@ class FakeGitHubApi : GitHubApi {
         repositoryName: String,
         page: Int,
         pageSize: Int
-    ): SearchRepositoriesResult {
+    ): SearchRepositoriesResultDto {
         val items = allLibraries.filter {
             it.name.contains(repositoryName, ignoreCase = true)
         }.mapIndexed { index, library ->
-            library.toSearchResultItem(id = index)
+            library.toSearchRepositoriesResultItemDto(id = index)
         }
-        return SearchRepositoriesResult(
+        return SearchRepositoriesResultDto(
             totalCount = items.size,
             incompleteResults = false,
             items = items

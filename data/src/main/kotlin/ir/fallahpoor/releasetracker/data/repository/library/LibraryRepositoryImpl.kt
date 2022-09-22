@@ -3,8 +3,8 @@ package ir.fallahpoor.releasetracker.data.repository.library
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
-import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
+import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
 import ir.fallahpoor.releasetracker.data.toLibrary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -29,15 +29,16 @@ class LibraryRepositoryImpl
         val libraryPath = libraryUrl.trim().removePrefix(GITHUB_BASE_URL)
         val libraryOwner = libraryPath.substring(0 until libraryPath.indexOf("/"))
         val libraryRepo = libraryPath.substring(libraryPath.indexOf("/") + 1)
-        val latestRelease: LatestRelease = gitHubApi.getLatestRelease(libraryOwner, libraryRepo)
-        return getRefinedLibraryVersion(libraryName.trim(), latestRelease)
+        val latestReleaseDto: LatestReleaseDto =
+            gitHubApi.getLatestRelease(libraryOwner, libraryRepo)
+        return getRefinedLibraryVersion(libraryName.trim(), latestReleaseDto)
     }
 
     private fun getRefinedLibraryVersion(
         libraryName: String,
-        latestRelease: LatestRelease
+        latestReleaseDto: LatestReleaseDto
     ): String {
-        val version: String = latestRelease.name.ifBlank { latestRelease.tagName }
+        val version: String = latestReleaseDto.name.ifBlank { latestReleaseDto.tagName }
         return getRefinedLibraryVersion(libraryName, version)
     }
 
@@ -88,7 +89,7 @@ class LibraryRepositoryImpl
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
         libraryDao.getAllAsFlow().map { libraryEntities -> libraryEntities.map { it.toLibrary() } }
 
-    override suspend fun searchLibraries(libraryName: String): SearchRepositoriesResult =
+    override suspend fun searchLibraries(libraryName: String): SearchRepositoriesResultDto =
         gitHubApi.searchRepositories(libraryName)
 
 }

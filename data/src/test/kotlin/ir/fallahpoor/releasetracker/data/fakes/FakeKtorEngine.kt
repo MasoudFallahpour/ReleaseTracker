@@ -11,10 +11,10 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.fullPath
 import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
-import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
+import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
 import ir.fallahpoor.releasetracker.data.repository.library.Library
-import ir.fallahpoor.releasetracker.data.toSearchResultItem
+import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResultItemDto
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -57,7 +57,7 @@ object FakeKtorEngine {
     }
 
     private fun convertToJson(library: Library): String = json.encodeToString(
-        LatestRelease(
+        LatestReleaseDto(
             name = library.version,
             tagName = ""
         )
@@ -80,14 +80,14 @@ object FakeKtorEngine {
 
     private fun convertToJson(libraries: List<Library>): String {
         val searchResultItems = libraries.mapIndexed { index, library ->
-            library.toSearchResultItem(index)
+            library.toSearchRepositoriesResultItemDto(index)
         }
-        val searchRepositoriesResult = SearchRepositoriesResult(
+        val searchRepositoriesResultDto = SearchRepositoriesResultDto(
             totalCount = searchResultItems.size,
             incompleteResults = false,
             items = searchResultItems
         )
-        return json.encodeToString(searchRepositoriesResult)
+        return json.encodeToString(searchRepositoriesResultDto)
     }
 
 }

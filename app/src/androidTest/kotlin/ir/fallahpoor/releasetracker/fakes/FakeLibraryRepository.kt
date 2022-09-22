@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultItem
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultItemDto
 import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import kotlinx.coroutines.flow.Flow
@@ -79,12 +79,12 @@ class FakeLibraryRepository : LibraryRepository {
             libraries.sortedBy { it.name }
         }.asFlow()
 
-    override suspend fun searchLibraries(libraryName: String): SearchRepositoriesResult {
+    override suspend fun searchLibraries(libraryName: String): SearchRepositoriesResultDto {
         val items = remoteLibraries.filter { it.name.contains(libraryName, ignoreCase = true) }
             .mapIndexed { index, library ->
                 library.toSearchResult(id = index.toLong())
             }
-        return SearchRepositoriesResult(
+        return SearchRepositoriesResultDto(
             totalCount = items.size,
             incompleteResults = false,
             items = items
@@ -118,7 +118,7 @@ class FakeLibraryRepository : LibraryRepository {
         localLibrariesLiveData.value = libraries
     }
 
-    private fun Library.toSearchResult(id: Long) = SearchRepositoriesResultItem(
+    private fun Library.toSearchResult(id: Long) = SearchRepositoriesResultItemDto(
         id = id,
         name = this.name,
         url = this.url,

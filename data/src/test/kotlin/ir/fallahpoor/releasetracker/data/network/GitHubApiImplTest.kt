@@ -6,9 +6,9 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import ir.fallahpoor.releasetracker.data.fakes.FakeData
 import ir.fallahpoor.releasetracker.data.fakes.FakeKtorEngine
-import ir.fallahpoor.releasetracker.data.network.models.LatestRelease
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResult
-import ir.fallahpoor.releasetracker.data.toSearchResultItem
+import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
+import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResultItemDto
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
@@ -37,13 +37,13 @@ class GitHubApiImplTest {
             FakeKtorEngine.throwException = false
 
             // When
-            val latestRelease: LatestRelease = gitHubApiImpl.getLatestRelease(
+            val latestReleaseDto: LatestReleaseDto = gitHubApiImpl.getLatestRelease(
                 owner = FakeData.ReleaseTracker.OWNER,
                 repository = FakeData.ReleaseTracker.REPOSITORY_NAME
             )
 
             // Then
-            Truth.assertThat(latestRelease.name).isEqualTo(FakeData.ReleaseTracker.VERSION)
+            Truth.assertThat(latestReleaseDto.name).isEqualTo(FakeData.ReleaseTracker.VERSION)
 
         }
 
@@ -80,13 +80,13 @@ class GitHubApiImplTest {
 
         }
 
-    private fun createFakeSearchResults(searchQuery: String): SearchRepositoriesResult {
+    private fun createFakeSearchResults(searchQuery: String): SearchRepositoriesResultDto {
         val searchResultItems = FakeData.allLibraries.filter {
             it.name.contains(searchQuery, ignoreCase = true)
         }.mapIndexed { index, library ->
-            library.toSearchResultItem(id = index)
+            library.toSearchRepositoriesResultItemDto(id = index)
         }
-        return SearchRepositoriesResult(
+        return SearchRepositoriesResultDto(
             totalCount = searchResultItems.size,
             incompleteResults = false,
             items = searchResultItems

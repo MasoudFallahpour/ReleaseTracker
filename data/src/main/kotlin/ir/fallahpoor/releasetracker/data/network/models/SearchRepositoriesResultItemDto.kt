@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.data.network.models
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
-data class SearchRepositoriesResultItem(
+data class SearchRepositoriesResultItemDto(
     @SerialName("id")
     val id: Long,
     @SerialName("name")
