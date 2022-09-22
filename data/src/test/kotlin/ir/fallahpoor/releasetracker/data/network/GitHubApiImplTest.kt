@@ -1,11 +1,11 @@
 package ir.fallahpoor.releasetracker.data.network
 
 import com.google.common.truth.Truth
-import io.ktor.client.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 import ir.fallahpoor.releasetracker.data.fakes.FakeData
-import ir.fallahpoor.releasetracker.data.fakes.FakeEngine
+import ir.fallahpoor.releasetracker.data.fakes.FakeKtorEngine
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.toSearchResultItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +16,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class GitHubApiImplTest {
 
-    private val httpClient = HttpClient(FakeEngine.engine) {
+    private val httpClient = HttpClient(FakeKtorEngine.engine) {
         install(ContentNegotiation) {
             json(
                 Json {
@@ -33,7 +33,7 @@ class GitHubApiImplTest {
         runTest {
 
             // Given
-            FakeEngine.throwException = false
+            FakeKtorEngine.throwException = false
 
             // When
             val libraryVersion: LibraryVersion = gitHubApiImpl.getLatestRelease(
@@ -51,7 +51,7 @@ class GitHubApiImplTest {
         runTest {
 
             // Given
-            FakeEngine.throwException = true
+            FakeKtorEngine.throwException = true
 
             // When
             gitHubApiImpl.getLatestRelease(
@@ -67,7 +67,7 @@ class GitHubApiImplTest {
         runTest {
 
             // Given
-            FakeEngine.throwException = false
+            FakeKtorEngine.throwException = false
             val searchQuery = "CO"
             val expectedSearchResults = createFakeSearchResults(searchQuery)
 
@@ -97,7 +97,7 @@ class GitHubApiImplTest {
         runTest {
 
             // Given
-            FakeEngine.throwException = true
+            FakeKtorEngine.throwException = true
 
             // When
             gitHubApiImpl.searchRepositories(repositoryName = "re")

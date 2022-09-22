@@ -1,9 +1,16 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
-import io.ktor.client.engine.mock.*
-import io.ktor.client.request.*
-import io.ktor.http.*
-import io.ktor.utils.io.*
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandleScope
+import io.ktor.client.engine.mock.respond
+import io.ktor.client.engine.mock.respondBadRequest
+import io.ktor.client.request.HttpResponseData
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.fullPath
+import io.ktor.http.headersOf
+import io.ktor.utils.io.ByteReadChannel
 import ir.fallahpoor.releasetracker.data.network.LibraryVersion
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.repository.library.Library
@@ -11,20 +18,21 @@ import ir.fallahpoor.releasetracker.data.toSearchResultItem
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-object FakeEngine {
+object FakeKtorEngine {
 
     private val json = Json {
         ignoreUnknownKeys = true
     }
-    private val latestReleaseRegex = Regex("/repos/([\\w\\d-]+)/([\\w\\d-]+)/releases/latest")
+    private val latestReleaseRegex = Regex("/repos/(\\w+)/(\\w+)/releases/latest")
     private val searchRepositoriesRegex =
-        Regex("/search/repositories\\?q=([\\w\\d-]+)\\+in%3Aname&sort=stars&page=\\d+&per_page=\\d+")
+        Regex("/search/repositories\\?q=(\\w+)\\+in%3Aname&sort=stars&page=\\d+&per_page=\\d+")
     var throwException = false
 
     val engine = MockEngine { request ->
         if (throwException) {
             throw Exception()
         }
+        request.url.fullPath
         val fullPath = request.url.fullPath
         if (fullPath.matches(latestReleaseRegex)) {
             handleGetLatestReleaseRequest(fullPath)
