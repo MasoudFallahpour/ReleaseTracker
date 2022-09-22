@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.data.repository.library
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
-import ir.fallahpoor.releasetracker.data.network.LibraryVersion
+import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import ir.fallahpoor.releasetracker.data.toLibrary
 import kotlinx.coroutines.flow.Flow

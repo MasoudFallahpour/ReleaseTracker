@@ -9,7 +9,9 @@ import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,6 +81,7 @@ class AddLibraryViewModel
                     )
                 }
             } catch (t: Throwable) {
+                Timber.e(t)
                 val message = exceptionParser.getMessage(t)
                 _uiState.value.copy(addLibraryState = AddLibraryState.Error(message))
             }
@@ -91,7 +94,7 @@ class AddLibraryViewModel
         libraryRepository.getLibrary(libraryName) != null
 
     private fun setUiState(uiState: AddLibraryScreenUiState) {
-        _uiState.value = uiState
+        _uiState.update { uiState }
     }
 
     private fun isGithubUrlPath(url: String): Boolean = GITHUB_URL_PATH_REGEX.matches(url)

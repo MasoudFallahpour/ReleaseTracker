@@ -1,8 +1,10 @@
 package ir.fallahpoor.releasetracker.data.network
 
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 import javax.inject.Inject
 import javax.inject.Singleton

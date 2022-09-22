@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.data.network
 
+import ir.fallahpoor.releasetracker.data.network.models.LibraryVersion
 import ir.fallahpoor.releasetracker.data.network.models.SearchResults
 
 interface GitHubApi {
