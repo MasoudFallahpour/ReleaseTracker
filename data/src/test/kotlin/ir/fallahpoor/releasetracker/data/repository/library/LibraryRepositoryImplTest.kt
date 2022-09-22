@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.data.repository.library
 
+import android.database.sqlite.SQLiteConstraintException
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.MainDispatcherRule
@@ -38,7 +39,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `get library`() = runTest {
+    fun `getLibrary returns the library given that the library exists`() = runTest {
 
         // Given
         val expectedLibrary: Library = FakeData.ReleaseTracker.library
@@ -53,7 +54,18 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `get library version`() = runTest {
+    fun `getLibrary returns null given that the library does not exist`() = runTest {
+
+        // When
+        val actualLibrary: Library? = libraryRepository.getLibrary("SomeNonExistentLibraryName")
+
+        // Then
+        Truth.assertThat(actualLibrary).isNull()
+
+    }
+
+    @Test
+    fun `getLibraryVersion returns the version of the library`() = runTest {
 
         // When
         val version: String = libraryRepository.getLibraryVersion(
@@ -67,43 +79,74 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `add library`() = runTest {
+    fun `addLibrary adds the library to the database given that it's not already added`() =
+        runTest {
 
-        // Given
-        val expectedLibrary: Library = FakeData.Coil.library
+            // Given
+            val expectedLibrary: Library = FakeData.Coil.library
 
-        // When
-        libraryRepository.addLibrary(
-            libraryName = expectedLibrary.name,
-            libraryUrl = expectedLibrary.url,
-            libraryVersion = expectedLibrary.version
-        )
+            // When
+            libraryRepository.addLibrary(
+                libraryName = expectedLibrary.name,
+                libraryUrl = expectedLibrary.url,
+                libraryVersion = expectedLibrary.version
+            )
 
-        // Then
-        val actualLibrary: Library? = fakeLibraryDao.get(expectedLibrary.name)?.toLibrary()
-        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
+            // Then
+            val actualLibrary: Library? = fakeLibraryDao.get(expectedLibrary.name)?.toLibrary()
+            Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
 
-    }
+        }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun `addLibrary throws an exception given that the library is already added`() =
+        runTest {
+
+            // Given
+            val library: Library = FakeData.Coil.library
+            fakeLibraryDao.insert(library.toLibraryEntity())
+
+            // When
+            libraryRepository.addLibrary(
+                libraryName = library.name,
+                libraryUrl = library.url,
+                libraryVersion = library.version
+            )
+
+        }
 
     @Test
-    fun `delete library`() = runTest {
+    fun `deleteLibrary deletes the library from the database given that it exists`() = runTest {
 
         // Given
         fakeLibraryDao.insert(FakeData.ReleaseTracker.library.toLibraryEntity())
-        fakeLibraryDao.insert(FakeData.Coil.library.toLibraryEntity())
 
         // When
         libraryRepository.deleteLibrary(FakeData.ReleaseTracker.library)
 
         // Then
         val actualLibraries = fakeLibraryDao.getAll().map { it.toLibrary() }
-        val expectedLibraries = listOf(FakeData.Coil.library)
-        Truth.assertThat(actualLibraries).isEqualTo(expectedLibraries)
+        Truth.assertThat(actualLibraries).isEmpty()
 
     }
 
     @Test
-    fun `update library`() = runTest {
+    fun `deleteLibrary does nothing given that the library does not exist`() = runTest {
+
+        // Given
+        fakeLibraryDao.insert(FakeData.ReleaseTracker.library.toLibraryEntity())
+
+        // When
+        libraryRepository.deleteLibrary(FakeData.Coil.library)
+
+        // Then
+        val actualLibraries = fakeLibraryDao.getAll().map { it.toLibrary() }
+        Truth.assertThat(actualLibraries).isEqualTo(listOf(FakeData.ReleaseTracker.library))
+
+    }
+
+    @Test
+    fun `updateLibrary updates the library given that it exists`() = runTest {
 
         // Given
         val library: Library = FakeData.ReleaseTracker.library
@@ -120,7 +163,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `pin library`() = runTest {
+    fun `pinLibrary pins the given library`() = runTest {
 
         // Given
         val library: Library = FakeData.ReleaseTracker.library
@@ -130,31 +173,29 @@ class LibraryRepositoryImplTest {
         libraryRepository.pinLibrary(library, true)
 
         // Then
-        val expectedLibrary = library.copy(isPinned = true)
         val actualLibrary = fakeLibraryDao.get(library.name)?.toLibrary()
-        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
+        Truth.assertThat(actualLibrary?.isPinned).isTrue()
 
     }
 
     @Test
-    fun `unpin library`() = runTest {
+    fun `pinLibrary unpins the given library`() = runTest {
 
         // Given
-        val library: Library = FakeData.ReleaseTracker.library
-        fakeLibraryDao.insert(library.copy(isPinned = true).toLibraryEntity())
+        val library: Library = FakeData.Coroutines.library
+        fakeLibraryDao.insert(library.toLibraryEntity())
 
         // When
         libraryRepository.pinLibrary(library, false)
 
         // Then
-        val expectedLibrary = library.copy(isPinned = false)
         val actualLibrary = fakeLibraryDao.get(library.name)?.toLibrary()
-        Truth.assertThat(actualLibrary).isEqualTo(expectedLibrary)
+        Truth.assertThat(actualLibrary?.isPinned).isFalse()
 
     }
 
     @Test
-    fun `get libraries`() = runTest {
+    fun `getLibraries returns all the libraries sorted by name`() = runTest {
 
         // Given
         fakeLibraryDao.insert(FakeData.ReleaseTracker.library.toLibraryEntity())
@@ -170,7 +211,7 @@ class LibraryRepositoryImplTest {
     }
 
     @Test
-    fun `flow of libraries should return all libraries sorted by name in ascending order`() =
+    fun `getLibrariesAsFlow returns all the libraries sorted by name`() =
         runTest {
 
             // Given
@@ -192,17 +233,32 @@ class LibraryRepositoryImplTest {
         }
 
     @Test
-    fun `search libraries`() = runTest {
+    fun `searchLibraries returns a non empty result given that there are matched libraries`() =
+        runTest {
+
+            // Given
+            val searchQuery = "co"
+            val expectedSearchResults = fakeGitHubApi.searchRepositories(searchQuery)
+
+            // When
+            val searchResults = libraryRepository.searchLibraries(searchQuery)
+
+            // Then
+            Truth.assertThat(searchResults).isEqualTo(expectedSearchResults)
+
+        }
+
+    @Test
+    fun `searchLibraries returns an empty result given that no library is found`() = runTest {
 
         // Given
-        val searchQuery = "co"
-        val expectedSearchResults = fakeGitHubApi.searchRepositories(searchQuery)
+        val searchQuery = "SomeNonExistentLibrary"
 
         // When
         val searchResults = libraryRepository.searchLibraries(searchQuery)
 
         // Then
-        Truth.assertThat(searchResults).isEqualTo(expectedSearchResults)
+        Truth.assertThat(searchResults.items).isEmpty()
 
     }
 

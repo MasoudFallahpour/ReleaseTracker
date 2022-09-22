@@ -106,8 +106,8 @@ class FakeLibraryRepository : LibraryRepository {
         return LIBRARY_VERSION
     }
 
-    override suspend fun pinLibrary(library: Library, pinned: Boolean) {
-        updateLibrary(library.copy(isPinned = pinned))
+    override suspend fun pinLibrary(library: Library, pin: Boolean) {
+        updateLibrary(library.copy(isPinned = pin))
     }
 
     fun deleteLibraries() {

@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.data.database
 
+import android.database.sqlite.SQLiteConstraintException
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import ir.fallahpoor.releasetracker.data.Database
@@ -33,6 +34,7 @@ class LibraryDaoImpl @Inject constructor(
         }
     }
 
+    @Throws(SQLiteConstraintException::class)
     override suspend fun insert(library: LibraryEntity) = withContext(dispatcher) {
         libraryQueries.insert(library)
     }

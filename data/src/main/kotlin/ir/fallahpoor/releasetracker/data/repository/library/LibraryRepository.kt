@@ -15,7 +15,7 @@ interface LibraryRepository {
 
     suspend fun updateLibrary(library: Library)
 
-    suspend fun pinLibrary(library: Library, pinned: Boolean)
+    suspend fun pinLibrary(library: Library, pin: Boolean)
 
     suspend fun getLibraries(): List<Library>
 

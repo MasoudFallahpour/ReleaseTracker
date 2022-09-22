@@ -77,8 +77,8 @@ class LibraryRepositoryImpl
         libraryDao.update(library.toLibraryEntity())
     }
 
-    override suspend fun pinLibrary(library: Library, pinned: Boolean) {
-        val newLibrary = library.copy(isPinned = pinned)
+    override suspend fun pinLibrary(library: Library, pin: Boolean) {
+        val newLibrary = library.copy(isPinned = pin)
         libraryDao.update(newLibrary.toLibraryEntity())
     }
 

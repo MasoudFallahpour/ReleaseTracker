@@ -1,5 +1,6 @@
 package ir.fallahpoor.releasetracker.data.fakes
 
+import android.database.sqlite.SQLiteConstraintException
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import ir.fallahpoor.releasetracker.data.database.LibraryDao
@@ -21,8 +22,12 @@ class FakeLibraryDao : LibraryDao {
     }
 
     override suspend fun insert(library: LibraryEntity) {
-        libraries += library
-        updateLibrariesLiveData()
+        if (libraries.contains(library)) {
+            throw SQLiteConstraintException()
+        } else {
+            libraries += library
+            updateLibrariesLiveData()
+        }
     }
 
     override suspend fun update(library: LibraryEntity) {
