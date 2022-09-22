@@ -5,9 +5,10 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.map
 import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultItemDto
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import ir.fallahpoor.releasetracker.data.repository.library.models.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.SearchRepositoriesResult
+import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResult
 import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 
@@ -79,16 +80,13 @@ class FakeLibraryRepository : LibraryRepository {
             libraries.sortedBy { it.name }
         }.asFlow()
 
-    override suspend fun searchLibraries(libraryName: String): SearchRepositoriesResultDto {
-        val items = remoteLibraries.filter { it.name.contains(libraryName, ignoreCase = true) }
-            .mapIndexed { index, library ->
-                library.toSearchResult(id = index.toLong())
-            }
-        return SearchRepositoriesResultDto(
-            totalCount = items.size,
-            incompleteResults = false,
-            items = items
-        )
+    override suspend fun searchLibraries(libraryName: String): List<SearchRepositoriesResult> {
+        val searchRepositoriesResultDtos =
+            remoteLibraries.filter { it.name.contains(libraryName, ignoreCase = true) }
+                .mapIndexed { index, library ->
+                    library.toSearchRepositoriesResultDto(id = index)
+                }
+        return searchRepositoriesResultDtos.map { it.toSearchRepositoriesResult() }
     }
 
     override suspend fun getLibraries(): List<Library> = localLibraries
@@ -118,8 +116,8 @@ class FakeLibraryRepository : LibraryRepository {
         localLibrariesLiveData.value = libraries
     }
 
-    private fun Library.toSearchResult(id: Long) = SearchRepositoriesResultItemDto(
-        id = id,
+    private fun Library.toSearchRepositoriesResultDto(id: Int) = SearchRepositoriesResultDto(
+        id = id.toLong(),
         name = this.name,
         url = this.url,
         description = ""

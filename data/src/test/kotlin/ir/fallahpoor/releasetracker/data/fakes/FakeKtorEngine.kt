@@ -12,9 +12,9 @@ import io.ktor.http.fullPath
 import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultsDto
 import ir.fallahpoor.releasetracker.data.repository.library.models.Library
-import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResultItemDto
+import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResultDto
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -80,14 +80,14 @@ object FakeKtorEngine {
 
     private fun convertToJson(libraries: List<Library>): String {
         val searchResultItems = libraries.mapIndexed { index, library ->
-            library.toSearchRepositoriesResultItemDto(index)
+            library.toSearchRepositoriesResultDto(index)
         }
-        val searchRepositoriesResultDto = SearchRepositoriesResultDto(
+        val searchRepositoriesResultsDto = SearchRepositoriesResultsDto(
             totalCount = searchResultItems.size,
             incompleteResults = false,
             items = searchResultItems
         )
-        return json.encodeToString(searchRepositoriesResultDto)
+        return json.encodeToString(searchRepositoriesResultsDto)
     }
 
 }

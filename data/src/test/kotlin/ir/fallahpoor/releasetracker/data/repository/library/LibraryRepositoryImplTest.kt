@@ -9,6 +9,8 @@ import ir.fallahpoor.releasetracker.data.fakes.FakeGitHubApi
 import ir.fallahpoor.releasetracker.data.fakes.FakeLibraryDao
 import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.data.toLibrary
+import ir.fallahpoor.releasetracker.data.toLibraryEntity
+import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -239,13 +241,14 @@ class LibraryRepositoryImplTest {
 
             // Given
             val searchQuery = "co"
-            val expectedSearchResults = fakeGitHubApi.searchRepositories(searchQuery)
+            val expectedSearchResults = fakeGitHubApi.searchRepositories(searchQuery).items
+                .map { it.toSearchRepositoriesResult() }
 
             // When
-            val searchResults = libraryRepository.searchLibraries(searchQuery)
+            val actualSearchResults = libraryRepository.searchLibraries(searchQuery)
 
             // Then
-            Truth.assertThat(searchResults).isEqualTo(expectedSearchResults)
+            Truth.assertThat(actualSearchResults).isEqualTo(expectedSearchResults)
 
         }
 
@@ -259,7 +262,7 @@ class LibraryRepositoryImplTest {
         val searchResults = libraryRepository.searchLibraries(searchQuery)
 
         // Then
-        Truth.assertThat(searchResults.items).isEmpty()
+        Truth.assertThat(searchResults).isEmpty()
 
     }
 

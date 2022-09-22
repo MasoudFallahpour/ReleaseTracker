@@ -4,10 +4,12 @@ import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
 data class SearchRepositoriesResultDto(
-    @SerialName("total_count")
-    val totalCount: Int,
-    @SerialName("incomplete_results")
-    val incompleteResults: Boolean,
-    @SerialName("items")
-    val items: List<SearchRepositoriesResultItemDto>
+    @SerialName("id")
+    val id: Long,
+    @SerialName("name")
+    val name: String,
+    @SerialName("html_url")
+    val url: String,
+    @SerialName("description")
+    val description: String
 )

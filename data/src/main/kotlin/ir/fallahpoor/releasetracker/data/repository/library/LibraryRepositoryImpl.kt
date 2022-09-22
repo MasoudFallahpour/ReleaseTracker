@@ -4,9 +4,11 @@ import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
 import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
 import ir.fallahpoor.releasetracker.data.repository.library.models.Library
+import ir.fallahpoor.releasetracker.data.repository.library.models.SearchRepositoriesResult
 import ir.fallahpoor.releasetracker.data.toLibrary
+import ir.fallahpoor.releasetracker.data.toLibraryEntity
+import ir.fallahpoor.releasetracker.data.toSearchRepositoriesResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -90,7 +92,9 @@ class LibraryRepositoryImpl
     override fun getLibrariesAsFlow(): Flow<List<Library>> =
         libraryDao.getAllAsFlow().map { libraryEntities -> libraryEntities.map { it.toLibrary() } }
 
-    override suspend fun searchLibraries(libraryName: String): SearchRepositoriesResultDto =
-        gitHubApi.searchRepositories(libraryName)
+    override suspend fun searchLibraries(libraryName: String): List<SearchRepositoriesResult> {
+        val searchRepositoriesResultDto = gitHubApi.searchRepositories(libraryName)
+        return searchRepositoriesResultDto.items.map { it.toSearchRepositoriesResult() }
+    }
 
 }

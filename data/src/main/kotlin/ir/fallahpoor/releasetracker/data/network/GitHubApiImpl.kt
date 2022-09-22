@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
-import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultsDto
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,7 +22,7 @@ class GitHubApiImpl
         repositoryName: String,
         page: Int,
         pageSize: Int
-    ): SearchRepositoriesResultDto =
+    ): SearchRepositoriesResultsDto =
         httpClient.get("search/repositories") {
             parameter("q", "$repositoryName in:name")
             parameter("sort", "stars")
