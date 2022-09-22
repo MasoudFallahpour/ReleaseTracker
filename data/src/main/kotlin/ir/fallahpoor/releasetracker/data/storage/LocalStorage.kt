@@ -27,7 +27,7 @@ class LocalStorage @Inject constructor(
     private val defaultNightMode = NightMode.AUTO
     private val defaultSortOrder = SortOrder.A_TO_Z
 
-    override suspend fun setSortOrder(sortOrder: SortOrder) {
+    override suspend fun saveSortOrder(sortOrder: SortOrder) {
         putString(KEY_SORT_ORDER, sortOrder.name)
     }
 
@@ -46,7 +46,7 @@ class LocalStorage @Inject constructor(
         }
     }
 
-    override suspend fun setLastUpdateCheck(date: String) {
+    override suspend fun saveLastUpdateCheck(date: String) {
         putString(KEY_LAST_UPDATE_CHECK, date)
     }
 
@@ -72,7 +72,7 @@ class LocalStorage @Inject constructor(
         return NightMode.valueOf(nightModeStr ?: defaultNightMode.name)
     }
 
-    override suspend fun setNightMode(nightMode: NightMode) {
+    override suspend fun saveNightMode(nightMode: NightMode) {
         putString(KEY_NIGHT_MODE, nightMode.name)
     }
 

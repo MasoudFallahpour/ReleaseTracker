@@ -10,10 +10,18 @@ import ir.fallahpoor.releasetracker.data.repository.library.Library
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import ir.fallahpoor.releasetracker.data.repository.storage.StorageRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -87,7 +95,7 @@ class LibrariesViewModel
     private fun changeSortOrder(sortOrder: SortOrder) {
         viewModelScope.launch {
             try {
-                storageRepository.setSortOrder(sortOrder)
+                storageRepository.saveSortOrder(sortOrder)
             } catch (t: Throwable) {
                 Timber.e(t)
             }

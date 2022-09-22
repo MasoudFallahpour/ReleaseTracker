@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface Storage {
 
-    suspend fun setSortOrder(sortOrder: SortOrder)
+    suspend fun saveSortOrder(sortOrder: SortOrder)
 
     fun getSortOrder(): SortOrder
 
     fun getSortOrderAsFlow(): Flow<SortOrder>
 
-    suspend fun setLastUpdateCheck(date: String)
+    suspend fun saveLastUpdateCheck(date: String)
 
     fun getLastUpdateCheck(): Flow<String>
 
@@ -20,6 +20,6 @@ interface Storage {
 
     fun getNightMode(): NightMode
 
-    suspend fun setNightMode(nightMode: NightMode)
+    suspend fun saveNightMode(nightMode: NightMode)
 
 }

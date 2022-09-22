@@ -7,12 +7,12 @@ interface StorageRepository {
 
     fun getLastUpdateCheck(): Flow<String>
 
-    suspend fun setLastUpdateCheck(date: String)
+    suspend fun saveLastUpdateCheck(date: String)
 
     fun getSortOrder(): SortOrder
 
     fun getSortOrderAsFlow(): Flow<SortOrder>
 
-    suspend fun setSortOrder(sortOrder: SortOrder)
+    suspend fun saveSortOrder(sortOrder: SortOrder)
 
 }

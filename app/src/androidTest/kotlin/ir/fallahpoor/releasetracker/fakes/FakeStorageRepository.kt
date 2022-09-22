@@ -13,11 +13,11 @@ class FakeStorageRepository : StorageRepository {
 
     override fun getLastUpdateCheck(): Flow<String> = lastUpdateCheckDateLiveData.asFlow()
 
-    override suspend fun setLastUpdateCheck(date: String) {
+    override suspend fun saveLastUpdateCheck(date: String) {
         lastUpdateCheckDateLiveData.value = date
     }
 
-    override suspend fun setSortOrder(sortOrder: SortOrder) {
+    override suspend fun saveSortOrder(sortOrder: SortOrder) {
         sortOrderLiveData.value = sortOrder
     }
 

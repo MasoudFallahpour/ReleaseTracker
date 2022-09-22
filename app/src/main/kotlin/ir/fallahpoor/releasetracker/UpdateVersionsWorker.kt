@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @HiltWorker
 class UpdateVersionsWorker
@@ -75,7 +76,7 @@ class UpdateVersionsWorker
 
     private suspend fun saveUpdateDate() {
         val simpleDateFormat = SimpleDateFormat("MMM dd HH:mm", Locale.US)
-        storageRepository.setLastUpdateCheck(simpleDateFormat.format(Date()))
+        storageRepository.saveLastUpdateCheck(simpleDateFormat.format(Date()))
     }
 
     private fun showNotification(updatedLibraries: List<String>) {

@@ -12,7 +12,7 @@ class NightModeRepositoryImpl @Inject constructor(
 ) : NightModeRepository {
 
     override suspend fun setNightMode(nightMode: NightMode) {
-        storage.setNightMode(nightMode)
+        storage.saveNightMode(nightMode)
     }
 
     override fun getNightMode(): NightMode = storage.getNightMode()

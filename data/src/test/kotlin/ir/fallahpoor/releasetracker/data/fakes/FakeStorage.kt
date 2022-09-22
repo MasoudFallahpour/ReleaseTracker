@@ -13,7 +13,7 @@ class FakeStorage : Storage {
     private val lastUpdateCheckDateLiveData = MutableLiveData("N/A")
     private val nightModeLiveData = MutableLiveData(NightMode.AUTO)
 
-    override suspend fun setSortOrder(sortOrder: SortOrder) {
+    override suspend fun saveSortOrder(sortOrder: SortOrder) {
         sortOrderLiveData.value = sortOrder
     }
 
@@ -21,7 +21,7 @@ class FakeStorage : Storage {
 
     override fun getSortOrderAsFlow(): Flow<SortOrder> = sortOrderLiveData.asFlow()
 
-    override suspend fun setLastUpdateCheck(date: String) {
+    override suspend fun saveLastUpdateCheck(date: String) {
         lastUpdateCheckDateLiveData.value = date
     }
 
@@ -31,7 +31,7 @@ class FakeStorage : Storage {
 
     override fun getNightMode() = nightModeLiveData.value!!
 
-    override suspend fun setNightMode(nightMode: NightMode) {
+    override suspend fun saveNightMode(nightMode: NightMode) {
         nightModeLiveData.value = nightMode
     }
 

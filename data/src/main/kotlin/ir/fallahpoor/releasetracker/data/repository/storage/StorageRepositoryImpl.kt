@@ -9,16 +9,16 @@ class StorageRepositoryImpl @Inject constructor(private val storage: Storage) : 
 
     override fun getLastUpdateCheck(): Flow<String> = storage.getLastUpdateCheck()
 
-    override suspend fun setLastUpdateCheck(date: String) {
-        storage.setLastUpdateCheck(date)
+    override suspend fun saveLastUpdateCheck(date: String) {
+        storage.saveLastUpdateCheck(date)
     }
 
     override fun getSortOrder(): SortOrder = storage.getSortOrder()
 
     override fun getSortOrderAsFlow(): Flow<SortOrder> = storage.getSortOrderAsFlow()
 
-    override suspend fun setSortOrder(sortOrder: SortOrder) {
-        storage.setSortOrder(sortOrder)
+    override suspend fun saveSortOrder(sortOrder: SortOrder) {
+        storage.saveSortOrder(sortOrder)
     }
 
 }

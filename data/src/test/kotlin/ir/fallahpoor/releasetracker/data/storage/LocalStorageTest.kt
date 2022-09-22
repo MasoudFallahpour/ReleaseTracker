@@ -20,7 +20,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -87,7 +88,7 @@ class LocalStorageTest {
         val expectedNightMode = NightMode.ON
 
         // When
-        localStorage.setNightMode(expectedNightMode)
+        localStorage.saveNightMode(expectedNightMode)
 
         // Then
         val actualNightMode = NightMode.valueOf(getString(KEY_NIGHT_MODE) ?: "")
@@ -102,7 +103,7 @@ class LocalStorageTest {
         val expectedSortOrder = SortOrder.Z_TO_A
 
         // When
-        localStorage.setSortOrder(expectedSortOrder)
+        localStorage.saveSortOrder(expectedSortOrder)
 
         // Then
         val actualSortOrder = SortOrder.valueOf(getString(KEY_SORT_ORDER) ?: "")
@@ -132,7 +133,7 @@ class LocalStorageTest {
         val expectedLastUpdateCheckDate = "15:30, March"
 
         // When
-        localStorage.setLastUpdateCheck(expectedLastUpdateCheckDate)
+        localStorage.saveLastUpdateCheck(expectedLastUpdateCheckDate)
 
         // Then
         val actualLastUpdateCheckDate = getString(KEY_LAST_UPDATE_CHECK)
