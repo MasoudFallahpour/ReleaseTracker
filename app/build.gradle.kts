@@ -121,6 +121,7 @@ dependencies {
     kapt(libs.hilt.androidCompiler)
     kapt(libs.hilt.compiler)
 
+    implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     debugImplementation(libs.compose.tooling)
     implementation(libs.compose.uiToolingPreview)
@@ -137,6 +138,7 @@ dependencies {
     testImplementation(libs.robolectric)
     kaptTest(libs.hilt.androidCompiler)
 
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.androidxTest.runner)
     androidTestImplementation(libs.androidxTest.rules)
     androidTestImplementation(libs.truth)
