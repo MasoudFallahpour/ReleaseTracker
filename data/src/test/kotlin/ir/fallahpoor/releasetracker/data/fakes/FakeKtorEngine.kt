@@ -32,7 +32,6 @@ object FakeKtorEngine {
         if (throwException) {
             throw Exception()
         }
-        request.url.fullPath
         val fullPath = request.url.fullPath
         if (fullPath.matches(latestReleaseRegex)) {
             handleGetLatestReleaseRequest(fullPath)

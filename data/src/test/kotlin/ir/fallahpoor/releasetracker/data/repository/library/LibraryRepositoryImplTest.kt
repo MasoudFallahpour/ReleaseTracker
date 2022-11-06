@@ -236,7 +236,7 @@ class LibraryRepositoryImplTest {
         }
 
     @Test
-    fun `searchLibraries returns a non empty result given that there are matched libraries`() =
+    fun `searchLibraries returns a non empty list given that there are matched libraries`() =
         runTest {
 
             // Given
@@ -253,7 +253,7 @@ class LibraryRepositoryImplTest {
         }
 
     @Test
-    fun `searchLibraries returns an empty result given that no library is found`() = runTest {
+    fun `searchLibraries returns an empty list given that no library is found`() = runTest {
 
         // Given
         val searchQuery = "SomeNonExistentLibrary"

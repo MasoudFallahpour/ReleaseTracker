@@ -56,7 +56,8 @@ class GitHubApiImplTest {
 
             // When
             gitHubApiImpl.getLatestRelease(
-                owner = "someNonExistentOwner", repository = "someNonExistentRepository"
+                owner = "someNonExistentOwner",
+                repository = "someNonExistentRepository"
             )
 
             // Then we expect to receive an exception
@@ -81,15 +82,15 @@ class GitHubApiImplTest {
         }
 
     private fun createFakeSearchResults(searchQuery: String): SearchRepositoriesResultsDto {
-        val searchResultItems = FakeData.allLibraries.filter {
+        val items = FakeData.allLibraries.filter {
             it.name.contains(searchQuery, ignoreCase = true)
         }.mapIndexed { index, library ->
             library.toSearchRepositoriesResultDto(id = index)
         }
         return SearchRepositoriesResultsDto(
-            totalCount = searchResultItems.size,
+            totalCount = items.size,
             incompleteResults = false,
-            items = searchResultItems
+            items = items
         )
     }
 
@@ -103,7 +104,7 @@ class GitHubApiImplTest {
             // When
             gitHubApiImpl.searchRepositories(repositoryName = "re")
 
-            // Then
+            // Then we expect to receive an exception
 
         }
 
