@@ -64,6 +64,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -75,10 +76,12 @@ android {
     }
 
     packagingOptions {
-        resources.excludes.add("**/attach_hotspot_windows.dll")
-        resources.excludes.add("META-INF/licenses/ASM")
-        resources.excludes.add("META-INF/AL2.0")
-        resources.excludes.add("META-INF/LGPL2.1")
+        with(resources.excludes) {
+            this += "**/attach_hotspot_windows.dll"
+            this += "META-INF/licenses/ASM"
+            this += "META-INF/AL2.0"
+            this += "META-INF/LGPL2.1"
+        }
     }
 
     testOptions {

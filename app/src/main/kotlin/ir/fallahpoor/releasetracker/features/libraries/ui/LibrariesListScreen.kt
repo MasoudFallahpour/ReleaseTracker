@@ -2,12 +2,12 @@ package ir.fallahpoor.releasetracker.features.libraries.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -36,15 +36,14 @@ fun LibrariesListScreen(
     onAddLibraryClick: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
+    // TODO replace collectAsState with collectAsStateWithLifecycle
     val uiState: LibrariesListScreenUiState by librariesViewModel.uiState.collectAsState()
     val lastUpdateCheck: String by librariesViewModel.lastUpdateCheck.collectAsState()
     val isSystemInDarkTheme = isSystemInDarkTheme()
-    val isNightModeOn by derivedStateOf {
-        when (currentNightMode) {
-            NightMode.OFF -> false
-            NightMode.ON -> true
-            NightMode.AUTO -> isSystemInDarkTheme
-        }
+    val isNightModeOn = when (currentNightMode) {
+        NightMode.OFF -> false
+        NightMode.ON -> true
+        NightMode.AUTO -> isSystemInDarkTheme
     }
 
     ReleaseTrackerTheme(darkTheme = isNightModeOn) {
@@ -70,9 +69,10 @@ fun LibrariesListScreen(
                     }
                 )
             }
-        ) {
+        ) { paddingValues ->
             LibrariesListContent(
                 modifier = Modifier
+                    .padding(paddingValues)
                     .fillMaxSize()
                     .testTag(LibrariesListScreenTags.CONTENT),
                 librariesListState = uiState.librariesListState,
