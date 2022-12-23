@@ -42,7 +42,7 @@ following list highlights its tech stack:
 - Compose
 - ViewModel
 - Coroutines
-- Room
+- SQLDelight
 - Navigation
 - Dagger Hilt
 - WorkManager
@@ -55,7 +55,7 @@ feature request or bug report, please open a new issue so it could be tracked.
 License
 =======
 
-    Copyright 2022 Masood Fallahpoor.
+    Copyright 2022 Masoud Fallahpour.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
