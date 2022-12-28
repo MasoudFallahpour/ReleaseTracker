@@ -4,6 +4,7 @@ import ir.fallahpoor.releasetracker.data.database.LibraryDao
 import ir.fallahpoor.releasetracker.data.database.entity.LibraryEntity
 import ir.fallahpoor.releasetracker.data.network.GitHubApi
 import ir.fallahpoor.releasetracker.data.network.models.LatestReleaseDto
+import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
 import ir.fallahpoor.releasetracker.data.repository.library.models.Library
 import ir.fallahpoor.releasetracker.data.repository.library.models.SearchRepositoriesResult
 import ir.fallahpoor.releasetracker.data.toLibrary
@@ -15,18 +16,16 @@ import javax.inject.Inject
 
 class LibraryRepositoryImpl
 @Inject constructor(
-    private val libraryDao: LibraryDao,
-    private val gitHubApi: GitHubApi
+    private val libraryDao: LibraryDao, private val gitHubApi: GitHubApi
 ) : LibraryRepository {
 
     companion object {
         private const val GITHUB_BASE_URL = "https://github.com/"
+        private const val MAX_VERSION_LENGTH = 15
     }
 
-    override suspend fun getLibrary(libraryName: String): Library? {
-        val libraryEntity = libraryDao.get(libraryName.trim())
-        return libraryEntity?.toLibrary()
-    }
+    private var searchQuery: String? = null
+    private var searchResults: List<SearchRepositoriesResult> = emptyList()
 
     override suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String {
         val libraryPath = libraryUrl.trim().removePrefix(GITHUB_BASE_URL)
@@ -38,8 +37,7 @@ class LibraryRepositoryImpl
     }
 
     private fun getRefinedLibraryVersion(
-        libraryName: String,
-        latestReleaseDto: LatestReleaseDto
+        libraryName: String, latestReleaseDto: LatestReleaseDto
     ): String {
         val version: String = latestReleaseDto.name.ifBlank { latestReleaseDto.tagName }
         return getRefinedLibraryVersion(libraryName, version)
@@ -57,24 +55,22 @@ class LibraryRepositoryImpl
             .replace("v", "", ignoreCase = true) // Remove the letter 'v'
             .replace("r", "", ignoreCase = true) // Remove the letter 'r'
             .trim()
+            .take(MAX_VERSION_LENGTH)
 
-    override suspend fun addLibrary(
-        libraryName: String,
-        libraryUrl: String,
-        libraryVersion: String
-    ) {
+    override suspend fun addLibrary(name: String, url: String) {
+        val version = getLibraryVersion(libraryName = name, libraryUrl = url)
         libraryDao.insert(
             LibraryEntity(
-                name = libraryName.trim(),
-                url = libraryUrl.trim(),
-                version = libraryVersion,
+                name = name.trim(),
+                url = url.trim(),
+                version = version,
                 pinned = 0
             )
         )
     }
 
     override suspend fun deleteLibrary(library: Library) {
-        libraryDao.delete(library.name)
+        libraryDao.delete(libraryName = library.name, libraryUrl = library.url)
     }
 
     override suspend fun updateLibrary(library: Library) {
@@ -83,18 +79,32 @@ class LibraryRepositoryImpl
 
     override suspend fun pinLibrary(library: Library, pin: Boolean) {
         val newLibrary = library.copy(isPinned = pin)
-        libraryDao.update(newLibrary.toLibraryEntity())
+        libraryDao.update(library = newLibrary.toLibraryEntity())
     }
 
     override suspend fun getLibraries(): List<Library> =
-        libraryDao.getAll().map { libraryEntity -> libraryEntity.toLibrary() }
+        libraryDao.getAll().map(LibraryEntity::toLibrary)
 
-    override fun getLibrariesAsFlow(): Flow<List<Library>> =
-        libraryDao.getAllAsFlow().map { libraryEntities -> libraryEntities.map { it.toLibrary() } }
+    override fun getLibrariesAsFlow(): Flow<List<Library>> = libraryDao.getAllAsFlow()
+        .map { libraryEntities -> libraryEntities.map(LibraryEntity::toLibrary) }
 
     override suspend fun searchLibraries(libraryName: String): List<SearchRepositoriesResult> {
-        val searchRepositoriesResultDto = gitHubApi.searchRepositories(libraryName)
-        return searchRepositoriesResultDto.items.map { it.toSearchRepositoriesResult() }
+        if (libraryName != searchQuery) {
+            val searchRepositoriesResultDto = gitHubApi.searchRepositories(libraryName)
+            searchQuery = libraryName
+            searchResults =
+                searchRepositoriesResultDto.items.map(SearchRepositoriesResultDto::toSearchRepositoriesResult)
+        }
+        return removeExistingLibraries(searchResults)
+    }
+
+    private suspend fun removeExistingLibraries(searchResults: List<SearchRepositoriesResult>): List<SearchRepositoriesResult> {
+        val existingLibraries = libraryDao.getAll()
+            .map { libraryEntity -> libraryEntity.name.lowercase() to libraryEntity.url.lowercase() }
+            .toSet()
+        return searchResults.filter { searchRepositoriesResult ->
+            (searchRepositoriesResult.name.lowercase() to searchRepositoriesResult.url.lowercase()) !in existingLibraries
+        }
     }
 
 }

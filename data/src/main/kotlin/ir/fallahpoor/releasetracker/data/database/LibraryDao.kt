@@ -9,12 +9,10 @@ interface LibraryDao {
 
     suspend fun getAll(): List<LibraryEntity>
 
-    suspend fun get(libraryName: String): LibraryEntity?
-
     suspend fun insert(library: LibraryEntity)
 
     suspend fun update(library: LibraryEntity)
 
-    suspend fun delete(libraryName: String)
+    suspend fun delete(libraryName: String, libraryUrl: String)
 
 }

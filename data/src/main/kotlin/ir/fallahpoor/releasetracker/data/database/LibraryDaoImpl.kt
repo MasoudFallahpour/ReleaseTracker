@@ -24,16 +24,6 @@ class LibraryDaoImpl @Inject constructor(
         libraryQueries.getAll().executeAsList()
     }
 
-    override suspend fun get(libraryName: String): LibraryEntity? = withContext(dispatcher) {
-        try {
-            libraryQueries.get(libraryName).executeAsOne()
-        } catch (e: NullPointerException) {
-            null
-        } catch (e: IllegalStateException) {
-            null
-        }
-    }
-
     @Throws(SQLiteConstraintException::class)
     override suspend fun insert(library: LibraryEntity) = withContext(dispatcher) {
         libraryQueries.insert(library)
@@ -41,15 +31,15 @@ class LibraryDaoImpl @Inject constructor(
 
     override suspend fun update(library: LibraryEntity) = withContext(dispatcher) {
         libraryQueries.update(
+            name = library.name,
             url = library.url,
             version = library.version,
-            pinned = library.pinned,
-            name = library.name
+            pinned = library.pinned
         )
     }
 
-    override suspend fun delete(libraryName: String) = withContext(dispatcher) {
-        libraryQueries.delete(libraryName)
+    override suspend fun delete(libraryName: String, libraryUrl: String) = withContext(dispatcher) {
+        libraryQueries.delete(name = libraryName, url = libraryUrl)
     }
 
 }

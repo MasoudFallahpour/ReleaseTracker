@@ -6,11 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface LibraryRepository {
 
-    suspend fun getLibrary(libraryName: String): Library?
-
     suspend fun getLibraryVersion(libraryName: String, libraryUrl: String): String
 
-    suspend fun addLibrary(libraryName: String, libraryUrl: String, libraryVersion: String)
+    suspend fun addLibrary(name: String, url: String)
 
     suspend fun deleteLibrary(library: Library)
 

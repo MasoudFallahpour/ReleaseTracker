@@ -108,6 +108,7 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.activityCompose)
     implementation(libs.navigationCompose)
+    implementation(libs.constraintLayout.compose)
     implementation(libs.material)
     implementation(libs.lifecycle.viewModel)
     implementation(libs.lifecycle.liveData)
