@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NightModeRepository {
 
-    suspend fun setNightMode(nightMode: NightMode)
+    suspend fun saveNightMode(nightMode: NightMode)
 
     fun getNightMode(): NightMode
 
