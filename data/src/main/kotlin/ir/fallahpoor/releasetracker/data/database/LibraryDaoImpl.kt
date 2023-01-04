@@ -17,19 +17,19 @@ class LibraryDaoImpl @Inject constructor(
 
     private val libraryQueries = database.libraryQueries
 
-    override fun getAllAsFlow(): Flow<List<LibraryEntity>> =
+    override fun getAllLibrariesAsFlow(): Flow<List<LibraryEntity>> =
         libraryQueries.getAll().asFlow().mapToList()
 
-    override suspend fun getAll(): List<LibraryEntity> = withContext(dispatcher) {
+    override suspend fun getAllLibraries(): List<LibraryEntity> = withContext(dispatcher) {
         libraryQueries.getAll().executeAsList()
     }
 
     @Throws(SQLiteConstraintException::class)
-    override suspend fun insert(library: LibraryEntity) = withContext(dispatcher) {
+    override suspend fun insertLibrary(library: LibraryEntity) = withContext(dispatcher) {
         libraryQueries.insert(library)
     }
 
-    override suspend fun update(library: LibraryEntity) = withContext(dispatcher) {
+    override suspend fun updateLibrary(library: LibraryEntity) = withContext(dispatcher) {
         libraryQueries.update(
             name = library.name,
             url = library.url,
@@ -38,8 +38,9 @@ class LibraryDaoImpl @Inject constructor(
         )
     }
 
-    override suspend fun delete(libraryName: String, libraryUrl: String) = withContext(dispatcher) {
-        libraryQueries.delete(name = libraryName, url = libraryUrl)
-    }
+    override suspend fun deleteLibrary(libraryName: String, libraryUrl: String) =
+        withContext(dispatcher) {
+            libraryQueries.delete(name = libraryName, url = libraryUrl)
+        }
 
 }

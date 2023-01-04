@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface LibraryDao {
 
-    fun getAllAsFlow(): Flow<List<LibraryEntity>>
+    fun getAllLibrariesAsFlow(): Flow<List<LibraryEntity>>
 
-    suspend fun getAll(): List<LibraryEntity>
+    suspend fun getAllLibraries(): List<LibraryEntity>
 
-    suspend fun insert(library: LibraryEntity)
+    suspend fun insertLibrary(library: LibraryEntity)
 
-    suspend fun update(library: LibraryEntity)
+    suspend fun updateLibrary(library: LibraryEntity)
 
-    suspend fun delete(libraryName: String, libraryUrl: String)
+    suspend fun deleteLibrary(libraryName: String, libraryUrl: String)
 
 }

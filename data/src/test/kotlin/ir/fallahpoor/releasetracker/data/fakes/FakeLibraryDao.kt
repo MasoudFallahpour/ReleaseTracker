@@ -13,15 +13,16 @@ class FakeLibraryDao : LibraryDao {
     private val librariesLiveData = MutableLiveData<List<LibraryEntity>>()
     private val libraries = mutableListOf<LibraryEntity>()
 
-    override fun getAllAsFlow(): Flow<List<LibraryEntity>> = librariesLiveData.asFlow().map {
-        libraries.sortedBy { it.name }
-    }
+    override fun getAllLibrariesAsFlow(): Flow<List<LibraryEntity>> =
+        librariesLiveData.asFlow().map {
+            libraries.sortedBy { it.name }
+        }
 
-    override suspend fun getAll(): List<LibraryEntity> = libraries.sortedBy {
+    override suspend fun getAllLibraries(): List<LibraryEntity> = libraries.sortedBy {
         it.name
     }
 
-    override suspend fun insert(library: LibraryEntity) {
+    override suspend fun insertLibrary(library: LibraryEntity) {
         if (libraries.contains(library)) {
             throw SQLiteConstraintException()
         } else {
@@ -30,7 +31,7 @@ class FakeLibraryDao : LibraryDao {
         }
     }
 
-    override suspend fun update(library: LibraryEntity) {
+    override suspend fun updateLibrary(library: LibraryEntity) {
         val removed = libraries.remove(get(library.name))
         if (removed) {
             libraries += library
@@ -38,17 +39,17 @@ class FakeLibraryDao : LibraryDao {
         }
     }
 
-    override suspend fun delete(libraryName: String) {
+    fun get(libraryName: String): LibraryEntity? = libraries.find {
+        it.name.contentEquals(libraryName, ignoreCase = true)
+    }
+
+    override suspend fun deleteLibrary(libraryName: String, libraryUrl: String) {
         val removed = libraries.removeIf {
-            it.name == libraryName
+            it.name == libraryName && it.url == libraryUrl
         }
         if (removed) {
             updateLibrariesLiveData()
         }
-    }
-
-    override suspend fun get(libraryName: String): LibraryEntity? = libraries.find {
-        it.name.contentEquals(libraryName, ignoreCase = true)
     }
 
     private fun updateLibrariesLiveData() {
