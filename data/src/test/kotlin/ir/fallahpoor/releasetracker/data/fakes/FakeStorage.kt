@@ -4,14 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import ir.fallahpoor.releasetracker.data.NightMode
 import ir.fallahpoor.releasetracker.data.SortOrder
+import ir.fallahpoor.releasetracker.data.storage.LocalStorage
 import ir.fallahpoor.releasetracker.data.storage.Storage
 import kotlinx.coroutines.flow.Flow
 
 class FakeStorage : Storage {
 
-    private var sortOrderLiveData = MutableLiveData(SortOrder.A_TO_Z)
-    private val lastUpdateCheckDateLiveData = MutableLiveData("N/A")
-    private val nightModeLiveData = MutableLiveData(NightMode.AUTO)
+    private var sortOrderLiveData = MutableLiveData(LocalStorage.DEFAULT_SORT_ORDER)
+    private val lastUpdateCheckDateLiveData =
+        MutableLiveData(LocalStorage.DEFAULT_LAST_UPDATE_CHECK)
+    private val nightModeLiveData = MutableLiveData(LocalStorage.DEFAULT_NIGHT_MODE)
 
     override suspend fun saveSortOrder(sortOrder: SortOrder) {
         sortOrderLiveData.value = sortOrder
@@ -21,18 +23,18 @@ class FakeStorage : Storage {
 
     override fun getSortOrderAsFlow(): Flow<SortOrder> = sortOrderLiveData.asFlow()
 
+    override suspend fun saveNightMode(nightMode: NightMode) {
+        nightModeLiveData.value = nightMode
+    }
+
+    override fun getNightMode() = nightModeLiveData.value!!
+
+    override fun getNightModeAsFlow(): Flow<NightMode> = nightModeLiveData.asFlow()
+
     override suspend fun saveLastUpdateCheck(date: String) {
         lastUpdateCheckDateLiveData.value = date
     }
 
-    override fun getLastUpdateCheck(): Flow<String> = lastUpdateCheckDateLiveData.asFlow()
-
-    override fun getNightModeAsFlow(): Flow<NightMode> = nightModeLiveData.asFlow()
-
-    override fun getNightMode() = nightModeLiveData.value!!
-
-    override suspend fun saveNightMode(nightMode: NightMode) {
-        nightModeLiveData.value = nightMode
-    }
+    override fun getLastUpdateCheckAsFlow(): Flow<String> = lastUpdateCheckDateLiveData.asFlow()
 
 }

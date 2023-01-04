@@ -12,14 +12,14 @@ interface Storage {
 
     fun getSortOrderAsFlow(): Flow<SortOrder>
 
-    suspend fun saveLastUpdateCheck(date: String)
-
-    fun getLastUpdateCheck(): Flow<String>
-
-    fun getNightModeAsFlow(): Flow<NightMode>
+    suspend fun saveNightMode(nightMode: NightMode)
 
     fun getNightMode(): NightMode
 
-    suspend fun saveNightMode(nightMode: NightMode)
+    fun getNightModeAsFlow(): Flow<NightMode>
+
+    suspend fun saveLastUpdateCheck(date: String)
+
+    fun getLastUpdateCheckAsFlow(): Flow<String>
 
 }

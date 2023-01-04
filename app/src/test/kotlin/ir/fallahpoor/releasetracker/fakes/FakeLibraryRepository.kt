@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.fakes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.map
-import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
+import ir.fallahpoor.releasetracker.common.MessageProvider
 import ir.fallahpoor.releasetracker.data.network.models.SearchRepositoriesResultDto
 import ir.fallahpoor.releasetracker.data.repository.library.LibraryRepository
 import ir.fallahpoor.releasetracker.data.repository.library.models.Library
@@ -17,7 +17,7 @@ class FakeLibraryRepository : LibraryRepository {
     companion object {
         const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING = "Coroutines"
         const val LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_DELETING = FakeData.Kotlin.name
-        const val ERROR_MESSAGE = ExceptionParser.SOMETHING_WENT_WRONG
+        const val ERROR_MESSAGE = MessageProvider.SOMETHING_WENT_WRONG
         const val LIBRARY_VERSION = "0.2"
     }
 
@@ -38,23 +38,23 @@ class FakeLibraryRepository : LibraryRepository {
     private val localLibrariesLiveData = MutableLiveData<List<Library>>(localLibraries)
 
     override suspend fun addLibrary(
-        libraryName: String,
-        libraryUrl: String,
-        libraryVersion: String
+        name: String,
+        url: String,
+        version: String
     ) {
-        if (libraryName.trim() == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING) {
+        if (name.trim() == LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING) {
             throw IOException(ERROR_MESSAGE)
         } else {
             val library: Library? = localLibraries.find {
-                it.name.equals(libraryName.trim(), ignoreCase = true)
+                it.name.equals(name.trim(), ignoreCase = true)
             }
             if (library != null) {
-                throw RuntimeException(ExceptionParser.SOMETHING_WENT_WRONG)
+                throw RuntimeException(MessageProvider.SOMETHING_WENT_WRONG)
             } else {
                 localLibraries += Library(
-                    libraryName.trim(),
-                    libraryUrl.trim(),
-                    libraryVersion,
+                    name.trim(),
+                    url.trim(),
+                    version,
                     isPinned = false
                 )
                 updateLibrariesLiveData(localLibraries)

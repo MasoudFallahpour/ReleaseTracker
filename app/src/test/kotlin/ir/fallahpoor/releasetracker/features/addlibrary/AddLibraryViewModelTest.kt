@@ -3,7 +3,7 @@ package ir.fallahpoor.releasetracker.features.addlibrary
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.MainDispatcherRule
-import ir.fallahpoor.releasetracker.data.exceptions.ExceptionParser
+import ir.fallahpoor.releasetracker.common.MessageProvider
 import ir.fallahpoor.releasetracker.fakes.FakeLibraryRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -35,7 +35,7 @@ class AddLibraryViewModelTest {
         fakeLibraryRepository = FakeLibraryRepository()
         addLibraryViewModel = AddLibraryViewModel(
             libraryRepository = fakeLibraryRepository,
-            exceptionParser = ExceptionParser()
+            messageProvider = MessageProvider()
         )
     }
 
@@ -43,10 +43,10 @@ class AddLibraryViewModelTest {
     fun `state is correctly updated when library name changes`() {
 
         // Given
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
+        addLibraryViewModel.handleEvent(Action.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
 
         // When
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(libraryName = LIBRARY_NAME))
+        addLibraryViewModel.handleEvent(Action.UpdateLibraryName(libraryName = LIBRARY_NAME))
 
         // Then
         Truth.assertThat(addLibraryViewModel.uiState.value)
@@ -64,10 +64,10 @@ class AddLibraryViewModelTest {
     fun `state is correctly updated when library URL path changes`() {
 
         // Given
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
+        addLibraryViewModel.handleEvent(Action.UpdateLibraryName(LIBRARY_NAME))
 
         // When
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(libraryUrlPath = LIBRARY_URL_PATH))
+        addLibraryViewModel.handleEvent(Action.UpdateLibraryUrlPath(libraryUrlPath = LIBRARY_URL_PATH))
 
         // Then
         Truth.assertThat(addLibraryViewModel.uiState.value)
@@ -87,11 +87,11 @@ class AddLibraryViewModelTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
 
             // When
             addLibraryViewModel.handleEvent(
-                Event.AddLibrary(
+                Action.AddLibrary(
                     libraryName = "",
                     libraryUrlPath = LIBRARY_URL_PATH
                 )
@@ -116,11 +116,11 @@ class AddLibraryViewModelTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryName(LIBRARY_NAME))
 
             // When
             addLibraryViewModel.handleEvent(
-                Event.AddLibrary(
+                Action.AddLibrary(
                     libraryName = LIBRARY_NAME,
                     libraryUrlPath = ""
                 )
@@ -145,12 +145,12 @@ class AddLibraryViewModelTest {
 
             // Given
             fakeLibraryRepository.deleteLibraries()
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath("this is an invalid URL"))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryName(LIBRARY_NAME))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryUrlPath("this is an invalid URL"))
 
             // When
             addLibraryViewModel.handleEvent(
-                Event.AddLibrary(
+                Action.AddLibrary(
                     libraryName = LIBRARY_NAME,
                     libraryUrlPath = "this is an invalid URL"
                 )
@@ -176,17 +176,17 @@ class AddLibraryViewModelTest {
             // Given
             fakeLibraryRepository.deleteLibraries()
             fakeLibraryRepository.addLibrary(
-                libraryName = LIBRARY_NAME,
-                libraryUrl = "https://github.com/masoodfallahpoor/ReleaseTracker",
-                libraryVersion = "1.0"
+                name = LIBRARY_NAME,
+                url = "https://github.com/masoodfallahpoor/ReleaseTracker",
+                version = "1.0"
             )
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(LIBRARY_NAME))
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryName(LIBRARY_NAME))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
 
 
             // When
             addLibraryViewModel.handleEvent(
-                Event.AddLibrary(
+                Action.AddLibrary(
                     libraryName = LIBRARY_NAME,
                     libraryUrlPath = LIBRARY_URL_PATH
                 )
@@ -213,7 +213,7 @@ class AddLibraryViewModelTest {
 
         // When
         addLibraryViewModel.handleEvent(
-            Event.AddLibrary(
+            Action.AddLibrary(
                 libraryName = LIBRARY_NAME,
                 libraryUrlPath = LIBRARY_URL_PATH
             )
@@ -226,7 +226,7 @@ class AddLibraryViewModelTest {
                 AddLibraryScreenUiState(
                     libraryName = "",
                     libraryUrlPath = "",
-                    addLibraryState = AddLibraryState.LibraryAdded
+                    addLibraryState = AddLibraryState.AddLibrarySuccess
                 )
             )
 
@@ -237,12 +237,12 @@ class AddLibraryViewModelTest {
         runTest {
 
             // Given
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryName(FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING))
-            addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryName(FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING))
+            addLibraryViewModel.handleEvent(Action.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
 
             // When
             addLibraryViewModel.handleEvent(
-                Event.AddLibrary(
+                Action.AddLibrary(
                     libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
                     libraryUrlPath = LIBRARY_URL_PATH
                 )
@@ -256,7 +256,7 @@ class AddLibraryViewModelTest {
                     AddLibraryScreenUiState(
                         libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
                         libraryUrlPath = LIBRARY_URL_PATH,
-                        addLibraryState = AddLibraryState.Error(ExceptionParser.SOMETHING_WENT_WRONG)
+                        addLibraryState = AddLibraryState.Error(MessageProvider.SOMETHING_WENT_WRONG)
                     )
                 )
 
@@ -266,17 +266,17 @@ class AddLibraryViewModelTest {
     fun `state is correctly updated when an error is dismissed`() {
 
         // Given the current state is Error
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryName(FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING))
-        addLibraryViewModel.handleEvent(Event.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
+        addLibraryViewModel.handleEvent(Action.UpdateLibraryName(FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING))
+        addLibraryViewModel.handleEvent(Action.UpdateLibraryUrlPath(LIBRARY_URL_PATH))
         addLibraryViewModel.handleEvent(
-            Event.AddLibrary(
+            Action.AddLibrary(
                 libraryName = FakeLibraryRepository.LIBRARY_NAME_TO_CAUSE_ERROR_WHEN_ADDING,
                 libraryUrlPath = LIBRARY_URL_PATH
             )
         )
 
         // When
-        addLibraryViewModel.handleEvent(Event.ErrorDismissed)
+        addLibraryViewModel.handleEvent(Action.ErrorDismissed)
 
         // Then
         Truth.assertThat(addLibraryViewModel.uiState.value)

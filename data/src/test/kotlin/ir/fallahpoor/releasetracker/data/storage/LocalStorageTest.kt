@@ -20,7 +20,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -54,50 +57,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun `getNightMode() should return the saved night mode`() = runTest {
-
-        // Given
-        val expectedNightMode = NightMode.OFF
-        putString(KEY_NIGHT_MODE, expectedNightMode.name)
-
-        // When
-        val actualNightMode: NightMode = localStorage.getNightMode()
-
-        // Then
-        Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
-
-    }
-
-    @Test
-    fun `getNightMode() should return the default night mode when no night mode is set`() {
-
-        // Given
-
-        // When
-        val actualNightMode: NightMode = localStorage.getNightMode()
-
-        // Then
-        Truth.assertThat(actualNightMode).isEqualTo(NightMode.AUTO)
-
-    }
-
-    @Test
-    fun test_setNightMode() = runTest {
-
-        // Given
-        val expectedNightMode = NightMode.ON
-
-        // When
-        localStorage.saveNightMode(expectedNightMode)
-
-        // Then
-        val actualNightMode = NightMode.valueOf(getString(KEY_NIGHT_MODE) ?: "")
-        Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
-
-    }
-
-    @Test
-    fun test_setSortOrder() = runTest {
+    fun `sort order is saved correctly`() = runTest {
 
         // Given
         val expectedSortOrder = SortOrder.Z_TO_A
@@ -112,7 +72,7 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_getSortOrder() = runTest {
+    fun `saved sort order is returned correctly`() = runTest {
 
         // Given
         val expectedSortOrder = SortOrder.PINNED_FIRST
@@ -127,10 +87,111 @@ class LocalStorageTest {
     }
 
     @Test
-    fun test_setLastUpdateCheck() = runTest {
+    fun `default sort order is returned when there is no saved sort order`() = runTest {
 
         // Given
-        val expectedLastUpdateCheckDate = "15:30, March"
+
+        // When
+        val actualSortOrder = localStorage.getSortOrder()
+
+        // Then
+        Truth.assertThat(actualSortOrder).isEqualTo(LocalStorage.DEFAULT_SORT_ORDER)
+
+    }
+
+    @Test
+    fun `sort order flow emits the saved sort order`() = runTest {
+
+        // Given
+        val actualSortOrders = mutableListOf<SortOrder>()
+        val job = launch(UnconfinedTestDispatcher()) {
+            localStorage.getSortOrderAsFlow().toList(actualSortOrders)
+        }
+
+        // When
+        putString(KEY_SORT_ORDER, SortOrder.Z_TO_A.name)
+        putString(KEY_SORT_ORDER, SortOrder.PINNED_FIRST.name)
+
+        // Then
+        val expectedSortOrders = listOf(
+            LocalStorage.DEFAULT_SORT_ORDER, SortOrder.Z_TO_A, SortOrder.PINNED_FIRST
+        )
+        Truth.assertThat(actualSortOrders).isEqualTo(expectedSortOrders)
+
+        job.cancel()
+
+    }
+
+    @Test
+    fun `night mode is saved correctly`() = runTest {
+
+        // Given
+        val expectedNightMode = NightMode.ON
+
+        // When
+        localStorage.saveNightMode(expectedNightMode)
+
+        // Then
+        val actualNightMode = NightMode.valueOf(getString(KEY_NIGHT_MODE) ?: "")
+        Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
+
+    }
+
+    @Test
+    fun `saved night mode is returned correctly`() = runTest {
+
+        // Given
+        val expectedNightMode = NightMode.OFF
+        putString(KEY_NIGHT_MODE, expectedNightMode.name)
+
+        // When
+        val actualNightMode: NightMode = localStorage.getNightMode()
+
+        // Then
+        Truth.assertThat(actualNightMode).isEqualTo(expectedNightMode)
+
+    }
+
+    @Test
+    fun `default night mode is returned when there is no saved night mode`() {
+
+        // Given
+
+        // When
+        val actualNightMode: NightMode = localStorage.getNightMode()
+
+        // Then
+        Truth.assertThat(actualNightMode).isEqualTo(LocalStorage.DEFAULT_NIGHT_MODE)
+
+    }
+
+    @Test
+    fun `night mode flow emits the saved night mode`() = runTest {
+        // Given
+        val actualNightModes = mutableListOf<NightMode>()
+        val job = launch(UnconfinedTestDispatcher()) {
+            localStorage.getNightModeAsFlow().toList(actualNightModes)
+        }
+
+        // When
+        putString(KEY_NIGHT_MODE, NightMode.OFF.name)
+        putString(KEY_NIGHT_MODE, NightMode.ON.name)
+
+        // Then
+        val expectedNightModes = listOf(
+            LocalStorage.DEFAULT_NIGHT_MODE, NightMode.OFF, NightMode.ON
+        )
+        Truth.assertThat(actualNightModes).isEqualTo(expectedNightModes)
+
+        job.cancel()
+
+    }
+
+    @Test
+    fun `last update check date is saved correctly`() = runTest {
+
+        // Given
+        val expectedLastUpdateCheckDate = "15:30, March 2022"
 
         // When
         localStorage.saveLastUpdateCheck(expectedLastUpdateCheckDate)
@@ -138,6 +199,28 @@ class LocalStorageTest {
         // Then
         val actualLastUpdateCheckDate = getString(KEY_LAST_UPDATE_CHECK)
         Truth.assertThat(actualLastUpdateCheckDate).isEqualTo(expectedLastUpdateCheckDate)
+
+    }
+
+    @Test
+    fun `last update check date flow emits the saved last update check date`() = runTest {
+        // Given
+        val actualUpdateCheckDates = mutableListOf<String>()
+        val job = launch(UnconfinedTestDispatcher()) {
+            localStorage.getLastUpdateCheckAsFlow().toList(actualUpdateCheckDates)
+        }
+
+        // When
+        putString(KEY_LAST_UPDATE_CHECK, "12:44, January 5 2023")
+        putString(KEY_LAST_UPDATE_CHECK, "18:20, January 5 2023")
+
+        // Then
+        val expectedUpdateCheckDates = listOf(
+            LocalStorage.DEFAULT_LAST_UPDATE_CHECK, "12:44, January 5 2023", "18:20, January 5 2023"
+        )
+        Truth.assertThat(actualUpdateCheckDates).isEqualTo(expectedUpdateCheckDates)
+
+        job.cancel()
 
     }
 
@@ -150,10 +233,9 @@ class LocalStorageTest {
 
     private suspend fun getString(key: String): String? {
         val prefKey = stringPreferencesKey(key)
-        val flow: Flow<String?> = dataStore.data
-            .map { preferences ->
-                preferences[prefKey]
-            }
+        val flow: Flow<String?> = dataStore.data.map { preferences ->
+            preferences[prefKey]
+        }
         return flow.first()
     }
 
