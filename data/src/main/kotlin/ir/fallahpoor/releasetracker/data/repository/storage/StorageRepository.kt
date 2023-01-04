@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface StorageRepository {
 
-    fun getLastUpdateCheck(): Flow<String>
-
-    suspend fun saveLastUpdateCheck(date: String)
+    suspend fun saveSortOrder(sortOrder: SortOrder)
 
     fun getSortOrder(): SortOrder
 
     fun getSortOrderAsFlow(): Flow<SortOrder>
 
-    suspend fun saveSortOrder(sortOrder: SortOrder)
+    suspend fun saveLastUpdateCheck(date: String)
+
+    fun getLastUpdateCheckAsFlow(): Flow<String>
 
 }

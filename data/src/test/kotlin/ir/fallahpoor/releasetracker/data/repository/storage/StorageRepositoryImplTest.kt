@@ -5,6 +5,7 @@ import com.google.common.truth.Truth
 import ir.fallahpoor.releasetracker.data.MainDispatcherRule
 import ir.fallahpoor.releasetracker.data.SortOrder
 import ir.fallahpoor.releasetracker.data.fakes.FakeStorage
+import ir.fallahpoor.releasetracker.data.storage.LocalStorage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.toList
@@ -34,88 +35,48 @@ class StorageRepositoryImplTest {
     }
 
     @Test
-    fun `getLastUpdateCheck returns the date when it's available`() = runTest {
+    fun `sort order is saved correctly`() = runTest {
 
         // Given
-        val expectedLastUpdateCheckDate = "15:30, March"
-        fakeStorage.saveLastUpdateCheck(expectedLastUpdateCheckDate)
+        val expectedSortOrder = SortOrder.Z_TO_A
 
         // When
-        val actualLastUpdateCheck: String = storageRepository.getLastUpdateCheck().first()
+        storageRepository.saveSortOrder(expectedSortOrder)
 
         // Then
-        Truth.assertThat(actualLastUpdateCheck).isEqualTo(expectedLastUpdateCheckDate)
+        val actualSortOrder = fakeStorage.getSortOrder()
+        Truth.assertThat(actualSortOrder).isEqualTo(expectedSortOrder)
 
     }
 
     @Test
-    fun `getLastUpdateCheck returns NA when there is no date available`() = runTest {
-
-        // When
-        val actualLastUpdateCheck: String = storageRepository.getLastUpdateCheck().first()
-
-        // Then
-        Truth.assertThat(actualLastUpdateCheck).isEqualTo("N/A")
-
-    }
-
-    @Test
-    fun `saveLastUpdateCheck saves the last update check date`() = runTest {
+    fun `saved sort order is returned correctly`() = runTest {
 
         // Given
-        val lastUpdateCheckDate = "15:30, March"
+        val expectedSortOrder = SortOrder.Z_TO_A
+        fakeStorage.saveSortOrder(expectedSortOrder)
 
         // When
-        storageRepository.saveLastUpdateCheck(lastUpdateCheckDate)
+        val actualSortOrder = storageRepository.getSortOrder()
 
         // Then
-        Truth.assertThat(fakeStorage.getLastUpdateCheck().first()).isEqualTo(lastUpdateCheckDate)
+        Truth.assertThat(actualSortOrder).isEqualTo(expectedSortOrder)
 
     }
 
     @Test
-    fun `saveSortOrder saves the sort order`() = runTest {
-
-        // Given
-        fakeStorage.saveSortOrder(SortOrder.Z_TO_A)
+    fun `default sort order is returned when there is no saved sort order`() = runTest {
 
         // When
-        storageRepository.saveSortOrder(SortOrder.PINNED_FIRST)
+        val actualSortOrder = storageRepository.getSortOrder()
 
         // Then
-        Truth.assertThat(fakeStorage.getSortOrder()).isEqualTo(SortOrder.PINNED_FIRST)
+        Truth.assertThat(actualSortOrder).isEqualTo(LocalStorage.DEFAULT_SORT_ORDER)
 
     }
 
     @Test
-    fun `getSortOrder returns the saved sort order given that there is a saved sort order`() =
-        runTest {
-
-            // Given
-            fakeStorage.saveSortOrder(SortOrder.Z_TO_A)
-
-            // When
-            val actualSortOrder = storageRepository.getSortOrder()
-
-            // Then
-            Truth.assertThat(actualSortOrder).isEqualTo(SortOrder.Z_TO_A)
-
-        }
-
-    @Test
-    fun `getSortOrder returns the default saved sort order given that there is no saved sort order`() =
-        runTest {
-
-            // When
-            val actualSortOrder = storageRepository.getSortOrder()
-
-            // Then
-            Truth.assertThat(actualSortOrder).isEqualTo(SortOrder.A_TO_Z)
-
-        }
-
-    @Test
-    fun a() = runTest {
+    fun `sort order flow emits the saved sort order`() = runTest {
 
         // Given
         val actualSortOrders = mutableListOf<SortOrder>()
@@ -131,12 +92,51 @@ class StorageRepositoryImplTest {
         }
 
         // Then
-        val expectedSortOrders =
-            listOf(SortOrder.A_TO_Z, SortOrder.PINNED_FIRST, SortOrder.Z_TO_A, SortOrder.A_TO_Z)
-        Truth.assertThat(actualSortOrders.size).isEqualTo(expectedSortOrders.size)
-        actualSortOrders.zip(expectedSortOrders) { actualSortOrder, expectedSortOrder ->
-            Truth.assertThat(actualSortOrder).isEqualTo(expectedSortOrder)
+        val expectedSortOrders = listOf(
+            LocalStorage.DEFAULT_SORT_ORDER,
+            SortOrder.PINNED_FIRST,
+            SortOrder.Z_TO_A,
+            SortOrder.A_TO_Z
+        )
+        Truth.assertThat(actualSortOrders).isEqualTo(expectedSortOrders)
+
+        job.cancel()
+
+    }
+
+    @Test
+    fun `last update check date is saved correctly`() = runTest {
+
+        // Given
+        val expectedLastUpdateCheckDate = "15:30, March 2022"
+
+        // When
+        storageRepository.saveLastUpdateCheck(expectedLastUpdateCheckDate)
+
+        // Then
+        Truth.assertThat(fakeStorage.getLastUpdateCheckAsFlow().first())
+            .isEqualTo(expectedLastUpdateCheckDate)
+
+    }
+
+    @Test
+    fun `last update check date flow emits the saved last update check date`() = runTest {
+
+        // Given
+        val actualUpdateCheckDates = mutableListOf<String>()
+        val job = launch(UnconfinedTestDispatcher()) {
+            storageRepository.getLastUpdateCheckAsFlow().toList(actualUpdateCheckDates)
         }
+
+        // When
+        fakeStorage.saveLastUpdateCheck("12:44, January 5 2023")
+        fakeStorage.saveLastUpdateCheck("18:20, January 5 2023")
+
+        // Then
+        val expectedUpdateCheckDates = listOf(
+            LocalStorage.DEFAULT_LAST_UPDATE_CHECK, "12:44, January 5 2023", "18:20, January 5 2023"
+        )
+        Truth.assertThat(actualUpdateCheckDates).isEqualTo(expectedUpdateCheckDates)
 
         job.cancel()
 
